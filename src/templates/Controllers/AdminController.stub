@@ -24,7 +24,7 @@ class {{singularClass}}Controller extends Controller
     }
 
     public function index() {
-        $admins = Admin::all();
+        $admins = $this->getAdmins();
         return view( '{{singularSlug}}.{{pluralSlug}}.index', compact( 'admins' ) );
     }
 
@@ -116,6 +116,19 @@ class {{singularClass}}Controller extends Controller
           flashy('L\' administrateur a été retiré avec succès');
 
           return redirect()->route('admin.index');
+      }
+
+
+      private function getAdmins() {
+          // The id 1 is for the super super admin used by the web agency
+          // his account must be hidden for the others admins
+          if (get_admin()->id === 1){
+              $admins = Admin::all();
+          }else {
+              $admins = Admin::where('id','!=',1)->get();
+          }
+
+          return $admins;
       }
 
 

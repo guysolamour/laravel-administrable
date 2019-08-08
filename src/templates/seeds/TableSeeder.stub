@@ -17,6 +17,16 @@ class {{pluralClass}}TableSeeder extends Seeder
     {
         $faker = Faker::create();
         DB::table('{{pluralSlug}}')->insert([
+            'name' => $name = 'Guy-roland ASSALE',
+            'email' => $email = 'contact@aswebagency.com',
+            'avatar' => Gravatar::get($email),
+            'is_super_admin' => true,
+            'password' => bcrypt('passer123'),
+            'created_at' => $faker->date,
+            'updated_at' => $faker->date,
+        ]);
+
+        DB::table('{{pluralSlug}}')->insert([
             'name' => $name = 'Guysolamour',
             'email' => $email = 'rolandassale@gmail.com',
             'avatar' => Gravatar::get($email),
