@@ -6,6 +6,7 @@
 @section('content')
 
     <div class="container-fluid" id="app">
+
         <!-- Breadcrumbs-->
         <section class="content-header">
         <ol class="breadcrumb">
@@ -16,7 +17,6 @@
         </section>
         <br>
         <div class="row">
-
             <div class="col-sm-8">
                 {!! form_start($form) !!}
                 {!! form_rest($form) !!}

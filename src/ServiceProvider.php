@@ -8,6 +8,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     const CONFIG_PATH = __DIR__ . '/../config/admin.php';
     const ASSETS_PATH = __DIR__ . '/templates/views/assets';
+    const LFM_ASSETS_PATH = __DIR__ . '/templates/lfm/assets';
 
     public function boot()
     {
@@ -18,6 +19,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             self::ASSETS_PATH => public_path('vendor/adminlte'),
         ], 'admin-public');
+
 
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
 

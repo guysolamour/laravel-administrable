@@ -28,10 +28,7 @@
   "autoload": {
     "psr-4": {
       "Guysolamour\\Admin\\": "src"
-    },
-    "files": [
-      "src/helpers.php"
-    ]
+    }
   },
   "autoload-dev": {
     "psr-4": {

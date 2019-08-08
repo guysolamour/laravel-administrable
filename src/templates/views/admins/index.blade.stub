@@ -87,4 +87,4 @@
 @stop
 
 
-{{--@include('admin.partials._datatable')--}}
+@include('admin.partials._datatable')

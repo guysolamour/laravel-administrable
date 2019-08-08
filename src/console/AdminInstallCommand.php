@@ -59,15 +59,17 @@ class AdminInstallCommand extends Command
 
         $progress->advance();
 
-        // Configurations
+        // Configurations and lfm
         $this->info(PHP_EOL . 'Registering configurations...');
 
         if ($this->exits && $this->override) {
             $this->info('Configurations registration skipped');
         } else {
             $this->registerConfigurations(self::TPL_PATH);
+            $this->loadLfmConfig(self::TPL_PATH);
             $this->info('Configurations registered in ' . config_path('auth.php'));
         }
+
 
         $progress->advance();
 
@@ -683,6 +685,34 @@ class AdminInstallCommand extends Command
         }
 
         return $views_path;
+    }
+    protected function loadLfmConfig($template_path)
+    {
+        $data_map = $this->parseName();
+
+        $files = array(
+            [
+                'stub' => $template_path . '/lfm/lfm.stub',
+                'path' => config_path('lfm.php'),
+            ],
+            [
+                'stub' => $template_path . '/lfm/LfmConfigHandler.stub',
+                'path' => app_path('/Handlers/LfmConfigHandler.php'),
+            ],
+        );
+
+        foreach ($files as $file) {
+            $stub = file_get_contents($file['stub']);
+            $complied = strtr($stub, $data_map);
+
+            $dir = dirname($file['path']);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            file_put_contents($file['path'], $complied);
+        }
+
     }
 
 

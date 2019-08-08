@@ -1,0 +1,11 @@
+<?php
+
+namespace {{namespace}}\Handlers;
+
+class LfmConfigHandler extends \UniSharp\LaravelFilemanager\Handlers\ConfigHandler
+{
+    public function userField()
+    {
+        return auth()->guard('{{singularSlug}}')->user()->id;
+    }
+}
