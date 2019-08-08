@@ -3,7 +3,7 @@
 @section('title',$admin->name.' - profile')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/toastr/toastr.min.css') }}">
 @endsection
 
 @section('content')
@@ -28,7 +28,7 @@
                                     <h3 class="profile-username text-center">{{ ucfirst($admin->name) }}</h3>
                                     <p class="profile-username text-center">{{ $admin->email }}</p>
 
-                                    
+
                                     @if (current_admin_profil($admin) || current_admin_is_super_admin())
 
 
@@ -43,7 +43,7 @@
                                                 <input id="thumbnail" data-id="{{ $admin->id }}" class="form-control" type="hidden" name="avatar" >
                                             </div>
                                         </div>
-                                    @endif 
+                                    @endif
                                 </div>
                                 <!-- /.box-body -->
                             </div>
@@ -92,7 +92,7 @@
 @stop
 
 @section('js')
-    <script src="{{ asset('js/toastr.min.js') }}"></script>
+    <script src="{{ asset('vendor/adminlte/plugins/toastr/toastr.min.js') }}"></script>
     <script>
         $('#holder').change(function(){
             const input = $('#thumbnail')

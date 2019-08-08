@@ -3,10 +3,13 @@
 namespace {{namespace}}\Http\Controllers\{{singularClass}};
 
 use {{namespace}}\{{singularClass}};
+use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Forms\{{singularClass}}\Reset{{singularClass}}PasswordForm;
 use {{namespace}}\Forms\{{singularClass}}\Create{{singularClass}}Form;
+use Kris\LaravelFormBuilder\Form;
+use MercurySeries\Flashy\Flashy;
 
 class {{singularClass}}Controller extends Controller
 {
@@ -29,6 +32,92 @@ class {{singularClass}}Controller extends Controller
         $form = $this->getForm( new Admin, CreateAdminForm::class );
 
         return view( '{{singularSlug}}.{{pluralSlug}}.create', compact( 'form' ) );
+    }
+
+    public function store( Request $request ) {
+
+        $form = $this->getForm( new Admin, CreateAdminForm::class );
+
+        $form->redirectIfNotValid();
+
+        $admin = Admin::create($request->all());
+
+        flashy('Le compte administrateur a été créé avec le succeès');
+
+        return redirect()->route('admin.profile',$admin);
+
+    }
+
+     /**
+     * @param Request $request
+     * @param Admin $admin
+     *
+     * @return array
+     */
+     public function changePassword( Request $request, Admin $admin ) {
+
+        // Validate the form
+        $reset_form = $this->getForm($admin,ResetAdminPasswordForm::class);
+
+        $this->redirectIfNotValid($reset_form);
+
+            // update password
+            $admin->update([
+              'password' => $request->input('new_password')
+            ]);
+
+            flashy('Votre mot de passe a été mis à jour');
+        return back();
       }
+
+     /**
+     * @param Form $form
+     */
+      private function redirectIfNotValid(Form $form ) {
+        if (! $form->isValid() ) {
+          Flashy::error('Erreur lors de la modification du mot de passe');
+        }
+        $form->redirectIfNotValid();
+      }
+
+      /**
+      * @param Request $request
+      * @param Admin $admin
+      *
+      * @return \Illuminate\Http\RedirectResponse
+      */
+      public function update(Request $request, Admin $admin)
+      {
+
+          $form = $this->getForm($admin);
+
+          $this->redirectIfNotValid($form);
+
+          $admin->update($request->all());
+
+          flashy('Le compte a été modifié avec succès');
+
+          return back();
+      }
+
+      public function updateAvatar(Request $request  )
+      {
+          $admin = Admin::find($request->get('id'));
+
+          $admin->update([
+              'avatar' => $request->get('avatar')
+              ]);
+          return $admin;
+      }
+
+      public function delete( Admin $admin) {
+
+          $admin->delete();
+          flashy('L\' administrateur a été retiré avec succès');
+
+          return redirect()->route('admin.index');
+      }
+
+
 
 }
