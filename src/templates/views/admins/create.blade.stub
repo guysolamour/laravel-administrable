@@ -1,0 +1,70 @@
+@extends('admin.adminlte.layouts.app')
+
+@section('title','Ajout administrateur')
+
+
+@section('content')
+
+    <div class="container-fluid" id="app">
+        <!-- Breadcrumbs-->
+        <section class="content-header">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Tableau de bord</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Administrateurs</a></li>
+            <li class="breadcrumb-item active">Ajouter</li>
+        </ol>
+        </section>
+        <br>
+        <div class="row">
+
+            <div class="col-sm-8">
+                {!! form_start($form) !!}
+                {!! form_rest($form) !!}
+                <div class="form-group">
+                    <input type="hidden" class="form-control" name="avatar">
+                </div>
+                <button type="submit" id="save" class="btn btn-primary"><i class="fa fa-plus"></i> Créer</button>
+                {!! form_end($form) !!}
+            </div>
+            <div class="col-sm-4">
+
+                <div class="text-center pt-5">
+
+                    <div class="input-group" style="margin-top: 1rem; margin-bottom: 2rem;">
+                                      <span class="input-group-btn">
+                                        <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                                          <i class="fa fa-picture-o"></i> Ajouter un avatar
+                                        </a>
+                                      </span>
+                        <input  type="hidden" id="thumbnail" class="form-control" name="filepath">
+                    </div>
+                    <img id="holder" class="img-responsive img-rounded">
+
+                </div>
+            </div>
+        </div>
+    </div>
+@stop
+
+@section('js')
+    <script>
+
+        /*
+        * set the checkbox to false if on checked and populate the avatar input in the form
+        */
+
+        $('button#save').on('click', function (ev) {
+
+            const avatarUrl = $('#thumbnail').val();
+
+
+            $('input[name=avatar]').val(avatarUrl)
+
+        })
+
+    </script>
+@stop
+
+@include('admin.partials._datatable')
+
+

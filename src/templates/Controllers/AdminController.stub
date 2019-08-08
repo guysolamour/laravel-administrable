@@ -1,0 +1,34 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{singularClass}};
+
+use {{namespace}}\{{singularClass}};
+use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\Traits\FormBuilderTrait;
+use {{namespace}}\Forms\{{singularClass}}\Reset{{singularClass}}PasswordForm;
+use {{namespace}}\Forms\{{singularClass}}\Create{{singularClass}}Form;
+
+class {{singularClass}}Controller extends Controller
+{
+    use FormBuilderTrait;
+
+    public function profile(Admin $admin) {
+
+      $edit_form = $this->getForm($admin);
+      $reset_form = $this->getForm($admin,ResetAdminPasswordForm::class);
+
+      return view('{{singularSlug}}.{{pluralSlug}}.show', compact('admin','edit_form','reset_form'));
+    }
+
+    public function index() {
+        $admins = Admin::all();
+        return view( '{{singularSlug}}.{{pluralSlug}}.index', compact( 'admins' ) );
+    }
+
+    public function create( ) {
+        $form = $this->getForm( new Admin, CreateAdminForm::class );
+
+        return view( '{{singularSlug}}.{{pluralSlug}}.create', compact( 'form' ) );
+      }
+
+}

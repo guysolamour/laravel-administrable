@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Traits;
+
+
+trait FormBuilderTrait {
+    use \Kris\LaravelFormBuilder\FormBuilderTrait;
+
+    /**
+     *
+     * @param mixed|null $model
+     *
+     * @param null $form
+     * @param bool $withModel
+     *
+     * @param bool $withNamespace
+     *
+     * @return \Kris\LaravelFormBuilder\Form
+     */
+    protected function getForm($model = null, $form = null ,bool $withModel = true,bool $withNamespace = true  )
+    {
+
+
+        $form = $form ?: $this->getFormName($withNamespace);
+        $modelName = $this->getModelClassName();
+
+        if ($withModel) {
+            $model = $model ?: new $modelName();
+            return $this->form($form, [
+                'model' => $model
+            ]);
+        }
+
+        return $this->form($form, [
+        ]);
+    }
+
+    /**
+     * @param bool $withNamespace
+     *
+     * @return string
+     */
+    private function getModelClassName() :string
+    {
+        return sprintf("App\Models\%s",$this->getModelName(false));
+    }
+
+    /**
+     * @param bool $withNamespace
+     *
+     * @return string
+     */
+    private function getModelName(bool $withNamespace = true  ) :string
+    {
+        $controller = explode('Controllers\\',get_called_class())[1];
+
+        $modelNamespace = explode('Controller',$controller)[0];
+
+        if ( $withNamespace ) {
+            return $modelNamespace;
+        }else {
+            return explode('\\', $modelNamespace)[1];
+        }
+
+        //dd( $model );
+
+        //return  explode('Controller',explode('\\',explode('\\Controllers\\',get_called_class())[1])[1])[0];
+
+    }
+
+
+    /**
+     * @param bool $withNamespace
+     *
+     * @return string
+     */
+    private function getFormName(bool $withNamespace = true ) :string
+    {
+        return sprintf("App\Forms\%sForm",$this->getModelName($withNamespace));
+    }
+
+
+}

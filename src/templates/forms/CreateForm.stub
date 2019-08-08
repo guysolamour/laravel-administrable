@@ -1,0 +1,39 @@
+<?php
+
+namespace {{namespace}}\Forms\{{singularClass}};
+
+use Kris\LaravelFormBuilder\Form;
+
+class Create{{singularClass}}Form extends Form
+{
+    public function buildForm()
+    {
+        $this->formOptions = [
+		    'method' => 'POST',
+		    'url'    => route('admin.store'),
+	    ];
+
+	    $this
+        ->add('name','text', [
+          'label' => 'Nom',
+          'rules' => 'required|min:2',
+        ])
+        ->add('email', 'email', [
+          'label' => 'Email',
+          'rules'  => 'required|email|unique:admins',
+        ])
+        ->add('is_super_admin', 'checkbox', [
+          'label' => 'Super Administrateur',
+          'checked'  => $this->getModel()->is_super_admin,
+        ])
+        ->add('password', 'password', [
+          'label' => 'Mot de passe',
+          'rules'  => 'required|min:6|confirmed',
+        ])
+        ->add('password_confirmation', 'password', [
+          'label' => 'Confirmation du mot de passe',
+          'rules'  => 'required|min:6',
+        ])
+      ;
+    }
+}

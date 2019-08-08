@@ -1,0 +1,52 @@
+<?php
+
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Creativeorange\Gravatar\Facades\Gravatar;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+class {{pluralClass}}TableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Faker::create();
+        DB::table('{{pluralSlug}}')->insert([
+            'name' => $name = 'Guysolamour',
+            'email' => $email = 'rolandassale@gmail.com',
+            'avatar' => Gravatar::get($email),
+            'is_super_admin' => true,
+            'password' => bcrypt('passer123'),
+            'created_at' => $faker->date,
+            'updated_at' => $faker->date,
+        ]);
+
+        DB::table('{{pluralSlug}}')->insert([
+            'name' => $name = 'roland',
+            'email' => 'rolandassale@outlook.com',
+            'avatar' => Gravatar::get($email),
+            'is_super_admin' => true,
+            'password' => bcrypt('passer123'),
+            'created_at' => $faker->date,
+            'updated_at' => $faker->date,
+        ]);
+
+        for ($i = 1; $i < 5; $i++) {
+
+            DB::table('{{pluralSlug}}')->insert([
+                'name' => $name = $faker->name(),
+                'email' => $faker->email,
+                'avatar' => $faker->imageUrl(200,200),
+                'is_super_admin' => false,
+                'password' => bcrypt('passer123'),
+                'created_at' => $faker->date,
+                'updated_at' => $faker->date,
+            ]);
+        }
+    }
+}

@@ -1,0 +1,4 @@
+
+        $this->call([
+            {{pluralClass}}TableSeeder::class,
+        ]);

@@ -6,6 +6,7 @@ use {{namespace}}\Notifications\{{singularClass}}\Auth\ResetPassword;
 use {{namespace}}\Notifications\{{singularClass}}\Auth\VerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Creativeorange\Gravatar\Facades\Gravatar;
 
 class {{singularClass}} extends Authenticatable
 {
@@ -17,7 +18,7 @@ class {{singularClass}} extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','avatar','is_super_admin'
     ];
 
     /**
@@ -36,6 +37,7 @@ class {{singularClass}} extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_super_admin' => 'boolean'
     ];
 
     /**
@@ -57,6 +59,28 @@ class {{singularClass}} extends Authenticatable
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmail);
+    }
+
+    public function isSuperAdmin(  ) :bool
+    {
+        return  $this->is_super_admin;
+    }
+
+    /**
+     * Set the avatar with gravatar service before saving and updating
+     *
+     * @param  mixed $value
+     *
+     * @return void
+     */
+    public function setAvatarAttribute($value)
+    {
+        $this->attributes['avatar'] = is_null($value) ? Gravatar::get($this->attributes['email']) : $value;
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
     }
 
 }

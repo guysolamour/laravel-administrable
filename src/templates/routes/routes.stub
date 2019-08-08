@@ -25,3 +25,19 @@ Route::group(['namespace' => '{{singularClass}}'], function() {
     // Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('{{singularSlug}}.verification.verify');
 
 });
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace('{{singularClass}}')->group(function () {
+
+        // Profile
+        Route::get( 'profile/{admin}', 'AdminController@profile')->name('{{singularSlug}}.profile');
+        Route::put('profile/{admin}','AdminController@update')->name('{{singularSlug}}.update');
+        Route::get('admins','AdminController@index')->name('{{singularSlug}}.index');
+        Route::post('/update-admin-avatar', 'AdminController@updateAvatar');
+        Route::get('admins/create','AdminController@create')->name('{{singularSlug}}.create')->middleware('{{singularSlug}}.super');
+        Route::post('admins/store','AdminController@store')->name('{{singularSlug}}.store')->middleware('{{singularSlug}}.super');
+        Route::delete('admin/{admin}','AdminController@delete')->name('{{singularSlug}}.delete')->middleware('{{singularSlug}}.super');
+        Route::put('change-password/{admin}','AdminController@changePassword')->name('{{singularSlug}}.change.password');
+
+    });
+});

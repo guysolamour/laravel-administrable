@@ -14,8 +14,12 @@
   ],
   "require": {
     "php": ">=7.0",
-    "bmatovu/multi-auth": "^7.3",
-    "illuminate/support": "~5.8.0"
+    "creativeorange/gravatar": "^1.0",
+    "cviebrock/eloquent-sluggable": "^4.8",
+    "illuminate/support": "~5.8.0",
+    "kris/laravel-form-builder": "^1.20",
+    "mercuryseries/flashy": "^1.0",
+    "unisharp/laravel-filemanager": "^1.9"
   },
   "require-dev": {
     "orchestra/testbench": "~3.8.0",
@@ -24,7 +28,10 @@
   "autoload": {
     "psr-4": {
       "Guysolamour\\Admin\\": "src"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

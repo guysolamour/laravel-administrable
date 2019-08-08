@@ -2,3 +2,4 @@
         '{{singularSnake}}.auth' => \{{namespace}}\Http\Middleware\RedirectIfNot{{singularClass}}::class,
         '{{singularSnake}}.guest' => \{{namespace}}\Http\Middleware\RedirectIf{{singularClass}}::class,
         // '{{singularSnake}}.verified' => \{{namespace}}\Http\Middleware\Ensure{{singularClass}}EmailIsVerified::class,
+        '{{singularSnake}}.super' => \{{namespace}}\Http\Middleware\RedirectIfNotSuper{{singularClass}}::class,

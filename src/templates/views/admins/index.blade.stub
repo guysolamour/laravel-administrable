@@ -1,0 +1,90 @@
+@extends('admin.adminlte.layouts.app')
+
+@section('title','Les administrateurs')
+
+
+@section('content')
+
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        {{--{{ Breadcrumbs::render('admin.post.index') }}--}}
+        <div class="row">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <ol class="breadcrumb">
+                    <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Tableau de bord</a></li>
+                    <li class="active">Administrateurs</li>
+                </ol>
+            </section>
+
+            <!-- Main content -->
+            <section class="content" style="margin-top: 4rem;">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Les administrateurs</h3>
+                        <br>
+                        <!-- /.box-tools -->
+                        @if (current_admin_is_super_admin())
+                            <a class="btn btn-primary pull-right" href="{{ route('admin.create') }}"><i class="fa fa-plus"></i> Ajouter un administrateur</a>
+                        @endif
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body" >
+
+                        <div class="table-responsive mailbox-messages">
+                            <table id="list" class="table table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Inscris le</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach ($admins as $admin)
+                                    <tr>
+                                        <td>
+                                            @if ($admin->isSuperAdmin())
+                                                <i class="fa fa-star" aria-hidden="true" title="Super Administrateur"></i>
+                                            @endif
+                                            {{ $admin->name }}
+                                        </td>
+                                        <td>{{ $admin->email }}</td>
+                                        <td>{{ $admin->created_at->diffForHumans() }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.profile', $admin) }}" class="btn btn-primary"><i class="fa fa-location-arrow" aria-hidden="true"></i> Profil</a>
+                                            @if (current_admin_is_super_admin())
+                                                <a href="{{ route('admin.delete',$admin) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash"></i> Supprimer</a>
+
+                                            @endif
+                                        </td>
+                                        {{--<td><a href="{{ route('admin.command.destroy',$command) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash"></i></a>--}}
+                                        {{--</td>--}}
+                                    </tr>
+                                @endforeach
+
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Inscris le</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                            <!-- /.table -->
+                        </div>
+                        <!-- /.mail-box-messages -->
+                    </div>
+                </div>
+                <!-- /.row -->
+            </section>
+            <!-- /.content -->
+        </div>
+    </div>
+@stop
+
+
+{{--@include('admin.partials._datatable')--}}

@@ -5,6 +5,7 @@ namespace Guysolamour\Admin\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 
 class AdminInstallCommand extends Command
@@ -114,9 +115,9 @@ class AdminInstallCommand extends Command
         // Controllers
         $this->info(PHP_EOL . 'Creating Controllers...');
 
-        $controllers_path = $this->loadControllers(self::TPL_PATH);
+        $traits_path = $this->loadControllers(self::TPL_PATH);
 
-        $this->info('Controllers created at ' . $controllers_path);
+        $this->info('Controllers created at ' . $traits_path);
 
         $progress->advance();
 
@@ -125,6 +126,7 @@ class AdminInstallCommand extends Command
         $this->info(PHP_EOL . 'Creating Views...');
 
         $views_path = $this->loadViews(self::TPL_PATH);
+        $admin_views_path = $this->loadAdminViews(self::TPL_PATH);
 
         $this->info('Views created at ' . $views_path);
 
@@ -166,6 +168,43 @@ class AdminInstallCommand extends Command
         } else {
             $kernel_path = $this->registerRouteMiddleware(self::TPL_PATH);
             $this->info('Route middleware registered in ' . $kernel_path);
+        }
+
+        // Traits
+        $this->info(PHP_EOL . 'Creating Traits...');
+
+        $traits_path = $this->loadTraits(self::TPL_PATH);
+
+        $this->info('Traits created at ' . $traits_path);
+
+        $progress->advance();
+
+        // Forms
+        $this->info(PHP_EOL . 'Creating Forms...');
+
+        $forms_path = $this->loadForms(self::TPL_PATH);
+
+        $this->info('Forms created at ' . $forms_path);
+
+        $progress->advance();
+
+        // Seeds
+        $this->info(PHP_EOL . 'Creating Seed...');
+
+        $seed_path = $this->loadSeed(self::TPL_PATH);
+
+        $this->info('Seed created at ' . $seed_path);
+
+        $progress->advance();
+
+        // DatabaseSeeder
+        $this->info(PHP_EOL . 'Registering seeder...');
+
+        if ($this->exits && $this->override) {
+            $this->info('Seed registration skipped');
+        } else {
+            $database_seeder_path = $this->registerSeed(self::TPL_PATH);
+            $this->info('Seed registered in ' . $database_seeder_path);
         }
 
         $progress->finish();
@@ -280,6 +319,27 @@ class AdminInstallCommand extends Command
             file_put_contents($model_path, $model);
 
             return $model_path;
+
+        } catch (\Exception $ex) {
+            throw new \RuntimeException($ex->getMessage());
+        }
+    }
+    protected function loadSeed($stub_path)
+    {
+        try {
+
+            $stub = file_get_contents($stub_path . '/seeds/TableSeeder.stub');
+
+            $data_map = $this->parseName();
+
+            $seed = strtr($stub, $data_map);
+
+
+            $seed_path = database_path('/seeds/'.$data_map['{{pluralClass}}'] . 'TableSeeder.php');
+
+            file_put_contents($seed_path, $seed);
+
+            return $seed_path;
 
         } catch (\Exception $ex) {
             throw new \RuntimeException($ex->getMessage());
@@ -422,6 +482,10 @@ class AdminInstallCommand extends Command
                 'stub' => $template_path . '/Controllers/Auth/VerificationController.stub',
                 'path' => $controllers_path . '/Auth/VerificationController.php',
             ],
+            [
+                'stub' => $template_path . '/Controllers/AdminController.stub',
+                'path' => $controllers_path . '/AdminController.php',
+            ],
         );
 
         foreach ($controllers as $controller) {
@@ -437,6 +501,75 @@ class AdminInstallCommand extends Command
         }
 
         return $controllers_path;
+    }
+
+    protected function loadTraits($template_path)
+    {
+        $data_map = $this->parseName();
+
+        $traits_path = app_path('/Traits');
+
+        $traits = array(
+            [
+                'stub' => $template_path . '/traits/FormBuilderTrait.stub',
+                'path' => $traits_path . '/FormBuilderTrait.php',
+            ],
+        );
+
+        foreach ($traits as $trait) {
+            $stub = file_get_contents($trait['stub']);
+            $complied = strtr($stub, $data_map);
+
+            $dir = dirname($trait['path']);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            file_put_contents($trait['path'], $complied);
+        }
+
+        return $traits_path;
+    }
+
+    protected function loadForms($template_path)
+    {
+        $data_map = $this->parseName();
+
+        $guard = $data_map['{{singularClass}}'];
+
+
+        $form_path = app_path('/Forms/'.$guard);
+
+
+        $forms = array(
+            [
+                'stub' => $template_path . '/forms/CreateForm.stub',
+                'path' => $form_path . '/Create'.$guard.'Form.php',
+            ],
+            [
+                'stub' => $template_path . '/forms/AdminForm.stub',
+                'path' => $form_path . '/'.$guard.'Form.php',
+            ],
+            [
+                'stub' => $template_path . '/forms/ResetAdminPasswordForm.stub',
+                'path' => $form_path . '/Reset'.$guard.'PasswordForm.php',
+            ],
+        );
+        //dd($forms);
+
+        foreach ($forms as $form) {
+            $stub = file_get_contents($form['stub']);
+            $complied = strtr($stub, $data_map);
+
+            $dir = dirname($form['path']);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            file_put_contents($form['path'], $complied);
+        }
+
+        return $form_path;
     }
 
     protected function loadViews($template_path)
@@ -492,6 +625,66 @@ class AdminInstallCommand extends Command
 
         return $views_path;
     }
+    protected function loadAdminViews($template_path)
+    {
+        $data_map = $this->parseName();
+
+        $guard = $data_map['{{singularSlug}}'];
+
+        $views_path = resource_path('views/' . $guard);
+
+        $views = array(
+            [
+                'stub' => $template_path . '/views/adminlte/layouts/app.blade.stub',
+                'path' => $views_path . '/adminlte/layouts/app.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/adminlte/partials/_aside.blade.stub',
+                'path' => $views_path . '/adminlte/partials/_aside.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/adminlte/partials/_footer.blade.stub',
+                'path' => $views_path . '/adminlte/partials/_footer.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/adminlte/partials/_header.blade.stub',
+                'path' => $views_path . '/adminlte/partials/_header.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/admins/index.blade.stub',
+                'path' => $views_path . '/admins/index.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/admins/create.blade.stub',
+                'path' => $views_path . '/admins/create.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/admins/show.blade.stub',
+                'path' => $views_path . '/admins/show.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/partials/_datatable.blade.stub',
+                'path' => $views_path . '/partials/_datatable.blade.php',
+            ],
+
+
+        );
+
+        foreach ($views as $view) {
+            $stub = file_get_contents($view['stub']);
+            $complied = strtr($stub, $data_map);
+
+            $dir = dirname($view['path']);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            file_put_contents($view['path'], $complied);
+        }
+
+        return $views_path;
+    }
+
 
     protected function loadRoutes($template_path)
     {
@@ -580,6 +773,10 @@ class AdminInstallCommand extends Command
                     'stub' => $template_path . '/Middleware/EnsureEmailIsVerified.stub',
                     'path' => $middleware_path . '/Ensure' . $data_map['{{singularClass}}'] . 'EmailIsVerified.php',
                 ],
+                [
+                    'stub' => $template_path . '/Middleware/RedirectIfNotSuperAdmin.stub',
+                    'path' => $middleware_path . '/RedirectIfNotSuper' . $data_map['{{singularClass}}'] . '.php',
+                ],
             );
 
             foreach ($middlewares as $middleware) {
@@ -618,6 +815,39 @@ class AdminInstallCommand extends Command
             file_put_contents($kernel_path, $kernel);
 
             return $kernel_path;
+
+        } catch (\Exception $ex) {
+            throw new \RuntimeException($ex->getMessage());
+        }
+    }
+    protected function registerSeed($stub_path)
+    {
+        try {
+
+            $data_map = $this->parseName();
+
+            $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
+
+            $database_seeder = file_get_contents($database_seeder_path);
+
+            /********** Route Middleware **********/
+
+            $route_mw = file_get_contents($stub_path . '/seeds/DatabaseSeeder.stub');
+
+
+            $route_mw = strtr($route_mw, $data_map);
+
+
+//            $route_mw_bait = '// $this->call(UsersTableSeeder::class);'."\n";
+            $route_mw_bait = "  {\n";
+
+
+            $database_seeder = str_replace($route_mw_bait, $route_mw_bait . $route_mw, $database_seeder);
+
+            // Overwrite config file
+            file_put_contents($database_seeder_path, $database_seeder);
+
+            return $database_seeder_path;
 
         } catch (\Exception $ex) {
             throw new \RuntimeException($ex->getMessage());
