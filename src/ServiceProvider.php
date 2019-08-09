@@ -3,6 +3,7 @@
 namespace Guysolamour\Admin;
 
 use Guysolamour\Admin\Console\AdminInstallCommand;
+use Guysolamour\Admin\Console\MakeCrudCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -35,7 +36,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                AdminInstallCommand::class
+                AdminInstallCommand::class,
+                MakeCrudCommand::class
             ]);
         }
 

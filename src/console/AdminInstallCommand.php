@@ -22,7 +22,7 @@ class AdminInstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'auth:install
+    protected $signature = 'admin:install
                                 {name=admin : Name of the guard.}
                                 {--f|force : Whether to override existing files}';
 
