@@ -4,7 +4,7 @@ namespace Guysolamour\Admin\Console;
 
 use Illuminate\Container\Container;
 
-class CreateModel
+class CreateCrudModel
 {
 
     protected  const TPL_PATH = __DIR__. '/../templates/crud';
@@ -34,7 +34,7 @@ class CreateModel
      * @param null|string $slug
      * @param bool $timestamps
      */
-    public function __construct(string $name , array $fields, ?string $slug = null, bool $timestamps = false)
+    private function __construct(string $name , array $fields, ?string $slug = null, bool $timestamps = false)
     {
 
         $this->name = $name;
@@ -43,9 +43,11 @@ class CreateModel
         $this->timestamps = $timestamps;
     }
 
-    public function generate()
+    public static function generate(string $name , array $fields, ?string $slug = null, bool $timestamps = false)
     {
-        return $this->createModel();
+        return (new CreateCrudModel($name,$fields,$slug,$timestamps))
+        ->createModel()
+        ;
     }
 
     private function createModel()

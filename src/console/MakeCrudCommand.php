@@ -5,8 +5,6 @@ namespace Guysolamour\Admin\Console;
 
 use Illuminate\Console\Command;
 
-use Illuminate\Support\Facades\Artisan;
-
 class MakeCrudCommand extends Command
 {
 
@@ -48,24 +46,28 @@ class MakeCrudCommand extends Command
 
         $this->timestamps = $this->option('timestamps');
         $this->slug = $this->option('slug');
-        //dd($this->timestamps);
 
-        // dd($this->option('slug'));
         $this->model = $this->argument('model');
 
 
-        $fields = $this->getFields();
+        $this->fields = $this->getFields();
 
         // Models
-        $this->info(PHP_EOL . 'Creating Model...');
+//        $this->info(PHP_EOL . 'Creating Model...');
+//
+//        $model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
+//
+//        $this->info('Model created at ' . $model_path);
+//        $progress->advance();
 
-        $CreateModel = new CreateModel(
-            $this->model, $fields, $this->slug, $this->timestamps
-        );
-        $model_path = $CreateModel->generate();
+        // Migrations
+        $this->info(PHP_EOL . 'Creating Migration...');
 
-        $this->info('Model created at ' . $model_path);
+        $migration_path = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
+
+        $this->info('Model created at ' . $migration_path);
         $progress->advance();
+
 
 
     }
