@@ -9,7 +9,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     const CONFIG_PATH = __DIR__ . '/../config/admin.php';
     const ASSETS_PATH = __DIR__ . '/templates/views/assets';
-    const LFM_ASSETS_PATH = __DIR__ . '/templates/lfm/assets';
 
     public function boot()
     {
@@ -37,7 +36,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 AdminInstallCommand::class,
-                MakeCrudCommand::class
+                MakeCrudCommand::class,
             ]);
         }
 
