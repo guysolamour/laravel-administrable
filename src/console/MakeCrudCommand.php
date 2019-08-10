@@ -53,20 +53,21 @@ class MakeCrudCommand extends Command
         $this->fields = $this->getFields();
 
         // Models
-//        $this->info(PHP_EOL . 'Creating Model...');
-//
-//        $model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
-//
-//        $this->info('Model created at ' . $model_path);
-//        $progress->advance();
+        $this->info(PHP_EOL . 'Creating Model...');
 
-        // Migrations
+        $model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
+
+        $this->info('Model created at ' . $model_path);
+        $progress->advance();
+
+        // Migrations and seeds
         $this->info(PHP_EOL . 'Creating Migration...');
 
         $migration_path = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
 
-        $this->info('Model created at ' . $migration_path);
+        $this->info('Migration created at ' . $migration_path);
         $progress->advance();
+
 
 
 
