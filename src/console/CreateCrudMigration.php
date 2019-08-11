@@ -120,8 +120,6 @@ class CreateCrudMigration
                 // seeder replace
                 $seed_mw_bait = 'create([';
 
-
-
                 $seed = str_replace($seed_mw_bait, $seed_mw_bait . $seed_fields, $seeder);
                 $seed_file = $data_map['{{pluralClass}}'] . 'TableSeeder.php';
                 $seed_path = database_path('/seeds/'.$seed_file);

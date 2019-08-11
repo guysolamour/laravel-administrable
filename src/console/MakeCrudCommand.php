@@ -78,8 +78,15 @@ class MakeCrudCommand extends Command
         // Controllers
         $this->info(PHP_EOL . 'Controllers...');
 //        $controller_path = CreateCrudController::generate($this->model, $this->fields,$this->slug,$this->timestamps);
-        $controller_path = CreateCrudController::generate($this->model);
-        $this->info('Controller created at ' . $controller_path);
+        //$controller_path = CreateCrudController::generate($this->model);
+        //$this->info('Controller created at ' . $controller_path);
+        $progress->advance();
+
+        // Forms
+        $this->info(PHP_EOL . 'Forms...');
+        $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
+//        $controller_path = CreateCrudController::generate($this->model);
+        $this->info('Form created at ' . $form_path);
         $progress->advance();
 
 

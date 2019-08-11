@@ -1,0 +1,31 @@
+<?php
+
+namespace {{namespace}}\Forms\Admin;
+
+use Kris\LaravelFormBuilder\Form;
+
+class {{singularClass}}Form extends Form
+{
+    public function buildForm()
+    {
+        if ( $this->getModel() && $this->getModel()->id ) {
+          $method = 'PUT';
+          $url    = route( 'admin.{{singularSlug}}.update', $this->getModel() );
+        } else {
+          $method = 'POST';
+          $url    = route( 'admin.{{singularSlug}}.store' );
+        }
+
+        $this->formOptions = [
+          'method' => $method,
+          'url'    => $url,
+        ];
+
+        $this
+
+
+
+        ;
+
+    }
+}
