@@ -39,7 +39,7 @@ class CreateCrudMigration
         $this->timestamps = $timestamps;
     }
 
-    public static function generate(string $name, array $fields, ?string $slug = null, bool $timestamps = false) :string
+    public static function generate(string $name, array $fields, ?string $slug = null, bool $timestamps = false)
     {
        return (new CreateCrudMigration($name,$fields,$slug,$timestamps))
             ->loadMigrations();
@@ -123,11 +123,13 @@ class CreateCrudMigration
 
 
                 $seed = str_replace($seed_mw_bait, $seed_mw_bait . $seed_fields, $seeder);
-                $seed_path = database_path('/seeds/'.$data_map['{{pluralClass}}'] . 'TableSeeder.php');
+                $seed_file = $data_map['{{pluralClass}}'] . 'TableSeeder.php';
+                $seed_path = database_path('/seeds/'.$seed_file);
 
                 file_put_contents($seed_path, $seed);
                 $this->registerSeed();
-                //dd($seed);
+
+                return [$migration['path'],$seed_file];
 
             }
 

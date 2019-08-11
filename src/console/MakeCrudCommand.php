@@ -4,6 +4,7 @@ namespace Guysolamour\Admin\Console;
 
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
 class MakeCrudCommand extends Command
 {
@@ -40,6 +41,7 @@ class MakeCrudCommand extends Command
 
     public function handle()
     {
+
         $this->info('Initiating...');
 
         $progress = $this->output->createProgressBar(12);
@@ -55,19 +57,30 @@ class MakeCrudCommand extends Command
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
 
-        $model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
+        //$model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
 
-        $this->info('Model created at ' . $model_path);
+       // $this->info('Model created at ' . $model_path);
         $progress->advance();
 
         // Migrations and seeds
         $this->info(PHP_EOL . 'Creating Migration...');
 
-        $migration_path = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
+//        [$migration_path,$seed_file_name] = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
 
-        $this->info('Migration created at ' . $migration_path);
+//        $this->info('Migration created at ' . $migration_path);
         $progress->advance();
 
+        // Migrate
+        $this->info(PHP_EOL . 'Migrate...');
+//        Artisan::call('migrate');
+        $progress->advance();
+
+        // Controllers
+        $this->info(PHP_EOL . 'Controllers...');
+//        $controller_path = CreateCrudController::generate($this->model, $this->fields,$this->slug,$this->timestamps);
+        $controller_path = CreateCrudController::generate($this->model);
+        $this->info('Controller created at ' . $controller_path);
+        $progress->advance();
 
 
 
