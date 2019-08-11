@@ -1,9 +1,6 @@
 <?php
 namespace Guysolamour\Admin\Console;
 
-
-use Illuminate\Support\Arr;
-
 class CreateCrudForm
 {
     use MakeCrudTrait;
@@ -31,7 +28,7 @@ class CreateCrudForm
     {
         $this->name = $name;
         $this->fields = array_chunk($fields,3);
-        $this->slug = $slug;
+        $this->slug = strtolower($slug);
     }
 
     /**
@@ -76,6 +73,9 @@ class CreateCrudForm
             }
             // add slug field
             if (!is_null($this->slug)) {
+                $fields .= '            ->add('."'{$this->slug}'".', '. "'text'" .',[
+                ])'."\n";
+
                 $fields .= '            ->add('."'slug'".', '. "'text'" .',[
                 ])'."\n";
             }

@@ -16,6 +16,7 @@
     "php": ">=7.0",
     "creativeorange/gravatar": "^1.0",
     "cviebrock/eloquent-sluggable": "^4.8",
+    "davejamesmiller/laravel-breadcrumbs": "^5.2",
     "illuminate/support": "~5.8.0",
     "kris/laravel-form-builder": "^1.20",
     "mercuryseries/flashy": "^1.0",

@@ -1,0 +1,5 @@
+            <li>
+              <a href="{{ route('admin.{{singularSlug}}.index') }}">
+                <i class="fa fa-pie-chart"></i> <span>{{pluralClass}}</span>
+              </a>
+            </li>

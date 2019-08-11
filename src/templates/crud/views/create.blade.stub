@@ -1,0 +1,30 @@
+@extends('admin.adminlte.layouts.app')
+
+@section('title','{{singularClass}}')
+
+@section('content')
+
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        {{--{{ Breadcrumbs::render('admin.work.create') }}--}}
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card">
+                    <h3 class="card-header h4">Ajout</h3>
+                    <div class="card-body">
+                        {!! form_start($form) !!}
+                        {!! form_rest($form) !!}
+                        <button type="submit" class="btn btn-success save"><i class="fa fa-plus"></i> Ajouter</button>
+                        {!! form_end($form) !!}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+
+
+            </div>
+
+        </div>
+    </div>
+
+@stop

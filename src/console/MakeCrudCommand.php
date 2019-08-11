@@ -41,7 +41,6 @@ class MakeCrudCommand extends Command
 
     public function handle()
     {
-
         $this->info('Initiating...');
 
         $progress = $this->output->createProgressBar(12);
@@ -57,9 +56,9 @@ class MakeCrudCommand extends Command
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
 
-        //$model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
+//        $model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
 
-       // $this->info('Model created at ' . $model_path);
+//        $this->info('Model created at ' . $model_path);
         $progress->advance();
 
         // Migrations and seeds
@@ -72,21 +71,31 @@ class MakeCrudCommand extends Command
 
         // Migrate
         $this->info(PHP_EOL . 'Migrate...');
-//        Artisan::call('migrate');
+        //Artisan::call('migrate');
         $progress->advance();
 
         // Controllers
         $this->info(PHP_EOL . 'Controllers...');
-//        $controller_path = CreateCrudController::generate($this->model, $this->fields,$this->slug,$this->timestamps);
-        //$controller_path = CreateCrudController::generate($this->model);
-        //$this->info('Controller created at ' . $controller_path);
+//        $controller_path = CreateCrudController::generate($this->model);
+//        $this->info('Controller created at ' . $controller_path);
         $progress->advance();
 
         // Forms
         $this->info(PHP_EOL . 'Forms...');
-        $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
-//        $controller_path = CreateCrudController::generate($this->model);
-        $this->info('Form created at ' . $form_path);
+//        $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
+//        $this->info('Form created at ' . $form_path);
+        $progress->advance();
+
+        // Routes
+        $this->info(PHP_EOL . 'Routes...');
+//        $route_path = CreateCrudRoute::generate($this->model);
+//        $this->info('Routes inserted at ' . $route_path);
+        $progress->advance();
+
+        // Views and registered link to left sidebar
+        $this->info(PHP_EOL . 'Views...');
+        $view_path = CreateCrudView::generate($this->model,$this->fields,$this->slug,$this->timestamps);
+        $this->info('Views created at ' . $view_path);
         $progress->advance();
 
 

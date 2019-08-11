@@ -1,0 +1,11 @@
+
+        // {{pluralClass}}
+        Route::resource('{{pluralSlug}}','{{singularClass}}Controller')->names([
+            'index'      => 'admin.{{singularSlug}}.index',
+            'create'     => 'admin.{{singularSlug}}.create',
+            'show'       => 'admin.{{singularSlug}}.show',
+            'store'      => 'admin.{{singularSlug}}.store',
+            'edit'       => 'admin.{{singularSlug}}.edit',
+            'update'     => 'admin.{{singularSlug}}.update',
+            'destroy'    => 'admin.{{singularSlug}}.destroy',
+        ]);

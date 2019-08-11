@@ -1,0 +1,28 @@
+@extends('admin.adminlte.layouts.app')
+
+@section('title','Edition')
+
+@section('content')
+
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        {{-- Breadcrumbs::render('admin.{{singularSlug}}.edit', $work) --}}
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card">
+                    <h3 class="card-header h4">Edition de réalisation </h3>
+                    <div class="card-body">
+                        {!! form_start($form) !!}
+                        {!! form_rest($form) !!}
+                            <button type="submit" id="save" class="btn btn-success"><i class='fa fa-edit'></i> Modifier</button>
+                        {!! form_end($form) !!}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+
+        </div>
+    </div>
+@stop

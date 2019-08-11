@@ -35,7 +35,7 @@ class CreateCrudMigration
     {
         $this->name = $name;
         $this->fields = array_chunk($fields,3);
-        $this->slug = $slug;
+        $this->slug = strtolower($slug);
         $this->timestamps = $timestamps;
     }
 
@@ -99,9 +99,11 @@ class CreateCrudMigration
                         $seed_fields.=  "\n" . "                '$field[0]'  => ".'$faker->randomElement([true,false]),';
                     }
                 }
-                // add slug field
+                // add slug field and the linked field
                 if (!is_null($this->slug)) {
+                    $fields .= '            $table->string(' . "'{$this->slug}'" . ');'."\n";
                     $fields .= '            $table->string(' . "'slug'" . ');';
+                    $seed_fields.=  "\n" . "                '{$this->slug}'  => ".'$faker->realText(50),';
                     $seed_fields.=  "\n" . "                'slug'  => ".'$faker->slug,';
 
                 }
