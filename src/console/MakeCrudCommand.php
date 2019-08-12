@@ -43,53 +43,49 @@ class MakeCrudCommand extends Command
     {
         $this->info('Initiating...');
 
-        $progress = $this->output->createProgressBar(12);
+        $progress = $this->output->createProgressBar(8);
 
         $this->timestamps = $this->option('timestamps');
         $this->slug = $this->option('slug');
-
         $this->model = $this->argument('model');
 
 
         $this->fields = $this->getFields();
+        $progress->advance();
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
-
-//        $model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
-
-//        $this->info('Model created at ' . $model_path);
+        $model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
+        $this->info('Model created at ' . $model_path);
         $progress->advance();
 
         // Migrations and seeds
         $this->info(PHP_EOL . 'Creating Migration...');
-
-//        [$migration_path,$seed_file_name] = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
-
-//        $this->info('Migration created at ' . $migration_path);
+        [$migration_path,$seed_file_name] = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
+        $this->info('Migration created at ' . $migration_path . ' and Seed at ' . $seed_file_name);
         $progress->advance();
 
         // Migrate
         $this->info(PHP_EOL . 'Migrate...');
-        //Artisan::call('migrate');
+        Artisan::call('migrate');
         $progress->advance();
 
         // Controllers
         $this->info(PHP_EOL . 'Controllers...');
-//        $controller_path = CreateCrudController::generate($this->model);
-//        $this->info('Controller created at ' . $controller_path);
+        $controller_path = CreateCrudController::generate($this->model);
+        $this->info('Controller created at ' . $controller_path);
         $progress->advance();
 
         // Forms
         $this->info(PHP_EOL . 'Forms...');
-//        $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
-//        $this->info('Form created at ' . $form_path);
+        $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
+        $this->info('Form created at ' . $form_path);
         $progress->advance();
 
         // Routes
         $this->info(PHP_EOL . 'Routes...');
-//        $route_path = CreateCrudRoute::generate($this->model);
-//        $this->info('Routes inserted at ' . $route_path);
+        $route_path = CreateCrudRoute::generate($this->model);
+        $this->info('Routes inserted at ' . $route_path);
         $progress->advance();
 
         // Views and registered link to left sidebar
@@ -98,10 +94,12 @@ class MakeCrudCommand extends Command
         $this->info('Views created at ' . $view_path);
         $progress->advance();
 
-
-
     }
-    private function getFields()
+
+    /**
+     * @return array
+     */
+    private function getFields() :array
     {
 
         $fields = [];
@@ -112,10 +110,7 @@ class MakeCrudCommand extends Command
 
         if ($this->confirm('Add another field?')) {
             $fields =  array_merge($fields,$this->getFields());
-            //return [$fields];
-//            $fields[] = $this->getFields();
         }
-        //$fields[] = $this->ask('Add another field');
 
         return $fields;
     }

@@ -21,9 +21,6 @@ trait MakeCrudTrait
             '{{singularSlug}}' => str_singular(str_slug($name)),
             '{{singularSnake}}' => str_singular(snake_case($name)),
             '{{singularClass}}' => str_singular(studly_case($name)),
-//            '{{fillable}}' => $this->getFillables(),
-//            '{{timestamps}}' => $this->getTimetsamps(),
-//            '{{slugField}}' => $this->slug,
         );
     }
 
@@ -36,5 +33,16 @@ trait MakeCrudTrait
     {
         $namespace = Container::getInstance()->getNamespace();
         return rtrim($namespace, '\\');
+    }
+
+    /**
+     * @param  string $path
+     */
+    private function createDirIfNotExists(string $path): void
+    {
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
     }
 }

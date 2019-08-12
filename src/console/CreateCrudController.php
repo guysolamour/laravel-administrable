@@ -32,6 +32,9 @@ class CreateCrudController
     }
 
 
+    /**
+     * @return string
+     */
     private function loadController() :string
     {
         try {
@@ -42,21 +45,16 @@ class CreateCrudController
 
             $controllers_path = app_path('/Http/Controllers/Admin');
 
-            $controllers = array(
+            $controllers = [
                 [
                     'stub' => $this->TPL_PATH . '/controllers/Controller.stub',
                     'path' => $controllers_path . "/{$controller_name}Controller.php",
                 ],
-            );
+            ];
 
             foreach ($controllers as $controller) {
-                $stub = file_get_contents($controller['stub']);
-                $complied = strtr($stub, $data_map);
-
-                $dir = dirname($controller['path']);
-                if (!is_dir($dir)) {
-                    mkdir($dir, 0755, true);
-                }
+                $complied = $this->loadAndRegisterControllerStub($controller, $data_map);
+                $this->createDirIfNotExists($controller['path']);
 
                 file_put_contents($controller['path'], $complied);
             }
@@ -66,5 +64,17 @@ class CreateCrudController
         } catch (\Exception $ex) {
             throw new \RuntimeException($ex->getMessage());
         }
+    }
+
+    /**
+     * @param $controller
+     * @param $data_map
+     * @return string
+     */
+    private function loadAndRegisterControllerStub($controller, $data_map): string
+    {
+        $stub = file_get_contents($controller['stub']);
+        $complied = strtr($stub, $data_map);
+        return $complied;
     }
 }
