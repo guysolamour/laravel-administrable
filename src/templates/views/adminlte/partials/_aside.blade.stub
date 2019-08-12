@@ -4,10 +4,10 @@
         <!-- Sidebar user panel -->
         <div class="user-panel" style="height: 60px;">
             <div class="pull-left image">
-                <img src="{{ asset(get_admin()->avatar) }}" class="img-circle" alt="Admin Image">
+                <img src="{{ asset(get_{{singularSlug}}()->avatar) }}" class="img-circle" alt="{{singularClass}} Image">
             </div>
             <div class="pull-left info">
-                <p style="text-transform: capitalize;">{{ get_admin()->name }}</p>
+                <p style="text-transform: capitalize;">{{ get_{{singularSlug}}()->name }}</p>
                 <a href="#"><i class="fa fa-circle text-success"></i> En ligne</a>
             </div>
         </div>
@@ -23,8 +23,8 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.index') }}">
-                    <i class="fa fa-folder-o"></i> <span>Administrateurs</span>
+                <a href="{{ route('{{singularSlug}}.index') }}">
+                    <i class="fa fa-folder-o"></i> <span>{{pluralSlug}}</span>
                 </a>
             </li>
 

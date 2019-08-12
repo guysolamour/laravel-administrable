@@ -1,4 +1,4 @@
-@extends('admin.adminlte.layouts.app')
+@extends('{{singularSlug}}.adminlte.layouts.app')
 
 @section('title','Tableau de bord')
 

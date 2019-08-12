@@ -15,54 +15,54 @@ class {{singularClass}}Controller extends Controller
 {
     use FormBuilderTrait;
 
-    public function profile(Admin $admin) {
+    public function profile({{singularClass}} ${{singularSlug}}) {
 
-      $edit_form = $this->getForm($admin);
-      $reset_form = $this->getForm($admin,ResetAdminPasswordForm::class);
+      $edit_form = $this->getForm(${{singularSlug}});
+      $reset_form = $this->getForm(${{singularSlug}},Reset{{singularClass}}PasswordForm::class);
 
-      return view('{{singularSlug}}.{{pluralSlug}}.show', compact('admin','edit_form','reset_form'));
+      return view('{{singularSlug}}.{{pluralSlug}}.show', compact('{{singularSlug}}','edit_form','reset_form'));
     }
 
     public function index() {
-        $admins = $this->getAdmins();
-        return view( '{{singularSlug}}.{{pluralSlug}}.index', compact( 'admins' ) );
+        ${{pluralSlug}} = $this->get{{pluralClass}}();
+        return view( '{{singularSlug}}.{{pluralSlug}}.index', compact( '{{pluralSlug}}' ) );
     }
 
     public function create( ) {
-        $form = $this->getForm( new Admin, CreateAdminForm::class );
+        $form = $this->getForm( new {{singularClass}}, Create{{singularClass}}Form::class );
 
         return view( '{{singularSlug}}.{{pluralSlug}}.create', compact( 'form' ) );
     }
 
     public function store( Request $request ) {
 
-        $form = $this->getForm( new Admin, CreateAdminForm::class );
+        $form = $this->getForm( new {{singularClass}}, Create{{singularClass}}Form::class );
 
         $form->redirectIfNotValid();
 
-        $admin = Admin::create($request->all());
+        ${{singularSlug}} = {{singularClass}}::create($request->all());
 
-        flashy('Le compte administrateur a été créé avec le succeès');
+        flashy('Le compte {{singularSlug}} a été créé avec le succeès');
 
-        return redirect()->route('admin.profile',$admin);
+        return redirect()->route('{{singularSlug}}.profile',${{singularSlug}});
 
     }
 
      /**
      * @param Request $request
-     * @param Admin $admin
+     * @param {{singularClass}} ${{singularSlug}}
      *
      * @return array
      */
-     public function changePassword( Request $request, Admin $admin ) {
+     public function changePassword( Request $request, {{singularClass}} ${{singularSlug}} ) {
 
         // Validate the form
-        $reset_form = $this->getForm($admin,ResetAdminPasswordForm::class);
+        $reset_form = $this->getForm(${{singularSlug}},Reset{{singularClass}}PasswordForm::class);
 
         $this->redirectIfNotValid($reset_form);
 
             // update password
-            $admin->update([
+            ${{singularSlug}}->update([
               'password' => $request->input('new_password')
             ]);
 
@@ -82,18 +82,18 @@ class {{singularClass}}Controller extends Controller
 
       /**
       * @param Request $request
-      * @param Admin $admin
+      * @param {{singularClass}} ${{singularSlug}}
       *
       * @return \Illuminate\Http\RedirectResponse
       */
-      public function update(Request $request, Admin $admin)
+      public function update(Request $request, {{singularClass}} ${{singularSlug}})
       {
 
-          $form = $this->getForm($admin);
+          $form = $this->getForm(${{singularSlug}});
 
           $this->redirectIfNotValid($form);
 
-          $admin->update($request->all());
+          ${{singularSlug}}->update($request->all());
 
           flashy('Le compte a été modifié avec succès');
 
@@ -102,33 +102,33 @@ class {{singularClass}}Controller extends Controller
 
       public function updateAvatar(Request $request  )
       {
-          $admin = Admin::find($request->get('id'));
+          ${{singularSlug}} = {{singularClass}}::find($request->get('id'));
 
-          $admin->update([
+          ${{singularSlug}}->update([
               'avatar' => $request->get('avatar')
               ]);
-          return $admin;
+          return ${{singularSlug}};
       }
 
-      public function delete( Admin $admin) {
+      public function delete( {{singularClass}} ${{singularSlug}}) {
 
-          $admin->delete();
-          flashy('L\' administrateur a été retiré avec succès');
+          ${{singularSlug}}->delete();
+          flashy('{{singularClass}} a été retiré avec succès');
 
-          return redirect()->route('admin.index');
+          return redirect()->route('{{singularSlug}}.index');
       }
 
 
-      private function getAdmins() {
+      private function get{{pluralClass}}() {
           // The id 1 is for the super super admin used by the web agency
           // his account must be hidden for the others admins
           if (get_admin()->id === 1){
-              $admins = Admin::all();
+              ${{pluralSlug}} = {{singularClass}}::all();
           }else {
-              $admins = Admin::where('id','!=',1)->get();
+              ${{pluralSlug}} = {{singularClass}}::where('id','!=',1)->get();
           }
 
-          return $admins;
+          return ${{pluralSlug}};
       }
 
 

@@ -11,7 +11,7 @@ class {{singularClass}}Form extends Form
 
         $this->formOptions = [
 		    'method' => 'PUT',
-		    'url'    => route('admin.update',$this->getModel()),
+		    'url'    => route('{{singularSlug}}.update',$this->getModel()),
         ];
 
 	    $this

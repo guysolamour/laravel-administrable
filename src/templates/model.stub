@@ -18,7 +18,7 @@ class {{singularClass}} extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','avatar','is_super_admin'
+        'name', 'email', 'password','avatar','is_super_{{singularSlug}}'
     ];
 
     /**
@@ -37,7 +37,7 @@ class {{singularClass}} extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'is_super_admin' => 'boolean'
+        'is_super_{{singularSlug}}' => 'boolean'
     ];
 
     /**
@@ -61,9 +61,9 @@ class {{singularClass}} extends Authenticatable
         $this->notify(new VerifyEmail);
     }
 
-    public function isSuperAdmin(  ) :bool
+    public function isSuper{{singularClass}}(  ) :bool
     {
-        return  $this->is_super_admin;
+        return  $this->is_super_{{singularSlug}};
     }
 
     /**

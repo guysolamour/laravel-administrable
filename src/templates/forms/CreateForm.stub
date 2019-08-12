@@ -10,7 +10,7 @@ class Create{{singularClass}}Form extends Form
     {
         $this->formOptions = [
 		    'method' => 'POST',
-		    'url'    => route('admin.store'),
+		    'url'    => route('{{singularSlug}}.store'),
 	    ];
 
 	    $this
@@ -23,7 +23,7 @@ class Create{{singularClass}}Form extends Form
           'rules'  => 'required|email|unique:admins',
         ])
         ->add('is_super_admin', 'checkbox', [
-          'label' => 'Super Administrateur',
+          'label' => 'Super {{singularSlug}}',
           'checked'  => $this->getModel()->is_super_admin,
         ])
         ->add('password', 'password', [

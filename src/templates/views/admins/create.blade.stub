@@ -1,6 +1,6 @@
-@extends('admin.adminlte.layouts.app')
+@extends('{{singularSlug}}.adminlte.layouts.app')
 
-@section('title','Ajout administrateur')
+@section('title','Ajout')
 
 
 @section('content')
@@ -10,8 +10,8 @@
         <!-- Breadcrumbs-->
         <section class="content-header">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Tableau de bord</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Administrateurs</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.index') }}">{{pluralSlug}}</a></li>
             <li class="breadcrumb-item active">Ajouter</li>
         </ol>
         </section>
@@ -65,6 +65,6 @@
     </script>
 @stop
 
-@include('admin.partials._datatable')
+@include('{{singularSlug}}.partials._datatable')
 
 

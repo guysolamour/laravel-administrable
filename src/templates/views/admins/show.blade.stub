@@ -1,6 +1,6 @@
-@extends('admin.adminlte.layouts.app')
+@extends('{{singularSlug}}.adminlte.layouts.app')
 
-@section('title',$admin->name.' - profile')
+@section('title',${{singularSlug}}->name.' - profile')
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/toastr/toastr.min.css') }}">
@@ -23,13 +23,13 @@
                             <!-- Profile Image -->
                             <div class="box box-primary">
                                 <div class="box-body box-profile">
-                                    <img class="admin-avatar img-responsive" src="{{ $admin->avatar }}" alt="Admin profile picture">
+                                    <img class="admin-avatar img-responsive" src="{{ ${{singularSlug}}->avatar }}" alt="{{singularClass}} profile picture">
 
-                                    <h3 class="profile-username text-center">{{ ucfirst($admin->name) }}</h3>
-                                    <p class="profile-username text-center">{{ $admin->email }}</p>
+                                    <h3 class="profile-username text-center">{{ ucfirst(${{singularSlug}}->name) }}</h3>
+                                    <p class="profile-username text-center">{{ ${{singularSlug}}->email }}</p>
 
 
-                                    @if (current_admin_profil($admin) || current_admin_is_super_admin())
+                                    @if (current_{{singularSlug}}_profil(${{singularSlug}}) || current_{{singularSlug}}_is_super_{{singularSlug}}())
 
 
                                         <div class="text-center">
@@ -53,7 +53,7 @@
                         <!-- /.col -->
                         <div class="col-md-7">
 
-                            @if (current_admin_profil($admin) || current_admin_is_super_admin())
+                            @if (current_{{singularSlug}}_profil(${{singularSlug}}) || current_{{singularSlug}}_is_super_{{singularSlug}}())
 
 
 
@@ -105,7 +105,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/admin/update-admin-avatar',
+                url: '/{{singularSlug}}/update-{{singularSlug}}-avatar',
                 type: 'post',
                 data:data,
                 cache: false,

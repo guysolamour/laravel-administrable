@@ -1,19 +1,19 @@
 @extends('admin.adminlte.layouts.app')
 
-@section('title','Les administrateurs')
+@section('title','{{pluralClass}}')
 
 
 @section('content')
 
     <div class="container-fluid">
         <!-- Breadcrumbs-->
-        {{--{{ Breadcrumbs::render('admin.post.index') }}--}}
+        {{--{{ Breadcrumbs::render('{{singularSlug}}.post.index') }}--}}
         <div class="row">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <ol class="breadcrumb">
-                    <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Tableau de bord</a></li>
-                    <li class="active">Administrateurs</li>
+                    <li><a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="fa fa-dashboard"></i> Tableau de bord</a></li>
+                    <li class="active">{{pluralClass}}</li>
                 </ol>
             </section>
 
@@ -24,8 +24,8 @@
                         <h3 class="box-title">Les administrateurs</h3>
                         <br>
                         <!-- /.box-tools -->
-                        @if (current_admin_is_super_admin())
-                            <a class="btn btn-primary pull-right" href="{{ route('admin.create') }}"><i class="fa fa-plus"></i> Ajouter un administrateur</a>
+                        @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
+                            <a class="btn btn-primary pull-right" href="{{ route('{{singularSlug}}.create') }}"><i class="fa fa-plus"></i> Ajouter un administrateur</a>
                         @endif
                     </div>
                     <!-- /.box-header -->
@@ -42,24 +42,24 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach ($admins as $admin)
+                                @foreach (${{pluralSlug}} as ${{singularSlug}})
                                     <tr>
                                         <td>
-                                            @if ($admin->isSuperAdmin())
-                                                <i class="fa fa-star" aria-hidden="true" title="Super Administrateur"></i>
+                                            @if (${{singularSlug}}->isSuper{{singularClass}}())
+                                                <i class="fa fa-star" aria-hidden="true" title="Super {{singularClass}}"></i>
                                             @endif
-                                            {{ $admin->name }}
+                                            {{ ${{singularSlug}}->name }}
                                         </td>
-                                        <td>{{ $admin->email }}</td>
-                                        <td>{{ $admin->created_at->diffForHumans() }}</td>
+                                        <td>{{ ${{singularSlug}}->email }}</td>
+                                        <td>{{ ${{singularSlug}}->created_at->diffForHumans() }}</td>
                                         <td>
-                                            <a href="{{ route('admin.profile', $admin) }}" class="btn btn-primary"><i class="fa fa-location-arrow" aria-hidden="true"></i> Profil</a>
-                                            @if (current_admin_is_super_admin())
-                                                <a href="{{ route('admin.delete',$admin) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash"></i> Supprimer</a>
+                                            <a href="{{ route('{{singularSlug}}.profile', ${{singularSlug}}) }}" class="btn btn-primary"><i class="fa fa-location-arrow" aria-hidden="true"></i> Profil</a>
+                                            @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
+                                                <a href="{{ route('{{singularSlug}}.delete',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash"></i> Supprimer</a>
 
                                             @endif
                                         </td>
-                                        {{--<td><a href="{{ route('admin.command.destroy',$command) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash"></i></a>--}}
+                                        {{--<td><a href="{{ route('{{singularSlug}}.command.destroy',$command) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash"></i></a>--}}
                                         {{--</td>--}}
                                     </tr>
                                 @endforeach
@@ -87,4 +87,4 @@
 @stop
 
 
-@include('admin.partials._datatable')
+@include('{{singularSlug}}.partials._datatable')

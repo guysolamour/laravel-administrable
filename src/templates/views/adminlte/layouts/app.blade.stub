@@ -52,7 +52,7 @@
 
 @include('admin.adminlte.partials._header')
 <!-- Left side column. contains the logo and sidebar -->
-@include('admin.adminlte.partials._aside')
+@include('{{singularSlug}}.adminlte.partials._aside')
 
 
 <!-- Content Wrapper. Contains page content -->
@@ -62,7 +62,7 @@
     <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-@include('admin.adminlte.partials._footer')
+@include('{{singularSlug}}.adminlte.partials._footer')
 
 <!-- Control Sidebar -->
 <!-- /.control-sidebar -->

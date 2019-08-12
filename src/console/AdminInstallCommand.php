@@ -5,6 +5,7 @@ namespace Guysolamour\Admin\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 
@@ -34,233 +35,108 @@ class AdminInstallCommand extends Command
     {
         $this->info('Initiating...');
 
-        $progress = $this->output->createProgressBar(12);
-
         $this->name = $this->argument('name');
 
         $this->override = $this->option('force') ? true : false;
 
-        // Check if the guard is already registered
-        if (array_key_exists(Str::singular(Str::snake($this->name)),config('auth.guards'))) {
-            $this->exits = true;
+//        Artisan::call('multi-auth:install',[
+//            'name' => $this->name,
+//            '--force' => $this->override
+//        ]);
 
-            if (!$this->option('force')) {
-                $this->info("Guard: '" . $this->name . "' is already registered");
-                if (!$this->confirm('Force override resources...?')) {
-                    $this->info(PHP_EOL . 'Halting scaffolding, try again with a another guard name...');
-                    // throw new \RuntimeException("Halting installation, choose another guard name...");
-                }
-                // Override resources
-                $this->override = true;
-            }
-        }
-
-        $this->info("Using guard: '" . $this->name . "'");
-
-        $progress->advance();
-
-        // Configurations and lfm
-        $this->info(PHP_EOL . 'Registering configurations...');
-
-        if ($this->exits && $this->override) {
-            $this->info('Configurations registration skipped');
-        } else {
-            $this->registerConfigurations(self::TPL_PATH);
-            $this->loadLfmConfig(self::TPL_PATH);
-            $this->info('Configurations registered in ' . config_path('auth.php'));
-        }
-
-
-        $progress->advance();
-
-        // Models
+        $progress = $this->output->createProgressBar(13);
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
-
         $model_path = $this->loadModel(self::TPL_PATH);
-
         $this->info('Model created at ' . $model_path);
-
         $progress->advance();
 
         // Factories
         $this->info(PHP_EOL . 'Creating Factory...');
-
         $factory_path = $this->loadFactory(self::TPL_PATH);
-
         $this->info('Factory created at ' . $factory_path);
-
-        $progress->advance();
-
-        // Notifications
-        $this->info(PHP_EOL . 'Creating Notification...');
-
-        $notification_path = $this->loadNotification(self::TPL_PATH);
-
-        $this->info('Notification created at ' . $notification_path);
-
         $progress->advance();
 
         // Migrations
         $this->info(PHP_EOL . 'Creating Migrations...');
-
-        if ($this->exits && $this->override) {
-            $this->info('Migrations\' creation skipped');
-        } else {
-            $migrations_path = $this->loadMigrations(self::TPL_PATH);
-            $this->info('Migrations created at ' . $migrations_path);
-        }
-
-        $progress->advance();
-
-        // Controllers
-        $this->info(PHP_EOL . 'Creating Controllers...');
-
-        $traits_path = $this->loadControllers(self::TPL_PATH);
-
-        $this->info('Controllers created at ' . $traits_path);
-
-        $progress->advance();
-
-
-        // Views
-        $this->info(PHP_EOL . 'Creating Views...');
-
-        $views_path = $this->loadViews(self::TPL_PATH);
-        $admin_views_path = $this->loadAdminViews(self::TPL_PATH);
-
-        $this->info('Views created at ' . $views_path);
-
-        $progress->advance();
-
-        // Routes
-        $this->info(PHP_EOL . 'Creating Routes...');
-
-        $routes_path = $this->loadRoutes(self::TPL_PATH);
-
-        $this->info('Routes created at ' . $routes_path);
-
-        $progress->advance();
-
-        // Routes Service Provider
-        $this->info(PHP_EOL . 'Registering Routes Service Provider...');
-
-        if ($this->exits && $this->override) {
-            $this->info('Routes service provider registration skipped');
-        } else {
-            $routes_sp_path = $this->registerRoutes(self::TPL_PATH);
-            $this->info('Routes registered in service provider: ' . $routes_sp_path);
-        }
-
-        // Middleware
-        $this->info(PHP_EOL . 'Creating Middleware...');
-
-        $middleware_path = $this->loadMiddleware(self::TPL_PATH);
-
-        $this->info('Middleware created at ' . $middleware_path);
-
-        $progress->advance();
-
-        // Route Middleware
-        $this->info(PHP_EOL . 'Registering route middleware...');
-
-        if ($this->exits && $this->override) {
-            $this->info('Route middleware registration skipped');
-        } else {
-            $kernel_path = $this->registerRouteMiddleware(self::TPL_PATH);
-            $this->info('Route middleware registered in ' . $kernel_path);
-        }
-
-        // Traits
-        $this->info(PHP_EOL . 'Creating Traits...');
-
-        $traits_path = $this->loadTraits(self::TPL_PATH);
-
-        $this->info('Traits created at ' . $traits_path);
-
-        $progress->advance();
-
-        // Forms
-        $this->info(PHP_EOL . 'Creating Forms...');
-
-        $forms_path = $this->loadForms(self::TPL_PATH);
-
-        $this->info('Forms created at ' . $forms_path);
-
+        $migrations_path = $this->loadMigrations(self::TPL_PATH);
+        $this->info('Migrations created at ' . $migrations_path);
         $progress->advance();
 
         // Seeds
         $this->info(PHP_EOL . 'Creating Seed...');
-
         $seed_path = $this->loadSeed(self::TPL_PATH);
-
         $this->info('Seed created at ' . $seed_path);
-
         $progress->advance();
+
 
         // DatabaseSeeder
         $this->info(PHP_EOL . 'Registering seeder...');
+        $database_seeder_path = $this->registerSeed(self::TPL_PATH);
+        $this->info('Seed registered in ' . $database_seeder_path);
+        $progress->advance();
 
-        if ($this->exits && $this->override) {
-            $this->info('Seed registration skipped');
-        } else {
-            $database_seeder_path = $this->registerSeed(self::TPL_PATH);
-            $this->info('Seed registered in ' . $database_seeder_path);
-        }
+        // Controllers
+        $this->info(PHP_EOL . 'Creating Controllers...');
+        $controllers_path = $this->loadControllers(self::TPL_PATH);
+        $this->info('Controllers created at ' . $controllers_path);
+        $progress->advance();
+
+
+        // Middleware
+        $this->info(PHP_EOL . 'Creating Middleware...');
+        $middleware_path = $this->loadMiddleware(self::TPL_PATH);
+        $this->info('Middleware created at ' . $middleware_path);
+        $progress->advance();
+
+
+        // Route Middleware
+        $this->info(PHP_EOL . 'Registering route middleware...');
+        $kernel_path = $this->registerRouteMiddleware(self::TPL_PATH);
+        $this->info('Route middleware registered in ' . $kernel_path);
+
+        // Traits
+        $this->info(PHP_EOL . 'Creating Traits...');
+        $traits_path = $this->loadTraits(self::TPL_PATH);
+        $this->info('Traits created at ' . $traits_path);
+        $progress->advance();
+
+
+
+
+        // Forms
+        $this->info(PHP_EOL . 'Creating Forms...');
+        $forms_path = $this->loadForms(self::TPL_PATH);
+        $this->info('Forms created at ' . $forms_path);
+        $progress->advance();
+
+
+
+        // lfm congfig
+        $this->info(PHP_EOL . 'Creating Lfm config...');
+        $config_path = $this->loadLfmConfig(self::TPL_PATH);
+        $this->info('Forms created at ' . $config_path);
+        $progress->advance();
+
+
+
+        // routes
+        $this->info(PHP_EOL . 'Creating Routes...');
+        $routes_path = $this->loadRoutes(self::TPL_PATH);
+        $this->info('Routes created at ' . $routes_path);
+        $progress->advance();
+
+
+
+        // Views
+        $this->info(PHP_EOL . 'Creating Views...');
+        $admin_views_path = $this->loadAdminViews(self::TPL_PATH);
+        $this->info('Views created at ' . $admin_views_path);
+        $progress->advance();
 
         $progress->finish();
 
-    }
-
-    private function registerConfigurations(string $template_path)
-    {
-        try {
-
-            // get auth file
-            $auth = file_get_contents(config_path('auth.php'));
-            $data_map = $this->parseName();
-
-            // Guard
-
-            // get template file
-            $guards = file_get_contents($template_path . '/config/guards.stub');
-
-            // compile stub...
-            $guards = strtr($guards, $data_map);
-
-            $guards_bait = "'guards' => [";
-
-            $auth = str_replace($guards_bait, $guards_bait . $guards, $auth);
-
-            /** Providers */
-            $providers = file_get_contents($template_path . '/config/providers.stub');
-
-            // compile stub...
-            $providers = strtr($providers, $data_map);
-
-
-            $providers_bait = "'providers' => [";
-
-            $auth = str_replace($providers_bait, $providers_bait . $providers, $auth);
-
-            /********** Passwords **********/
-
-            $passwords = file_get_contents($template_path . '/config/passwords.stub');
-
-            // compile stub...
-            $passwords = strtr($passwords, $data_map);
-
-            $passwords_bait = "'passwords' => [";
-
-            $auth = str_replace($passwords_bait, $passwords_bait . $passwords, $auth);
-
-            // Overwrite config file
-            file_put_contents(config_path('auth.php'), $auth);
-
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
-        }
     }
 
     /**
@@ -370,79 +246,23 @@ class AdminInstallCommand extends Command
         }
     }
 
-    protected function loadNotification($template_path)
-    {
-        try {
-
-            $data_map = $this->parseName();
-
-            $notifications_path = app_path('/Notifications/' . $data_map['{{singularClass}}'] . '/Auth');
-
-            $notifications = array(
-                [
-                    'stub' => $template_path . '/Notifications/ResetPassword.stub',
-                    'path' => $notifications_path . '/ResetPassword.php',
-                ],
-                [
-                    'stub' => $template_path . '/Notifications/VerifyEmail.stub',
-                    'path' => $notifications_path . '/VerifyEmail.php',
-                ],
-            );
-
-
-            foreach ($notifications as $notification) {
-                $stub = file_get_contents($notification['stub']);
-
-                $complied = strtr($stub, $data_map);
-
-                $dir = dirname($notification['path']);
-                if (!is_dir($dir)) {
-                    mkdir($dir, 0755, true);
-                }
-
-
-                file_put_contents($notification['path'], $complied);
-            }
-
-            return $notifications_path;
-
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
-        }
-    }
 
     protected function loadMigrations($template_path)
     {
         try {
 
+
             $data_map = $this->parseName();
+            $guard = $data_map['{{pluralSlug}}'];
+
+            $migration_path = Arr::first(glob(database_path('migrations').'/*_create_'. $guard .'_table.php'));
+            $migration_stub = $template_path . '/migrations/provider.stub';
+
+            $stub = file_get_contents($migration_stub);
+            $complied = strtr($stub, $data_map);
 
 
-            $signature = date('Y_m_d_His');
-
-
-            $migrations = array(
-                [
-                    'stub' => $template_path . '/migrations/provider.stub',
-                    'path' => database_path('migrations/' . $signature . '_create_' . $data_map['{{pluralSnake}}'] . '_table.php'),
-                ],
-                [
-                    'stub' => $template_path . '/migrations/password_resets.stub',
-                    'path' => database_path('migrations/' . $signature . '_create_' . $data_map['{{singularSnake}}'] . '_password_resets_table.php'),
-                ],
-            );
-
-            foreach ($migrations as $migration) {
-                $stub = file_get_contents($migration['stub']);
-                $complied = strtr($stub, $data_map);
-
-                $dir = dirname($migration['path']);
-                if (!is_dir($dir)) {
-                    mkdir($dir, 0755, true);
-                }
-
-                file_put_contents($migration['path'], $complied);
-            }
+            file_put_contents($migration_path, $complied);
 
             return database_path('migrations');
 
@@ -459,36 +279,12 @@ class AdminInstallCommand extends Command
 
         $controllers_path = app_path('/Http/Controllers/' . $guard);
 
-        $controllers = array(
+        $controllers = [
             [
-                'stub' => $template_path . '/Controllers/HomeController.stub',
-                'path' => $controllers_path . '/HomeController.php',
+                'stub' => $template_path . '/Controllers/controller.stub',
+                'path' => $controllers_path . '/'. $guard . 'Controller.php',
             ],
-            [
-                'stub' => $template_path . '/Controllers/Auth/ForgotPasswordController.stub',
-                'path' => $controllers_path . '/Auth/ForgotPasswordController.php',
-            ],
-            [
-                'stub' => $template_path . '/Controllers/Auth/LoginController.stub',
-                'path' => $controllers_path . '/Auth/LoginController.php',
-            ],
-            [
-                'stub' => $template_path . '/Controllers/Auth/RegisterController.stub',
-                'path' => $controllers_path . '/Auth/RegisterController.php',
-            ],
-            [
-                'stub' => $template_path . '/Controllers/Auth/ResetPasswordController.stub',
-                'path' => $controllers_path . '/Auth/ResetPasswordController.php',
-            ],
-            [
-                'stub' => $template_path . '/Controllers/Auth/VerificationController.stub',
-                'path' => $controllers_path . '/Auth/VerificationController.php',
-            ],
-            [
-                'stub' => $template_path . '/Controllers/AdminController.stub',
-                'path' => $controllers_path . '/AdminController.php',
-            ],
-        );
+        ];
 
         foreach ($controllers as $controller) {
             $stub = file_get_contents($controller['stub']);
@@ -573,60 +369,32 @@ class AdminInstallCommand extends Command
 
         return $form_path;
     }
-
-    protected function loadViews($template_path)
+    /**
+     * Load routes
+     * @param $stub_path
+     * @return string
+     */
+    protected function loadRoutes($stub_path)
     {
         $data_map = $this->parseName();
 
         $guard = $data_map['{{singularSlug}}'];
 
-        $views_path = resource_path('views/' . $guard);
+        $routes_path = base_path('/routes/' . $guard . '.php');
 
-        $views = array(
-            [
-                'stub' => $template_path . '/views/home.blade.stub',
-                'path' => $views_path . '/home.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/layouts/app.blade.stub',
-                'path' => $views_path . '/layouts/app.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/login.blade.stub',
-                'path' => $views_path . '/auth/login.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/register.blade.stub',
-                'path' => $views_path . '/auth/register.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/verify.blade.stub',
-                'path' => $views_path . '/auth/verify.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/passwords/email.blade.stub',
-                'path' => $views_path . '/auth/passwords/email.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/passwords/reset.blade.stub',
-                'path' => $views_path . '/auth/passwords/reset.blade.php',
-            ],
+        $routes = array(
+            'stub' => $stub_path . '/routes/routes.stub',
+            'path' => $routes_path,
         );
 
-        foreach ($views as $view) {
-            $stub = file_get_contents($view['stub']);
-            $complied = strtr($stub, $data_map);
+        $stub = file_get_contents($routes['stub']);
+        $complied = strtr($stub, $data_map);
 
-            $dir = dirname($view['path']);
-            if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
+        file_put_contents($routes['path'], $complied);
 
-            file_put_contents($view['path'], $complied);
-        }
-
-        return $views_path;
+        return $routes_path;
     }
+
     protected function loadAdminViews($template_path)
     {
         $data_map = $this->parseName();
@@ -716,69 +484,9 @@ class AdminInstallCommand extends Command
     }
 
 
-    protected function loadRoutes($template_path)
-    {
-        $data_map = $this->parseName();
-
-        $guard = $data_map['{{singularSlug}}'];
-
-        $routes_path = base_path('/routes/' . $guard . '.php');
-
-        $routes = array(
-            'stub' => $template_path . '/routes/routes.stub',
-            'path' => $routes_path,
-        );
-
-        $stub = file_get_contents($routes['stub']);
-        $complied = strtr($stub, $data_map);
-
-        file_put_contents($routes['path'], $complied);
-
-        return $routes_path;
-    }
-
-    protected function registerRoutes($template_path)
-    {
-        try {
-
-            $provider_path = app_path('Providers/RouteServiceProvider.php');
-
-            $provider = file_get_contents($provider_path);
-
-            $data_map = $this->parseName();
-
-            /********** Function **********/
-
-            $stub = $template_path . '/routes/map.stub';
-
-            $map = file_get_contents($stub);
-
-            $map = strtr($map, $data_map);
-
-            $map_bait = "    /**\n" . '     * Define the "web" routes for the application.';
-
-            $provider = str_replace($map_bait, $map . $map_bait, $provider);
-
-            /********** Function Call **********/
-
-            $map_call = file_get_contents($template_path . '/routes/map_call.stub');
-
-            $map_call = strtr($map_call, $data_map);
 
 
-            $map_call_bait = '$this->mapWebRoutes();';
 
-            $provider = str_replace($map_call_bait, $map_call_bait . $map_call, $provider);
-
-            // Overwrite config file
-            file_put_contents($provider_path, $provider);
-
-            return $provider_path;
-
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
-        }
-    }
 
     protected function loadMiddleware($template_path)
     {
@@ -790,19 +498,6 @@ class AdminInstallCommand extends Command
 
 
             $middlewares = array(
-                [
-                    'stub' => $template_path . '/Middleware/RedirectIfAuthenticated.stub',
-                    'path' => $middleware_path . '/RedirectIf' . $data_map['{{singularClass}}'] . '.php',
-                ],
-                [
-
-                    'stub' => $template_path . '/Middleware/RedirectIfNotAuthenticated.stub',
-                    'path' => $middleware_path . '/RedirectIfNot' . $data_map['{{singularClass}}'] . '.php',
-                ],
-                [
-                    'stub' => $template_path . '/Middleware/EnsureEmailIsVerified.stub',
-                    'path' => $middleware_path . '/Ensure' . $data_map['{{singularClass}}'] . 'EmailIsVerified.php',
-                ],
                 [
                     'stub' => $template_path . '/Middleware/RedirectIfNotSuperAdmin.stub',
                     'path' => $middleware_path . '/RedirectIfNotSuper' . $data_map['{{singularClass}}'] . '.php',
@@ -860,7 +555,6 @@ class AdminInstallCommand extends Command
 
             $database_seeder = file_get_contents($database_seeder_path);
 
-            /********** Route Middleware **********/
 
             $route_mw = file_get_contents($stub_path . '/seeds/DatabaseSeeder.stub');
 
