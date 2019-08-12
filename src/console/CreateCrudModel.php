@@ -38,7 +38,7 @@ class CreateCrudModel
 
         $this->name = $name;
         $this->fields = array_chunk($fields, 3);;
-        $this->slug = strtolower($slug);
+        $this->slug = $slug;
         $this->timestamps = $timestamps;
     }
 
@@ -51,6 +51,7 @@ class CreateCrudModel
      */
     public static function generate(string $name , array $fields, ?string $slug = null, bool $timestamps = false)
     {
+
         return
             (new CreateCrudModel($name,$fields,$slug,$timestamps))
             ->createModel();
@@ -132,7 +133,7 @@ class CreateCrudModel
             }
         }
         // add slug field to the fillable properties
-        if (null != $this->slug) {
+        if (!is_null($this->slug)) {
             $fillable .= "'{$this->slug}'";
         }
 

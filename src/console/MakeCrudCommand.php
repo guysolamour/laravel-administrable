@@ -46,9 +46,8 @@ class MakeCrudCommand extends Command
         $progress = $this->output->createProgressBar(8);
 
         $this->timestamps = $this->option('timestamps');
-        $this->slug = $this->option('slug');
+        $this->slug = is_string($this->option('slug')) ? strtolower($this->option('slug')) : $this->option('slug');
         $this->model = $this->argument('model');
-
 
         $this->fields = $this->getFields();
         $progress->advance();

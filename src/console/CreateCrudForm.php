@@ -28,7 +28,7 @@ class CreateCrudForm
     {
         $this->name = $name;
         $this->fields = array_chunk($fields,3);
-        $this->slug = strtolower($slug);
+        $this->slug = $slug;
     }
 
     /**
