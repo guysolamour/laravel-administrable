@@ -1,6 +1,6 @@
 <?php
 
-namespace Guysolamour\Admin\Console;
+namespace Guysolamour\Admin\Console\Crud;
 
 
 class CreateCrudMigration

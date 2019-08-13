@@ -121,13 +121,11 @@ class AdminInstallCommand extends Command
 
 
 
-        // routes
-        $this->info(PHP_EOL . 'Creating Routes...');
+        // routes and breadcrumbs
+        $this->info(PHP_EOL . 'Creating Routes and breadcrumb...');
         $routes_path = $this->loadRoutes(self::TPL_PATH);
-        $this->info('Routes created at ' . $routes_path);
+        $this->info('Routes and breadcrumb created at ' . $routes_path);
         $progress->advance();
-
-
 
         // Views
         $this->info(PHP_EOL . 'Creating Views...');
@@ -380,17 +378,27 @@ class AdminInstallCommand extends Command
 
         $guard = $data_map['{{singularSlug}}'];
 
-        $routes_path = base_path('/routes/' . $guard . '.php');
+        $routes_path = base_path('/routes/');
 
-        $routes = array(
-            'stub' => $stub_path . '/routes/routes.stub',
-            'path' => $routes_path,
-        );
+        $routes = [
+            [
+                'stub' => $stub_path . '/routes/routes.stub',
+                'path' => $routes_path  . $guard . '.php',
+            ],
+            [
+                'stub' => $stub_path . '/routes/breadcrumb.stub',
+                'path' => $routes_path . 'breadcrumb.php',
+            ],
+        ];
 
-        $stub = file_get_contents($routes['stub']);
-        $complied = strtr($stub, $data_map);
+        foreach ($routes as $route) {
 
-        file_put_contents($routes['path'], $complied);
+            $stub = file_get_contents($route['stub']);
+            $complied = strtr($stub, $data_map);
+
+            file_put_contents($route['path'], $complied);
+        }
+
 
         return $routes_path;
     }

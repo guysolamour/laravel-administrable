@@ -5,6 +5,12 @@ namespace Guysolamour\Admin\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Guysolamour\Admin\Console\Crud\CreateCrudController;
+use Guysolamour\Admin\Console\Crud\CreateCrudForm;
+use Guysolamour\Admin\Console\Crud\CreateCrudMigration;
+use Guysolamour\Admin\Console\Crud\CreateCrudModel;
+use Guysolamour\Admin\Console\Crud\CreateCrudRoute;
+use Guysolamour\Admin\Console\Crud\CreateCrudView;
 
 class MakeCrudCommand extends Command
 {
@@ -39,11 +45,14 @@ class MakeCrudCommand extends Command
     protected $description = 'Create, model, migration and all views';
 
 
+    /**
+     *
+     */
     public function handle()
     {
         $this->info('Initiating...');
 
-        $progress = $this->output->createProgressBar(8);
+        $progress = $this->output->createProgressBar(9);
 
         $this->timestamps = $this->option('timestamps');
         $this->slug = is_string($this->option('slug')) ? strtolower($this->option('slug')) : $this->option('slug');
@@ -92,6 +101,11 @@ class MakeCrudCommand extends Command
         $view_path = CreateCrudView::generate($this->model,$this->fields,$this->slug,$this->timestamps);
         $this->info('Views created at ' . $view_path);
         $progress->advance();
+
+        // add breadcrumbs
+
+
+        $progress->finish();
 
     }
 

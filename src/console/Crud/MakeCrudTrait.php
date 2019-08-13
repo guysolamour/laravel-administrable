@@ -1,5 +1,5 @@
 <?php
-namespace Guysolamour\Admin\Console;
+namespace Guysolamour\Admin\Console\Crud;
 
 
 use Illuminate\Container\Container;
@@ -7,7 +7,7 @@ use Illuminate\Container\Container;
 trait MakeCrudTrait
 {
 
-    protected   $TPL_PATH = __DIR__. '/../templates/crud';
+    protected   $TPL_PATH = __DIR__ . '/../../templates/crud';
 
     protected function parseName(string $name)
     {
