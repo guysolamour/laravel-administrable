@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "php": ">=7.3",
+    "php": ">=7.1",
     "bmatovu/multi-auth": "^7.3",
     "creativeorange/gravatar": "^1.0",
     "cviebrock/eloquent-sluggable": "^4.8",
