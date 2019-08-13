@@ -45,4 +45,34 @@ trait MakeCrudTrait
             mkdir($dir, 0755, true);
         }
     }
+
+    /**
+     * @param string $type
+     * @return string
+     */
+    private function getType(string $type) :string
+    {
+        if (
+            $type === 'string' || $type === 'decimal' || $type === 'double' ||
+            $type === 'float')
+        {
+            return 'text';
+        } elseif (
+            $type === 'integer' || $type === 'mediumInteger')
+        {
+            return 'number';
+        } elseif ($type === 'text' || $type === 'mediumText' || $type === 'longText') {
+            return 'textarea';
+        } elseif ($type === 'email') {
+            return 'email';
+        } elseif ($type === 'boolean' || $type === 'enum') {
+            return 'checkbox';
+        } elseif ($type === 'date') {
+            return 'date';
+        } elseif ($type === 'datetime') {
+            return 'datetime';
+        }else{
+            return 'text';
+        }
+    }
 }

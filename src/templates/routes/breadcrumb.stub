@@ -1,0 +1,9 @@
+<?php
+
+use Illuminate\Support\Str;
+
+/*
+  add breadcrumbs here (please don't remove  this  comment  line, it's used
+   to add other breadcrumbs dynamically)
+*/
+

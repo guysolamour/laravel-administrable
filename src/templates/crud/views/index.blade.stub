@@ -7,7 +7,7 @@
         <div class="row">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                {{-- Breadcrumbs::render('admin.work.index') --}}
+                {{ Breadcrumbs::render('admin.{{singularSlug}}.index') }}
             </section>
 
             <!-- Main content -->
