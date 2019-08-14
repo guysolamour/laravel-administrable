@@ -1,15 +1,17 @@
 {
   "name": "guysolamour/laravel-administrable",
-  "description": "A admin",
+  "description": "An administration package based on Laravel. This package was made according to my personal use to not repeat the same things for each project.",
   "license": "MIT",
   "keywords": [
-    "admin"
+    "admin","laravel","administration"
   ],
   "type": "library",
   "authors": [
     {
       "name": "Guy-roland ASSALE",
-      "email": "rolandassale@gmail.com"
+      "email": "rolandassale@gmail.com",
+      "homepage": "https://roland-assale.info",
+      "role": "developer"
     }
   ],
   "require": {

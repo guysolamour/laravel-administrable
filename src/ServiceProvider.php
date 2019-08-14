@@ -7,18 +7,18 @@ use Guysolamour\Admin\Console\MakeCrudCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    const CONFIG_PATH = __DIR__ . '/../config/admin.php';
+    const CONFIG_PATH = __DIR__ . '/../config/administrable.php';
     const ASSETS_PATH = __DIR__ . '/templates/views/assets';
 
     public function boot()
     {
         $this->publishes([
-            self::CONFIG_PATH => config_path('admin.php'),
-        ], 'admin-config');
+            self::CONFIG_PATH => config_path('administrable.php'),
+        ], 'administrable-config');
 
         $this->publishes([
             self::ASSETS_PATH => public_path('vendor/adminlte'),
-        ], 'admin-public');
+        ], 'administrable-public');
 
 
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
@@ -30,7 +30,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->mergeConfigFrom(
             self::CONFIG_PATH,
-            'admin'
+            'administrable'
         );
 
         if ($this->app->runningInConsole()) {

@@ -33,18 +33,19 @@ class AdminInstallCommand extends Command
 
     public function handle()
     {
+
         $this->info('Initiating...');
 
         $this->name = $this->argument('name');
 
         $this->override = $this->option('force') ? true : false;
 
-//        Artisan::call('multi-auth:install',[
-//            'name' => $this->name,
-//            '--force' => $this->override
-//        ]);
+        Artisan::call('multi-auth:install',[
+            'name' => $this->name,
+            '--force' => $this->override
+        ]);
 
-        $progress = $this->output->createProgressBar(13);
+        $progress = $this->output->createProgressBar(14);
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
@@ -131,6 +132,12 @@ class AdminInstallCommand extends Command
         $this->info(PHP_EOL . 'Creating Views...');
         $admin_views_path = $this->loadAdminViews(self::TPL_PATH);
         $this->info('Views created at ' . $admin_views_path);
+        $progress->advance();
+
+        // Assets
+        $this->info(PHP_EOL . 'Publishing Assets...');
+        Artisan::call('vendor:publish --tag=administrable-public');
+        $this->info('Assets published at ' . public_path('vendor/adminlte'));
         $progress->advance();
 
         $progress->finish();
@@ -386,8 +393,8 @@ class AdminInstallCommand extends Command
                 'path' => $routes_path  . $guard . '.php',
             ],
             [
-                'stub' => $stub_path . '/routes/breadcrumb.stub',
-                'path' => $routes_path . 'breadcrumb.php',
+                'stub' => $stub_path . '/routes/breadcrumbs.stub',
+                'path' => $routes_path . 'breadcrumbs.php',
             ],
         ];
 
@@ -444,13 +451,44 @@ class AdminInstallCommand extends Command
                 'stub' => $template_path . '/views/partials/_datatable.blade.stub',
                 'path' => $views_path . '/partials/_datatable.blade.php',
             ],
-
-
+            // auth filesS
+            [
+                'stub' => $template_path . '/views/layouts/app.blade.stub',
+                'path' => $views_path . '/layouts/app.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/home.blade.stub',
+                'path' => $views_path . '/home.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/login.blade.stub',
+                'path' => $views_path . '/auth/login.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/register.blade.stub',
+                'path' => $views_path . '/auth/register.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/verify.blade.stub',
+                'path' => $views_path . '/auth/verify.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/passwords/email.blade.stub',
+                'path' => $views_path . '/auth/passwords/email.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/passwords/reset.blade.stub',
+                'path' => $views_path . '/auth/passwords/reset.blade.php',
+            ],
         );
+
+        // remove auth directory created by nulti auth package
+        $this->recurseRmdir($views_path . '/auth');
 
         foreach ($views as $view) {
             $stub = file_get_contents($view['stub']);
             $complied = strtr($stub, $data_map);
+
 
             $dir = dirname($view['path']);
             if (!is_dir($dir)) {
@@ -584,6 +622,14 @@ class AdminInstallCommand extends Command
         } catch (\Exception $ex) {
             throw new \RuntimeException($ex->getMessage());
         }
+    }
+
+    private function recurseRmdir($dir) {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
     }
 
 

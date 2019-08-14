@@ -16,7 +16,7 @@ Package description: CHANGE ME
 
 Install via composer
 ```bash
-composer require guysolamour/admin
+composer require guysolamour/laravel-administrable
 ```
 
 ### Register Service Provider
@@ -44,7 +44,64 @@ php artisan vendor:publish --provider="Guysolamour\Admin\ServiceProvider" --tag=
 
 ## Usage
 
-CHANGE ME
+### Install the package
+    composer require guysolamour/laravel-admin
+
+### Publish config and assets
+    php artisan vendor:publish
+
+### Publish lfm config and assets
+    php artisan vendor:publish --tag=lfm_public
+
+### Clear cache
+    php artisan route:clear
+    php artisan config:clear
+
+### Create symbolic link for lfm
+    php artisan storage:link
+
+### Edit APP_URL in  .env file to add the port :800
+
+
+### use the make crud command
+    php artisan admin:make:crud Post
+    -t if the model should not be timestamps
+    --slug= the field to slugify
+    NB: the slug field in automatically generate don't enter it when the command prompt you
+    Don't forget to dump-autoload before seeding
+    composer dump-autolad (because some class where created)
+    php artisan db:seed --class PostsTableSeeder
+    
+
+
+### Edited files
+    app/Http/Kernel.php
+	app/Providers/RouteServiceProvider.php
+	config/auth.php
+	database/seeds/DatabaseSeeder.php
+
+
+### Add files
+    app/Admin.php
+    app/Forms/
+    app/Handlers/
+    app/Http/Controllers/Admin/
+    app/Http/Middleware/EnsureAdminEmailIsVerified.php
+    app/Http/Middleware/RedirectIfAdmin.php
+    app/Http/Middleware/RedirectIfNotAdmin.php
+    app/Http/Middleware/RedirectIfNotSuperAdmin.php
+    app/Notifications/
+    app/Traits/
+    config/lfm.php
+    database/factories/AdminFactory.php
+    database/migrations/2019_08_14_074523_create_admin_password_resets_table.php
+    database/migrations/2019_08_14_074523_create_admins_table.php
+    database/seeds/AdminsTableSeeder.php
+    resources/views/admin/
+    routes/admin.php
+    routes/breadcrumb.php
+
+
 
 ## Security
 
@@ -58,3 +115,5 @@ instead of using the issue tracker.
 
 This package is bootstrapped with the help of
 [melihovv/laravel-package-generator](https://github.com/melihovv/laravel-package-generator).
+
+
