@@ -65,6 +65,12 @@ class AdminInstallCommand extends Command
         $this->info('Migrations created at ' . $migrations_path);
         $progress->advance();
 
+        // Run migrations
+        $this->info(PHP_EOL . 'Migrate');
+        Artisan::call('migrate');
+        $this->info('Migrations done');
+        $progress->advance();
+
         // Seeds
         $this->info(PHP_EOL . 'Creating Seed...');
         $seed_path = $this->loadSeed(self::TPL_PATH);
