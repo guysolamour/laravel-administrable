@@ -10,7 +10,7 @@
 
     <div class="container-fluid">
         <!-- Breadcrumbs-->
-        {{--{{ Breadcrumbs::render('admin.admin.show', $admin) }}--}}
+        {{ Breadcrumbs::render('{{singularSlug}}.profile',${{singularSlug}}) }}
         <div class="row">
             <div class="col-sm-12">
 

@@ -8,13 +8,7 @@
     <div class="container-fluid" id="app">
 
         <!-- Breadcrumbs-->
-        <section class="content-header">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.index') }}">{{pluralSlug}}</a></li>
-            <li class="breadcrumb-item active">Ajouter</li>
-        </ol>
-        </section>
+        {{ Breadcrumbs::render('admin.create') }}
         <br>
         <div class="row">
             <div class="col-sm-8">
@@ -33,7 +27,7 @@
                     <div class="input-group" style="margin-top: 1rem; margin-bottom: 2rem;">
                                       <span class="input-group-btn">
                                         <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                                          <i class="fa fa-picture-o"></i> Ajouter un avatar
+                                          <i class="fa fa-picture-o"></i> <span>Ajouter un avatar</span>
                                         </a>
                                       </span>
                         <input  type="hidden" id="thumbnail" class="form-control" name="filepath">
@@ -49,8 +43,15 @@
 @section('js')
     <script>
 
+        // Change upload button text
+        $('#holder').on('change', function(){
+            if($('#holder').attr('src') !== undefined){
+                $('#lfm span').text('Changer d\'avatar')
+            }
+        })
+
         /*
-        * set the checkbox to false if on checked and populate the avatar input in the form
+        * Populate the avatar input in the form
         */
 
         $('button#save').on('click', function (ev) {

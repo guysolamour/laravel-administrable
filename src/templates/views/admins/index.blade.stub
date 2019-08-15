@@ -6,16 +6,9 @@
 @section('content')
 
     <div class="container-fluid">
-        <!-- Breadcrumbs-->
-        {{--{{ Breadcrumbs::render('{{singularSlug}}.post.index') }}--}}
         <div class="row">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <ol class="breadcrumb">
-                    <li><a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="fa fa-dashboard"></i> Tableau de bord</a></li>
-                    <li class="active">{{pluralClass}}</li>
-                </ol>
-            </section>
+             <!-- Breadcrumbs-->
+            {{ Breadcrumbs::render('admin.index') }}
 
             <!-- Main content -->
             <section class="content" style="margin-top: 4rem;">
