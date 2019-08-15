@@ -157,10 +157,17 @@ class CreateCrudMigration
         $fields = "\n";
         $seed_fields = "\n";
         foreach ($this->fields as $field) {
-            $fields .= '            $table->' . $field[1] . '(' . "'$field[0]'" . ');' . "\n";
+            $fields .= '            $table->' . $this->getFieldType($field[1]) . '(' . "'$field[0]'" . ');' . "\n";
+
+
             if ($field[1] === 'string') {
 
                 $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->text(),';
+            }
+
+            if ($field[1] === 'image') {
+
+                $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->file,';
             }
 
             if ($field[1] === 'text') {
@@ -235,4 +242,6 @@ class CreateCrudMigration
         file_put_contents($seed_path, $seed);
         return $seed_file;
     }
+
+
 }

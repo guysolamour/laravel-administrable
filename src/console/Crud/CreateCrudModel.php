@@ -135,6 +135,7 @@ class CreateCrudModel
         // add slug field to the fillable properties
         if (!is_null($this->slug)) {
             $fillable .= "'{$this->slug}'";
+            $fillable .= ",'slug'";
         }
 
         // remove the comma at the end of the string
@@ -180,7 +181,7 @@ class CreateCrudModel
     {
         if (!file_exists(app_path('Models/BaseModel.php'))) {
 
-            $base_model_stub = file_get_contents(self::TPL_PATH . '/models/BaseModel.stub');
+            $base_model_stub = file_get_contents($this->TPL_PATH . '/models/BaseModel.stub');
             $base_model = strtr($base_model_stub, $data_map);
             $base_model_path = app_path('Models/BaseModel.php');
             file_put_contents($base_model_path, $base_model);

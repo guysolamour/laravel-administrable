@@ -7,7 +7,7 @@ use Illuminate\Container\Container;
 trait MakeCrudTrait
 {
 
-    protected   $TPL_PATH = __DIR__ . '/../../templates/crud';
+    public   $TPL_PATH = __DIR__ . '/../../templates/crud';
 
     protected function parseName(string $name)
     {
@@ -46,6 +46,14 @@ trait MakeCrudTrait
         }
     }
 
+    private function getFieldType(string $field) :string
+    {
+        if ($field === 'image') {
+            return 'string';
+        }
+        return strtolower($field);
+    }
+
     /**
      * @param string $type
      * @return string
@@ -57,7 +65,12 @@ trait MakeCrudTrait
             $type === 'float')
         {
             return 'text';
-        } elseif (
+        }elseif (
+           $type === 'image')
+        {
+          return 'file';
+        }
+        elseif (
             $type === 'integer' || $type === 'mediumInteger')
         {
             return 'number';

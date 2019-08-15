@@ -78,7 +78,7 @@ class CreateCrudForm
     {
         $fields = "\n";
         foreach ($this->fields as $field) {
-            $fields .= '            ->add(' . "'{$field[0]}'" . ', ' . "'{$this->getType($field[1])}'" . ',[
+            $fields .= '            ->add(' . "'{$this->getFieldType($field[0])}'" . ', ' . "'{$this->getType($field[1])}'" . ',[
                     \'rules\' => ' . "'$field[2]'" . '
                 ])' . "\n";
         }
@@ -120,6 +120,14 @@ class CreateCrudForm
         $stub = file_get_contents($form_stub);
         $complied = strtr($stub, $data_map);
         return array($form_path, $complied);
+    }
+
+    private function getFieldType(string $field) :string
+    {
+        if ($field === 'image') {
+            return 'file';
+        }
+        return strtolower($field);
     }
 
 

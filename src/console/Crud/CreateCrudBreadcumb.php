@@ -46,8 +46,8 @@ class CreateCrudBreadcumb
     {
         $data_map = $this->parseName($this->name);
 
-        $breadcrumb_path = base_path('/routes/breadcrumb.php');
-        $breadcrumb_stub = $this->TPL_PATH . '/routes/breadcrumb.stub';
+        $breadcrumb_path = base_path('/routes/breadcrumbs.php');
+        $breadcrumb_stub = $this->TPL_PATH . '/routes/breadcrumbs.stub';
 
         $breadcrumb = file_get_contents($breadcrumb_path);
         $stub = file_get_contents($breadcrumb_stub);
