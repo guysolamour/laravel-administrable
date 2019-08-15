@@ -1,0 +1,5 @@
+
+    public function redirectTo()
+    {
+        return config('administrable.auth_prefix_path');
+    }

@@ -40,6 +40,7 @@ class AdminInstallCommand extends Command
 
         $this->override = $this->option('force') ? true : false;
 
+
         Artisan::call('multi-auth:install',[
             'name' => $this->name,
             '--force' => $this->override
@@ -309,7 +310,43 @@ class AdminInstallCommand extends Command
             file_put_contents($controller['path'], $complied);
         }
 
+        // Add redirectTo method to auth controllers
+        $auth_controllers = glob($controllers_path . '/Auth/*.php');
+        $search = 'protected $redirectTo = '. "'/{$data_map['{{singularSlug}}']}'" . ';';
+        $stub = file_get_contents($template_path . '/Controllers/redirectTo.stub');
+
+
+        $this->replaceAndRegisterStub($search,$stub,$auth_controllers);
+
+
+        // home controller
+        $file = $controllers_path . '/HomeController.php';
+        $search = 'protected $redirectTo = '. "'/{$data_map['{{singularSlug}}']}/login'" . ';';
+        $this->replaceAndRegisterStub($search,$stub,$file);
+
+
+
         return $controllers_path;
+    }
+
+    /**
+     * @param $search
+     * @param $replace
+     * @param  string|array $file
+     */
+    private function replaceAndRegisterStub($search, $replace, $file)
+    {
+        if (is_array($file)){
+            foreach ($file as $value) {
+                $this->replaceAndRegisterStub($search,$replace,$value);
+            }
+            return;
+        }
+
+        $provider = file_get_contents($file);
+        $provider = str_replace($search, $replace, $provider);
+        // Overwrite file
+        file_put_contents($file, $provider);
     }
 
     protected function loadTraits($template_path)
@@ -412,6 +449,19 @@ class AdminInstallCommand extends Command
             file_put_contents($route['path'], $complied);
         }
 
+        // register route prefix
+        $provider_path = app_path('Providers/RouteServiceProvider.php');
+        $provider = file_get_contents($provider_path);
+        $data_map = $this->parseName();
+
+        $map_call_bait = "Route::prefix('{$data_map['{{singularSlug}}']}')";
+
+        $prefix = "Route::prefix(config('administrable.auth_prefix_path'))";
+
+        $provider = str_replace($map_call_bait, $prefix, $provider);
+
+        // Overwrite file
+        file_put_contents($provider_path, $provider);
 
         return $routes_path;
     }
@@ -560,6 +610,22 @@ class AdminInstallCommand extends Command
                 $stub = file_get_contents($middleware['stub']);
                 file_put_contents($middleware['path'], strtr($stub, $data_map));
             }
+
+            // change middleware redirectifNot{$guard) redirect method
+
+            $provider_path = $middleware_path . "/RedirectIfNot{$data_map['{{singularClass}}']}.php";
+            $provider = file_get_contents($provider_path);
+
+
+            $search = "'{$data_map['{{singularSlug}}']}/login'";
+            $prefix = file_get_contents($template_path . '/Middleware/RedirectTo.stub');
+
+            $provider = str_replace($search, $prefix, $provider);
+
+            // Overwrite file
+            file_put_contents($provider_path, $provider);
+
+
 
             return $middleware_path;
 
