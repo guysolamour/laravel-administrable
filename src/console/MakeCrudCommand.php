@@ -1,17 +1,17 @@
 <?php
 
-namespace Guysolamour\Admin\Console;
+namespace Guysolamour\Administrable\Console;
 
 
-use Guysolamour\Admin\Console\Crud\CreateCrudBreadcumb;
+use Guysolamour\Administrable\Console\Crud\CreateCrudBreadcumb;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Guysolamour\Admin\Console\Crud\CreateCrudController;
-use Guysolamour\Admin\Console\Crud\CreateCrudForm;
-use Guysolamour\Admin\Console\Crud\CreateCrudMigration;
-use Guysolamour\Admin\Console\Crud\CreateCrudModel;
-use Guysolamour\Admin\Console\Crud\CreateCrudRoute;
-use Guysolamour\Admin\Console\Crud\CreateCrudView;
+use Guysolamour\Administrable\Console\Crud\CreateCrudController;
+use Guysolamour\Administrable\Console\Crud\CreateCrudForm;
+use Guysolamour\Administrable\Console\Crud\CreateCrudMigration;
+use Guysolamour\Administrable\Console\Crud\CreateCrudModel;
+use Guysolamour\Administrable\Console\Crud\CreateCrudRoute;
+use Guysolamour\Administrable\Console\Crud\CreateCrudView;
 
 class MakeCrudCommand extends Command
 {
@@ -32,10 +32,10 @@ class MakeCrudCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'admin:make:crud 
+    protected $signature = 'admin:make:crud
                             {model : Model name.}
-                             {--s|slug= : The field to slugify}                            
-                             {--t|timestamps : Determine if the model is not timestamped}                            
+                             {--s|slug= : The field to slugify}
+                             {--t|timestamps : Determine if the model is not timestamped}
                             ';
 
     /**
@@ -112,6 +112,10 @@ class MakeCrudCommand extends Command
         $view_path = CreateCrudView::generate($this->model,$this->fields,$this->slug,$this->timestamps);
         $this->info('Views created at ' . $view_path);
         $progress->advance();
+
+         // update composer autoload for seeding
+         \exec('composer dump-autoload > /dev/null 2>&1');
+
 
 
 

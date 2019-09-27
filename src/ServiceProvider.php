@@ -1,9 +1,9 @@
 <?php
 
-namespace Guysolamour\Admin;
+namespace Guysolamour\Administrable;
 
-use Guysolamour\Admin\Console\AdminInstallCommand;
-use Guysolamour\Admin\Console\MakeCrudCommand;
+use Guysolamour\Administrable\Console\AdminInstallCommand;
+use Guysolamour\Administrable\Console\MakeCrudCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

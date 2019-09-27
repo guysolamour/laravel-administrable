@@ -1,6 +1,6 @@
 <?php
 
-namespace Guysolamour\Admin\Console\Crud;
+namespace Guysolamour\Administrable\Console\Crud;
 
 
 class CreateCrudMigration
@@ -167,7 +167,7 @@ class CreateCrudMigration
 
             if ($field[1] === 'image') {
 
-                $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->file,';
+                $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->imageUrl,';
             }
 
             if ($field[1] === 'text') {

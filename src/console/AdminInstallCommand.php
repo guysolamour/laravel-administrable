@@ -1,6 +1,6 @@
 <?php
 
-namespace Guysolamour\Admin\Console;
+namespace Guysolamour\Administrable\Console;
 
 
 use Illuminate\Console\Command;
@@ -45,6 +45,7 @@ class AdminInstallCommand extends Command
             'name' => $this->name,
             '--force' => $this->override
         ]);
+
 
         $progress = $this->output->createProgressBar(14);
 
@@ -147,6 +148,10 @@ class AdminInstallCommand extends Command
         $this->info('Assets published at ' . public_path('vendor/adminlte'));
         $progress->advance();
 
+
+        // update composer autoload for seeding
+        \exec('composer dump-autoload > /dev/null 2>&1');
+
         $progress->finish();
 
     }
@@ -175,16 +180,19 @@ class AdminInstallCommand extends Command
             $name = $this->name;
 
 
+
+
+
         return $parsed = array(
             '{{namespace}}' => $this->getNamespace(),
-            '{{pluralCamel}}' => str_plural(camel_case($name)),
-            '{{pluralSlug}}' => str_plural(str_slug($name)),
-            '{{pluralSnake}}' => str_plural(snake_case($name)),
-            '{{pluralClass}}' => str_plural(studly_case($name)),
-            '{{singularCamel}}' => str_singular(camel_case($name)),
-            '{{singularSlug}}' => str_singular(str_slug($name)),
-            '{{singularSnake}}' => str_singular(snake_case($name)),
-            '{{singularClass}}' => str_singular(studly_case($name)),
+            '{{pluralCamel}}' => Str::plural(Str::camel($name)),
+            '{{pluralSlug}}' => Str::plural(Str::slug($name)),
+            '{{pluralSnake}}' => Str::plural(Str::snake($name)),
+            '{{pluralClass}}' => Str::plural(Str::studly($name)),
+            '{{singularCamel}}' => Str::singular(Str::camel($name)),
+            '{{singularSlug}}' => Str::singular(Str::slug($name)),
+            '{{singularSnake}}' => Str::singular(Str::snake($name)),
+            '{{singularClass}}' => Str::singular(Str::studly($name)),
         );
     }
 

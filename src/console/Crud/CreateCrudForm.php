@@ -1,5 +1,5 @@
 <?php
-namespace Guysolamour\Admin\Console\Crud;
+namespace Guysolamour\Administrable\Console\Crud;
 
 class CreateCrudForm
 {

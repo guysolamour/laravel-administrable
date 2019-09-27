@@ -1,12 +1,12 @@
 <?php
 
-namespace Guysolamour\Admin\Tests;
+namespace Guysolamour\Administrable\Tests;
 
-use Guysolamour\Admin\Facades\Admin;
-use Guysolamour\Admin\ServiceProvider;
+use Guysolamour\Administrable\Facades\Administrable;
+use Guysolamour\Administrable\ServiceProvider;
 use Orchestra\Testbench\TestCase;
 
-class AdminTest extends TestCase
+class AdministrableTest extends TestCase
 {
     protected function getPackageProviders($app)
     {
@@ -16,7 +16,7 @@ class AdminTest extends TestCase
     protected function getPackageAliases($app)
     {
         return [
-            'admin' => Admin::class,
+            'administrable' => Administrable::class,
         ];
     }
 

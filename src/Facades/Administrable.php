@@ -1,13 +1,13 @@
 <?php
 
-namespace Guysolamour\Admin\Facades;
+namespace Guysolamour\Administrable\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Admin extends Facade
+class Administrable extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'admin';
+        return 'administrable';
     }
 }
