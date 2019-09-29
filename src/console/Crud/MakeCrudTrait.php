@@ -55,6 +55,8 @@ trait MakeCrudTrait
         return strtolower($field);
     }
 
+
+
     /**
      * @param string $type
      * @return string
@@ -88,5 +90,15 @@ trait MakeCrudTrait
         }else{
             return 'text';
         }
+    }
+
+
+    private function writeFile($path,$content) :bool {
+        if (!file_exists($path)) {
+            file_put_contents($path, $content);
+            return true;
+        }
+
+        return false;
     }
 }

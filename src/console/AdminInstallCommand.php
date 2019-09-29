@@ -55,6 +55,7 @@ class AdminInstallCommand extends Command
         $this->info('Model created at ' . $model_path);
         $progress->advance();
 
+
         // Factories
         $this->info(PHP_EOL . 'Creating Factory...');
         $factory_path = $this->loadFactory(self::TPL_PATH);
@@ -213,6 +214,8 @@ class AdminInstallCommand extends Command
 
 
             $model_path = app_path($data_map['{{singularClass}}'] . '.php');
+
+
 
             file_put_contents($model_path, $model);
 
@@ -711,6 +714,8 @@ class AdminInstallCommand extends Command
         }
         return rmdir($dir);
     }
+
+
 
 
 

@@ -65,15 +65,19 @@ class MakeCrudCommand extends Command
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
-        $model_path = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
-        $this->info('Model created at ' . $model_path);
+        [$result,$model_path] = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
+        $this->displayResult($result,$model_path);
+
         $progress->advance();
+
+
 
 
         // Migrations and seeds
         $this->info(PHP_EOL . 'Creating Migration...');
-        [$migration_path,$seed_file_name] = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
-        $this->info('Migration created at ' . $migration_path . ' and Seed at ' . $seed_file_name);
+        [$migration_result,$migration_path,$seed_result,$seed_path] = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
+        $this->displayResult($migration_result,$migration_path);
+        $this->displayResult($seed_result,$seed_path);
         $progress->advance();
 
         // Migrate
@@ -142,6 +146,15 @@ class MakeCrudCommand extends Command
         }
 
         return $fields;
+    }
+
+
+    private function displayResult(bool $result, string $path) :void {
+        if($result){
+            $this->info('File created at ' . $path);
+        }else{
+            $this->error('File '. $path . ' already exists');
+        }
     }
 
 }

@@ -62,7 +62,7 @@ class CreateCrudModel
     /**
      * @return string
      */
-    private function createModel() :string
+    private function createModel() :array
     {
         try {
             $stub = file_get_contents($this->TPL_PATH . '/models/model.stub');
@@ -78,9 +78,9 @@ class CreateCrudModel
             $this->createDirIfNotExists($model_path);
 
             // add model and base model
-            $this->loadModelAndBaseModel($data_map, $model_path, $model);
+            $result = $this->loadModelAndBaseModel($data_map, $model_path, $model);
 
-            return $model_path;
+            return [$result,$model_path];
 
         } catch (\Exception $ex) {
             throw new \RuntimeException($ex->getMessage());
@@ -179,7 +179,7 @@ class CreateCrudModel
      * @param $model_path
      * @param $model
      */
-    private function loadModelAndBaseModel($data_map, $model_path, $model): void
+    private function loadModelAndBaseModel($data_map, $model_path, $model): bool
     {
         if (!file_exists(app_path('Models/BaseModel.php'))) {
 
@@ -190,7 +190,7 @@ class CreateCrudModel
         }
 
 
-        file_put_contents($model_path, $model);
+        return $this->writeFile($model_path,$model);
     }
 
 }

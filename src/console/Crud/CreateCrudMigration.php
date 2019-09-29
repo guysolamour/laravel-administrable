@@ -78,18 +78,25 @@ class CreateCrudMigration
                 // generate the differents fields
                 [$fields, $seed_fields] = $this->generateFields();
 
-                // migration replace
-                $this->registerMigrationFields($fields, $complied, $migration);
+
+
+
 
                 // seeder replace
-                $seed_file = $this->createMigration($seed_fields, $seeder, $data_map);
-                $this->registerSeed();
+                [$seed_result,$seed_file] = $this->createMigration($seed_fields, $seeder, $data_map);
 
-                return [$migration['path'],$seed_file];
+                // create migration if the seed was generate previously
+                if($seed_result){
+                    $migration_result = $this->registerMigrationFields($fields, $complied, $migration);
+                    $this->registerSeed();
+
+                }
+
+
+                return [isset($migration_result),$migration['path'],$seed_result,$seed_file];
 
             }
 
-            return database_path('migrations');
 
         } catch (\Exception $ex) {
             throw new \RuntimeException($ex->getMessage());
@@ -108,10 +115,9 @@ class CreateCrudMigration
             $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
 
             $database_seeder = file_get_contents($database_seeder_path);
-
-//            $route_mw_bait = '// $this->call(UsersTableSeeder::class);'."\n";
-            $route_mw_bait = "call([";
-            $route_mw = "\n            " . $data_map['{{pluralClass}}'] . 'TableSeeder::class,';
+            $route_mw_bait = "    {";
+            $replace = '$this->call(' .  $data_map['{{pluralClass}}'] . 'TableSeeder::class'. ");";
+            $route_mw = "\n        " . $replace;
 
 
             $database_seeder = str_replace($route_mw_bait, $route_mw_bait . $route_mw, $database_seeder);
@@ -205,11 +211,11 @@ class CreateCrudMigration
      * @param $complied
      * @param $migration
      */
-    protected function registerMigrationFields($fields, $complied, $migration): void
+    protected function registerMigrationFields($fields, $complied, $migration): bool
     {
         $slug_mw_bait = '$table->bigIncrements(\'id\');';
         $model = str_replace($slug_mw_bait, $slug_mw_bait . $fields, $complied);
-        file_put_contents($migration['path'], $model);
+        return $this->writeFile($migration['path'], $model);
     }
 
     /**
@@ -239,8 +245,8 @@ class CreateCrudMigration
 
         list($seed, $seed_file, $seed_path) = $this->registerEntryInDatabaseSeeder($seed_mw_bait, $seed_fields, $seeder, $data_map);
 
-        file_put_contents($seed_path, $seed);
-        return $seed_file;
+        $result = $this->writeFile($seed_path,$seed);
+        return [$result,$seed_file];
     }
 
 
