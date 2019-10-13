@@ -19,4 +19,10 @@ class BaseModel extends Model {
         }
         return $query->limit($limit)->orderByDesc('id');
     }
+
+
+    public function scopeFindBySlug($query, string $slug)
+    {
+        return $query->where('slug',$slug);
+    }
 }
