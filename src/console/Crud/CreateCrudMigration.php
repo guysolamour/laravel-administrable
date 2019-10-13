@@ -195,8 +195,8 @@ class CreateCrudMigration
         if (!is_null($this->slug)) {
             $fields .= '            $table->string(' . "'{$this->slug}'" . ');' . "\n";
             $fields .= '            $table->string(' . "'slug'" . ');';
-            $seed_fields .= "\n" . "                '{$this->slug}'  => " . '$faker->realText(50),';
-            $seed_fields .= "\n" . "                'slug'  => " . '$faker->slug,';
+            $seed_fields .= "\n" . "                '{$this->slug}'  => " . '$slug = $faker->realText(50),';
+            $seed_fields .= "\n" . "                'slug'  => " . 'Illuminate\Support\Str::slug($slug,';
 
         }
         // add timestamps
