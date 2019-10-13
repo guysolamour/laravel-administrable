@@ -163,12 +163,31 @@ class CreateCrudMigration
         $fields = "\n";
         $seed_fields = "\n";
         foreach ($this->fields as $field) {
+            // on genere les champs de la migration
+
+
             $fields .= '            $table->' . $this->getFieldType($field[1]) . '(' . "'$field[0]'" . ');' . "\n";
 
 
-            if ($field[1] === 'string') {
 
-                $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->text(),';
+
+
+            // permettre de generer le slug dans le seed en mettant la variable $slug devant
+
+            if ($field[1] === 'string') {
+                if($field[0] === $this->slug){
+                    $seed_fields .= "\n" . "                '$field[0]'  => " . '$slug = $faker->text(),';
+                }else {
+                    $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->text(),';
+
+                }
+
+            }
+
+
+            if ($field[1] === 'slug') {
+
+                $seed_fields .= "\n" . "                '$field[0]'  => " . '$slug = $faker->realText(50),';
             }
 
             if ($field[1] === 'image') {
@@ -193,10 +212,10 @@ class CreateCrudMigration
         }
         // add slug field and the linked field
         if (!is_null($this->slug)) {
-            $fields .= '            $table->string(' . "'{$this->slug}'" . ');' . "\n";
+            // $fields .= '            $table->string(' . "'{$this->slug}'" . ');' . "\n";
             $fields .= '            $table->string(' . "'slug'" . ');';
-            $seed_fields .= "\n" . "                '{$this->slug}'  => " . '$slug = $faker->realText(50),';
-            $seed_fields .= "\n" . "                'slug'  => " . 'Illuminate\Support\Str::slug($slug,';
+            // $seed_fields .= "\n" . "                '{$this->slug}'  => " . '$slug = $faker->realText(50),';
+            $seed_fields .= "\n" . "                'slug'  => " . 'Illuminate\Support\Str::slug($slug),';
 
         }
         // add timestamps

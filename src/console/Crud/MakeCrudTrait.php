@@ -63,6 +63,7 @@ trait MakeCrudTrait
      */
     private function getType(string $type) :string
     {
+     
         if (
             $type === 'string' || $type === 'decimal' || $type === 'double' ||
             $type === 'float')
