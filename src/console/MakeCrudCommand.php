@@ -3,18 +3,23 @@
 namespace Guysolamour\Administrable\Console;
 
 
-use Guysolamour\Administrable\Console\Crud\CreateCrudBreadcumb;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
-use Guysolamour\Administrable\Console\Crud\CreateCrudController;
 use Guysolamour\Administrable\Console\Crud\CreateCrudForm;
-use Guysolamour\Administrable\Console\Crud\CreateCrudMigration;
+use Guysolamour\Administrable\Console\Crud\CreateCrudView;
 use Guysolamour\Administrable\Console\Crud\CreateCrudModel;
 use Guysolamour\Administrable\Console\Crud\CreateCrudRoute;
-use Guysolamour\Administrable\Console\Crud\CreateCrudView;
+use Guysolamour\Administrable\Console\Crud\CreateCrudBreadcumb;
+use Guysolamour\Administrable\Console\Crud\CreateCrudMigration;
+use Guysolamour\Administrable\Console\Crud\CreateCrudController;
 
 class MakeCrudCommand extends Command
 {
+
+    private const EXCLUDE_FIELDS = ['id','created_at','updated_at'];
 
 
     protected const TYPES = [
@@ -46,6 +51,17 @@ class MakeCrudCommand extends Command
     protected $description = 'Create, model, migration and all views';
 
 
+    private function getTableName(string $name) :string{
+        return strtolower(Str::plural($name));
+    }
+
+    private function getTableFields(string $table_name) :array {
+        $table_fields = Schema::getColumnListing($table_name);
+
+        return array_diff($table_fields,self::EXCLUDE_FIELDS);
+
+    }
+
     /**
      *
      */
@@ -55,11 +71,30 @@ class MakeCrudCommand extends Command
 
         $progress = $this->output->createProgressBar(9);
 
+
+
         $this->timestamps = $this->option('timestamps');
         $this->slug = is_string($this->option('slug')) ? strtolower($this->option('slug')) : $this->option('slug');
         $this->model = $this->argument('model');
 
-        $this->fields = $this->getFields();
+        // check if the model exists
+        $config = "administrable.models.".strtolower($this->model);
+        $config_fields = config($config);
+
+       // dd($fie);
+        //dd($this->model,config($fie),Arr::dot(config($fie)));
+        //dd($this->getTableFields(($this->getTableName($this->model))));
+
+        if (!empty($config_fields)) {
+            # code...
+            $this->fields = Arr::dot($config_fields);
+            //dd( $this->fields);
+        }else {
+
+            $this->fields = $this->getFields();
+        }
+
+
         $progress->advance();
 
 
