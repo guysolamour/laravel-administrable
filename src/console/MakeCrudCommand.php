@@ -50,18 +50,6 @@ class MakeCrudCommand extends Command
      */
     protected $description = 'Create, model, migration and all views';
 
-
-    private function getTableName(string $name) :string{
-        return strtolower(Str::plural($name));
-    }
-
-    private function getTableFields(string $table_name) :array {
-        $table_fields = Schema::getColumnListing($table_name);
-
-        return array_diff($table_fields,self::EXCLUDE_FIELDS);
-
-    }
-
     /**
      *
      */
@@ -158,8 +146,6 @@ class MakeCrudCommand extends Command
 
 
 
-
-
         $progress->finish();
 
     }
@@ -188,7 +174,7 @@ class MakeCrudCommand extends Command
         if($result){
             $this->info('File created at ' . $path);
         }else{
-            $this->error('File '. $path . ' already exists');
+            $this->info('File '. $path . ' already exists');
         }
     }
 
