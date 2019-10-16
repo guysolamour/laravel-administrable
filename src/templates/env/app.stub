@@ -1,0 +1,4 @@
+'short_name' => env('APP_NAME', 'Laravel'),
+    'first_name' => env('APP_FIRST_NAME', 'Laravel'),
+    'last_name' => env('APP_LAST_NAME', 'Laravel'),
+    

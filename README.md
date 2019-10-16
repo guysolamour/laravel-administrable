@@ -60,7 +60,7 @@ php artisan vendor:publish --provider="Guysolamour\Admin\ServiceProvider" --tag=
 ### Create symbolic link for lfm
     php artisan storage:link
 
-### Edit APP_URL in  .env file to add the port :800
+### Edit APP_URL in  .env file to add the port :8000
 
 
 ### use the make crud command
@@ -71,7 +71,7 @@ php artisan vendor:publish --provider="Guysolamour\Admin\ServiceProvider" --tag=
     Don't forget to dump-autoload before seeding
     composer dump-autolad (because some class where created)
     php artisan db:seed --class PostsTableSeeder
-    
+
 
 
 ### Edited files
@@ -105,7 +105,7 @@ php artisan vendor:publish --provider="Guysolamour\Admin\ServiceProvider" --tag=
 
 ## Security
 
-If you discover any security related issues, please email 
+If you discover any security related issues, please email
 instead of using the issue tracker.
 
 ## Credits

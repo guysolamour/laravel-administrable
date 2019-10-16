@@ -36,6 +36,8 @@ class AdminInstallCommand extends Command
 
         $this->info('Initiating...');
 
+
+
         $this->name = $this->argument('name');
 
         $this->override = $this->option('force') ? true : false;
@@ -47,7 +49,7 @@ class AdminInstallCommand extends Command
         ]);
 
 
-        $progress = $this->output->createProgressBar(14);
+        $progress = $this->output->createProgressBar(16);
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
@@ -148,6 +150,19 @@ class AdminInstallCommand extends Command
         Artisan::call('vendor:publish --tag=administrable-public');
         $this->info('Assets published at ' . public_path('vendor/adminlte'));
         $progress->advance();
+
+
+         // add variable in .env file
+         $this->info(PHP_EOL . 'Adding env variables...');
+         $env_path = $this->addEnvVariables();
+         $this->info('Set env variables at ' . $env_path);
+         $progress->advance();
+
+         // add app config keys
+         $this->info(PHP_EOL . 'Adding config keys...');
+         $env_path = $this->addAppConfigKeys();
+         $this->info('App config set at ' . $env_path);
+         $progress->advance();
 
 
         // update composer autoload for seeding
@@ -707,12 +722,63 @@ class AdminInstallCommand extends Command
         }
     }
 
-    private function recurseRmdir($dir) {
+    protected function recurseRmdir($dir) {
         $files = array_diff(scandir($dir), array('.','..'));
         foreach ($files as $file) {
             (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
         }
         return rmdir($dir);
+    }
+
+
+    protected function addEnvVariables()
+    {
+
+
+        $env_path = base_path('.env');
+
+        $env = file_get_contents($env_path);
+
+
+        $env_stub = file_get_contents(self::TPL_PATH . '/env/env.stub');
+
+
+        $search = 'APP_ENV';
+
+        $env_file = str_replace($search,  $env_stub . $search, $env);
+
+        // add port to the APP_URL
+
+        $search = 'APP_URL=http://localhost';
+
+        $port = 8000;
+
+        $env_file = str_replace($search,  $search . ":{$port}" , $env_file);
+
+        // Overwrite config file
+       file_put_contents($env_path, $env_file);
+
+
+
+        return $env_path;
+    }
+
+    protected function addAppConfigKeys()
+    {
+        $app_path = config_path('app.php');
+
+        $app = file_get_contents($app_path);
+
+        $app_stub = file_get_contents(self::TPL_PATH . '/env/app.stub');
+
+
+        $search = "'name' =>";
+
+        $app_file = str_replace($search,    $app_stub . $search   , $app);
+
+        // Overwrite config file
+        file_put_contents($app_path);
+
     }
 
 
