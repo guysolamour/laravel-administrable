@@ -78,14 +78,24 @@ class CreateCrudForm
     {
         $fields = "\n";
         foreach ($this->fields as $field) {
-            $fields .= '            ->add(' . "'{$this->getFieldType($field[0])}'" . ', ' . "'{$this->getType($field[1])}'" . ',[
+            // on doit ajouter les rules si ces derniers ne sont pas vides
+
+            if (!empty($field[2])){
+
+                $fields .= '            ->add(' . "'{$this->getFieldType($field[0])}'" . ', ' . "'{$this->getType($field[1])}'" . ',[
                     \'rules\' => ' . "'$field[2]'" . '
                 ])' . "\n";
+            }else {
+
+                $fields .= '            ->add(' . "'{$this->getFieldType($field[0])}'" . ', ' . "'{$this->getType($field[1])}'" . ',[
+                ])' . "\n";
+            }
+
         }
         // add slug field
         if (!is_null($this->slug)) {
-            $fields .= '            ->add(' . "'{$this->slug}'" . ', ' . "'text'" . ',[
-                ])' . "\n";
+//            $fields .= '            ->add(' . "'{$this->slug}'" . ', ' . "'text'" . ',[
+//                ])' . "\n";
 
             $fields .= '            ->add(' . "'slug'" . ', ' . "'text'" . ',[
                 ])' . "\n";
