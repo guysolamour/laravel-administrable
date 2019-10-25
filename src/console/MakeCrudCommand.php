@@ -13,6 +13,7 @@ use Guysolamour\Administrable\Console\Crud\CreateCrudBreadcumb;
 use Guysolamour\Administrable\Console\Crud\CreateCrudMigration;
 use Guysolamour\Administrable\Console\Crud\CreateCrudController;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class MakeCrudCommand extends Command
 {
@@ -35,6 +36,7 @@ class MakeCrudCommand extends Command
     protected $fields = [];
     protected $tempFields = [];
     protected $timestamps;
+    protected $seed;
     protected $slug;
 
     /**
@@ -45,6 +47,7 @@ class MakeCrudCommand extends Command
     protected $signature = 'admin:make:crud
                             {model : Model name.}
                              {--s|slug= : The field to slugify}
+                             {--d|seed : Seed the table}
                              {--t|timestamps : Determine if the model is not timestamped}
                             ';
 
@@ -62,9 +65,10 @@ class MakeCrudCommand extends Command
     {
         $this->info('Initiating...');
 
-        $progress = $this->output->createProgressBar(9);
+        $progress = $this->output->createProgressBar(10);
 
         $this->timestamps = $this->option('timestamps');
+        $this->seed = $this->option('seed');
         $this->slug = is_string($this->option('slug')) ? strtolower($this->option('slug')) : $this->option('slug');
         $this->model = $this->argument('model');
 
@@ -156,6 +160,16 @@ class MakeCrudCommand extends Command
 
          // update composer autoload for seeding
          \exec('composer dump-autoload > /dev/null 2>&1');
+
+        // seed table
+        if ($this->seed){
+            $this->info(PHP_EOL . 'Seeding...');
+            $this->callSilent('db:seed', [
+                '--class' => Str::plural(Str::studly($this->model))  . 'TableSeeder',
+            ]);
+            $this->info('Database seeding completed successfully.');
+            $progress->advance();
+        }
 
 
 
