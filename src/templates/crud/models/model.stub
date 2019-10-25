@@ -8,8 +8,6 @@ class {{singularClass}} extends BaseModel
 
     public $fillable = [{{fillable}}];
 
-    public $timestamps = {{timestamps}};
-
     // add relation methods below
 
 

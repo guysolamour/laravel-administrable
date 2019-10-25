@@ -73,6 +73,8 @@ class CreateCrudModel
 
         $model = strtr($stub, $data_map);
 
+        $model = $this->addTimestampProperty($model);
+
 
         $model = $this->loadSluggableTrait($model, $data_map);
 
@@ -102,7 +104,6 @@ class CreateCrudModel
             '{{singularSnake}}' => Str::singular(Str::snake($name)),
             '{{singularClass}}' => Str::singular(Str::studly($name)),
             '{{fillable}}' => $this->getFillables(),
-            '{{timestamps}}' => $this->getTimetsamps(),
             '{{slugField}}' => $this->slug,
         ];
     }
@@ -189,16 +190,12 @@ class CreateCrudModel
 
             }
         }
+
+
         return $this->writeFile($model_path,$model);
     }
 
-    /**
-     * @return string
-     */
-    private function getTimetsamps()
-    {
-        return $this->timestamps ? 'false' : 'true';
-    }
+
 
 
     /**
@@ -294,6 +291,23 @@ class CreateCrudModel
             $related_stub = file_get_contents($this->TPL_PATH . '/models/belongsTo.stub');
         }
         return [$model_stub, $related_stub];
+    }
+
+    private function addTimestampProperty($model)
+    {
+        // stop if the timestamps is null because the option was not given
+        if (!$this->timestamps) {
+            return;
+        }
+
+
+        // insert in the model
+        $search = 'public $fillable' ;
+        $replace = ' public $timestamps = false;' . "\n\n";
+
+        $model = str_replace($search,  $replace .'     '.  $search, $model);
+
+        return $model;
     }
 
 }
