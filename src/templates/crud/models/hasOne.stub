@@ -1,0 +1,4 @@
+    public function {{modelSingularSlug}}()
+    {
+      return $this->hasOne(\{{modelSingularClass}}::class);
+    }

@@ -10,5 +10,12 @@ class {{singularClass}} extends BaseModel
 
     public $timestamps = {{timestamps}};
 
+    // add relation methods below
+
+
+
+
+    // add sluggable methods below
+
 
 }

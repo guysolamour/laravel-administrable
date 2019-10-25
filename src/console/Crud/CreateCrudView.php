@@ -3,6 +3,8 @@ namespace Guysolamour\Administrable\Console\Crud;
 
 
 
+use Illuminate\Support\Arr;
+
 class CreateCrudView
 {
 
@@ -33,7 +35,7 @@ class CreateCrudView
     public function __construct(string $name, array $fields, ?string $slug = null, bool $timestamps = false)
     {
         $this->name = $name;
-        $this->fields = array_chunk($fields,3);
+        $this->fields = $fields;
         $this->timestamps = $timestamps;
         $this->slug = $slug;
     }
@@ -122,7 +124,12 @@ class CreateCrudView
         }
 
         foreach ($this->fields as $field) {
-            $show_views .= '                <p><b>' . $field[0] . ':</b>{{ $' . $field_name . '->' . $field[0] . ' }}</p>' . "\n";
+//            if ($this->isRelationField($field)){
+//
+//            }else {
+//
+//            }
+            $show_views .= '                <p><b>' . $field['name'] . ':</b>{{ $' . $field_name . '->' . $field['name'] . ' }}</p>' . "\n";
         }
 
         if (!$this->timestamps) {
@@ -162,12 +169,25 @@ class CreateCrudView
         }
 
         foreach ($this->fields as $field) {
-            $fields .= '                                    <th>' . ucfirst($field[0]) . '</th>' . "\n";
-            if ($this->checkTextFieldType($field[1])){
-                $values .= '                                        <td>{{ Str::limit($' . $var_name . '->' . $field[0] . ') }}</td>' . "\n";
-            } else {
-                $values .= '                                        <td>{{ $' . $var_name . '->' . $field[0] . ' }}</td>' . "\n";
+
+            if ($this->isRelationField($field['type'])){
+                $fields .= '                                    <th>' . ucfirst($this->getRelationModelWithoutId($field['name'])) . '</th>' . "\n";
+            }else {
+                $fields .= '                                    <th>' . ucfirst($field['name']) . '</th>' . "\n";
             }
+
+            if ($this->checkTextFieldType($field['type'])){
+                $values .= '                                        <td>{{ Str::limit($' . $var_name . '->' . $field['name'] . ') }}</td>' . "\n";
+            } else {
+                if ($this->isRelationField($field['type'])){
+                    $values .= '                                        <td><a href="{{ route(\'admin.'. $this->getRelationModelWithoutId($field['name']) .'.show\',$'. $var_name .'->'. $this->getRelationModelWithoutId($field['name']) .') }}">{{ $' . $var_name . '->' . $this->getRelationModelWithoutId($field['name']) . '->'. $this->getRelatedModelProperty($field) .' }}</a></td>' . "\n";
+
+                }else {
+
+                    $values .= '                                        <td>{{ $' . $var_name . '->' . $field['name'] . ' }}</td>' . "\n";
+                }
+            }
+
         }
 
         if (!$this->timestamps) {
@@ -175,6 +195,16 @@ class CreateCrudView
             $values .= '                                        <td>{{ $' . $var_name . '->created_at->format(\'d/m/Y h:i\') }}</td>' . "\n";
         }
         return [$values, $fields];
+    }
+
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    private function getRelationModelWithoutId(string $name) :string
+    {
+        return Arr::first(explode('_', $name));
     }
 
     /**
@@ -210,16 +240,18 @@ class CreateCrudView
     }
 
     /**
-     * @param string $field
+     * @param string|string[] $field
      * @return bool
      */
-    private function checkTextFieldType(string $field) :bool
+    private function checkTextFieldType($field) :bool
     {
+        if ($this->isRelationField($field)) return false;
+
         return
-            $field[1] === 'string' || $field[1] === 'decimal' ||
-            $field[1] === 'double' || $field[1] === 'float' ||
-            $field[1] === 'text' || $field[1] === 'mediumText' ||
-            $field[1] === 'longText';
+            $field === 'string' || $field === 'decimal' ||
+            $field === 'double' || $field === 'float' ||
+            $field === 'text' || $field === 'mediumText' ||
+            $field === 'longText';
     }
 
 }

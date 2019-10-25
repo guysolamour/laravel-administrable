@@ -27,7 +27,7 @@ class CreateCrudForm
     public function __construct(string $name, array $fields, ?string $slug)
     {
         $this->name = $name;
-        $this->fields = array_chunk($fields,3);
+        $this->fields = $fields;
         $this->slug = $slug;
     }
 
@@ -80,14 +80,25 @@ class CreateCrudForm
         foreach ($this->fields as $field) {
             // on doit ajouter les rules si ces derniers ne sont pas vides
 
-            if (!empty($field[2])){
+            if ($this->isRelationField($field['type'])){
+                $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
+                    "class" => \\' . "{$field['type']['relation']['model']}::class," . '
+                    "property" => \'' . "{$field['type']['relation']['property']}'," . '
+                    "rules" => ' . "'required'," . '
+                    "query_builder" => ' . "function(\\".$field['type']['relation']['model']. ' $' .strtolower($this->modelNameWithoutNamespace($field['type']['relation']['model'])) . "){
+                        return $". strtolower($this->modelNameWithoutNamespace($field['type']['relation']['model'])) .";
+                    }"
 
-                $fields .= '            ->add(' . "'{$this->getFieldType($field[0])}'" . ', ' . "'{$this->getType($field[1])}'" . ',[
-                    \'rules\' => ' . "'$field[2]'" . '
+                    . '
+                    
+                ])' . "\n";
+            }
+            else if (!empty($field['rules'])){
+                $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
+                    \'rules\' => ' . "'{$this->getRules($field['rules'])}'" . '
                 ])' . "\n";
             }else {
-
-                $fields .= '            ->add(' . "'{$this->getFieldType($field[0])}'" . ', ' . "'{$this->getType($field[1])}'" . ',[
+                $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
                 ])' . "\n";
             }
 
@@ -101,6 +112,14 @@ class CreateCrudForm
                 ])' . "\n";
         }
         return $fields;
+    }
+
+    private function getRules(string $rule) :string
+    {
+        if ($rule === 'req'){
+            return 'required';
+        }
+        return $rule;
     }
 
     /**

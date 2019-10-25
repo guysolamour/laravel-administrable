@@ -3,11 +3,8 @@
 namespace Guysolamour\Administrable\Console;
 
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Container\Container;
 use Guysolamour\Administrable\Console\Crud\CreateCrudForm;
 use Guysolamour\Administrable\Console\Crud\CreateCrudView;
 use Guysolamour\Administrable\Console\Crud\CreateCrudModel;
@@ -19,16 +16,23 @@ use Guysolamour\Administrable\Console\Crud\CreateCrudController;
 class MakeCrudCommand extends Command
 {
 
-    private const EXCLUDE_FIELDS = ['id','created_at','updated_at'];
+
 
 
     protected const TYPES = [
         'string','text','boolean','date','datetime','decimal','float','enum','double','integer',
-        'ipAdress','longText','mediumText','mediumInterger','image'
+        'ipAdress','longText','mediumText','mediumInterger','image','relation'
     ];
+
+    protected const RELATION_TYPES = [
+        'One to One','One to Many','Many to One'
+    ];
+
+
 
     protected $model = '';
     protected $fields = [];
+    protected $tempFields = [];
     protected $timestamps;
     protected $slug;
 
@@ -59,8 +63,6 @@ class MakeCrudCommand extends Command
 
         $progress = $this->output->createProgressBar(9);
 
-
-
         $this->timestamps = $this->option('timestamps');
         $this->slug = is_string($this->option('slug')) ? strtolower($this->option('slug')) : $this->option('slug');
         $this->model = $this->argument('model');
@@ -69,26 +71,8 @@ class MakeCrudCommand extends Command
         $config = "administrable.models.".strtolower($this->model);
         $config_fields = config($config);
 
-       // dd($fie);
-        //dd($this->model,config($fie),Arr::dot(config($fie)));
-        //dd($this->getTableFields(($this->getTableName($this->model))));
 
-        if (!empty($config_fields)) {
-            # code...
-            $this->fields = Arr::dot($config_fields);
-            //dd( $this->fields);
-        }else {
-
-            $this->fields = $this->getFields();
-        }
-
-        // Forms
-        $this->info(PHP_EOL . 'Forms...');
-        $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
-        $this->info('Form created at ' . $form_path);
-        $progress->advance();
-
-        die;
+        $this->fields = !empty($config_fields) ? $config_fields : $this->getFields();
 
 
         $progress->advance();
@@ -98,10 +82,7 @@ class MakeCrudCommand extends Command
         $this->info(PHP_EOL . 'Creating Model...');
         [$result,$model_path] = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
         $this->displayResult($result,$model_path);
-
         $progress->advance();
-
-
 
 
         // Migrations and seeds
@@ -113,13 +94,7 @@ class MakeCrudCommand extends Command
 
         // Migrate
         $this->info(PHP_EOL . 'Migrate...');
-        Artisan::call('migrate');
-        $progress->advance();
-
-        // Controllers
-        $this->info(PHP_EOL . 'Controllers...');
-        $controller_path = CreateCrudController::generate($this->model);
-        $this->info('Controller created at ' . $controller_path);
+        $this->call('migrate');
         $progress->advance();
 
         // Forms
@@ -127,6 +102,16 @@ class MakeCrudCommand extends Command
         $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
         $this->info('Form created at ' . $form_path);
         $progress->advance();
+
+
+
+        // Controllers
+        $this->info(PHP_EOL . 'Controllers...');
+        $controller_path = CreateCrudController::generate($this->model);
+        $this->info('Controller created at ' . $controller_path);
+        $progress->advance();
+
+
 
         // Routes
         $this->info(PHP_EOL . 'Routes...');
@@ -164,18 +149,76 @@ class MakeCrudCommand extends Command
     private function getFields() :array
     {
 
-        $fields = [];
 
-        $fields[] = $this->ask('Field');
-        $fields[] = $this->anticipate('Type', self::TYPES);
-        $fields[] = $this->ask('Rules');
+        $field = $this->ask('Field');
+        $type = $this->anticipate('Type', self::TYPES);
 
-        if ($this->confirm('Add another field?')) {
-            $fields =  array_merge($fields,$this->getFields());
+        if ($type === 'relation'){
+            $relation_type = $this->choice('Which type of relation is it ?', self::RELATION_TYPES, 1);
+            $relation_property = $this->ask('What property will be used to access relation ?');
+            $relation_model = $this->anticipate('Which model is associated to ?', $this->getAllAppModels());
+            $relation_model_with_namespace = $this->getAllAppModels(true)[$relation_model];
+            $rules = '';
+            $this->tempFields[$field] = [
+                'name' => $field,
+                'type'=>
+                    [$type => ['name' => $relation_type,'model' => $relation_model_with_namespace,'property' => $relation_property]],
+                'rules' => $rules];
+        }else {
+            $rules = $this->ask('Rules');
+            $this->tempFields[$field] = ['name' => $field,'type'=> $type,'rules' => $rules];
         }
 
-        return $fields;
+
+        if ($this->confirm('Add another field?')) {
+            $this->getFields();
+        }
+
+        return $this->tempFields;
+
+
     }
+
+    private function removeFileExtension(string $file) :string{
+        // substr($file,0, strpos($file, '.'));
+        return pathinfo($file, PATHINFO_FILENAME);
+    }
+
+    private function getAllAppModels(bool $withNamespace = false) :array
+    {
+        // get all models in app folder
+       $results = glob(app_path() . '/*.php');
+
+       $out = [];
+       foreach ($results as $file){
+           $parts = explode('/',$file);
+
+           if ($withNamespace){
+               $model = Container::getInstance()->getNamespace() . end($parts);
+           }else {
+               $model = end($parts);
+           }
+           $out[$this->removeFileExtension(end($parts))] = $this->removeFileExtension($model);
+       }
+
+       // get all models in app/models folder
+        $path = app_path() . "/Models";
+        $results = scandir($path);
+
+        foreach ($results as $result) {
+            if ($result === '.' || $result === '..' || $result === 'BaseModel.php') continue;
+
+            if ($withNamespace){
+                $model = Container::getInstance()->getNamespace() . 'Models\\' . $result;
+            }else {
+                $model = $result;
+            }
+            $out[$this->removeFileExtension($result)] = $this->removeFileExtension($model);
+        }
+
+        return $out;
+    }
+
 
 
     private function displayResult(bool $result, string $path) :void {

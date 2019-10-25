@@ -8,9 +8,6 @@ class CreateCrudBreadcumb
 {
     use MakeCrudTrait;
 
-    // the index in fields array
-    const FIELD_NAME = 0;
-    const FIELD_TYPE = 1;
     /**
      * @var string
      */
@@ -34,7 +31,7 @@ class CreateCrudBreadcumb
     public function __construct(string $name, array $fields, ?string $slug = null)
     {
         $this->name = $name;
-        $this->fields = array_chunk($fields, 3);
+        $this->fields = $fields;
         $this->slug = $slug;
     }
 
@@ -83,10 +80,10 @@ class CreateCrudBreadcumb
     {
         foreach ($this->fields as $field) {
             if (
-                $this->getType($field[self::FIELD_TYPE]) === 'text' ||
-                $this->getType($field[self::FIELD_TYPE] === 'textarea')
+                $this->getType($field['name']) === 'text' ||
+                $this->getType($field['type'] === 'textarea')
             ) {
-                return $field[self::FIELD_NAME];
+                return $field['name'];
             }
         }
     }

@@ -39,7 +39,7 @@ class CreateCrudModel
     {
 
         $this->name = $name;
-        $this->fields = array_chunk($fields, 3);;
+        $this->fields = $fields;
         $this->slug = $slug;
         $this->timestamps = $timestamps;
     }
@@ -59,32 +59,30 @@ class CreateCrudModel
             ->createModel();
     }
 
+
     /**
-     * @return string
+     * @return array
      */
     private function createModel() :array
     {
-        try {
-            $stub = file_get_contents($this->TPL_PATH . '/models/model.stub');
-            $data_map = $this->parseName($this->name);
+        $stub = file_get_contents($this->TPL_PATH . '/models/model.stub');
 
-            $model_path = app_path('Models/'.$data_map['{{singularClass}}'].'.php');
+        $data_map = $this->parseName($this->name);
 
-            $model = strtr($stub, $data_map);
+        $model_path = app_path('Models/'.$data_map['{{singularClass}}'].'.php');
+
+        $model = strtr($stub, $data_map);
 
 
-            $model = $this->loadSluggableTrait($model, $data_map);
+        $model = $this->loadSluggableTrait($model, $data_map);
 
-            $this->createDirIfNotExists($model_path);
+        $this->createDirIfNotExists($model_path);
 
-            // add model and base model
-            $result = $this->loadModelAndBaseModel($data_map, $model_path, $model);
+        // add model and base model
+        $result = $this->loadModelAndBaseModel($data_map, $model_path, $model);
 
-            return [$result,$model_path];
+        return [$result,$model_path];
 
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
-        }
     }
 
     /**
@@ -109,6 +107,91 @@ class CreateCrudModel
         ];
     }
 
+
+    private function parseRelationName(string $model_name, string $related_full_name) :array
+    {
+        // on recupere le nom du modele sans le namespace
+        $related = $this->modelNameWithoutNamespace($related_full_name);
+        return [
+            '{{modelPluralSlug}}' => Str::plural(Str::slug($model_name)),
+            '{{modelPluralClass}}' => Str::plural(Str::studly($model_name)),
+            '{{modelSingularClass}}' => $model_name,
+            '{{modelSingularSlug}}' => Str::singular(Str::slug($model_name)),
+            '{{relatedSingularClass}}' => Str::singular(Str::studly($related)),
+            '{{relatedPluralSlug}}' => Str::plural(Str::slug($related)),
+            '{{relatedPluralClass}}' => Str::plural(Str::studly($related)),
+            '{{relatedSingularSlug}}' => Str::singular(Str::slug($related)),
+            '{{relatedNamespace}}'  => $this->getRelatedNamespace($related_full_name)
+        ];
+    }
+
+    /**
+     * @param string $full_name
+     * @return string
+     */
+    private function getRelatedNamespace(string $full_name) :string
+    {
+        $parts = explode('\\', $full_name);
+        // remove the model name
+        array_pop($parts);
+
+        return ('\\' . join('\\', $parts) . '\\');
+
+    }
+
+    /**
+     * @param $field
+     * @return bool
+     */
+    private function isOneToManyRelation($field) :bool
+    {
+        return $field['type']['relation']['name'] === 'One to Many';
+    }
+
+    private function isManyToOneRelation($field) :bool
+    {
+        return $field['type']['relation']['name'] === 'Many to One';
+    }
+
+    private function isOneToOneRelation($field) :bool
+    {
+        return $field['type']['relation']['name'] === 'One to One';
+    }
+
+
+    private function addRelations($model,$model_path){
+        foreach ($this->fields as $field) {
+            if ($this->isRelationField($field['type'])){
+                // on recupere le modele
+                [$model_stub, $related_stub] = $this->getModelAndRelatedModelStubs($field);
+
+                $data_map = $this->parseRelationName($this->name, $field['type']['relation']['model']);
+
+                $new_model = strtr($model_stub , $data_map);
+                $related = strtr($related_stub, $data_map);
+
+                $related_path = app_path('Models/' . $this->modelNameWithoutNamespace($field['type']['relation']['model']).'.php');
+
+                if (!file_exists($related_path)){
+                    $related_path = app_path($this->modelNameWithoutNamespace($field['type']['relation']['model']).'.php');
+                }
+
+                $related_model = file_get_contents($related_path);
+
+                $search = '// add relation methods below';
+
+                $model_file = str_replace($search,   $search . "\n" . $new_model    , $model);
+                $related_file = str_replace($search,    $search . "\n" . $related    , $related_model);
+
+                if($this->writeFile($model_path,$model_file) && file_put_contents($related_path,$related_file)){
+                    return true;
+                }
+
+            }
+        }
+        return $this->writeFile($model_path,$model);
+    }
+
     /**
      * @return string
      */
@@ -125,21 +208,14 @@ class CreateCrudModel
     private function getFillables() :string
     {
         $fillable = '';
-        foreach ($this->fields as $fields) {
-            foreach ($fields as $k => $field) {
-                // 0 is the index of the name's field
-                if ($k === 0) {
-                    $fillable .= "'$field'" . ',';
-
-                }
-            }
+        foreach ($this->fields as $field) {
+            $fillable .= "'{$field['name']}'" . ',';
         }
+
         // add slug field to the fillable properties
         if (!is_null($this->slug)) {
-            $fillable .= "'{$this->slug}'";
-            $fillable .= ",'slug'";
+            $fillable .= "'slug'";
         }
-
         // remove the comma at the end of the string
         $fillable = rtrim($fillable,',');
 
@@ -174,10 +250,12 @@ class CreateCrudModel
         return $model;
     }
 
+
     /**
      * @param $data_map
      * @param $model_path
      * @param $model
+     * @return bool
      */
     private function loadModelAndBaseModel($data_map, $model_path, $model): bool
     {
@@ -188,9 +266,34 @@ class CreateCrudModel
             $base_model_path = app_path('Models/BaseModel.php');
             file_put_contents($base_model_path, $base_model);
         }
+        // add model and relations to
+        return $this->addRelations($model,$model_path);
+    }
 
+    /**
+     * @param $field
+     * @return array
+     */
+    private function getModelAndRelatedModelStubs($field): array
+    {
+        if ($this->isOneToManyRelation($field)) {
 
-        return $this->writeFile($model_path,$model);
+            $model_stub = file_get_contents($this->TPL_PATH . '/models/belongsTo.stub');
+            $related_stub = file_get_contents($this->TPL_PATH . '/models/hasMany.stub');
+        }
+
+        if ($this->isManyToOneRelation($field)) {
+
+            $model_stub = file_get_contents($this->TPL_PATH . '/models/ManyToOne/belongsTo.stub');
+            $related_stub = file_get_contents($this->TPL_PATH . '/models/ManyToOne/hasMany.stub');
+        }
+
+        if ($this->isOneToOneRelation($field)) {
+
+            $model_stub = file_get_contents($this->TPL_PATH . '/models/hasOne.stub');
+            $related_stub = file_get_contents($this->TPL_PATH . '/models/belongsTo.stub');
+        }
+        return [$model_stub, $related_stub];
     }
 
 }

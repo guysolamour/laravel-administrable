@@ -47,8 +47,12 @@ trait MakeCrudTrait
         }
     }
 
-    private function getFieldType(string $field) :string
+    private function getFieldType($field)
     {
+        // si la valeur est un tableau c'est que nous avons un champ de type relation
+        // pas la paine d'aller plus loin
+        if ($this->isRelationField($field)) return '';
+
         if ($field === 'image') {
             return 'string';
         }
@@ -56,14 +60,22 @@ trait MakeCrudTrait
     }
 
 
+    /**
+     * @param string|array $type
+     * @return bool
+     */
+    private function isRelationField($type) :bool
+    {
 
+        return is_array($type);
+    }
     /**
      * @param string $type
      * @return string
      */
-    private function getType(string $type) :string
+    private function getType($type) :string
     {
-     
+
         if (
             $type === 'string' || $type === 'decimal' || $type === 'double' ||
             $type === 'float')
@@ -88,7 +100,10 @@ trait MakeCrudTrait
             return 'date';
         } elseif ($type === 'datetime') {
             return 'datetime';
-        }else{
+        }elseif ($this->isRelationField($type)){
+            return 'entity';
+        }
+        else{
             return 'text';
         }
     }
@@ -102,4 +117,22 @@ trait MakeCrudTrait
 
         return false;
     }
+
+    private function modelNameWithoutNamespace(string $model) :string
+    {
+        $parts = explode('\\', $model);
+        return end($parts);
+    }
+
+    private function getRelatedModel(array $field) :string
+    {
+        return $field['type']['relation']['model'];
+    }
+
+  private function getRelatedModelProperty(array $field) :string
+    {
+        return $field['type']['relation']['property'];
+    }
+
+
 }

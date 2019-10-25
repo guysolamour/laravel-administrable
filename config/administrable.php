@@ -8,21 +8,35 @@ return [
 
     'auth_prefix_path' => 'administrable',
 
-    /*'models' => [
+    'models' => [
         'folder' => 'App/Models',
-        'post' => [
-            ['name' => 'title' , 'type' => 'string','rules' => 'required'],
-            ['name' => 'description' , 'type' => 'text','rules' => 'required'],
-            ['name' => 'publish' , 'type' => 'boolean','rules' => 'required'],
-        ],
         'category' => [
-            [
-                'name' => 'title' ,
-                'type' => 'string',
-                'rules' => 'required'
-            ],
-            ['name' => 'description' , 'type' => 'text','rules' => 'required'],
-            ['name' => 'publish' , 'type' => 'boolean','rules' => 'required'],
-        ]
-    ]*/
+            'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
+            'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
+        ],
+       'terrain' => [
+           'title' => [
+               'name' => 'title' , 'type' => 'string','rules' => 'required'
+           ],
+           'category_id' => [
+               'name' => 'category_id', 'type' => [
+                   'relation' => [
+                       'name' => 'Many to One',
+                       'model' => 'App\Models\Category',
+                       'property' => 'name'
+                   ]
+                ],
+              // 'rules' => ''
+           ]
+       ],
+//        'category' => [
+//            [
+//                'name' => 'title' ,
+//                'type' => 'string',
+//                'rules' => 'required'
+//            ],
+//            ['name' => 'description' , 'type' => 'text','rules' => 'required'],
+//            ['name' => 'publish' , 'type' => 'boolean','rules' => 'required'],
+//        ]
+    ]
 ];

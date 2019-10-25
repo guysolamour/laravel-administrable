@@ -1,0 +1,8 @@
+->add('{{field}}', 'entity', [
+      'class' => {{relatedModel}},
+      'property' => 'name',
+      'query_builder' => function(Category $category){
+          return $category->where('type',1)->where('id','!=', 1);
+      },
+      'rules' => 'required',
+])

@@ -1,7 +1,7 @@
 <?php
 
 namespace Guysolamour\Administrable\Console\Crud;
-
+use Illuminate\Support\Str;
 
 class CreateCrudMigration
 {
@@ -34,7 +34,7 @@ class CreateCrudMigration
     public function __construct(string $name, array $fields, ?string $slug = null, bool $timestamps = false)
     {
         $this->name = $name;
-        $this->fields = array_chunk($fields,3);
+        $this->fields = $fields;
         $this->slug = $slug;
         $this->timestamps = $timestamps;
     }
@@ -57,7 +57,7 @@ class CreateCrudMigration
      */
     protected function loadMigrations()
     {
-        try {
+
 
             $data_map = $this->parseName($this->name);
 
@@ -79,9 +79,6 @@ class CreateCrudMigration
                 [$fields, $seed_fields] = $this->generateFields();
 
 
-
-
-
                 // seeder replace
                 [$seed_result,$seed_file] = $this->createMigration($seed_fields, $seeder, $data_map);
 
@@ -98,9 +95,7 @@ class CreateCrudMigration
             }
 
 
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
-        }
+
     }
 
     /**
@@ -160,54 +155,57 @@ class CreateCrudMigration
      */
     protected function generateFields(): array
     {
+        //dd($this->fields);
         $fields = "\n";
         $seed_fields = "\n";
         foreach ($this->fields as $field) {
-            // on genere les champs de la migration
+            // we generate migrations fields
+            if ($this->isRelationField($field['type'])){
+                $fields .= '            $table->unsignedBigInteger(' . "'{$field['name']}'" . ');' . "\n";
+                $fields .= '            $table->foreign(' . "'{$field['name']}'" . ')->references(\'id\')->on('. "'{$this->getModelTableName($field['type']['relation']['model'])}'".')->onDelete("no action");' . "\n";
+            }
+            else{
 
-
-            $fields .= '            $table->' . $this->getFieldType($field[1]) . '(' . "'$field[0]'" . ');' . "\n";
-
-
-
-
+                $fields .= '            $table->' . $this->getFieldType($field['type']) . '(' . "'{$field['name']}'" . ');' . "\n";
+            }
 
             // permettre de generer le slug dans le seed en mettant la variable $slug devant
-
-            if ($field[1] === 'string') {
-                if($field[0] === $this->slug){
-                    $seed_fields .= "\n" . "                '$field[0]'  => " . '$slug = $faker->text(),';
+            if ($field['type'] === "string") {
+                if($field['name'] === $this->slug){
+                    $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$slug = $faker->text(),';
                 }else {
-                    $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->text(),';
+                    $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->text(),';
 
                 }
 
             }
 
-
-            if ($field[1] === 'slug') {
-
-                $seed_fields .= "\n" . "                '$field[0]'  => " . '$slug = $faker->realText(50),';
+            if ($field['type'] === 'slug') {
+                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$slug = $faker->realText(50),';
             }
 
-            if ($field[1] === 'image') {
+            if ($field['type'] === 'image') {
 
-                $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->imageUrl,';
+                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->imageUrl,';
             }
 
-            if ($field[1] === 'text') {
+            if ($field['type'] === 'text') {
 
-                $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->realText(150),';
+                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->realText(150),';
             }
 
-            if ($field[1] === 'integer') {
+            if ($field['type'] === 'integer') {
 
-                $seed_fields .= "\n" . "                '$field[0]'  => " . 'mt_rand(0,100),';
+                $seed_fields .= "\n" . "                '{$field['name']}'  => " . 'mt_rand(0,100),';
             }
 
-            if ($field[1] === 'boolean') {
+            if ($field['type'] === 'boolean') {
 
-                $seed_fields .= "\n" . "                '$field[0]'  => " . '$faker->randomElement([true,false]),';
+                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement([true,false]),';
+            }
+            if ($this->isRelationField($field['type'])) {
+
+                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement('. $this->getRelatedModel($field). '::all()->pluck(\'id\')' .'),';
             }
         }
         // add slug field and the linked field
@@ -235,6 +233,14 @@ class CreateCrudMigration
         $slug_mw_bait = '$table->bigIncrements(\'id\');';
         $model = str_replace($slug_mw_bait, $slug_mw_bait . $fields, $complied);
         return $this->writeFile($migration['path'], $model);
+    }
+
+    protected function getModelTableName(string  $model) :string
+    {
+        // on recupere le nom du modele sans namespace
+        $model = explode('\\',$model);
+
+        return  strtolower(Str::plural(Str::studly(end($model))));
     }
 
     /**

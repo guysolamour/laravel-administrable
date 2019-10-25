@@ -1,0 +1,4 @@
+    public function {{relatedSingularSlug}}()
+    {
+      return $this->belongsTo({{relatedNamespace}}{{relatedSingularClass}}::class) ;
+    }
