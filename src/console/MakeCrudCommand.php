@@ -200,6 +200,16 @@ class MakeCrudCommand extends Command
                     [$type => ['name' => $relation_type,'model' => $relation_model_with_namespace,'property' => $relation_property]],
                 'rules' => $rules];
         }else {
+            $headers = ['Name', 'Name', 'Name', 'Name'];
+
+            $users = [
+                ['boolean','between:min,max','confirmed','date'],
+                ['dimensions:mwidth,mheight','email','exists:table,column','image'],
+                ['integer','ip','max:value','min:value','nullable'],
+                ['required','ip','unique:table,column','string','size:value'],
+            ];
+
+            $this->table($headers, $users);
             $rules = $this->ask('Rules');
             $this->tempFields[$field] = ['name' => $field,'type'=> $type,'rules' => $rules];
         }
