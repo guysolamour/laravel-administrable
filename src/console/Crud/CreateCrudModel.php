@@ -242,7 +242,7 @@ class CreateCrudModel
             $sluggable = strtr($sluggable_stub, $data_map);
 
             // insert in the model
-            $route_mw_bait = 'public $timestamps = ' . $this->getTimetsamps() . ';' . "\n\n\n";
+            $route_mw_bait = '// add sluggable methods below' . "\n\n";
 
             $model = str_replace($route_mw_bait, $route_mw_bait . $sluggable, $model);
 

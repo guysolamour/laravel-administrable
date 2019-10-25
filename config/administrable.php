@@ -14,6 +14,11 @@ return [
             'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
         ],
+        'comment' => [
+            'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
+            'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
+            'slug' => 'name'
+        ],
        'terrain' => [
            'title' => [
                'name' => 'title' , 'type' => 'string','rules' => 'required'

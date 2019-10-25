@@ -12,6 +12,7 @@ use Guysolamour\Administrable\Console\Crud\CreateCrudRoute;
 use Guysolamour\Administrable\Console\Crud\CreateCrudBreadcumb;
 use Guysolamour\Administrable\Console\Crud\CreateCrudMigration;
 use Guysolamour\Administrable\Console\Crud\CreateCrudController;
+use Illuminate\Support\Arr;
 
 class MakeCrudCommand extends Command
 {
@@ -72,7 +73,27 @@ class MakeCrudCommand extends Command
         $config_fields = config($config);
 
 
-        $this->fields = !empty($config_fields) ? $config_fields : $this->getFields();
+        if (!empty($config_fields)) {
+            $this->fields = $config_fields;
+
+
+            if(isset($this->fields['slug']) && !empty($this->fields['slug'])){
+
+                // check if the relqted slug exists in model fields
+                if (array_key_exists($this->fields['slug'], $this->fields)){
+                    // affect slug and remove the slug field in all model field
+                    $this->slug = is_string($this->fields['slug']) ? strtolower($this->fields['slug']) : $this->fields['slug'];
+                    $this->fields = Arr::except($this->fields,'slug');
+                }
+                else{
+                    $this->error('The related slug field [' . $this->fields['slug'] . '] does not exists in model fields');
+                    die;
+                }
+
+            }
+        } else {
+            $this->fields = $this->getFields();
+        }
 
 
         $progress->advance();
