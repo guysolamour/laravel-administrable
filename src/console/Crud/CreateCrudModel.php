@@ -13,7 +13,7 @@ class CreateCrudModel
     /**
      * @var string
      */
-    private $name;
+    private $model;
     /**
      * @var array
      */
@@ -26,6 +26,12 @@ class CreateCrudModel
      * @var bool
      */
     private $timestamps;
+    /**
+     * @var bool
+     */
+    private $polymorphic;
+
+    private $new_model_stub = '';
 
 
     /**
@@ -34,14 +40,16 @@ class CreateCrudModel
      * @param array $fields
      * @param null|string $slug
      * @param bool $timestamps
+     * @param bool $polymorphic
      */
-    private function __construct(string $name , array $fields, ?string $slug = null, bool $timestamps = false)
+    private function __construct(string $model , array $fields, ?string $slug = null, bool $timestamps = false, bool $polymorphic = false)
     {
 
-        $this->name = $name;
+        $this->model = $model;
         $this->fields = $fields;
         $this->slug = $slug;
         $this->timestamps = $timestamps;
+        $this->polymorphic = $polymorphic;
     }
 
     /**
@@ -49,13 +57,15 @@ class CreateCrudModel
      * @param array $fields
      * @param null|string $slug
      * @param bool $timestamps
+     * @param bool $polymorphic
      * @return string
+     * @internal param bool $entity
      */
-    public static function generate(string $name , array $fields, ?string $slug = null, bool $timestamps = false)
+    public static function generate(string $name , array $fields, ?string $slug = null, bool $timestamps = false, bool $polymorphic = false)
     {
 
         return
-            (new CreateCrudModel($name,$fields,$slug,$timestamps))
+            (new CreateCrudModel($name,$fields,$slug,$timestamps,$polymorphic))
             ->createModel();
     }
 
@@ -65,15 +75,24 @@ class CreateCrudModel
      */
     private function createModel() :array
     {
-        $stub = file_get_contents($this->TPL_PATH . '/models/model.stub');
 
-        $data_map = $this->parseName($this->name);
+        if ($this->polymorphic){
+            $stub = file_get_contents($this->TPL_PATH . '/models/poly.stub');
+        }else {
+            $stub = file_get_contents($this->TPL_PATH . '/models/model.stub');
+        }
+
+        $data_map = $this->parseName($this->model);
 
         $model_path = app_path('Models/'.$data_map['{{singularClass}}'].'.php');
 
         $model = strtr($stub, $data_map);
 
+        //dd($model);
+
         $model = $this->addTimestampProperty($model);
+
+
 
         $model = $this->loadSluggableTrait($model, $data_map);
 
@@ -121,7 +140,7 @@ class CreateCrudModel
             '{{relatedPluralSlug}}' => Str::plural(Str::slug($related)),
             '{{relatedPluralClass}}' => Str::plural(Str::studly($related)),
             '{{relatedSingularSlug}}' => Str::singular(Str::slug($related)),
-            '{{relatedNamespace}}'  => $this->getRelatedNamespace($related_full_name)
+            '{{relatedNamespace}}'  => $this->getRelatedNamespace($related_full_name),
         ];
     }
 
@@ -157,23 +176,30 @@ class CreateCrudModel
     {
         return $field['type']['relation']['name'] === 'One to One';
     }
+    private function isOneToManyPolymorphicRelation($field) :bool
+    {
+        return $field['type']['relation']['name'] === 'One To Many (Polymorphic)';
+    }
 
 
     private function addRelations($model,$model_path){
         foreach ($this->fields as $field) {
             if ($this->isRelationField($field['type'])){
                 // check if the related model already exists
-                if(!class_exists($this->getRelatedModel($field))){
-                    die("The related model [{$this->getRelatedModel($field)}] does not exists. You nedd to create if first." . PHP_EOL);
-                }
+                $this->checkIfRelatedModelExists($field);
 
                 // on recupere le modele
                 [$model_stub, $related_stub] = $this->getModelAndRelatedModelStubs($field);
 
-                $data_map = $this->parseRelationName($this->name, $this->getRelatedModel($field));
 
-                $new_model = strtr($model_stub , $data_map);
+                $data_map = $this->parseRelationName($this->model, $this->getRelatedModel($field));
+
+                /**
+                 * mettre le resultat dans l'instance afin de le conserver et ne pas le perdre
+                 */
+                $this->new_model_stub .=   strtr($model_stub , $data_map) . PHP_EOL;
                 $related = strtr($related_stub, $data_map);
+
 
                 $related_path = app_path('Models/' . $this->modelNameWithoutNamespace($this->getRelatedModel($field)).'.php');
 
@@ -185,18 +211,22 @@ class CreateCrudModel
 
                 $search = '// add relation methods below';
 
-                $model_file = str_replace($search,   $search . "\n" . $new_model    , $model);
+                // search if the model
+
                 $related_file = str_replace($search,    $search . "\n" . $related    , $related_model);
 
-                if($this->writeFile($model_path,$model_file) && file_put_contents($related_path,$related_file)){
-                    return true;
-                }
+                file_put_contents($related_path,$related_file);
+
+
 
             }
         }
+        $search = '// add relation methods below';
+        $model_file = str_replace($search,   $search . "\n" . $this->new_model_stub    , $model);
+       // dd($this->new_model_stub, $model_path. $model_file);
 
-
-        return $this->writeFile($model_path,$model);
+       // dd($this->new_model_stub);
+        return $this->writeFile($model_path,$model_file);
     }
 
 
@@ -210,7 +240,16 @@ class CreateCrudModel
     {
         $fillable = '';
         foreach ($this->fields as $field) {
-            $fillable .= "'{$field['name']}'" . ',';
+            if ($field['name'] !== 'morphs'){
+
+                $fillable .= "'{$field['name']}'" . ',';
+            }
+        }
+
+        // add polymrphic type and id to the fillable properties
+        if ($this->polymorphic) {
+            $fillable .= "'". strtolower($this->model) . "able_type',";
+            $fillable .= "'". strtolower($this->model) . "able_id',";
         }
 
         // add slug field to the fillable properties
@@ -295,6 +334,13 @@ class CreateCrudModel
             $model_stub = file_get_contents($this->TPL_PATH . '/models/OneToOne/belongsTo.stub');
             $related_stub = file_get_contents($this->TPL_PATH . '/models/OneToOne/hasOne.stub');
         }
+        if ($this->isOneToManyPolymorphicRelation($field)) {
+
+            // create image model and migration here
+
+            $model_stub = file_get_contents($this->TPL_PATH . '/models/OneToManyPoly/MorphMany.stub');
+            $related_stub = file_get_contents($this->TPL_PATH . '/models/OneToManyPoly/MorphTo.stub');
+        }
         return [$model_stub, $related_stub];
     }
 
@@ -317,6 +363,18 @@ class CreateCrudModel
         $model = str_replace($search,  $replace .'     '.  $search, $model);
 
         return $model;
+    }
+
+
+    private function checkIfRelatedModelExists($field)
+    {
+        if(!class_exists($this->getRelatedModel($field))){
+            // if the model is image its mean that we have to generate a polymorphic image model
+            // so we do not exit
+            if ($this->getRelatedModel($field) !== 'App\\Models\\Image'){
+                die("The related model [{$this->getRelatedModel($field)}] does not exists. You nedd to create if first." . PHP_EOL);
+            }
+        }
     }
 
 }

@@ -70,6 +70,12 @@ trait MakeCrudTrait
 
         return is_array($type);
     }
+
+
+    private function isMorphsFIeld($field) :bool
+    {
+        return $field['name'] === 'morphs';
+    }
     /**
      * @param string $type
      * @return string

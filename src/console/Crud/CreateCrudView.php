@@ -170,7 +170,10 @@ class CreateCrudView
         foreach ($this->fields as $field) {
 
             if ($this->isRelationField($field['type'])){
-                $fields .= '                                    <th>' . ucfirst($this->getRelationModelWithoutId($field['name'])) . '</th>' . "\n";
+
+                if (!$this->isMorphsFIeld($field)){
+                    $fields .= '                                    <th>' . ucfirst($this->getRelationModelWithoutId($field['name'])) . '</th>' . "\n";
+                }
             }else {
                 $fields .= '                                    <th>' . ucfirst($field['name']) . '</th>' . "\n";
             }
@@ -179,7 +182,9 @@ class CreateCrudView
                 $values .= '                                        <td>{{ Str::limit($' . $var_name . '->' . $field['name'] . ') }}</td>' . "\n";
             } else {
                 if ($this->isRelationField($field['type'])){
-                    $values .= '                                        <td><a href="{{ route(\'admin.'. $this->getRelationModelWithoutId($field['name']) .'.show\',$'. $var_name .'->'. $this->getRelationModelWithoutId($field['name']) .') }}">{{ $' . $var_name . '->' . $this->getRelationModelWithoutId($field['name']) . '->'. $this->getRelatedModelProperty($field) .' }}</a></td>' . "\n";
+                    if (!$this->isMorphsFIeld($field)){
+                        $values .= '                                        <td><a href="{{ route(\'admin.'. $this->getRelationModelWithoutId($field['name']) .'.show\',$'. $var_name .'->'. $this->getRelationModelWithoutId($field['name']) .') }}">{{ $' . $var_name . '->' . $this->getRelationModelWithoutId($field['name']) . '->'. $this->getRelatedModelProperty($field) .' }}</a></td>' . "\n";
+                    }
 
                 }else {
 

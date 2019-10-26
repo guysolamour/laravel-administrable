@@ -1,4 +1,0 @@
-    public function {{relatedSingularSlug}}()
-    {
-      return $this->belongsTo(\App\Models\{{relatedSingularClass}}::class) ;
-    }

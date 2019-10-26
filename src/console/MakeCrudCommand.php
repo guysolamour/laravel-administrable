@@ -23,20 +23,49 @@ class MakeCrudCommand extends Command
 
     protected const TYPES = [
         'string','text','boolean','date','datetime','decimal','float','enum','double','integer',
-        'ipAdress','longText','mediumText','mediumInterger','image','relation'
+        'ipAdress','longText','mediumText','mediumInterger','image','relation','bigInteger'
     ];
 
     protected const RELATION_TYPES = [
-        'One to One','One to Many','Many to One'
+        'One to One','Many to One', 'One To Many (Polymorphic)'
     ];
 
 
-
+    /**
+     * @var string
+     */
     protected $model = '';
+    /**
+     * @var array
+     */
     protected $fields = [];
+    /**
+     * @var array
+     */
     protected $tempFields = [];
+    /**
+     * @var array
+     */
+    protected $morphs = [];
+    /**
+     * @var bool
+     */
     protected $timestamps;
+    /**
+     * @var bool
+     */
     protected $seed;
+    /**
+     * @var bool
+     */
+    protected $entity;
+    /**
+     * @var bool
+     */
+    protected $polymorphic;
+    /**
+     * @var string
+     */
     protected $slug;
 
     /**
@@ -45,9 +74,11 @@ class MakeCrudCommand extends Command
      * @var string
      */
     protected $signature = 'admin:make:crud
-                            {model : Model name.}
+                             {model : Model name.}
                              {--s|slug= : The field to slugify}
                              {--d|seed : Seed the table}
+                             {--e|entity : The model is only an entity(model and migration only)}
+                             {--p|polymorphic : The model will be a polymorphic model (morphTo)}
                              {--t|timestamps : Determine if the model is not timestamped}
                             ';
 
@@ -69,6 +100,8 @@ class MakeCrudCommand extends Command
 
         $this->timestamps = $this->option('timestamps');
         $this->seed = $this->option('seed');
+        $this->entity = $this->option('entity');
+        $this->polymorphic = $this->option('polymorphic');
         $this->slug = is_string($this->option('slug')) ? strtolower($this->option('slug')) : $this->option('slug');
         $this->model = $this->argument('model');
 
@@ -80,39 +113,27 @@ class MakeCrudCommand extends Command
         if (!empty($config_fields)) {
             $this->fields = $config_fields;
 
+            $this->setConfigOption(['slug','seed','entity','polymorphic', 'timestamps']);
 
-            if(isset($this->fields['slug']) && !empty($this->fields['slug'])){
 
-                // check if the relqted slug exists in model fields
-                if (array_key_exists($this->fields['slug'], $this->fields)){
-                    // affect slug and remove the slug field in all model field
-                    $this->slug = is_string($this->fields['slug']) ? strtolower($this->fields['slug']) : $this->fields['slug'];
-                    $this->fields = Arr::except($this->fields,'slug');
-                }
-                else{
-                    $this->error('The related slug field [' . $this->fields['slug'] . '] does not exists in model fields');
-                    die;
-                }
-
-            }
         } else {
             $this->fields = $this->getFields();
         }
 
 
-        $progress->advance();
 
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
-        [$result,$model_path] = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps);
+        [$result,$model_path] = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps, $this->polymorphic);
         $this->displayResult($result,$model_path);
         $progress->advance();
+       // dd($this->morphs, $this->fields);;
 
 
         // Migrations and seeds
         $this->info(PHP_EOL . 'Creating Migration...');
-        [$migration_result,$migration_path,$seed_result,$seed_path] = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps);
+        [$migration_result,$migration_path,$seed_result,$seed_path] = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps,$this->polymorphic);
         $this->displayResult($migration_result,$migration_path);
         $this->displayResult($seed_result,$seed_path);
         $progress->advance();
@@ -122,50 +143,50 @@ class MakeCrudCommand extends Command
         $this->call('migrate');
         $progress->advance();
 
-        // Forms
-        $this->info(PHP_EOL . 'Forms...');
-        $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
-        $this->info('Form created at ' . $form_path);
-        $progress->advance();
+        if (!$this->entity) {
+            // Forms
+            $this->info(PHP_EOL . 'Forms...');
+            $form_path = CreateCrudForm::generate($this->model, $this->fields,$this->slug);
+            $this->info('Form created at ' . $form_path);
+            $progress->advance();
+
+            // Controllers
+            $this->info(PHP_EOL . 'Controllers...');
+            $controller_path = CreateCrudController::generate($this->model);
+            $this->info('Controller created at ' . $controller_path);
+            $progress->advance();
+
+            // Routes
+            $this->info(PHP_EOL . 'Routes...');
+            $route_path = CreateCrudRoute::generate($this->model);
+            $this->info('Routes inserted at ' . $route_path);
+            $progress->advance();
+
+            // add breadcrumbs
+            $this->info(PHP_EOL . 'Breadcrumb...');
+            $breadcrumb_path = CreateCrudBreadcumb::generate($this->model,$this->fields,$this->slug);
+            $this->info('Breadcrumb created at ' . $breadcrumb_path);
+            $progress->advance();
 
 
-
-        // Controllers
-        $this->info(PHP_EOL . 'Controllers...');
-        $controller_path = CreateCrudController::generate($this->model);
-        $this->info('Controller created at ' . $controller_path);
-        $progress->advance();
-
-
-
-        // Routes
-        $this->info(PHP_EOL . 'Routes...');
-        $route_path = CreateCrudRoute::generate($this->model);
-        $this->info('Routes inserted at ' . $route_path);
-        $progress->advance();
+            // Views and registered link to left sidebar
+            $this->info(PHP_EOL . 'Views...');
+            $view_path = CreateCrudView::generate($this->model,$this->fields,$this->slug,$this->timestamps);
+            $this->info('Views created at ' . $view_path);
+            $progress->advance();
+        }
 
 
-        // add breadcrumbs
-        $this->info(PHP_EOL . 'Breadcrumb...');
-        $breadcrumb_path = CreateCrudBreadcumb::generate($this->model,$this->fields,$this->slug);
-        $this->info('Breadcrumb created at ' . $breadcrumb_path);
-        $progress->advance();
-
-
-        // Views and registered link to left sidebar
-        $this->info(PHP_EOL . 'Views...');
-        $view_path = CreateCrudView::generate($this->model,$this->fields,$this->slug,$this->timestamps);
-        $this->info('Views created at ' . $view_path);
-        $progress->advance();
-
-         // update composer autoload for seeding
-         \exec('composer dump-autoload > /dev/null 2>&1');
+        // update composer autoload for seeding
+         exec('composer dump-autoload > /dev/null 2>&1');
 
         // seed table
         if ($this->seed){
             $this->info(PHP_EOL . 'Seeding...');
+            $seed_file_name = Str::plural(Str::studly($this->model))  . 'TableSeeder';
+            //exec("php artisan db:seed --class $seed_file_name  > /dev/null 2>&1");
             $this->callSilent('db:seed', [
-                '--class' => Str::plural(Str::studly($this->model))  . 'TableSeeder',
+                '--class' => $seed_file_name,
             ]);
             $this->info('Database seeding completed successfully.');
             $progress->advance();
@@ -270,7 +291,37 @@ class MakeCrudCommand extends Command
         if($result){
             $this->info('File created at ' . $path);
         }else{
-            $this->info('File '. $path . ' already exists');
+            if (!$this->polymorphic)
+                $this->info('File '. $path . ' already exists');
+        }
+    }
+
+
+    /**
+     * @param array $options
+     */
+    private function setConfigOption(array $options): void
+    {
+
+//        dd($options);
+
+//        dd($this->fields);
+
+        foreach ($options as $option){
+
+            if (isset($this->fields[$option]) && !empty($this->fields[$option])) {
+
+                // is option model (generate only model and migration)
+                if (array_key_exists($option, $this->fields)) {
+
+                    if ($option === 'slug'){
+                        $this->slug = is_string($this->fields['slug']) ? strtolower($this->fields['slug']) : $this->fields['slug'];
+                    }else {
+                        $this->$option = $this->fields[$option];
+                    }
+                    $this->fields = Arr::except($this->fields, $option);
+                }
+            }
         }
     }
 

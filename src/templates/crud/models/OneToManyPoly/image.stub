@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models;
+
+
+class Media extends BaseModel
+{
+    protected $fillable = ['url','mediaable_type','mediaable_id'];
+
+    public function imageable()
+    {
+        return $this->morphTo();
+    }
+}

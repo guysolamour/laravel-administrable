@@ -10,7 +10,7 @@ class CreateCrudMigration
     /**
      * @var string
      */
-    private $name;
+    private $model;
     /**
      * @var array
      */
@@ -23,20 +23,26 @@ class CreateCrudMigration
      * @var bool
      */
     private $timestamps;
+    /**
+     * @var bool
+     */
+    private $polymorphic;
 
     /**
      * CreateCrudMigration constructor.
-     * @param string $name
+     * @param string $model
      * @param array $fields
      * @param null|string $slug
      * @param bool $timestamps
+     * @param bool $polymorphic
      */
-    public function __construct(string $name, array $fields, ?string $slug = null, bool $timestamps = false)
+    public function __construct(string $model, array $fields, ?string $slug = null, bool $timestamps = false, bool $polymorphic = false)
     {
-        $this->name = $name;
+        $this->model = $model;
         $this->fields = $fields;
         $this->slug = $slug;
         $this->timestamps = $timestamps;
+        $this->polymorphic = $polymorphic;
     }
 
     /**
@@ -44,11 +50,12 @@ class CreateCrudMigration
      * @param array $fields
      * @param null|string $slug
      * @param bool $timestamps
+     * @param bool $polymorphic
      * @return array|string
      */
-    public static function generate(string $name, array $fields, ?string $slug = null, bool $timestamps = false)
+    public static function generate(string $name, array $fields, ?string $slug = null, bool $timestamps = false, bool $polymorphic = false)
     {
-       return (new CreateCrudMigration($name,$fields,$slug,$timestamps))
+       return (new CreateCrudMigration($name,$fields,$slug,$timestamps,$polymorphic))
             ->loadMigrations();
     }
 
@@ -59,7 +66,7 @@ class CreateCrudMigration
     {
 
 
-            $data_map = $this->parseName($this->name);
+            $data_map = $this->parseName($this->model);
 
             $signature = date('Y_m_d_His');
 
@@ -83,9 +90,12 @@ class CreateCrudMigration
                 [$seed_result,$seed_file] = $this->createMigration($seed_fields, $seeder, $data_map);
 
                 // create migration if the seed was generate previously
-                if($seed_result){
+                if($this->polymorphic || $seed_result){
                     $migration_result = $this->registerMigrationFields($fields, $complied, $migration);
-                    $this->registerSeed();
+                    // register seed only if it is not a polymorphic model
+                    if (!$this->polymorphic){
+                        $this->registerSeed();
+                    }
 
                 }
 
@@ -105,7 +115,7 @@ class CreateCrudMigration
     {
         try {
 
-            $data_map = $this->parseName($this->name);
+            $data_map = $this->parseName($this->model);
 
             $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
 
@@ -158,11 +168,15 @@ class CreateCrudMigration
         //dd($this->fields);
         $fields = "\n";
         $seed_fields = "\n";
+
+
         foreach ($this->fields as $field) {
             // we generate migrations fields
             if ($this->isRelationField($field['type'])){
-                $fields .= '            $table->unsignedBigInteger(' . "'{$field['name']}'" . ');' . "\n";
-                $fields .= '            $table->foreign(' . "'{$field['name']}'" . ')->references(\'id\')->on('. "'{$this->getModelTableName($field['type']['relation']['model'])}'".')->onDelete("no action");' . "\n";
+                if (!$this->isMorphsField($field)){
+                    $fields .= '            $table->unsignedBigInteger(' . "'{$field['name']}'" . ');' . "\n";
+                    $fields .= '            $table->foreign(' . "'{$field['name']}'" . ')->references(\'id\')->on('. "'{$this->getModelTableName($field['type']['relation']['model'])}'".')->onDelete("cascade");' . "\n";
+                }
             }
             else{
 
@@ -194,7 +208,7 @@ class CreateCrudMigration
                 $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->realText(150),';
             }
 
-            if ($field['type'] === 'integer') {
+            if ($field['type'] === 'integer' || $field['type'] === 'bigint') {
 
                 $seed_fields .= "\n" . "                '{$field['name']}'  => " . 'mt_rand(0,100),';
             }
@@ -204,8 +218,9 @@ class CreateCrudMigration
                 $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement([true,false]),';
             }
             if ($this->isRelationField($field['type'])) {
-
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement('. $this->getRelatedModel($field). '::all()->pluck(\'id\')' .'),';
+                if (!$this->isMorphsFIeld($field)){
+                    $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement('. $this->getRelatedModel($field). '::all()->pluck(\'id\')' .'),';
+                }
             }
         }
         // add slug field and the linked field
@@ -215,6 +230,10 @@ class CreateCrudMigration
             // $seed_fields .= "\n" . "                '{$this->slug}'  => " . '$slug = $faker->realText(50),';
             $seed_fields .= "\n" . "                'slug'  => " . 'Illuminate\Support\Str::slug($slug),';
 
+        }
+        // add morphs field
+        if ($this->polymorphic){
+            $fields .= '            $table->morphs( '. "'" . strtolower($this->model) . "able'" .' ); '. "\n";
         }
         // add timestamps
         if (!$this->timestamps) {
@@ -227,6 +246,7 @@ class CreateCrudMigration
      * @param $fields
      * @param $complied
      * @param $migration
+     * @return bool
      */
     protected function registerMigrationFields($fields, $complied, $migration): bool
     {
@@ -252,10 +272,11 @@ class CreateCrudMigration
      */
     protected function registerEntryInDatabaseSeeder($seed_mw_bait, $seed_fields, $seeder, $data_map): array
     {
+
         $seed = str_replace($seed_mw_bait, $seed_mw_bait . $seed_fields, $seeder);
         $seed_file = $data_map['{{pluralClass}}'] . 'TableSeeder.php';
         $seed_path = database_path('/seeds/' . $seed_file);
-        return array($seed, $seed_file, $seed_path);
+        return [$seed, $seed_file, $seed_path];
     }
 
     /**
@@ -270,8 +291,10 @@ class CreateCrudMigration
 
         list($seed, $seed_file, $seed_path) = $this->registerEntryInDatabaseSeeder($seed_mw_bait, $seed_fields, $seeder, $data_map);
 
-        $result = $this->writeFile($seed_path,$seed);
-        return [$result,$seed_file];
+        if (!$this->polymorphic){
+            $result = $this->writeFile($seed_path,$seed);
+        }
+        return [$result ?? false,$seed_file];
     }
 
 

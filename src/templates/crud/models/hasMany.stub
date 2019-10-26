@@ -1,4 +1,0 @@
-    public function {{modelPluralSlug}}()
-    {
-      return $this->hasMany(\{{modelSingularClass}}::class);
-    }

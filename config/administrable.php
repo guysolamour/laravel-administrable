@@ -10,6 +10,11 @@ return [
 
     'models' => [
         'folder' => 'App/Models',
+        'image' => [
+            'url' => ['name' => 'url', 'type' => 'string', 'rules' => 'required'],
+            'entity' => true,
+            'polymorphic' => true,
+        ],
         'category' => [
             'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
@@ -23,11 +28,20 @@ return [
            'title' => [
                'name' => 'title' , 'type' => 'string','rules' => 'required'
            ],
+           'morphs' => [
+               'name' => 'morphs', 'type' => [
+                   'relation' => [
+                       'name' => 'One To Many (Polymorphic)',
+                       'model' => 'App\Models\Image',
+                       'property' => 'name'
+                   ]
+               ],
+           ],
            'category_id' => [
                'name' => 'category_id', 'type' => [
                    'relation' => [
-                       'name' => 'One to One',
-                       'model' => 'App\Models\Categorysss',
+                       'name' => 'Many to One',
+                       'model' => 'App\Models\Category',
                        'property' => 'name'
                    ]
                 ],
