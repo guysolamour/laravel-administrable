@@ -202,14 +202,14 @@ class MakeCrudCommand extends Command
         }else {
             $headers = ['Name', 'Name', 'Name', 'Name'];
 
-            $users = [
+            $rules = [
                 ['boolean','between:min,max','confirmed','date'],
                 ['dimensions:mwidth,mheight','email','exists:table,column','image'],
                 ['integer','ip','max:value','min:value','nullable'],
                 ['required','ip','unique:table,column','string','size:value'],
             ];
 
-            $this->table($headers, $users);
+            $this->table($headers, $rules);
             $rules = $this->ask('Rules');
             $this->tempFields[$field] = ['name' => $field,'type'=> $type,'rules' => $rules];
         }

@@ -84,6 +84,7 @@ class CreateCrudForm
                 $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
                     "class" => \\' . "{$field['type']['relation']['model']}::class," . '
                     "property" => \'' . "{$field['type']['relation']['property']}'," . '
+                    "label" => \'' . "{$this->getRelationModelWithoutId(ucfirst($field['name']))}'," . '
                     "rules" => ' . "'required'," . '
                     "query_builder" => ' . "function(\\".$field['type']['relation']['model']. ' $' .strtolower($this->modelNameWithoutNamespace($field['type']['relation']['model'])) . "){
                         return $". strtolower($this->modelNameWithoutNamespace($field['type']['relation']['model'])) .";

@@ -3,6 +3,7 @@ namespace Guysolamour\Administrable\Console\Crud;
 
 
 use Illuminate\Container\Container;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 trait MakeCrudTrait
@@ -129,9 +130,18 @@ trait MakeCrudTrait
         return $field['type']['relation']['model'];
     }
 
-  private function getRelatedModelProperty(array $field) :string
+    private function getRelatedModelProperty(array $field) :string
     {
         return $field['type']['relation']['property'];
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    private function getRelationModelWithoutId(string $name) :string
+    {
+        return Arr::first(explode('_', $name));
     }
 
 

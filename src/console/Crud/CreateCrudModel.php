@@ -75,7 +75,6 @@ class CreateCrudModel
 
         $model = $this->addTimestampProperty($model);
 
-
         $model = $this->loadSluggableTrait($model, $data_map);
 
         $this->createDirIfNotExists($model_path);
@@ -163,18 +162,23 @@ class CreateCrudModel
     private function addRelations($model,$model_path){
         foreach ($this->fields as $field) {
             if ($this->isRelationField($field['type'])){
+                // check if the related model already exists
+                if(!class_exists($this->getRelatedModel($field))){
+                    die("The related model [{$this->getRelatedModel($field)}] does not exists. You nedd to create if first." . PHP_EOL);
+                }
+
                 // on recupere le modele
                 [$model_stub, $related_stub] = $this->getModelAndRelatedModelStubs($field);
 
-                $data_map = $this->parseRelationName($this->name, $field['type']['relation']['model']);
+                $data_map = $this->parseRelationName($this->name, $this->getRelatedModel($field));
 
                 $new_model = strtr($model_stub , $data_map);
                 $related = strtr($related_stub, $data_map);
 
-                $related_path = app_path('Models/' . $this->modelNameWithoutNamespace($field['type']['relation']['model']).'.php');
+                $related_path = app_path('Models/' . $this->modelNameWithoutNamespace($this->getRelatedModel($field)).'.php');
 
                 if (!file_exists($related_path)){
-                    $related_path = app_path($this->modelNameWithoutNamespace($field['type']['relation']['model']).'.php');
+                    $related_path = app_path($this->modelNameWithoutNamespace($this->getRelatedModel($field)).'.php');
                 }
 
                 $related_model = file_get_contents($related_path);
@@ -244,6 +248,7 @@ class CreateCrudModel
             $model = str_replace($route_mw_bait, $route_mw_bait . $sluggable, $model);
 
         }
+
         return $model;
     }
 
@@ -287,17 +292,21 @@ class CreateCrudModel
 
         if ($this->isOneToOneRelation($field)) {
 
-            $model_stub = file_get_contents($this->TPL_PATH . '/models/hasOne.stub');
-            $related_stub = file_get_contents($this->TPL_PATH . '/models/belongsTo.stub');
+            $model_stub = file_get_contents($this->TPL_PATH . '/models/OneToOne/belongsTo.stub');
+            $related_stub = file_get_contents($this->TPL_PATH . '/models/OneToOne/hasOne.stub');
         }
         return [$model_stub, $related_stub];
     }
 
-    private function addTimestampProperty($model)
+    /**
+     * @param string $model
+     * @return string
+     */
+    private function addTimestampProperty(string $model) :string
     {
         // stop if the timestamps is null because the option was not given
         if (!$this->timestamps) {
-            return;
+            return $model;
         }
 
 

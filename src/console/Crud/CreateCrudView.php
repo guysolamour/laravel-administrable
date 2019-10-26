@@ -3,7 +3,6 @@ namespace Guysolamour\Administrable\Console\Crud;
 
 
 
-use Illuminate\Support\Arr;
 
 class CreateCrudView
 {
@@ -198,14 +197,7 @@ class CreateCrudView
     }
 
 
-    /**
-     * @param string $name
-     * @return string
-     */
-    private function getRelationModelWithoutId(string $name) :string
-    {
-        return Arr::first(explode('_', $name));
-    }
+
 
     /**
      * @param $fields

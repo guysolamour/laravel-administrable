@@ -26,8 +26,8 @@ return [
            'category_id' => [
                'name' => 'category_id', 'type' => [
                    'relation' => [
-                       'name' => 'Many to One',
-                       'model' => 'App\Models\Category',
+                       'name' => 'One to One',
+                       'model' => 'App\Models\Categorysss',
                        'property' => 'name'
                    ]
                 ],
