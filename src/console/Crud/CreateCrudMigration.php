@@ -189,9 +189,6 @@ class CreateCrudMigration
 
             }
 
-            if ($field['type'] === 'slug') {
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$slug = $faker->realText(50),';
-            }
 
             if ($field['type'] === 'image') {
 

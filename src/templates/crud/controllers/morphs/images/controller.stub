@@ -7,6 +7,7 @@ use {{namespace}}\Models\{{singularMorphClass}};
 use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Traits\FormBuilderTrait;
+use Illuminate\Support\Facades\DB;
 
 class {{singularClass}}Controller extends Controller
 {
@@ -109,6 +110,14 @@ class {{singularClass}}Controller extends Controller
      */
     public function destroy({{singularClass}} ${{singularSlug}})
     {
+        DB::transaction(function() use (${{singularSlug}}) {
+            ${{pluralMorphField}} = ${{singularSlug}}->{{pluralMorphField}};
+            foreach (${{pluralMorphField}} as ${{singularMorphSlug}}) {
+                ${{singularMorphSlug}}->delete();
+            }
+            ${{singularSlug}}->delete();
+        });
+
         ${{singularSlug}}->delete();
         flashy('L\' élément a bien été supprimé');
         return redirect()->route('admin.{{singularSlug}}.index');

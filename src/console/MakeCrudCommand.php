@@ -112,24 +112,12 @@ class MakeCrudCommand extends Command
 
         if (!empty($config_fields)) {
             $this->fields = $config_fields;
-
             $this->setConfigOption(['slug','seed','entity','polymorphic', 'timestamps']);
-
-
         } else {
             $this->fields = $this->getFields();
         }
 
-        //dd($this->fields);
 
-        // Views and registered link to left sidebar
-//        $this->info(PHP_EOL . 'Views...');
-//        $view_path = CreateCrudView::generate($this->model,$this->fields,$this->slug,$this->timestamps);
-//        $this->info('Views created at ' . $view_path);
-//        $progress->advance();
-//
-//
-//        die;
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
@@ -196,7 +184,6 @@ class MakeCrudCommand extends Command
             $this->info('Database seeding completed successfully.');
             $progress->advance();
         }
-
         $progress->finish();
     }
 

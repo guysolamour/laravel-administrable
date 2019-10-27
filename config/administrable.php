@@ -19,6 +19,13 @@ return [
             'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
         ],
+        'prestation' => [
+            'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
+            'image' =>['name' => 'image', 'type' => 'image', 'rules' => 'required'],
+            'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
+            'seed' => true,
+            'slug' => 'name'
+        ],
         'comment' => [
             'name' =>['name' => 'name', 'type' => 'string', 'rules' => ''],
             'image' =>['name' => 'image', 'type' => 'image', 'rules' => 'required'],
