@@ -120,16 +120,11 @@ class MakeCrudCommand extends Command
             $this->fields = $this->getFields();
         }
 
-
-
-
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
         [$result,$model_path] = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps, $this->polymorphic);
         $this->displayResult($result,$model_path);
         $progress->advance();
-       // dd($this->morphs, $this->fields);;
-
 
         // Migrations and seeds
         $this->info(PHP_EOL . 'Creating Migration...');
@@ -152,13 +147,13 @@ class MakeCrudCommand extends Command
 
             // Controllers
             $this->info(PHP_EOL . 'Controllers...');
-            $controller_path = CreateCrudController::generate($this->model);
+            $controller_path = CreateCrudController::generate($this->model, $this->fields);
             $this->info('Controller created at ' . $controller_path);
             $progress->advance();
 
             // Routes
             $this->info(PHP_EOL . 'Routes...');
-            $route_path = CreateCrudRoute::generate($this->model);
+            $route_path = CreateCrudRoute::generate($this->model, $this->fields);
             $this->info('Routes inserted at ' . $route_path);
             $progress->advance();
 
@@ -167,7 +162,6 @@ class MakeCrudCommand extends Command
             $breadcrumb_path = CreateCrudBreadcumb::generate($this->model,$this->fields,$this->slug);
             $this->info('Breadcrumb created at ' . $breadcrumb_path);
             $progress->advance();
-
 
             // Views and registered link to left sidebar
             $this->info(PHP_EOL . 'Views...');
@@ -192,11 +186,7 @@ class MakeCrudCommand extends Command
             $progress->advance();
         }
 
-
-
-
         $progress->finish();
-
     }
 
     /**
@@ -204,8 +194,6 @@ class MakeCrudCommand extends Command
      */
     private function getFields() :array
     {
-
-
         $field = $this->ask('Field');
         $type = $this->anticipate('Type', self::TYPES);
 
@@ -235,14 +223,11 @@ class MakeCrudCommand extends Command
             $this->tempFields[$field] = ['name' => $field,'type'=> $type,'rules' => $rules];
         }
 
-
         if ($this->confirm('Add another field?')) {
             $this->getFields();
         }
 
         return $this->tempFields;
-
-
     }
 
     private function removeFileExtension(string $file) :string{
@@ -303,9 +288,6 @@ class MakeCrudCommand extends Command
     private function setConfigOption(array $options): void
     {
 
-//        dd($options);
-
-//        dd($this->fields);
 
         foreach ($options as $option){
 

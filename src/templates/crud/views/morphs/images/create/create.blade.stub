@@ -1,0 +1,21 @@
+
+
+                    <div class="row">
+                            <div class="row p-2 img-thumbs">
+
+                            </div>
+                            <div class="col-md-12">
+
+                                <div class="input-group" style="margin-top: 1rem; margin-bottom: 2rem;">
+                                    <span class="input-group-btn">
+                                    <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                                        <i class="fa fa-picture-o"></i> Ajouter une nouvelle image
+                                    </a>
+                                    </span>
+                                    <input  type="hidden" id="thumbnail" class="form-control" name="filepath">
+                                </div>
+                                {{-- <img id="holder" class="img-responsive img-rounded"> --}}
+
+                            </div>
+
+                        </div>

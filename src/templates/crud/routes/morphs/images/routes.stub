@@ -1,0 +1,3 @@
+
+        Route::post('{{pluralSlug}}/{{singularMorphField}}/{{{singularMorphField}}}/destroy','{{singularClass}}Controller@{{singularMorphField}}Destroy')->name('admin.{{singularSlug}}.{{singularMorphField}}.destroy');
+        Route::post('{{pluralSlug}}/{{{singularSlug}}}/{{singularMorphField}}/add','{{singularClass}}Controller@{{singularMorphField}}Add')->name('admin.{{singularSlug}}.{{singularMorphField}}.add');

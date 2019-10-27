@@ -3,6 +3,7 @@
 namespace {{namespace}}\Http\Controllers\Admin;
 
 use {{namespace}}\Models\{{singularClass}};
+use {{namespace}}\Models\{{singularMorphClass}};
 use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Traits\FormBuilderTrait;
@@ -45,7 +46,16 @@ class {{singularClass}}Controller extends Controller
 
        $form->redirectIfNotValid();
 
-       {{singularClass}}::create($request->all());
+       $photos = json_decode($request->get('{{pluralMorphField}}'));
+
+       ${{singularSlug}} = {{singularClass}}::create($request->all());
+
+       // associate {{pluralMorphField}}
+       foreach ( $photos as $photo ) {
+           ${{singularSlug}}->{{pluralMorphField}}()->create([
+               'url' => $photo
+           ]);
+       }
 
        flashy('L\' élément a bien été ajouté');
        return redirect()->route('admin.{{singularSlug}}.index');
@@ -103,5 +113,34 @@ class {{singularClass}}Controller extends Controller
         flashy('L\' élément a bien été supprimé');
         return redirect()->route('admin.{{singularSlug}}.index');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \{{namespace}}\Models\{{singularMorphClass}}  ${{singularMorphSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function imageDestroy({{singularMorphClass}} ${{singularMorphSlug}})
+    {
+       ${{singularMorphSlug}}->delete();
+       return response('ok');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{namespace}}\Models\{{singularClass}}  ${{singularSlug}}
+     * @return array
+     */
+    public function imageAdd(Request $request, {{singularClass}} ${{singularSlug}})
+    {
+       $image = $terrain->{{pluralMorphField}}()->create([
+        	'url' =>$request->get('url')
+    	 ]);
+    	 return [$terrain,$image];
+    }
+
+
 
 }

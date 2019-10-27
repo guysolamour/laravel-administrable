@@ -14,13 +14,13 @@
                     <div class="card-body">
                         {!! form_start($form) !!}
                         {!! form_rest($form) !!}
-                        <button type="submit" class="btn btn-success save"><i class="fa fa-plus"></i> Ajouter</button>
+                        <button type="submit" class="btn btn-success" id="submit"><i class="fa fa-plus"></i> Ajouter</button>
                         {!! form_end($form) !!}
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
-
+              <!-- add something here -->
 
             </div>
 
@@ -28,3 +28,5 @@
     </div>
 
 @stop
+
+<!-- add assets here -->

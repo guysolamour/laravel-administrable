@@ -9,3 +9,6 @@
             'update'     => 'admin.{{singularSlug}}.update',
             'destroy'    => 'admin.{{singularSlug}}.destroy',
         ]);
+
+
+

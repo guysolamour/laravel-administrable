@@ -52,14 +52,14 @@ class CreateCrudModel
         $this->polymorphic = $polymorphic;
     }
 
+
     /**
      * @param string $name
      * @param array $fields
      * @param null|string $slug
      * @param bool $timestamps
      * @param bool $polymorphic
-     * @return string
-     * @internal param bool $entity
+     * @return array
      */
     public static function generate(string $name , array $fields, ?string $slug = null, bool $timestamps = false, bool $polymorphic = false)
     {
@@ -88,11 +88,7 @@ class CreateCrudModel
 
         $model = strtr($stub, $data_map);
 
-        //dd($model);
-
         $model = $this->addTimestampProperty($model);
-
-
 
         $model = $this->loadSluggableTrait($model, $data_map);
 
@@ -182,7 +178,12 @@ class CreateCrudModel
     }
 
 
-    private function addRelations($model,$model_path){
+    /**
+     * @param $model
+     * @param $model_path
+     * @return bool
+     */
+    private function addRelations($model, $model_path){
         foreach ($this->fields as $field) {
             if ($this->isRelationField($field['type'])){
                 // check if the related model already exists

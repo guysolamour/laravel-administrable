@@ -1,6 +1,8 @@
 <?php
 namespace Guysolamour\Administrable\Console\Crud;
 
+use Illuminate\Support\Str;
+
 class CreateCrudForm
 {
     use MakeCrudTrait;
@@ -16,17 +18,17 @@ class CreateCrudForm
     /**
      * @var string
      */
-    private $name;
+    private $model;
 
     /**
      * CreateCrudForm constructor.
-     * @param string $name
+     * @param string $model
      * @param array $fields
      * @param string|null $slug
      */
-    public function __construct(string $name, array $fields, ?string $slug)
+    public function __construct(string $model, array $fields, ?string $slug)
     {
-        $this->name = $name;
+        $this->model = $model;
         $this->fields = $fields;
         $this->slug = $slug;
     }
@@ -50,7 +52,7 @@ class CreateCrudForm
     {
         try {
 
-            $data_map = $this->parseName($this->name);
+            $data_map = $this->parseName($this->model);
 
             $form_name = $data_map['{{singularClass}}'];
 
@@ -79,9 +81,19 @@ class CreateCrudForm
         $fields = "\n";
         foreach ($this->fields as $field) {
             // on doit ajouter les rules si ces derniers ne sont pas vides
-
             if ($this->isRelationField($field['type'])){
-                $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
+                //dd(Str::plural(Str::slug($this->modelNameWithoutNamespace($this->getRelatedModel($field)))));
+
+                if ($this->isMorphsFIeld($field)){
+                    if ($this->isImagesMorphRelation($field)){
+                    $morph_field_name = $this->getMorphFieldName($field);
+                    $fields .= '            ->add(' . "'{$morph_field_name}'" . ', ' . "'hidden'" . ',[
+                    \'rules\' => ' . "'required'," . '
+                    \'attr\' => ' . "['id' => '{$morph_field_name}', 'class' => '{$morph_field_name}']" . '
+               ])' . "\n";
+                    }
+                }else {
+                    $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
                     "class" => \\' . "{$field['type']['relation']['model']}::class," . '
                     "property" => \'' . "{$field['type']['relation']['property']}'," . '
                     "label" => \'' . "{$this->getRelationModelWithoutId(ucfirst($field['name']))}'," . '
@@ -90,9 +102,10 @@ class CreateCrudForm
                         return $". strtolower($this->modelNameWithoutNamespace($field['type']['relation']['model'])) .";
                     }"
 
-                    . '
+                        . '
                     
                 ])' . "\n";
+                }
             }
             else if (!empty($field['rules'])){
                 $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[

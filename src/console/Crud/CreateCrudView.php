@@ -4,6 +4,8 @@ namespace Guysolamour\Administrable\Console\Crud;
 
 
 
+use Illuminate\Support\Str;
+
 class CreateCrudView
 {
 
@@ -11,7 +13,7 @@ class CreateCrudView
     /**
      * @var string
      */
-    private $name;
+    private $model;
     /**
      * @var array
      */
@@ -26,14 +28,14 @@ class CreateCrudView
 
     /**
      * CreateCrudView constructor.
-     * @param string $name
+     * @param string $model
      * @param array $fields
      * @param null|string $slug
      * @param bool $timestamps
      */
-    public function __construct(string $name, array $fields, ?string $slug = null, bool $timestamps = false)
+    public function __construct(string $model, array $fields, ?string $slug = null, bool $timestamps = false)
     {
-        $this->name = $name;
+        $this->model = $model;
         $this->fields = $fields;
         $this->timestamps = $timestamps;
         $this->slug = $slug;
@@ -56,59 +58,103 @@ class CreateCrudView
      */
     public function loadViews() :string
     {
-        $data_map = $this->parseName($this->name);
+        $data_map = $this->parseName($this->model);
 
         $guard = $data_map['{{pluralSlug}}'];
 
         $views_path = resource_path('views/admin');
 
-        $views = [
-            [
-                'stub' => $this->TPL_PATH . '/views/index.blade.stub',
-                'path' => $views_path . '/' . $guard . '/index.blade.php',
-            ],
-            [
-                'stub' => $this->TPL_PATH . '/views/create.blade.stub',
-                'path' => $views_path . '/' . $guard . '/create.blade.php',
-            ],
-            [
-                'stub' => $this->TPL_PATH. '/views/edit.blade.stub',
-                'path' => $views_path . '/' . $guard . '/edit.blade.php',
-            ],
-
-            [
-                'stub' => $this->TPL_PATH . '/views/show.blade.stub',
-                'path' => $views_path . '/' . $guard . '/show.blade.php',
-            ],
-        ];
-
-        foreach ($views as $view) {
-            $stub = file_get_contents($view['stub']);
-            $complied = strtr($stub, $data_map);
-
-            $dir = dirname($view['path']);
-            if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
-
-            // for index view
-            $var_name = $data_map['{{singularSlug}}'];
-            [$values, $fields] = $this->showIndexFields($var_name);
-            $form = $this->insertFieldToViewIndex($fields, $complied, $values);
-
-            // for show views
-            $show_views = $this->showViewFields($var_name);
-            $form = $this->insertFieldToViewSHow($show_views, $form);
-
-            // write file
-            file_put_contents($view['path'], $form);
-        }
+        $this->loadIndexView($guard, $views_path, $data_map);
+        $this->loadCreateView($guard, $views_path, $data_map);
+        $this->loadEditView($guard, $views_path, $data_map);
+        $this->loadShowView($guard, $views_path, $data_map);
 
         // register sidebar link
         $this->registerLinkToLeftSidebar($data_map);
 
         return $views_path;
     }
+
+    private function loadIndexView($guard, $views_path, $data_map)
+    {
+        $stub  = $this->TPL_PATH . '/views/index.blade.stub';
+        $path =  $views_path . '/' . $guard . '/index.blade.php';
+
+        $stub = file_get_contents($stub);
+        $complied = strtr($stub, $data_map);
+
+        $this->createDirIfNotExists($path);
+
+        $var_name = $data_map['{{singularSlug}}'];
+        [$values, $fields] = $this->showIndexFields($var_name);
+        $view = $this->insertFieldToViewIndex($fields, $complied, $values);
+
+        $this->writeFile($path, $view);
+
+
+    }
+    private function loadShowView($guard, $views_path, $data_map)
+    {
+        $stub  = $this->TPL_PATH . '/views/show.blade.stub';
+        $path =  $views_path . '/' . $guard . '/show.blade.php';
+
+        $stub = file_get_contents($stub);
+        $complied = strtr($stub, $data_map);
+
+        $this->createDirIfNotExists($path);
+
+        $var_name = $data_map['{{singularSlug}}'];
+        $show_views = $this->showViewFields($var_name);
+        $view = $this->insertFieldToViewSHow($show_views, $complied);
+
+        $this->writeFile($path, $view);
+
+
+    }
+    private function loadCreateView($guard, $views_path, $data_map)
+    {
+        $stub  = $this->TPL_PATH . '/views/create.blade.stub';
+        $path =  $views_path . '/' . $guard . '/create.blade.php';
+
+        $stub = file_get_contents($stub);
+        $complied = strtr($stub, $data_map);
+
+        $this->createDirIfNotExists($path);
+
+        foreach ($this->fields as $field){
+            if ($this->isMorphsFIeld($field)){
+                if ($this->isImagesMorphRelation($field)){
+                    $complied = $this->loadMorphsViewAndAssets($data_map, $field, $complied, 'create');
+                }
+            }
+        }
+
+        $this->writeFile($path, $complied);
+    }
+
+    private function loadEditView($guard, $views_path, $data_map)
+    {
+        $stub  = $this->TPL_PATH . '/views/edit.blade.stub';
+        $path =  $views_path . '/' . $guard . '/edit.blade.php';
+
+        $stub = file_get_contents($stub);
+        $complied = strtr($stub, $data_map);
+
+        $this->createDirIfNotExists($path);
+
+        foreach ($this->fields as $field){
+            if ($this->isMorphsFIeld($field)){
+                if ($this->isImagesMorphRelation($field)){
+                    $complied = $this->loadMorphsViewAndAssets($data_map, $field, $complied, 'edit');
+                }
+            }
+        }
+
+        $this->writeFile($path, $complied);
+    }
+
+
+
 
     /**
      * @param $field_name
@@ -147,6 +193,13 @@ class CreateCrudView
     {
         $slug_mw_bait = '{{showView}}';
         $view = str_replace($slug_mw_bait, $show_views, $view);
+        return $view;
+    }
+
+    protected function insertFieldToViewEdit($show_views, $view)
+    {
+        $search = '{{morphImagesEdit}}';
+        $view = str_replace($search, $show_views, $view);
         return $view;
     }
 
@@ -231,8 +284,8 @@ class CreateCrudView
         $stub = file_get_contents($aside_stub);
         $complied = strtr($stub, $data_map);
 
-        $slug_mw_bait = '        </ul>' . "\n" . '    </section>';
-        $form = str_replace($slug_mw_bait, $complied . $slug_mw_bait, file_get_contents($aside));
+        $search = '        </ul>' . "\n" . '    </section>';
+        $form = str_replace($search, $complied . $search, file_get_contents($aside));
         file_put_contents($aside, $form);
     }
 
@@ -248,7 +301,36 @@ class CreateCrudView
             $field === 'string' || $field === 'decimal' ||
             $field === 'double' || $field === 'float' ||
             $field === 'text' || $field === 'mediumText' ||
-            $field === 'longText';
+            $field === 'longText' || $field === 'bigInteger';
+    }
+
+    /**
+     * @param $data_map
+     * @param $field
+     * @param $complied
+     * @param string $action
+     * @return mixed
+     */
+    private function loadMorphsViewAndAssets($data_map, $field, $complied, string $action)
+    {
+        $map = $this->parseMorphsName($field);
+
+        $partial_stub = $this->TPL_PATH . "/views/morphs/images/{$action}/{$action}.blade.stub";
+        $partial_stub = file_get_contents($partial_stub);
+        $partial = strtr($partial_stub, $data_map);
+        $partial = strtr($partial, $map);
+
+        $search = '<!-- add something here -->';
+        $complied = str_replace($search, $partial, $complied);
+
+        $partial_stub = $this->TPL_PATH . "/views/morphs/images/{$action}/assets.blade.stub";
+        $partial_stub = file_get_contents($partial_stub);
+        $partial = strtr($partial_stub, $data_map);
+        $partial = strtr($partial, $map);
+
+        $search = '<!-- add assets here -->';
+        $complied = str_replace($search, $partial, $complied);
+        return $complied;
     }
 
 }

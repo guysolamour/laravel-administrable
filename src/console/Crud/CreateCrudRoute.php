@@ -9,24 +9,31 @@ class CreateCrudRoute
     /**
      * @var string
      */
-    private $name;
+    private $model;
+    /**
+     * @var array
+     */
+    private $fields;
 
     /**
      * CreateCrudRoute constructor.
-     * @param string $name
+     * @param string $model
+     * @param array $fields
      */
-    public function __construct(string $name)
+    public function __construct(string $model, array $fields)
     {
-        $this->name = $name;
+        $this->model = $model;
+        $this->fields = $fields;
     }
 
     /**
-     * @param string $name
+     * @param string $model
+     * @param array $fields
      * @return string
      */
-    public static function generate(string $name)
+    public static function generate(string $model, array $fields)
     {
-        return (new CreateCrudRoute($name))
+        return (new CreateCrudRoute($model, $fields))
             ->loadRoutes();
     }
 
@@ -35,7 +42,7 @@ class CreateCrudRoute
      */
     protected function loadRoutes() :string
     {
-        $data_map = $this->parseName($this->name);
+        $data_map = $this->parseName($this->model);
 
         $routes_path = base_path('/routes/admin.php');
         $routes_stub = $this->TPL_PATH . '/routes/routes.stub';
@@ -59,8 +66,28 @@ class CreateCrudRoute
         $stub = file_get_contents($routes_stub);
         $complied = strtr($stub, $data_map);
 
-        $slug_mw_bait = '    });';
-        $complied = str_replace($slug_mw_bait, $complied . $slug_mw_bait, $routes);
+        // add others routes if morphsImageField
+        foreach ($this->fields as $field){
+            if ($this->isMorphsFIeld($field)){
+                if ($this->isImagesMorphRelation($field)){
+
+                    $map = $this->parseMorphsName($field);
+
+                    $partial_stub  = $this->TPL_PATH . '/routes/morphs/images/routes.stub';
+                    $partial_stub = file_get_contents($partial_stub);
+                    $partial = strtr($partial_stub, $data_map);
+                    $partial = strtr($partial, $map);
+
+                    $search = "// {$data_map['{{pluralClass}}']}";
+                    $complied = str_replace($search, $search . $partial, $complied);
+
+
+                }
+            }
+        }
+
+        $search = '    });';
+        $complied = str_replace($search, $complied . $search, $routes);
         return $complied;
     }
 }

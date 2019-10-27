@@ -64,8 +64,6 @@ class CreateCrudMigration
      */
     protected function loadMigrations()
     {
-
-
             $data_map = $this->parseName($this->model);
 
             $signature = date('Y_m_d_His');
@@ -99,12 +97,9 @@ class CreateCrudMigration
 
                 }
 
-
                 return [isset($migration_result),$migration['path'],$seed_result,$seed_file];
 
             }
-
-
 
     }
 

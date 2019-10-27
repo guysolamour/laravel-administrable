@@ -26,6 +26,21 @@ trait MakeCrudTrait
         );
     }
 
+    private function getRelatedModelWithoutNamespace(array $field) :string
+    {
+        return $this->modelNameWithoutNamespace($this->getRelatedModel($field));
+    }
+
+    private function parseMorphsName(array $field)
+    {
+        return [
+            '{{pluralMorphField}}' => Str::plural(Str::slug($this->getRelatedModelWithoutNamespace($field))),
+            '{{singularMorphField}}' => Str::singular(Str::slug($this->getRelatedModelWithoutNamespace($field))),
+            '{{singularMorphClass}}' => Str::singular(Str::studly($this->getRelatedModelWithoutNamespace($field))),
+            '{{singularMorphSlug}}' => Str::singular(Str::slug($this->getRelatedModelWithoutNamespace($field))),
+        ];
+    }
+
     /**
      * Get project namespace
      * Default: App
@@ -69,6 +84,18 @@ trait MakeCrudTrait
     {
 
         return is_array($type);
+    }
+
+
+    private function getMorphFieldName ($field)
+    {
+        return Str::plural(Str::slug($this->modelNameWithoutNamespace($this->getRelatedModel($field))));
+    }
+
+
+    private function getSingularMorphFieldName ($field)
+    {
+        return Str::singular(Str::slug($this->modelNameWithoutNamespace($this->getRelatedModel($field))));
     }
 
 
@@ -134,6 +161,11 @@ trait MakeCrudTrait
     private function getRelatedModel(array $field) :string
     {
         return $field['type']['relation']['model'];
+    }
+
+    private function isImagesMorphRelation($field) :bool
+    {
+        return $this->getRelatedModel($field) == 'App\\Models\\Image';
     }
 
     private function getRelatedModelProperty(array $field) :string

@@ -1,0 +1,111 @@
+@section('css')
+    <style>
+        .product-image-box {
+            position: relative;
+        }
+        .product-image-box {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .product-image-box .close-icon {
+            position: absolute;
+            top: 45%;
+            right: 48%;
+        }
+        .product-image {
+            height: 150px !important;
+            width: 100% !important;
+        }
+    </style>
+@stop
+
+
+@section('js')
+    <script>
+        // ACTIVE BOOSTRAP TOOLTIP
+
+        $('[data-toggle="tooltip"]').tooltip()
+
+        // HOVER WHEN DELETING IMAGE
+
+        $('.product-image-box').hover(function(){
+            $(this).find('.product-image').css('backgroundColor','red');
+            $(this).find('.close-icon').css('display','block');
+        },function(){
+            $(this).find('.product-image').css('backgroundColor','white');
+            $(this).find('.close-icon').css('display','none');
+        })
+
+        // DELETE IMAGE WHEN CLIK ON THE CROSS
+        $('.close-icon').click(function(ev){
+            ev.preventDefault()
+            let parent = $(this).parent()
+            let image = parent.find('img.product-image')
+
+
+
+              // delete the picture in database
+              $.ajax({
+
+                  url: image.data('url') ,
+                  type: 'post',
+
+                  headers: {
+                      'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+                  },
+
+
+                    success : (data, textStatus, jqXHR) => {
+                        parent.fadeOut()
+                    },
+                    error : (data, textStatus, jqXHR) => {
+                    },
+                })
+
+            })
+
+
+            // ADD NEW PHOTO
+            $('#thumbnail').change(function(){
+
+
+                $.ajax({
+
+                    url: $('input[data-url]').data('url') ,
+                    type: 'post',
+
+                    data: {
+                            'url': $(this).val()
+                        },
+
+                    headers: {
+                            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+                        },
+
+
+                        success : (data, textStatus, jqXHR) => {
+                                // append the new image
+                                $('.img-thumbs').append("" +
+                                    "<div class='col-md-6 product-image-box'>" +
+                                        "<i class='close-icon fa fa-times' aria-hidden='true' data-toggle='tooltip' data-placement='top' title='Supprimer cette image' style='font-size: 2rem;display: none;cursor: pointer;color: red'></i>" +
+                                        "<img data-id='"+ data[1].id +"' data-url='/admin/produit-photo/"+ data[1].id +"' class='img-fluid img-thumbnail product-image' src='"+  data[1].url +"' alt='"+ data[0].name +"'>" +
+                                        " </div>" +
+                                        "");
+
+
+                                },
+
+
+
+                        error : (data, textStatus, jqXHR) => {
+                                },
+                            })
+
+                        });
+
+
+
+
+    </script>
+
+@stop

@@ -10,24 +10,31 @@ class CreateCrudController
     /**
      * @var string
      */
-    private $name;
+    private $model;
+    /**
+     * @var array
+     */
+    private $fields;
 
     /**
      * CreateCrudController constructor.
-     * @param string $name
+     * @param string $model
+     * @param array $fields
      */
-    public function __construct(string $name)
+    public function __construct(string $model, array $fields)
     {
-        $this->name = $name;
+        $this->model = $model;
+        $this->fields = $fields;
     }
 
     /**
-     * @param string $name
-     * @return mixed
+     * @param string $model
+     * @param array $fields
+     * @return string
      */
-    public static function generate(string $name) :string
+    public static function generate(string $model, array $fields) :string
     {
-        return (new CreateCrudController($name))
+        return (new CreateCrudController($model, $fields))
             ->loadController();
     }
 
@@ -37,44 +44,65 @@ class CreateCrudController
      */
     private function loadController() :string
     {
-        try {
+        $data_map = $this->parseName($this->model);
 
-            $data_map = $this->parseName($this->name);
+        $controller_name = $data_map['{{singularClass}}'];
 
-            $controller_name = $data_map['{{singularClass}}'];
+        $controllers_path = app_path('/Http/Controllers/Admin');
 
-            $controllers_path = app_path('/Http/Controllers/Admin');
+        [$stub, $path] = $this->loadStubAndPath($controllers_path, $controller_name);
 
-            $controllers = [
-                [
-                    'stub' => $this->TPL_PATH . '/controllers/Controller.stub',
-                    'path' => $controllers_path . "/{$controller_name}Controller.php",
-                ],
-            ];
+        $complied = $this->loadAndRegisterControllerStub($stub, $data_map);
+        $this->createDirIfNotExists($path);
 
-            foreach ($controllers as $controller) {
-                $complied = $this->loadAndRegisterControllerStub($controller, $data_map);
-                $this->createDirIfNotExists($controller['path']);
+        $this->writeFile($path, $complied);
 
-                file_put_contents($controller['path'], $complied);
-            }
+        return $controllers_path;
 
-            return $controllers_path;
-
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
-        }
     }
 
     /**
-     * @param $controller
+     * @param $stub
      * @param $data_map
      * @return string
      */
-    private function loadAndRegisterControllerStub($controller, $data_map): string
+    private function loadAndRegisterControllerStub($stub, $data_map): string
     {
-        $stub = file_get_contents($controller['stub']);
+        if (is_file($stub)){
+            $stub = file_get_contents($stub);
+        }
         $complied = strtr($stub, $data_map);
         return $complied;
+    }
+
+    /**
+     * @param $controllers_path
+     * @param $controller_name
+     * @return array
+     */
+    private function loadStubAndPath($controllers_path, $controller_name): array
+    {
+        foreach ($this->fields as $field){
+            if ($this->isMorphsFIeld($field)){
+
+                if ($this->isImagesMorphRelation($field)){
+                    $stub = $this->TPL_PATH . '/controllers/morphs/images/controller.stub';
+                    $path = $controllers_path . "/{$controller_name}Controller.php";
+
+                    $map = $this->parseMorphsName($field);
+
+
+                    $stub = file_get_contents($stub);
+                    $stub = strtr($stub, $map);
+
+                    return [$stub, $path];
+                }
+            }
+        }
+
+        $stub = $this->TPL_PATH . '/controllers/Controller.stub';
+        $path = $controllers_path . "/{$controller_name}Controller.php";
+
+        return [$stub, $path];
     }
 }
