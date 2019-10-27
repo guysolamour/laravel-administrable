@@ -1,0 +1,8 @@
+  <style>
+        .product-image-box { position: relative }
+        .delete-photo {
+            position: absolute;
+            top: 5px;
+            right: 20px;
+        }
+    </style>

@@ -1,0 +1,14 @@
+<div class="col-md-12" >
+                    <h3>Image à la une</h3>
+                    <img id="imageholder" class="img-responsive img-rounded"  >
+
+                    <div class="input-group" style="margin-top: 1rem; margin-bottom: 2rem;">
+                        <span class="input-group-btn">
+                            <a id="lfm" data-input="imagethumbnail" data-preview="imageholder" class="btn btn-primary">
+                                <i class="fa fa-picture-o"></i> Ajouter l'image à la une
+                            </a>
+                        </span>
+                        <input  type="hidden" id="imagethumbnail" class="form-control" name="filepath">
+                    </div>
+
+                </div>

@@ -1,0 +1,17 @@
+ <div class="col-md-12" >
+                        <h3>Image à la une</h3>
+                        <div class="lightbox imagethumbnail">
+                            <i class="close-icon fa fa-times" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Supprimer l'image" style="font-size: 2rem;display: none;cursor: pointer;color: red"></i>
+                            <a href="{{ ${{singularSlug}}->image }}">
+                                <img style="height:250px;width:100%"   class="  product-image" src="{{ ${{singularSlug}}->image }}" alt="{{singularSlug}} picture">
+                            </a>
+                        </div>
+                        <div class="input-group" style="margin-top: 1rem; margin-bottom: 2rem;">
+                                <span class="input-group-btn">
+                                    <a id="lfm" data-input="imagethumbnail"  class="btn btn-primary">
+                                        <i class="fa fa-picture-o"></i> Ajouter une nouvelle image
+                                    </a>
+                                </span>
+                                <input  type="hidden" id="imagethumbnail" class="form-control" name="filepath">
+                        </div>
+                    </div>

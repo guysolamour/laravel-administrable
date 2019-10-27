@@ -1,0 +1,19 @@
+<style>
+        .product-image-box {
+            position: relative;
+        }
+        .product-image-box {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .product-image-box .close-icon {
+            position: absolute;
+            top: 45%;
+            right: 48%;
+        }
+        .product-image {
+            height: 150px !important;
+            width: 100% !important;
+        }
+    </style>
+

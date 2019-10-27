@@ -127,6 +127,10 @@ class CreateCrudView
                     $complied = $this->loadMorphsViewAndAssets($data_map, $field, $complied, 'create');
                 }
             }
+
+            if ($this->isImageFIeld($field)){
+                $complied = $this->loadImageViewsAndAssets($data_map, $complied, 'create');
+            }
         }
 
         $this->writeFile($path, $complied);
@@ -147,6 +151,9 @@ class CreateCrudView
                 if ($this->isImagesMorphRelation($field)){
                     $complied = $this->loadMorphsViewAndAssets($data_map, $field, $complied, 'edit');
                 }
+            }
+            if ($this->isImageFIeld($field)){
+                $complied = $this->loadImageViewsAndAssets($data_map, $complied, 'edit');
             }
         }
 
@@ -319,16 +326,53 @@ class CreateCrudView
         $partial_stub = file_get_contents($partial_stub);
         $partial = strtr($partial_stub, $data_map);
         $partial = strtr($partial, $map);
-
-        $search = '<!-- add something here -->';
+        $search = '{{-- add morphs image  here --}}';
         $complied = str_replace($search, $partial, $complied);
 
-        $partial_stub = $this->TPL_PATH . "/views/morphs/images/{$action}/assets.blade.stub";
+        $partial_stub = $this->TPL_PATH . "/views/morphs/images/{$action}/css.blade.stub";
         $partial_stub = file_get_contents($partial_stub);
         $partial = strtr($partial_stub, $data_map);
         $partial = strtr($partial, $map);
+        $search = '{{-- add morphs image css here --}}';
+        $complied = str_replace($search, $partial, $complied);
 
-        $search = '<!-- add assets here -->';
+        $partial_stub = $this->TPL_PATH . "/views/morphs/images/{$action}/js.blade.stub";
+        $partial_stub = file_get_contents($partial_stub);
+        $partial = strtr($partial_stub, $data_map);
+        $partial = strtr($partial, $map);
+        $search = '{{-- add morphs image js here --}}';
+        $complied = str_replace($search, $partial, $complied);
+
+
+        return $complied;
+    }
+
+    /**
+     * @param $data_map
+     * @param $complied
+     * @param string $action
+     * @return mixed
+     */
+    private function loadImageViewsAndAssets($data_map, $complied, string $action)
+    {
+        $partial_stub = $this->TPL_PATH . "/views/images/{$action}/{$action}.blade.stub";
+        $partial_stub = file_get_contents($partial_stub);
+        $partial = strtr($partial_stub, $data_map);
+        $search = '{{-- add standalone image  here --}}';
+        $complied = str_replace($search, $partial, $complied);
+
+        $partial_stub = $this->TPL_PATH . "/views/images/{$action}/css.blade.stub";
+        $partial_stub = file_get_contents($partial_stub);
+        $partial = strtr($partial_stub, $data_map);
+        $partial = strtr($partial, $data_map);
+        $search = '{{-- add standalone image css here --}}';
+        $complied = str_replace($search, $partial, $complied);
+
+        $partial_stub = $this->TPL_PATH . "/views/images/{$action}/js.blade.stub";
+        $partial_stub = file_get_contents($partial_stub);
+        $partial = strtr($partial_stub, $data_map);
+        $partial = strtr($partial, $data_map);
+        $search = '{{-- add standalone image js here --}}';
         $complied = str_replace($search, $partial, $complied);
         return $complied;
     }

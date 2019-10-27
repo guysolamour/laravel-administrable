@@ -93,7 +93,7 @@ class CreateCrudForm
                ])' . "\n";
                     }
                 }else {
-                    $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
+                    $fields .= '            ->add(' . "'{$this->getFieldName($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
                     "class" => \\' . "{$field['type']['relation']['model']}::class," . '
                     "property" => \'' . "{$field['type']['relation']['property']}'," . '
                     "label" => \'' . "{$this->getRelationModelWithoutId(ucfirst($field['name']))}'," . '
@@ -107,12 +107,15 @@ class CreateCrudForm
                 ])' . "\n";
                 }
             }
-            else if (!empty($field['rules'])){
-                $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
-                    \'rules\' => ' . "'{$this->getRules($field['rules'])}'" . '
+            else if($field['name'] === 'image') {
+                $fields .= '            ->add(' . "'{$this->getFieldName($field['name'])}'" . ', \'hidden\',[
+                '. $this->getRules($field['rules']) .'
+                \'attr\' => [\'id\' => \''. $this->getFieldName($field['name']) .'\'],
                 ])' . "\n";
-            }else {
-                $fields .= '            ->add(' . "'{$this->getFieldType($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
+            }
+            else {
+                $fields .= '            ->add(' . "'{$this->getFieldName($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
+                '. $this->getRules($field['rules']) .'
                 ])' . "\n";
             }
 
@@ -131,9 +134,9 @@ class CreateCrudForm
     private function getRules(string $rule) :string
     {
         if ($rule === 'req'){
-            return 'required';
+            $rule =  'required';
         }
-        return $rule;
+        return !empty($rule) ? "'rules' => '$rule'," : $rule;
     }
 
     /**
@@ -143,8 +146,8 @@ class CreateCrudForm
      */
     private function registerFields($fields, $complied, $form_path): void
     {
-        $slug_mw_bait = '$this' . "\n";
-        $form = str_replace($slug_mw_bait, $slug_mw_bait . $fields, $complied);
+        $search = '$this' . "\n";
+        $form = str_replace($search, $search . $fields, $complied);
         file_put_contents($form_path, $form);
     }
 
@@ -165,11 +168,8 @@ class CreateCrudForm
         return array($form_path, $complied);
     }
 
-    private function getFieldType(string $field) :string
+    private function getFieldName(string $field) :string
     {
-        if ($field === 'image') {
-            return 'file';
-        }
         return strtolower($field);
     }
 

@@ -120,6 +120,17 @@ class MakeCrudCommand extends Command
             $this->fields = $this->getFields();
         }
 
+        //dd($this->fields);
+
+        // Views and registered link to left sidebar
+//        $this->info(PHP_EOL . 'Views...');
+//        $view_path = CreateCrudView::generate($this->model,$this->fields,$this->slug,$this->timestamps);
+//        $this->info('Views created at ' . $view_path);
+//        $progress->advance();
+//
+//
+//        die;
+
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
         [$result,$model_path] = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps, $this->polymorphic);

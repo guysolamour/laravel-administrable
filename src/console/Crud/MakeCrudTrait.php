@@ -103,6 +103,11 @@ trait MakeCrudTrait
     {
         return $field['name'] === 'morphs';
     }
+
+    private function isImageFIeld($field) :bool
+    {
+        return $field['name'] === 'image';
+    }
     /**
      * @param string $type
      * @return string

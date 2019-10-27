@@ -1,19 +1,4 @@
-@section('css')
-    <style>
-        .product-image-box {
-            position: relative;
-        }
-        .product-image-box .close-icon {
-            position: absolute;
-            top: 45%;
-            right: 48%;
-        }
-    </style>
-@stop
-
-
-@section('js')
-    <script>
+<script>
         // ACTIVE BOOSTRAP TOOLTIP
 
         $('[data-toggle="tooltip"]').tooltip()
@@ -36,8 +21,7 @@
 
 
 
-
-              // delete the picutre in database
+              // delete the picture in database
               $.ajax({
 
                   url: image.data('url') ,
@@ -57,21 +41,8 @@
 
             })
 
-            // add standalone image
 
-            $('#imagethumbnail').on('change', function(){
-
-                $('.imagethumbnail a').attr('href',$(this).val())
-                $('.imagethumbnail a img').attr('src',$(this).val())
-
-                $('input#image').val($(this).val());
-
-            })
-
-
-
-
-            // ADD A NEW PHOTO FOR THE CURRENT PRODUCT
+            // ADD NEW PHOTO
             $('#thumbnail').change(function(){
 
 
@@ -113,5 +84,3 @@
 
 
     </script>
-
-@stop

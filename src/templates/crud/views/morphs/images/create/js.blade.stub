@@ -1,18 +1,4 @@
-
-@section('css')
-    <style>
-        .product-image-box { position: relative }
-        .delete-photo {
-            position: absolute;
-            top: 5px;
-            right: 20px;
-        }
-    </style>
-
-@endsection
-@section('js')
     <script>
-
         $('#thumbnail').change(function(ev){
             ev.preventDefault()
             // append the new image
@@ -27,7 +13,9 @@
 
         // HOVER WHEN DELETING IMAGE
         $('.img-thumbs').on('click','.delete-photo', function(){
-            $(this).parent().fadeOut();
+             $(this).parent().fadeOut(400, function(){
+                  $(this).remove();
+             });
         });
 
         $('button#submit').on('click', function () {
@@ -44,4 +32,3 @@
         });
 
     </script>
-@stop

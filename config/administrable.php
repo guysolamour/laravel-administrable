@@ -20,9 +20,18 @@ return [
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
         ],
         'comment' => [
-            'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
+            'name' =>['name' => 'name', 'type' => 'string', 'rules' => ''],
             'image' =>['name' => 'image', 'type' => 'image', 'rules' => 'required'],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
+            'morphs' => [
+                'name' => 'morphs', 'type' => [
+                    'relation' => [
+                        'name' => 'One To Many (Polymorphic)',
+                        'model' => 'App\Models\Image',
+                        'property' => 'name'
+                    ]
+                ],
+            ],
             'slug' => 'name'
         ],
        'terrain' => [
