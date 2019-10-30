@@ -24,3 +24,17 @@ if (!function_exists('current_admin_profil')) {
         return get_admin('id') == $admin->id;
     }
 }
+
+if (!function_exists('get_admin_role')) {
+    function get_admin_role($admin) : string
+    {
+        return $admin->isSuperAdmin() ? 'Super administrateur' : 'Administrateur';
+    }
+}
+
+if (!function_exists('get_current_admin_role')) {
+    function get_current_admin_role() : string
+    {
+        return get_admin_role(get_admin());
+    }
+}

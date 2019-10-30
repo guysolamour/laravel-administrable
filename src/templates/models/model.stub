@@ -18,7 +18,8 @@ class {{singularClass}} extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','avatar','is_super_{{singularSlug}}'
+        'pseudo', 'first_name', 'last_name', 'email', 'password','avatar','is_super_{{singularSlug}}',
+        'facebook', 'twitter','phone_number','website','about'
     ];
 
     /**

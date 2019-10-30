@@ -1,0 +1,104 @@
+@extends('admin.adminlte.layouts.app')
+
+@section('title','Configuration')
+
+@section('content')
+
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <!-- Breadcrumbs-->
+        {{--{{ Breadcrumbs::render('admin.client.index') }}--}}
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="card-header">Modification des paramètres généraux du site</h3>
+            </div>
+            <div class="col-md-8">
+
+                {!! form_start($form) !!}
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->email) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! form_row($form->postal) !!}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->area) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! form_row($form->cell) !!}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->phone) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! form_row($form->youtube) !!}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->facebook) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! form_row($form->twitter) !!}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->linkedin) !!}
+                    </div>
+
+                    {{--<div class="col-md-6">--}}
+                        {{--{!! form_row($form->cgu) !!}--}}
+                    {{--</div>--}}
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {!! form_row($form->about) !!}
+                    </div>
+
+                    {{--<div class="col-md-6">--}}
+                        {{--{!! form_row($form->cgu) !!}--}}
+                    {{--</div>--}}
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-edit"></i> Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                {!! form_end($form) !!}
+            </div>
+            <div class="col-md-4"  style="margin-bottom: 2rem; margin-top: 2rem;">
+                <div style="display: flex;justify-content: center;">
+                    <div class="btn-group-vertical">
+
+                        <a href="" class="btn btn-info"><i class="fa fa-edit"></i> Modifier les conditions légales</a>
+                        <a href="" data-method="delete" data-confirm="Etes vous sûr de bien vouloir vider le cache.  Cela pourrait impacter négativement les performances ?" class="btn btn-danger"><i class="fa fa-trash"></i> Vider le cache</a>
+
+                    </div>
+
+                </div>
+                <div style="margin-top: 2rem;">
+                    <p>Changer la couleur</p>
+                    <div class="form-group">
+                        <select name="" id="" class="form-control">
+                            <option value="">Bleu</option>
+                            <option value="">Jaune</option>
+                            <option value="">Vert</option>
+                            <option value="">Rouge</option>
+                        </select>
+                    </div>
+                    <br><br>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+@stop

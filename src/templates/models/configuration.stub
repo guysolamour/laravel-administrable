@@ -1,0 +1,18 @@
+<?php
+
+namespace {{namespace}}\Models;
+use Illuminate\Database\Eloquent\Model;
+
+class Configuration extends Model
+{
+    public $table = 'administrable';
+
+    public $fillable = [
+        'about','email','postal','area','cell','phone','youtube','facebook','twitter','linkedin','cgu',
+    ];
+
+    public $timestamps = false;
+
+
+
+}

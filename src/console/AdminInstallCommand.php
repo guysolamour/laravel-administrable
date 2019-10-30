@@ -53,8 +53,8 @@ class AdminInstallCommand extends Command
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
-        $model_path = $this->loadModel(self::TPL_PATH);
-        $this->info('Model created at ' . $model_path);
+        $this->loadModel(self::TPL_PATH);
+        $this->info('Model created at ');
         $progress->advance();
 
 
@@ -70,6 +70,7 @@ class AdminInstallCommand extends Command
         $this->info('Migrations created at ' . $migrations_path);
         $progress->advance();
 
+
         // Run migrations
         $this->info(PHP_EOL . 'Migrate');
         Artisan::call('migrate');
@@ -79,8 +80,13 @@ class AdminInstallCommand extends Command
         // Seeds
         $this->info(PHP_EOL . 'Creating Seed...');
         $seed_path = $this->loadSeed(self::TPL_PATH);
+
         $this->info('Seed created at ' . $seed_path);
         $progress->advance();
+
+
+
+
 
 
         // DatabaseSeeder
@@ -168,6 +174,11 @@ class AdminInstallCommand extends Command
         // update composer autoload for seeding
         \exec('composer dump-autoload > /dev/null 2>&1');
 
+        // seed
+        $this->callSilent('db:seed', [
+            '--class' => 'ConfigurationsTableSeeder',
+        ]);
+
         $progress->finish();
 
     }
@@ -195,10 +206,6 @@ class AdminInstallCommand extends Command
         if (!$name)
             $name = $this->name;
 
-
-
-
-
         return $parsed = array(
             '{{namespace}}' => $this->getNamespace(),
             '{{pluralCamel}}' => Str::plural(Str::camel($name)),
@@ -221,20 +228,32 @@ class AdminInstallCommand extends Command
     {
         try {
 
-            $stub = file_get_contents($stub_path . '/model.stub');
-
             $data_map = $this->parseName();
 
-            $model = strtr($stub, $data_map);
+            $models = [
+                [
+                    'stub' =>  $stub_path . '/models/model.stub',
+                    'path'  => app_path($data_map['{{singularClass}}'] . '.php')
+                ],
+                [
+                    'stub'  => $stub_path . '/models/configuration.stub',
+                    'path' =>  app_path('/Models/Configuration.php'),
+                ],
+            ];
 
+            foreach ($models as $model){
+                $stub = file_get_contents($model['stub']);
+                $stub = strtr($stub, $data_map);
 
-            $model_path = app_path($data_map['{{singularClass}}'] . '.php');
+                $dir = dirname($model['path']);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
 
+                file_put_contents($model['path'], $stub);
+            }
 
-
-            file_put_contents($model_path, $model);
-
-            return $model_path;
+            return app_path('models');
 
         } catch (\Exception $ex) {
             throw new \RuntimeException($ex->getMessage());
@@ -243,19 +262,34 @@ class AdminInstallCommand extends Command
     protected function loadSeed($stub_path)
     {
         try {
-
-            $stub = file_get_contents($stub_path . '/seeds/TableSeeder.stub');
-
             $data_map = $this->parseName();
 
-            $seed = strtr($stub, $data_map);
+            $seeds = [
+                [
+                    'stub' =>  $stub_path . '/seeds/TableSeeder.stub',
+                    'path'  => database_path('/seeds/'.$data_map['{{pluralClass}}'] . 'TableSeeder.php'),
+                ],
+                [
+                    'stub'  => $stub_path . '/seeds/ConfigurationSeeder.stub',
+                    'path' =>  database_path('/seeds/ConfigurationsTableSeeder.php'),
+                ],
+            ];
+
+            foreach ($seeds  as $seed){
+                $stub = file_get_contents($seed['stub']);
+                $stub = strtr($stub, $data_map);
+
+                $dir = dirname($seed['path']);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+
+                file_put_contents($seed['path'], $stub);
+            }
 
 
-            $seed_path = database_path('/seeds/'.$data_map['{{pluralClass}}'] . 'TableSeeder.php');
 
-            file_put_contents($seed_path, $seed);
-
-            return $seed_path;
+            return database_path('/seeds');
 
         } catch (\Exception $ex) {
             throw new \RuntimeException($ex->getMessage());
@@ -287,26 +321,31 @@ class AdminInstallCommand extends Command
 
     protected function loadMigrations($template_path)
     {
-        try {
-
 
             $data_map = $this->parseName();
             $guard = $data_map['{{pluralSlug}}'];
 
-            $migration_path = Arr::first(glob(database_path('migrations').'/*_create_'. $guard .'_table.php'));
-            $migration_stub = $template_path . '/migrations/provider.stub';
 
-            $stub = file_get_contents($migration_stub);
-            $complied = strtr($stub, $data_map);
+            $migrations = [
+                [
+                    'stub' =>  $template_path . '/migrations/provider.stub',
+                    'path'  => Arr::first(glob(database_path('migrations').'/*_create_'. $guard .'_table.php'))
+                ],
+                [
+                    'stub'  => $template_path . '/migrations/administrable.stub',
+                    'path'  => database_path('migrations/2015_10_29_201929_create_administrable_table.php'),
+                ],
+            ];
 
+            foreach ($migrations as $migration){
+                $stub = file_get_contents($migration['stub']);
+                $complied = strtr($stub, $data_map);
 
-            file_put_contents($migration_path, $complied);
+                file_put_contents($migration['path'], $complied);
+            }
 
             return database_path('migrations');
 
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
-        }
     }
 
     protected function loadControllers($template_path)
@@ -321,6 +360,10 @@ class AdminInstallCommand extends Command
             [
                 'stub' => $template_path . '/Controllers/controller.stub',
                 'path' => $controllers_path . '/'. $guard . 'Controller.php',
+            ],
+            [
+                'stub' => $template_path . '/Controllers/configuration.stub',
+                'path' => $controllers_path . '/ConfigurationController.php',
             ],
         ];
 
@@ -425,6 +468,10 @@ class AdminInstallCommand extends Command
             [
                 'stub' => $template_path . '/forms/ResetAdminPasswordForm.stub',
                 'path' => $form_path . '/Reset'.$guard.'PasswordForm.php',
+            ],
+            [
+                'stub' => $template_path . '/forms/ConfigurationForm.stub',
+                'path' => $form_path . '/ConfigurationForm.php',
             ],
         );
         //dd($forms);
@@ -561,6 +608,10 @@ class AdminInstallCommand extends Command
             [
                 'stub' => $template_path . '/views/auth/passwords/reset.blade.stub',
                 'path' => $views_path . '/auth/passwords/reset.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/configuration/edit.blade.stub',
+                'path' => $views_path . '/configuration/edit.blade.php',
             ],
         );
 
@@ -777,7 +828,7 @@ class AdminInstallCommand extends Command
         $app_file = str_replace($search,    $app_stub . $search   , $app);
 
         // Overwrite config file
-        file_put_contents($app_path);
+        file_put_contents($app_path, $app_file);
 
     }
 

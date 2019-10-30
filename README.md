@@ -48,7 +48,8 @@ php artisan vendor:publish --provider="Guysolamour\Admin\ServiceProvider" --tag=
     composer require guysolamour/laravel-admin
 
 ### Publish config and assets
-    php artisan vendor:publish
+    php artisan vendor:publish --tag=administrable-config
+    php artisan vendor:publish --tag=administrable-public
 
 ### Publish lfm config and assets
     php artisan vendor:publish --tag=lfm_public

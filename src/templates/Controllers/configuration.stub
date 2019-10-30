@@ -1,0 +1,38 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{singularClass}};
+
+use {{namespace}}\{{singularClass}};
+use Illuminate\Http\Request;
+use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\Models\Configuration;
+use {{namespace}}\Traits\FormBuilderTrait;
+use {{namespace}}\Forms\{{singularClass}}\ConfigurationForm;
+use MercurySeries\Flashy\Flashy;
+
+class ConfigurationController extends Controller
+{
+    use FormBuilderTrait;
+
+    public function edit()
+    {
+        $configuration = Configuration::first();
+        $form = $this->getForm( $configuration, ConfigurationForm::class );
+
+        return view('{{singularSlug}}.configuration.edit', compact('form'));
+    }
+
+
+    public function store(Request $request)
+    {
+        $configuration = Configuration::first();
+        $form = $this->getForm( $configuration, ConfigurationForm::class );
+        $form->redirectIfNotValid();
+
+        $configuration->update($request->all());
+
+        flashy('La configuration a été mise à jour');
+
+        return back();
+    }
+}

@@ -22,10 +22,25 @@
                     <i class="fa fa-file"></i> <span>Gestionnaire de fichiers</span>
                 </a>
             </li>
-            <li>
-                <a href="{{ route('{{singularSlug}}.index') }}">
-                    <i class="fa fa-folder-o"></i> <span>{{pluralSlug}}</span>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-user"></i> <span>Administrateurs</span>
+                        <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                     </span>
                 </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('{{singularSlug}}.index') }}"><i class="fa fa-list"></i> Liste </a></li>
+                    <li><a href="{{ route('{{singularSlug}}.profile', get_{{singularSlug}}()) }}"><i class="fa fa-list"></i> Votre profil </a></li>
+                     @if (current_admin_is_super_admin())
+                        <li><a href="{{ route('admin.create') }}"><i class="fa fa-plus"></i> Ajouter</a></li>
+                     @endif
+                </ul>
+            </li>
+            <li>
+              <a href="{{ route('admin.configuration.edit') }}">
+                <i class="fa fa-gear"></i> <span>Configuration</span>
+              </a>
             </li>
 
         </ul>

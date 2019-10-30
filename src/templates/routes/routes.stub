@@ -39,5 +39,8 @@ Route::middleware(['{{singularSlug}}.auth'])->group(function () {
         Route::delete('{{singularSlug}}/{{{singularSlug}}}','{{singularClass}}Controller@delete')->name('{{singularSlug}}.delete')->middleware('{{singularSlug}}.super');
         Route::put('change-password/{{{singularSlug}}}','{{singularClass}}Controller@changePassword')->name('{{singularSlug}}.change.password');
 
+
+        Route::get('configuration', 'ConfigurationController@edit')->name('{{singularSlug}}.configuration.edit');
+        Route::put('configuration', 'ConfigurationController@store')->name('{{singularSlug}}.configuration.store');
     });
 });
