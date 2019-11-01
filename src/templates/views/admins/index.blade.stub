@@ -1,78 +1,94 @@
-@extends('admin.adminlte.layouts.app')
+@extends('admin.layouts.base')
 
-@section('title','{{pluralClass}}')
-
+@section('title','Administrateurs')
 
 @section('content')
-
-    <div class="container-fluid">
-        <div class="row">
-             <!-- Breadcrumbs-->
-            {{ Breadcrumbs::render('{{singularSlug}}.index') }}
-
-            <!-- Main content -->
-            <section class="content" style="margin-top: 4rem;">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Administrateurs</h3>
-                        <br>
-                        <!-- /.box-tools -->
-                        @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
-                            <a class="btn btn-primary pull-right" href="{{ route('{{singularSlug}}.create') }}"><i class="fa fa-plus"></i> Ajouter un administrateur</a>
-                        @endif
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body" >
-
-                        <div class="table-responsive mailbox-messages">
-                            <table id="list" class="table table-hover table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Pseudo</th>
-                                    <th>Nom</th>
-                                    <th>Adresse de messagerie</th>
-                                    <th>Rôle</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach (${{pluralSlug}} as ${{singularSlug}})
-                                    <tr>
-                                        <td class="show-actions">
-                                            {{ ${{singularSlug}}->pseudo }}
-                                        </td>
-                                        <td>{{ ${{singularSlug}}->name }}</td>
-                                        <td>{{ ${{singularSlug}}->email }}</td>
-                                        <td>{{ get_{{singularSlug}}_role(${{singularSlug}}) }}</td>
-                                        <td>
-                                            <a href="{{ route('{{singularSlug}}.profile', ${{singularSlug}}) }}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
-                                            @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
-                                                <a href="{{ route('{{singularSlug}}.delete',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th>Pseudo</th>
-                                    <th>Nom</th>
-                                    <th>Adresse de messagerie</th>
-                                    <th>Rôle</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </tfoot>
-                            </table>
-                            <!-- /.table -->
-                        </div>
-                        <!-- /.mail-box-messages -->
-                    </div>
-                </div>
-                <!-- /.row -->
-            </section>
-            <!-- /.content -->
+    <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Administrateurs</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+              <li class="breadcrumb-item active">Administrateurs</li>
+            </ol>
+          </div>
         </div>
-    </div>
-@stop
-@include('{{singularSlug}}.partials._datatable')
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card card-solid">
+        <div class="card-body pb-0">
+          <div class="row d-flex align-items-stretch">
+            @foreach ($admins as $admin)
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0">
+                  {{ $admin->role }}
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>{{ $admin->full_name }}</b></h2>
+                      <p class="text-muted text-sm"><b>A propos: </b> {{ Str::limit($admin->about,25) }} </p>
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Téléphone #: {{ $admin->phone_number }}</li>
+                      </ul>
+                    </div>
+                    <div class="col-5 text-center">
+                      <img src="/vendor/adminlte/dist/img/user1-128x128.jpg" alt="" class="img-circle img-fluid">
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-comments"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm bg-danger">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                    <a href="{{ route('admin.profile', $admin) }}" class="btn btn-sm btn-primary">
+                      <i class="fas fa-user"></i> View Profile
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endforeach
+          </div>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+          <nav aria-label="Contacts Page Navigation">
+            <ul class="pagination justify-content-center m-0">
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">4</a></li>
+              <li class="page-item"><a class="page-link" href="#">5</a></li>
+              <li class="page-item"><a class="page-link" href="#">6</a></li>
+              <li class="page-item"><a class="page-link" href="#">7</a></li>
+              <li class="page-item"><a class="page-link" href="#">8</a></li>
+            </ul>
+          </nav>
+        </div>
+        <!-- /.card-footer -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+@endsection

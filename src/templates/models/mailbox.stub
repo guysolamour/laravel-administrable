@@ -1,0 +1,42 @@
+<?php
+
+namespace {{namespace}}\Models;
+
+class Mailbox extends BaseModel
+{
+      use \Cviebrock\EloquentSluggable\Sluggable;
+
+        public $fillable = ['email','phone_number','content','name','slug','read'];
+
+
+        public function scopeUnread($query)
+        {
+            return $query->where('read',false);
+        }
+
+        public function scopeRead($query)
+        {
+            return $query->where('read',true);
+        }
+
+
+       public function getRouteKeyName()
+       {
+           return 'slug';
+       }
+
+       /**
+        * Return the sluggable configuration array for this model.
+        *
+        * @return array
+        */
+       public function sluggable(): array
+       {
+           return [
+               'slug' => ['source' => 'name']
+           ];
+       }
+
+
+
+}

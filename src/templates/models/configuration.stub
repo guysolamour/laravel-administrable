@@ -1,9 +1,8 @@
 <?php
 
 namespace {{namespace}}\Models;
-use Illuminate\Database\Eloquent\Model;
 
-class Configuration extends Model
+class Configuration extends BaseModel
 {
     public $table = 'administrable';
 

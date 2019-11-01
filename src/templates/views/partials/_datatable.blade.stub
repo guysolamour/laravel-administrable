@@ -1,11 +1,13 @@
 @section('css')
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
 
 @stop
 
 @section('js')
-    <script src="{{ asset('/vendor/adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('/vendor/adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <!-- DataTables -->
+    <script src="{{ asset('vendor/adminlte/plugins/datatables/jquery.dataTables.js') }}"></script>
+    <script src="{{ asset('vendor/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
 
     <script>
         $(function () {

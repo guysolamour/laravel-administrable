@@ -1,0 +1,130 @@
+@extends('{{singularSlug}}.adminlte.layouts.app')
+
+@section('title',${{singularSlug}}->name.' - profile')
+
+@section('css')
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/toastr/toastr.min.css') }}">
+@endsection
+
+@section('content')
+
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        {{ Breadcrumbs::render('{{singularSlug}}.profile',${{singularSlug}}) }}
+        <div class="row">
+            <div class="col-sm-12">
+
+                <!-- Main content -->
+                <section class="content">
+
+                    <div class="row">
+                        <div class="col-md-5">
+
+                            <!-- Profile Image -->
+                            <div class="box box-primary">
+                                <div class="box-body box-profile">
+                                    <img class="admin-avatar img-responsive" src="{{ ${{singularSlug}}->avatar }}" alt="{{singularClass}} profile picture">
+
+                                    <h3 class="profile-username text-center">{{ ucfirst(${{singularSlug}}->name) }}</h3>
+                                    <p class="profile-username text-center">{{ ${{singularSlug}}->email }}</p>
+
+
+                                    @if (current_{{singularSlug}}_profil(${{singularSlug}}) || current_{{singularSlug}}_is_super_{{singularSlug}}())
+
+
+                                        <div class="text-center">
+                                             <img id="holder" class="img-responsive">
+                                            <div class="input-group" style="margin-top: 1rem;">
+                                                  <span class="input-group-btn">
+                                                    <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                                                      <i class="fa fa-picture-o"></i> Changer d'avatar
+                                                    </a>
+                                                  </span>
+                                                <input id="thumbnail" data-id="{{ $admin->id }}" class="form-control" type="hidden" name="avatar" >
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-7">
+
+                            @if (current_{{singularSlug}}_profil(${{singularSlug}}) || current_{{singularSlug}}_is_super_{{singularSlug}}())
+
+
+
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#timeline" data-toggle="tab">Edition</a></li>
+                                    <li><a href="#settings" data-toggle="tab">Mot de passe</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <!-- /.tab-pane -->
+                                    <div class="active tab-pane" id="timeline">
+                                    {!! form($edit_form) !!}
+                                    <!-- The timeline -->
+                                    </div>
+                                    <!-- /.tab-pane -->
+
+                                    <div class="tab-pane" id="settings">
+                                        {!! form($reset_form) !!}
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                </div>
+                                <!-- /.tab-content -->
+                            </div>
+                        @endif
+                            <!-- /.nav-tabs-custom -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                </section>
+            </div>
+            <!-- /.content -->
+        </div>
+    </div>
+@stop
+
+@section('js')
+    <script src="{{ asset('vendor/adminlte/plugins/toastr/toastr.min.js') }}"></script>
+    <script>
+        $('#holder').change(function(){
+            const input = $('#thumbnail')
+            let data = new FormData();
+
+            data.append('id',input.data('id'))
+            data.append('avatar',input.val())
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/{{singularSlug}}/update-{{singularSlug}}-avatar',
+                type: 'post',
+                data:data,
+                cache: false,
+                contentType: false,
+                processData: false,
+
+                success : (data, textStatus, jqXHR) => {
+
+                    //console.log(data)
+                    $('#holder').attr('src','')
+                    $('.admin-avatar').attr('src',data.avatar)
+                    toastr.success('La photo de profil a bien été mise à jour')
+                },
+                fail : (data, textStatus, jqXHR) => {
+
+                },
+        })
+
+        })
+    </script>
+
+@endsection

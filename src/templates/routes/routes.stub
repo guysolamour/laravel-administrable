@@ -42,5 +42,14 @@ Route::middleware(['{{singularSlug}}.auth'])->group(function () {
 
         Route::get('configuration', 'ConfigurationController@edit')->name('{{singularSlug}}.configuration.edit');
         Route::put('configuration', 'ConfigurationController@store')->name('{{singularSlug}}.configuration.store');
+
+
+        Route::resource('mailboxes','MailboxController')->names([
+                'index'      => '{{singularSlug}}.mailbox.index',
+                'show'       => '{{singularSlug}}.mailbox.show',
+                'destroy'    => '{{singularSlug}}.mailbox.destroy',
+            ])->except('create','edit','store','update');
+
+
     });
 });

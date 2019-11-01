@@ -1,66 +1,87 @@
 @extends('{{singularSlug}}.layouts.app')
 
+@section('title','Inscription')
+
 @section('content')
     <div class="register-box">
         <div class="register-logo">
             <a href="{{ url('/') }}"><b>{{ config('administrable.app_first_name') }}</b>{{ config('administrable.app_last_name')}}</a>
         </div>
 
-        <div class="register-box-body">
-            <p class="login-box-msg">Inscription</p>
+        <div class="card">
+            <div class="card-body register-card-body">
+                <p class="login-box-msg">Inscription</p>
 
-            <form action="{{ route('{{singularSlug}}.register') }}" method="post" aria-label="{{ __('Register') }}">
-                @csrf
-                <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-                    <input name="name" type="text" class="form-control" placeholder="Nom" value="{{ old('name') }}">
-                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                    @if ($errors->has('name'))
-                        <span class="help-block" role="alert">
-                            <strong>{{ $errors->first('name') }}</strong>
-                         </span>
-                    @endif
-                </div>
-                <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
-                    <input name="email" type="email" class="form-control" placeholder="Email" value="{{ old('email') }}">
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                     @if ($errors->has('email'))
-                        <span class="help-block" role="alert">
-                            <strong>{{ $errors->first('email') }}</strong>
-                         </span>
-                     @endif
-                </div>
-                <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
-                    <input name="password" type="password" class="form-control" placeholder="Mot de passe">
-                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                    @if ($errors->has('password'))
-                        <span class="help-block" role="alert">
-                            <strong>{{ $errors->first('password') }}</strong>
-                         </span>
-                    @endif
-                </div>
-                <div class="form-group has-feedback">
-                    <input name="password_confirmation" type="password" class="form-control" placeholder="Confirmation mot de passe">
-                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
-
-                </div>
-                <div class="row">
-                    <div class="col-xs-8">
-                        {{--<div class="checkbox icheck">--}}
-                            {{--<label>--}}
-                                {{--<input type="checkbox" {{ old('remember') ? 'checked' : '' }}> J'accepte les  <a href="#">CGU</a>--}}
-                            {{--</label>--}}
-                        {{--</div>--}}
+                <form action="{{ route('{{singularSlug}}.register') }}" method="post" aria-label="{{ __('Register') }}">
+                    @csrf
+                    <div class="input-group mb-3">
+                        <input name="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Nom" value="{{ old('name') }}">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                        @if ($errors->has('name'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
+                        @endif
                     </div>
-                    <!-- /.col -->
-                    <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Envoyer</button>
+                    <div class="input-group mb-3">
+                        <input name="email" type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email" value="{{ old('email') }}">                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                        @if ($errors->has('email'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </span>
+                        @endif
                     </div>
-                    <!-- /.col -->
-                </div>
-            </form>
+                    <div class="input-group mb-3">
+                        <input name="password" type="password" class="form-control" placeholder="Mot de passe">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                        @if ($errors->has('password'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('password') }}</strong>
+                            </span>
+                        @endif
 
-            <a href="{{ route('{{singularSlug}}.login') }}" class="text-center">Déjà inscrit ? Démarrer une session</a>
-    </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name="password_confirmation" type="password" class="form-control" placeholder="Confirmation mot de passe">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="icheck-primary">
+                                <input type="checkbox" {{ old('remember') ? 'checked' : '' }}>
+                                <label for="agreeTerms">
+                                    J'accepte les  <a href="#">CGU</a>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">S'inscrire</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+                <a href="{{ route('{{singularSlug}}.login') }}" class="text-center">Déjà inscrit ? Démarrer une session</a>
+            </div>
+            <!-- /.form-box -->
+        </div><!-- /.card -->
     </div>
         <!-- /.form-box -->
 @endsection

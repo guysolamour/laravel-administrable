@@ -1,0 +1,78 @@
+@extends('admin.adminlte.layouts.app')
+
+@section('title','{{pluralClass}}')
+
+
+@section('content')
+
+    <div class="container-fluid">
+        <div class="row">
+             <!-- Breadcrumbs-->
+            {{ Breadcrumbs::render('{{singularSlug}}.index') }}
+
+            <!-- Main content -->
+            <section class="content" style="margin-top: 4rem;">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Administrateurs</h3>
+                        <br>
+                        <!-- /.box-tools -->
+                        @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
+                            <a class="btn btn-primary pull-right" href="{{ route('{{singularSlug}}.create') }}"><i class="fa fa-plus"></i> Ajouter un administrateur</a>
+                        @endif
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body" >
+
+                        <div class="table-responsive mailbox-messages">
+                            <table id="list" class="table table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Pseudo</th>
+                                    <th>Nom</th>
+                                    <th>Adresse de messagerie</th>
+                                    <th>Rôle</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (${{pluralSlug}} as ${{singularSlug}})
+                                    <tr>
+                                        <td class="show-actions">
+                                            {{ ${{singularSlug}}->pseudo }}
+                                        </td>
+                                        <td>{{ ${{singularSlug}}->name }}</td>
+                                        <td>{{ ${{singularSlug}}->email }}</td>
+                                        <td>{{ get_{{singularSlug}}_role(${{singularSlug}}) }}</td>
+                                        <td>
+                                            <a href="{{ route('{{singularSlug}}.profile', ${{singularSlug}}) }}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                            @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
+                                                <a href="{{ route('{{singularSlug}}.delete',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th>Pseudo</th>
+                                    <th>Nom</th>
+                                    <th>Adresse de messagerie</th>
+                                    <th>Rôle</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                            <!-- /.table -->
+                        </div>
+                        <!-- /.mail-box-messages -->
+                    </div>
+                </div>
+                <!-- /.row -->
+            </section>
+            <!-- /.content -->
+        </div>
+    </div>
+@stop
+@include('{{singularSlug}}.partials._datatable')

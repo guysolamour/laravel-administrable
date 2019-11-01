@@ -239,6 +239,14 @@ class AdminInstallCommand extends Command
                     'stub'  => $stub_path . '/models/configuration.stub',
                     'path' =>  app_path('/Models/Configuration.php'),
                 ],
+                [
+                    'stub'  => $stub_path . '/models/BaseModel.stub',
+                    'path' =>  app_path('/Models/BaseModel.php'),
+                ],
+                [
+                    'stub'  => $stub_path . '/models/mailbox.stub',
+                    'path' =>  app_path('/Models/Mailbox.php'),
+                ],
             ];
 
             foreach ($models as $model){
@@ -272,6 +280,10 @@ class AdminInstallCommand extends Command
                 [
                     'stub'  => $stub_path . '/seeds/ConfigurationSeeder.stub',
                     'path' =>  database_path('/seeds/ConfigurationsTableSeeder.php'),
+                ],
+                [
+                    'stub'  => $stub_path . '/seeds/MailboxSeeder.stub',
+                    'path' =>  database_path('/seeds/MailboxesTableSeeder.php'),
                 ],
             ];
 
@@ -335,6 +347,10 @@ class AdminInstallCommand extends Command
                     'stub'  => $template_path . '/migrations/administrable.stub',
                     'path'  => database_path('migrations/2015_10_29_201929_create_administrable_table.php'),
                 ],
+                [
+                    'stub'  => $template_path . '/migrations/mailbox.stub',
+                    'path'  => database_path('migrations/2015_10_30_201929_create_mailboxes_table.php'),
+                ],
             ];
 
             foreach ($migrations as $migration){
@@ -364,6 +380,10 @@ class AdminInstallCommand extends Command
             [
                 'stub' => $template_path . '/Controllers/configuration.stub',
                 'path' => $controllers_path . '/ConfigurationController.php',
+            ],
+            [
+                'stub' => $template_path . '/Controllers/mailbox.stub',
+                'path' => $controllers_path . '/MailboxController.php',
             ],
         ];
 
@@ -547,7 +567,7 @@ class AdminInstallCommand extends Command
 
         $views_path = resource_path('views/' . $guard);
 
-        $views = array(
+        $views2 = array(
             [
                 'stub' => $template_path . '/views/adminlte/layouts/app.blade.stub',
                 'path' => $views_path . '/adminlte/layouts/app.blade.php',
@@ -613,6 +633,83 @@ class AdminInstallCommand extends Command
                 'stub' => $template_path . '/views/configuration/edit.blade.stub',
                 'path' => $views_path . '/configuration/edit.blade.php',
             ],
+        );
+        $views = array(
+            [
+                'stub' => $template_path . '/views/layouts/base.blade.stub',
+                'path' => $views_path . '/layouts/base.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/partials/_aside.blade.stub',
+                'path' => $views_path . '/partials/_aside.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/partials/_footer.blade.stub',
+                'path' => $views_path . '/partials/_footer.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/partials/_header.blade.stub',
+                'path' => $views_path . '/partials/_header.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/admins/index.blade.stub',
+                'path' => $views_path . '/admins/index.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/admins/create.blade.stub',
+                'path' => $views_path . '/admins/create.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/admins/show.blade.stub',
+                'path' => $views_path . '/admins/show.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/partials/_datatable.blade.stub',
+                'path' => $views_path . '/partials/_datatable.blade.php',
+            ],
+            // auth filesS
+            [
+                'stub' => $template_path . '/views/layouts/app.blade.stub',
+                'path' => $views_path . '/layouts/app.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/home.blade.stub',
+                'path' => $views_path . '/home.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/login.blade.stub',
+                'path' => $views_path . '/auth/login.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/register.blade.stub',
+                'path' => $views_path . '/auth/register.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/verify.blade.stub',
+                'path' => $views_path . '/auth/verify.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/passwords/email.blade.stub',
+                'path' => $views_path . '/auth/passwords/email.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/auth/passwords/reset.blade.stub',
+                'path' => $views_path . '/auth/passwords/reset.blade.php',
+            ],
+            // Configuration
+            [
+                'stub' => $template_path . '/views/configuration/edit.blade.stub',
+                'path' => $views_path . '/configuration/edit.blade.php',
+            ],
+            // Mailbox
+            [
+                'stub' => $template_path . '/views/mailbox/index.blade.stub',
+                'path' => $views_path . '/mailbox/index.blade.php',
+            ],[
+                'stub' => $template_path . '/views/mailbox/show.blade.stub',
+                'path' => $views_path . '/mailbox/show.blade.php',
+            ],
+
         );
 
         // remove auth directory created by nulti auth package

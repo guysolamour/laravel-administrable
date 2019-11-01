@@ -1,0 +1,28 @@
+<?php
+
+namespace {{namespace}}\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class BaseModel extends Model {
+
+    /**
+     * Get the lasts items ordered by id DESC
+     * @param $query
+     * @param int $limit
+     * @return
+     */
+    public function scopeLast($query, int $limit = null)
+    {
+        if (is_null($limit)) {
+            return $query->orderByDesc('id');
+        }
+        return $query->limit($limit)->orderByDesc('id');
+    }
+
+
+    public function scopeFindBySlug($query, string $slug)
+    {
+        return $query->where('slug',$slug);
+    }
+}

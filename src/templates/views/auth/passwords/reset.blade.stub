@@ -14,7 +14,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('{{singularSlug}}.password.request') }}" aria-label="{{ __('Reset Password') }}">
+            <form method="POST" action="{{ route('admin.password.request') }}" aria-label="{{ __('Reset Password') }}">
                 @csrf
 
                 <input type="hidden" name="token" value="{{ $token }}">

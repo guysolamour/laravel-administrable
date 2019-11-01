@@ -68,6 +68,18 @@ class {{singularClass}} extends Authenticatable
     }
 
     /**
+     * Get the admin's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+
+
+    /**
      * Set the avatar with gravatar service before saving and updating
      *
      * @param  mixed $value

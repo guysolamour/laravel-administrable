@@ -1,0 +1,77 @@
+@extends('admin.layouts.base')
+
+
+
+@section('content')
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Accueil</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('admin.mailbox.index') }}">Messagerie</a></li>
+              <li class="breadcrumb-item active">Lecture</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+
+        <div class="col-md-12">
+          <div class="card card-primary card-outline">
+            <div class="card-header">
+              <h3 class="card-title">Lecture</h3>
+
+
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+              <div class="mailbox-read-info">
+
+                <h6>De: {{ $mailbox->email }}
+                  <span class="mailbox-read-time float-right">{{ $mailbox->created_at->format('d/m/Y h:i') }}</span></h6>
+              </div>
+              <!-- /.mailbox-read-info -->
+              <div class="mailbox-controls with-border text-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-container="body" title="Supprimer">
+                    <i class="far fa-trash-alt"></i></button>
+                </div>
+                <!-- /.btn-group -->
+              </div>
+              <!-- /.mailbox-controls -->
+              <div class="mailbox-read-message">
+                  <p>
+                      {{ $mailbox->content }}
+                  </p>
+              </div>
+              <!-- /.mailbox-read-message -->
+            </div>
+            <!-- /.card-body -->
+            <!-- /.card-footer -->
+            <div class="card-footer">
+              <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete</button>
+            </div>
+            <!-- /.card-footer -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+@endsection
