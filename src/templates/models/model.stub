@@ -72,11 +72,20 @@ class {{singularClass}} extends Authenticatable
      *
      * @return string
      */
-    public function getFullNameAttribute()
+    public function getFullNameAttribute() :string
     {
         return "{$this->first_name} {$this->last_name}";
     }
 
+    /**
+     * Get the admin's role.
+     *
+     * @return string
+     */
+    public function getRoleAttribute() :string
+    {
+        return $this->is_super_admin ? 'Super administrateur' : 'Administrateur';
+    }
 
 
     /**

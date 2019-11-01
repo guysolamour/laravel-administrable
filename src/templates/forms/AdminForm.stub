@@ -43,7 +43,7 @@ class {{singularClass}}Form extends Form
 		    ->add('website', 'text', [
 			    'label' => 'Site internet',
 		    ])
-		    ->add('about', 'text', [
+		    ->add('about', 'textarea', [
 			    'label' => 'A propos',
 		    ])
         ;
