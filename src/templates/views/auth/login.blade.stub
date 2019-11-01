@@ -10,7 +10,7 @@
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Connecter vous afin de démarrer votre session</p>
 
-                <form action="{{ route('{{singularSlug}}.login') }}" method="post">
+                <form action="{{ route('admin.login') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="email" name="email" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Email" value="{{ old('email') }}">
@@ -57,10 +57,10 @@
                 </form>
 
                 <p class="mb-2">
-                    <a href="{{ route('{{singularSlug}}.password.request') }}">Mot de passe oublié</a>
+                    <a href="{{ route('admin.password.request') }}">Mot de passe oublié</a>
                 </p>
                 <p class="mb-2">
-                    <a href="{{ route('{{singularSlug}}.register')  }}" class="text-center">Pas de compte ? S'inscrire</a>
+                    <a href="{{ route('admin.register')  }}" class="text-center">Pas de compte ? S'inscrire</a>
                 </p>
             </div>
             <!-- /.login-card-body -->

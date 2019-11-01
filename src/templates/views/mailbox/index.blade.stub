@@ -82,8 +82,8 @@
                                   <tr>
                                       <td>
                                           <div class="icheck-primary">
-                                          <input type="checkbox" value="" id="check15">
-                                          <label for="check15"></label>
+                                          <input type="checkbox" value="" id="check{{ $message->id }}">
+                                          <label for="check{{ $message->id }}"></label>
                                           </div>
                                       </td>
                                       <td class="mailbox-star"><a href="#"><i class="fas {{ ($message->read) ? 'fa-star-o' : 'fa-star'}} text-warning"></i></a></td>

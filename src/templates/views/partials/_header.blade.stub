@@ -32,7 +32,9 @@
                 $unread = \App\Models\Mailbox::unread()->get()
             @endphp
           <i class="far fa-envelope"></i>
-          <span class="badge badge-danger navbar-badge">{{ $unread->count() }}</span>
+          @if($unread->count())
+            <span class="badge badge-danger navbar-badge">{{ $unread->count() }}</span>
+          @endif
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             @foreach($unread->take(6) as $message)
@@ -80,9 +82,7 @@
                 </p>
             </div>
 
-            <style>
-                .user-header img {  }
-            </style>
+            
           {{--<span class="dropdown-item dropdown-header">15 Notifications</span>--}}
           {{--<div class="dropdown-divider"></div>--}}
           {{--<a href="#" class="dropdown-item">--}}

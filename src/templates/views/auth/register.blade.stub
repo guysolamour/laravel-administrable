@@ -3,7 +3,7 @@
 @section('title','Inscription')
 
 @section('content')
-    <div class="register-box">
+  <div class="register-box">
         <div class="register-logo">
             <a href="{{ url('/') }}"><b>{{ config('administrable.app_first_name') }}</b>{{ config('administrable.app_last_name')}}</a>
         </div>
@@ -12,7 +12,7 @@
             <div class="card-body register-card-body">
                 <p class="login-box-msg">Inscription</p>
 
-                <form action="{{ route('{{singularSlug}}.register') }}" method="post" aria-label="{{ __('Register') }}">
+                <form action="{{ route('admin.register') }}" method="post" aria-label="{{ __('Register') }}">
                     @csrf
                     <div class="input-group mb-3">
                         <input name="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Nom" value="{{ old('name') }}">
@@ -78,10 +78,9 @@
                     </div>
                 </form>
 
-                <a href="{{ route('{{singularSlug}}.login') }}" class="text-center">Déjà inscrit ? Démarrer une session</a>
+                <a href="{{ route('admin.login') }}" class="text-center">Déjà inscrit ? Démarrer une session</a>
             </div>
             <!-- /.form-box -->
         </div><!-- /.card -->
     </div>
-        <!-- /.form-box -->
 @endsection

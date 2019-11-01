@@ -2,8 +2,7 @@
 @section('title','Réinitialisation de mot de passe')
 
 @section('content')
-    <div class="login-box">
-        {{ dump(session('errors')) }}
+   <div class="login-box">
         <div class="login-logo">
             <a href="{{ url('/') }}"><b>{{ config('administrable.app_first_name')}}</b>{{ config('administrable.app_last_name')}}</a>
         </div>
@@ -17,7 +16,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.password.request') }}" method="post">
+                <form action="{{ route('admin.password.email') }}" method="post">
                     @csrf
                     {{--<input type="hidden" name="token" value="{{ $token }}">--}}
                     <div class="input-group mb-3">

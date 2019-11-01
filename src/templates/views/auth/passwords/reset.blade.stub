@@ -1,61 +1,72 @@
 @extends('{{singularSlug}}.layouts.app')
 @section('title','Réinitialisation de mot de passe')
+
 @section('content')
-    <div class="login-box">
-         <div class="login-logo">
-              <a href="{{ url('/') }}"><b>{{ config('administrable.app_first_name')}}</b>{{ config('administrable.app_last_name')}}</a>
-         </div>
-        <!-- /.login-logo -->
-        <div class="login-box-body">
-            <p class="login-box-msg">Réinitialisation de mot de passe</p>
-            @if (session('status'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('admin.password.request') }}" aria-label="{{ __('Reset Password') }}">
-                @csrf
-
-                <input type="hidden" name="token" value="{{ $token }}">
-
-                <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
-                    <label for="email" class="form-label">Email : </label>
-
-                    <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
-
-                    @if ($errors->has('email'))
-                        <span class="help-block" role="alert">
-                        <strong>{{ $errors->first('email') }}</strong>
-                    </span>
-                    @endif
-                </div>
-
-                <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
-                    <label for="password" class="form-label">Mot de passe :</label>
-
-                    <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                    @if ($errors->has('password'))
-                        <span class="help-block" role="alert">
-                        <strong>{{ $errors->first('password') }}</strong>
-                    </span>
-                    @endif
-                </div>
-
-                <div class="form-group">
-                    <label for="password-confirm" class="form-label">Confrmer le mot de passe :</label>
-
-                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Changer mon mot de passe</button>
-                </div>
-            </form>
-
+   <div class="register-box">
+        <div class="register-logo">
+            <a href="{{ url('/') }}"><b>{{ config('administrable.app_first_name') }}</b>{{ config('administrable.app_last_name')}}</a>
         </div>
-        <!-- /.login-box-body -->
+
+        <div class="card">
+            <div class="card-body register-card-body">
+                <p class="login-box-msg">Réinitialisation de mot de passe</p>
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('admin.password.update') }}" method="post">
+                        <input type="hidden" name="token" value="{{ $token }}">
+                    @csrf
+                    <div class="input-group mb-3">
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                       
+                    </div>
+                    <div class="input-group mb-3">
+                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="Mot de passe">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+
+                    </div>
+                    <div class="input-group mb-3">
+                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password"  placeholder="Confirmation mot de passe">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                       
+                        <!-- /.col -->
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">Réinitialiser</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+            </div>
+            <!-- /.form-box -->
+        </div><!-- /.card -->
     </div>
 @endsection
 

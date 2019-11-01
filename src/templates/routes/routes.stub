@@ -15,7 +15,7 @@ Route::group(['namespace' => '{{singularClass}}'], function() {
 
     // Passwords
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('{{singularSlug}}.password.email');
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('admin.password.update');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('{{singularSlug}}.password.request');
     Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('{{singularSlug}}.password.reset');
 
