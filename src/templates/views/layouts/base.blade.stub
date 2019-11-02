@@ -79,16 +79,15 @@
 <script src="{{ asset('vendor/adminlte/dist/js/adminlte.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('vendor/adminlte/dist/js/pages/dashboard.js') }}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('vendor/adminlte/dist/js/demo.js') }}"></script>
+
 
 <script src="{{ asset('vendor/adminlte/plugins/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/plugins/larails/larails-alert.js') }}"></script>
 <script src="{{ asset('vendor/laravel-filemanager/js/lfm.js') }}"></script>
-@yield('js')
 <script>
     $('.lfm,#lfm').filemanager('file');
 </script>
+@yield('js')
 {{-- Flashy view--}}
 @include('flashy::message')
 </body>

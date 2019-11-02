@@ -41,7 +41,7 @@
                           <section style="margin-bottom: 2rem;">
 
                             <div class="btn-group-horizontal">
-                                <a class="btn btn-info btn-sm" href="{{ route('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}"><i class="fa fa-folder-open"></i> Editer</a>
+                                <a class="btn btn-info" href="{{ route('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}"><i class="fa fa-folder-open"></i> Editer</a>
                                 <a href="{{ route('admin.{{singularSlug}}.destroy',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash"></i> Supprimer</a>
                             </div>
                           </section>

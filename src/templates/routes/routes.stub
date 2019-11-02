@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['namespace' => '{{singularClass}}'], function() {
+Route::namespace('{{singularClass}}')->group(function () {
 
     Route::get('/', 'HomeController@index')->name('{{singularSlug}}.dashboard');
 

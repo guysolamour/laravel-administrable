@@ -33,6 +33,9 @@ class AdminInstallCommand extends Command
     protected $description = 'Install admin package';
 
 
+    /**
+     *
+     */
     public function handle()
     {
 
@@ -51,7 +54,8 @@ class AdminInstallCommand extends Command
         ]);
 
 
-        $progress = $this->output->createProgressBar(17);
+        $progress = $this->output->createProgressBar(18);
+
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
@@ -157,6 +161,13 @@ class AdminInstallCommand extends Command
         $this->info(PHP_EOL . 'Adding locale...');
         $config_path = $this->loadLocale();
         $this->info('Locale added at ' . $config_path);
+        $progress->advance();
+
+        // Social links
+        $this->info(PHP_EOL . 'Creating social links...');
+        $routes_path = $this->loadSocialLink();
+        $this->info('Social links created at ' . $routes_path);
+        $progress->advance();
 
         // Assets
         $this->info(PHP_EOL . 'Publishing Assets...');
@@ -873,6 +884,7 @@ class AdminInstallCommand extends Command
     /**
      * Load Locales
      * @return string
+     * @throws \Exception
      */
     protected function loadLocale() :string
     {
@@ -940,7 +952,57 @@ class AdminInstallCommand extends Command
         return $config_path;
     }
 
+    public function loadSocialLink()
+    {
+        // Routes
+        $this->loadSocialLinkRoute();
 
+        // Controller
+        $this->loadSocialLinkController();
+
+        return base_path('routes');
+
+    }
+
+    /**
+     * @return string
+     */
+    private function loadSocialLinkRoute()
+    {
+        $routes_path = base_path('/routes/web.php');
+
+        $stub = self::TPL_PATH . '/routes/sociallinks.stub';
+        $route = file_get_contents($routes_path);
+
+
+        $stub = file_get_contents($stub);
+
+        $search = '*/';
+        $complied = str_replace($search, $search . "\n\n\n" . $stub, $route);
+
+        file_put_contents($routes_path, $complied);
+    }
+
+    private function loadSocialLinkController()
+    {
+        $data_map = $this->parseName();
+
+        $controller_path = app_path('/Http/Controllers/User/RedirectController.php');
+
+        $dir = dirname($controller_path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $stub = self::TPL_PATH . '/Controllers/sociallinks.stub';
+        $stub = file_get_contents($stub);
+
+        $complied = strtr($stub, $data_map);
+
+
+
+        file_put_contents($controller_path , $complied);
+    }
 
 
 }

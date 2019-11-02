@@ -1,0 +1,8 @@
+Route::namespace('User')->group(function () {
+
+    /* Socials links */
+    Route::get('/facebook', 'RedirectController@facebook')->name('facebook');
+    Route::get('/twitter', 'RedirectController@twitter')->name('twitter');
+    Route::get('/linkedin', 'RedirectController@linkedin')->name('linkedin');
+
+});

@@ -1,0 +1,31 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\User;
+
+use {{namespace}}\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Redirect;
+use {{namespace}}\Models\Configuration;
+
+class RedirectController extends Controller
+{
+
+    private $config;
+
+    public function __construct()
+    {
+        $this->config = Configuration::first();
+    }
+
+    public function twitter(  ) {
+		    return Redirect::to( $this->config->twitter);
+    }
+
+	  public function linkedin(  ) {
+        return Redirect::to( $this->config->linkedin);
+    }
+
+	  public function facebook(  ) {
+        return Redirect::to( $this->config->facebook);
+    }
+}

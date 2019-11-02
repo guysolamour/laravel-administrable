@@ -172,7 +172,7 @@ class CreateCrudView
         $show_views = '';
         // ajout du champ slug
         if (!is_null($this->slug)) {
-            $show_views .= '                <p><b>' . $this->slug . ':</b>{{ $' . $field_name . '->' . $this->slug . ' }}</p>' . "\n";
+            $show_views .= '                <p><b>' . ucfirst($this->slug) . ':</b>{{ $' . $field_name . '->' . $this->slug . ' }}</p>' . "\n";
         }
 
         foreach ($this->fields as $field) {
@@ -181,7 +181,7 @@ class CreateCrudView
 //            }else {
 //
 //            }
-            $show_views .= '                <p><b>' . $field['name'] . ':</b>{{ $' . $field_name . '->' . $field['name'] . ' }}</p>' . "\n";
+            $show_views .= '                <p><b>' . ucfirst($field['name']) . ':</b>{{ $' . $field_name . '->' . $field['name'] . ' }}</p>' . "\n";
         }
 
         if (!$this->timestamps) {
