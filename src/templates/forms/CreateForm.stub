@@ -14,25 +14,47 @@ class Create{{singularClass}}Form extends Form
 	    ];
 
 	    $this
-        ->add('name','text', [
-          'label' => 'Nom',
-          'rules' => 'required|min:2',
+        ->add('pseudo','text', [
+            'label' => 'Pseudo *',
+            'rules' => 'required|min:2',
+        ])
+        ->add('first_name','text', [
+            'label' => 'Prénoms *',
+            'rules' => 'required|min:2',
+        ])
+        ->add('last_name','text', [
+            'label' => 'Nom *',
+            'rules' => 'required|min:2',
         ])
         ->add('email', 'email', [
-          'label' => 'Email',
-          'rules'  => 'required|email|unique:admins',
+            'label' => 'Email *',
+            'rules'  => 'required|email',
+        ])
+        ->add('facebook', 'text', [
+            'label' => 'Facebook',
+        ])
+        ->add('twitter', 'text', [
+            'label' => 'Twitter',
+        ])
+        ->add('phone_number', 'text', [
+            'label' => 'Numéro de téléphone',
+        ])
+        ->add('website', 'text', [
+            'label' => 'Site internet',
+        ])
+        ->add('about', 'textarea', [
+            'label' => 'A propos',
         ])
         ->add('is_super_admin', 'checkbox', [
-          'label' => 'Super {{singularSlug}}',
-          'checked'  => $this->getModel()->is_super_admin,
+          'label' => 'Super admin',
         ])
         ->add('password', 'password', [
-          'label' => 'Mot de passe',
-          'rules'  => 'required|min:6|confirmed',
+          'label' => 'Mot de passe *',
+          'rules'  => 'required|min:8|confirmed',
         ])
         ->add('password_confirmation', 'password', [
-          'label' => 'Confirmation du mot de passe',
-          'rules'  => 'required|min:6',
+          'label' => 'Confirmation du mot de passe *',
+          'rules'  => 'required|min:8',
         ])
       ;
     }
