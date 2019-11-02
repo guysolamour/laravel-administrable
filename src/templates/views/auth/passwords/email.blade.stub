@@ -4,7 +4,11 @@
 @section('content')
    <div class="login-box">
         <div class="login-logo">
-            <a href="{{ url('/') }}"><b>{{ config('administrable.app_first_name')}}</b>{{ config('administrable.app_last_name')}}</a>
+            @if(config('administrable.logo_url'))
+                <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('administrable.name')}} Logo" class="brand-image" width='200'>
+            @else
+                 <a href="{{ url('/') }}"><b>{{ config('administrable.app_first_name')}}</b>{{ config('administrable.app_last_name')}}</a>
+            @endif
         </div>
         <!-- /.login-logo -->
         <div class="card">

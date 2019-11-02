@@ -6,6 +6,8 @@ return [
     'app_last_name' => config('app.last_name', 'Admin'),
     'app_short_name' => config('app.short_namr', 'Lvl'),
 
+    'logo_url' => '/img/logo.png',
+
     'auth_prefix_path' => 'administrable',
 
     'models' => [
