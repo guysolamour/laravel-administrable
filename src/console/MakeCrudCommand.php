@@ -113,11 +113,13 @@ class MakeCrudCommand extends Command
         if (!empty($config_fields)) {
             $this->fields = $config_fields;
             $this->setConfigOption(['slug','seed','entity','polymorphic', 'timestamps']);
+            $this->setDefaultTypeAndRule();
+
         } else {
             $this->fields = $this->getFields();
         }
 
-       
+
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
         [$result,$model_path] = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps, $this->polymorphic);
@@ -300,6 +302,22 @@ class MakeCrudCommand extends Command
                     }
                     $this->fields = Arr::except($this->fields, $option);
                 }
+            }
+        }
+    }
+
+    private function setDefaultTypeAndRule()
+    {
+        foreach ($this->fields as $key => $field) {
+
+            if (!array_key_exists('type', $field)) {
+                $field['type'] = 'string';
+                $this->fields[$key] = $field;
+            }
+
+            if (!array_key_exists('rules', $field)) {
+                $field['rules'] = '';
+                $this->fields[$key] = $field;
             }
         }
     }

@@ -18,9 +18,13 @@ return [
             'polymorphic' => true,
         ],
         'category' => [
-            'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
+            'name' =>['name' => 'name',],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
         ],
+//        'category' => [
+//            'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
+//            'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
+//        ],
         'prestation' => [
             'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],
             'image' =>['name' => 'image', 'type' => 'image', 'rules' => 'required'],
