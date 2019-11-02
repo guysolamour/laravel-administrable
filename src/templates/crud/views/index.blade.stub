@@ -1,75 +1,111 @@
-@extends('admin.adminlte.layouts.app')
+@extends('admin.layouts.base')
 
-@section('title','{{singularClass}}')
+@section('title','{{singularSlug}}')
 
 @section('content')
+
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
     <div class="container-fluid">
-        <div class="row">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                {{ Breadcrumbs::render('admin.{{singularSlug}}.index') }}
-            </section>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>{{pluralClass}}</h1>
+        </div>
+        <div class="col-sm-6">
+          <div class='float-sm-right'>
+            {{ Breadcrumbs::render('admin.{{singularSlug}}.index') }}
+          </div>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
 
-            <!-- Main content -->
-            <section class="content" style="margin-top: 4rem;">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{pluralClass}}</h3>
-                        <br>
-                        <!-- /.box-tools -->
-                        <a class="btn btn-primary pull-right" href="{{ route('admin.{{singularSlug}}.create') }}"><i class="fa fa-plus"></i> Ajouter</a>
+  <!-- Main content -->
+  <section class="content">
 
+    <!-- Default box -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+            <i class="fas fa-minus"></i></button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class='row'>
+            <div class="col-md-12">
+              <div class="card" style='box-shadow: 0 0 1px rgba(0,0,0,0), 0 1px 3px rgba(0,0,0,0);'>
+
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">{{pluralClass}}</h3>
                     </div>
-                    <!-- /.box-header -->
-                    <div class="box-body" >
-                      <div class="table-responsive mailbox-messages">
-                          <table id="list" class="table table-hover table-striped">
-                              <thead>
-                                <tr>
-                                    <th></th>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      <table class="table table-hover table-striped" id="list">
+                        <thead>
+                          <tr>
+                            <th></th>
 {{fields}}
-                                    <th>Actions</th>
+                            <th>Actions</th>
 
-                                </tr>
-                              </thead>
-                              <tbody>
-                                @forelse(${{pluralSlug}} as ${{singularSlug}})
-                                    <tr>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @forelse(${{pluralSlug}} as ${{singularSlug}})
+                          <tr>
 
-                                        <td>{{ $loop->iteration }}</td>
+                            <td>{{ $loop->iteration }}</td>
 {{values}}
 
-                                        <td>
-                                            <div class="btn-group-horizontal">
-
-                                                <a class="btn btn-success btn-sm" href="{{ route('admin.{{singularSlug}}.show', ${{singularSlug}}) }}"><i class="fa fa-folder-open"></i> Afficher</a>
-
-                                                <a class="btn btn-info btn-sm" href="{{ route('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}"><i class="fa fa-folder-open"></i> Editer</a>
-                                                <a href="{{ route('admin.{{singularSlug}}.destroy',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fa fa-trash"></i> Supprimer</a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr><td rowspan="4">La liste est vide</td></tr>
-                                @endforelse
-                              </tbody>
-                              <tfoot>
-                                <tr>
-                                    <th></th>
+                            <td>
+                              <div class="btn-group" role="group">
+                                    <a href="{{ route('admin.{{singularSlug}}.show', ${{singularSlug}}) }}" class="btn btn-primary" title="Afficher"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}" class="btn btn-info" title="Editer"><i class="fas fa-edit"></i></a>
+                                    <a href="{{ route('admin.{{singularSlug}}.destroy',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger" title="Supprimer"><i class="fas fa-trash"></i></a>
+                              </div>
+                            </td>
+                          </tr>
+                          @empty
+                          <tr><td rowspan="4">La liste est vide</td></tr>
+                          @endforelse
+                        </tbody>
+                        <thead>
+                          <tr>
+                            <th></th>
 {{fields}}
-                                    <th>Actions</th>
-                                </tr>
-                              </tfoot>
-                          </table>
-                      <!-- /.table -->
-                       </div>
-                    </div>
-                </div>
-                <!-- /.row -->
-            </section>
-            <!-- /.content -->
-        </div>
-    </div>
-@stop
+                            <th>Actions</th>
 
-@include('admin.partials._datatable')
+                          </tr>
+                        </thead>
+                      </table>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.mail-box-messages -->
+                </div>
+
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /.card-body -->
+
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+
+
+  @endsection
+
+  @include('admin.partials._datatable')
+

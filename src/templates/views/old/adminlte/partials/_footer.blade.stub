@@ -1,7 +1,0 @@
-<footer class="main-footer">
-    <div class="pull-right hidden-xs">
-        <b>Build with passion by</b> <a href="https://aswebagency.com" target="_blank">AswebAgency</a>
-    </div>
-    <strong>Copyright &copy; {{ date('Y') }} .</strong> Tous droits
-    reservés.
-</footer>

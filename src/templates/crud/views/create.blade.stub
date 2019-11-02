@@ -1,36 +1,68 @@
-@extends('admin.adminlte.layouts.app')
+@extends('admin.layouts.base')
 
-@section('title','{{singularClass}}')
+@section('title',{{singularClass}})
 
 @section('content')
 
-    <div class="container-fluid">
-        <!-- Breadcrumbs-->
-        {{ Breadcrumbs::render('admin.{{singularSlug}}.create') }}
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="card">
-                    <h3 class="card-header h4">Ajout</h3>
-                    <div class="card-body">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Ajout</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Acceuil</a></li>
+                            <li class="breadcrumb-item active">Configuration</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+            {{ Breadcrumbs::render('admin.{{singularSlug}}.create') }}
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                            <i class="fas fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class='row'>
+                      <div class='col-md-8'>
                         {!! form_start($form) !!}
                         {!! form_rest($form) !!}
                         <button type="submit" class="btn btn-success" id="submit"><i class="fa fa-plus"></i> Ajouter</button>
                         {!! form_end($form) !!}
+                      </div>
+                      <div class='col-md-4'>
+                          {{-- add standalone image  here --}}
+
+                          {{-- add morphs image  here --}}
+                      </div>
+                        
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-4">
-              <div class='row'>
-                {{-- add standalone image  here --}}
 
-                {{-- add morphs image  here --}}
-              </div>
             </div>
+                <!-- /.card-body -->
 
-        </div>
+            <!-- /.card -->
+
+        </section>
+        <!-- /.content -->
     </div>
+    <!-- /.content-wrapper -->
 
-@stop
+@endsection
 
 @section('css')
   {{-- add standalone image css here --}}

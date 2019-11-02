@@ -117,8 +117,7 @@ class MakeCrudCommand extends Command
             $this->fields = $this->getFields();
         }
 
-
-
+       
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
         [$result,$model_path] = CreateCrudModel::generate($this->model, $this->fields, $this->slug, $this->timestamps, $this->polymorphic);

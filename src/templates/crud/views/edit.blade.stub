@@ -1,35 +1,64 @@
-@extends('admin.adminlte.layouts.app')
+@extends('admin.layouts.base')
 
 @section('title','Edition')
 
 @section('content')
 
-    <div class="container-fluid">
-        <!-- Breadcrumbs-->
-        {{ Breadcrumbs::render('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="card">
-                    <h3 class="card-header h4">Edition</h3>
-                    <div class="card-body">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Edition</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        {{ Breadcrumbs::render('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                            <i class="fas fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class='row'>
+                      <div class='col-md-8'>
                         {!! form_start($form) !!}
                         {!! form_rest($form) !!}
                             <button type="submit" id="save" class="btn btn-success"><i class='fa fa-edit'></i> Modifier</button>
                         {!! form_end($form) !!}
+                      </div>
+                      <div class='col-md-4'>
+                          {{-- add standalone image  here --}}
+
+                          {{-- add morphs image  here --}}
+                      </div>
+                        
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                 <div class="row p-2" style="margin-top: 2rem;">
-                    {{-- add standalone image  here --}}
 
-                    {{-- add morphs image  here --}}
-                 </div>
             </div>
+                <!-- /.card-body -->
 
-        </div>
+            <!-- /.card -->
+
+        </section>
+        <!-- /.content -->
     </div>
-@stop
+    <!-- /.content-wrapper -->
+
+@endsection
 
 @section('css')
   {{-- add standalone image css here --}}
@@ -42,3 +71,4 @@
 
   {{-- add morphs image js here --}}
 @stop
+

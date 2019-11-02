@@ -287,11 +287,12 @@ class CreateCrudView
     private function registerLinkToLeftSidebar($data_map): void
     {
         $aside_stub = $this->TPL_PATH . '/views/_aside.blade.stub';
-        $aside = resource_path('views/admin/adminlte/partials/_aside.blade.php');
+        $aside = resource_path('views/admin/partials/_aside.blade.php');
         $stub = file_get_contents($aside_stub);
-        $complied = strtr($stub, $data_map);
 
-        $search = '        </ul>' . "\n" . '    </section>';
+        $complied = strtr($stub, $data_map);
+        
+        $search = '{{-- insert sidebar links here --}}';
         $form = str_replace($search, $complied . $search, file_get_contents($aside));
         file_put_contents($aside, $form);
     }

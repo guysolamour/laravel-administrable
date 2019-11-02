@@ -2,7 +2,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('admin.dashboard') }}" class="brand-link">
-      <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('a }}pp.name') }} Logo" class="brand-image img-circle elevation-3"
+      <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('app.name') }} Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">{{ config('app.last_name','vel') }}</span>
     </a>
@@ -31,10 +31,24 @@
             <p>Gestionnaire de fichiers </p>
         </a>
         </li>
-
-          <li class="nav-item has-treeview">
+          <li class="nav-item">
+             <a href="{{ route('admin.mailbox.index') }}" class="nav-link">
+               <i class="nav-icon far fa-envelope"></i>
+                 Messagerie
+               <p>
+                   @php
+                       $new =  \App\Models\Mailbox::unread()->count()
+                   @endphp
+                   @if($new)
+                      <span class="badge badge-success right">{{ 'new ' .$new  }}</span>
+                   @endif
+               </p>
+             </a>
+           </li>
+           {{-- insert sidebar links here --}}
+           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
+              <i class="nav-icon fas fa-user"></i>
               <p>
                 Admnistrateurs
                 <i class="right fas fa-angle-left"></i>
@@ -63,22 +77,6 @@
                 @endif
             </ul>
           </li>
-
-          <li class="nav-item">
-             <a href="{{ route('admin.mailbox.index') }}" class="nav-link">
-               <i class="nav-icon far fa-envelope"></i>
-                 Messagerie
-               <p>
-                   @php
-                       $new =  \App\Models\Mailbox::unread()->count()
-                   @endphp
-                   @if($new)
-                      <span class="badge badge-success right">{{ 'new ' .$new  }}</span>
-                   @endif
-               </p>
-             </a>
-           </li>
-
           <li class="nav-item">
             <a href="{{ route('admin.configuration.edit') }}" class="nav-link">
               <i class="nav-icon fas fa-tools"></i>
@@ -87,6 +85,7 @@
               </p>
             </a>
           </li>
+         
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

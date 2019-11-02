@@ -1,0 +1,46 @@
+@extends('admin.adminlte.layouts.app')
+
+@section('title','{{singularClass}}')
+
+@section('content')
+
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        {{ Breadcrumbs::render('admin.{{singularSlug}}.create') }}
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card">
+                    <h3 class="card-header h4">Ajout</h3>
+                    <div class="card-body">
+                        {!! form_start($form) !!}
+                        {!! form_rest($form) !!}
+                        <button type="submit" class="btn btn-success" id="submit"><i class="fa fa-plus"></i> Ajouter</button>
+                        {!! form_end($form) !!}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+              <div class='row'>
+                {{-- add standalone image  here --}}
+
+                {{-- add morphs image  here --}}
+              </div>
+            </div>
+
+        </div>
+    </div>
+
+@stop
+
+@section('css')
+  {{-- add standalone image css here --}}
+
+  {{-- add morphs image css here --}}
+@stop
+
+@section('js')
+  {{-- add standalone image js here --}}
+
+  {{-- add morphs image js here --}}
+@stop
+
