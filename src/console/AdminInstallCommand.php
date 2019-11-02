@@ -25,7 +25,9 @@ class AdminInstallCommand extends Command
      */
     protected $signature = 'admin:install
                                 {name=admin : Name of the guard.}
-                                {--f|force : Whether to override existing files}';
+                                {--f|force : Whether to override existing files}
+                                {--l|locale=fr : Whether to override existing files}
+                            ';
 
 
     protected $description = 'Install admin package';
@@ -49,7 +51,7 @@ class AdminInstallCommand extends Command
         ]);
 
 
-        $progress = $this->output->createProgressBar(16);
+        $progress = $this->output->createProgressBar(17);
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
@@ -151,6 +153,11 @@ class AdminInstallCommand extends Command
         $this->info('Views created at ' . $admin_views_path);
         $progress->advance();
 
+        // Locales
+        $this->info(PHP_EOL . 'Adding locale...');
+        $config_path = $this->loadLocale();
+        $this->info('Locale added at ' . $config_path);
+
         // Assets
         $this->info(PHP_EOL . 'Publishing Assets...');
         Artisan::call('vendor:publish --tag=administrable-public');
@@ -158,17 +165,17 @@ class AdminInstallCommand extends Command
         $progress->advance();
 
 
-         // add variable in .env file
-         $this->info(PHP_EOL . 'Adding env variables...');
-         $env_path = $this->addEnvVariables();
-         $this->info('Set env variables at ' . $env_path);
-         $progress->advance();
+        // add variable in .env file
+        $this->info(PHP_EOL . 'Adding env variables...');
+        $env_path = $this->addEnvVariables();
+        $this->info('Set env variables at ' . $env_path);
+        $progress->advance();
 
-         // add app config keys
-         $this->info(PHP_EOL . 'Adding config keys...');
-         $env_path = $this->addAppConfigKeys();
-         $this->info('App config set at ' . $env_path);
-         $progress->advance();
+        // add app config keys
+        $this->info(PHP_EOL . 'Adding config keys...');
+        $env_path = $this->addAppConfigKeys();
+        $this->info('App config set at ' . $env_path);
+        $progress->advance();
 
 
         // update composer autoload for seeding
@@ -567,73 +574,7 @@ class AdminInstallCommand extends Command
 
         $views_path = resource_path('views/' . $guard);
 
-        $views2 = array(
-            [
-                'stub' => $template_path . '/views/adminlte/layouts/app.blade.stub',
-                'path' => $views_path . '/adminlte/layouts/app.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/adminlte/partials/_aside.blade.stub',
-                'path' => $views_path . '/adminlte/partials/_aside.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/adminlte/partials/_footer.blade.stub',
-                'path' => $views_path . '/adminlte/partials/_footer.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/adminlte/partials/_header.blade.stub',
-                'path' => $views_path . '/adminlte/partials/_header.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/admins/index.blade.stub',
-                'path' => $views_path . '/admins/index.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/admins/create.blade.stub',
-                'path' => $views_path . '/admins/create.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/admins/show.blade.stub',
-                'path' => $views_path . '/admins/show.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/partials/_datatable.blade.stub',
-                'path' => $views_path . '/partials/_datatable.blade.php',
-            ],
-            // auth filesS
-            [
-                'stub' => $template_path . '/views/layouts/app.blade.stub',
-                'path' => $views_path . '/layouts/app.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/home.blade.stub',
-                'path' => $views_path . '/home.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/login.blade.stub',
-                'path' => $views_path . '/auth/login.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/register.blade.stub',
-                'path' => $views_path . '/auth/register.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/verify.blade.stub',
-                'path' => $views_path . '/auth/verify.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/passwords/email.blade.stub',
-                'path' => $views_path . '/auth/passwords/email.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/auth/passwords/reset.blade.stub',
-                'path' => $views_path . '/auth/passwords/reset.blade.php',
-            ],
-            [
-                'stub' => $template_path . '/views/configuration/edit.blade.stub',
-                'path' => $views_path . '/configuration/edit.blade.php',
-            ],
-        );
+
         $views = array(
             [
                 'stub' => $template_path . '/views/layouts/base.blade.stub',
@@ -929,6 +870,75 @@ class AdminInstallCommand extends Command
 
     }
 
+    /**
+     * Load Locales
+     * @return string
+     */
+    protected function loadLocale() :string
+    {
+
+        // copy files to ressource/lang
+        $dir = self::TPL_PATH . '/locales/' . $this->option('locale') .'/'. $this->option('locale');
+        $json_dir = self::TPL_PATH . '/locales/' . $this->option('locale') .'/json';
+
+        $r_dir = resource_path("lang/" . $this->option('locale')) . '/';
+
+        if(!is_dir($dir)){
+            throw new \Exception("The locale path [{$dir}] does not exists", 1);
+        }
+
+        if(!is_dir($json_dir)){
+            throw new \Exception("The locale path [{$json_dir}] does not exists", 1);
+        }
+
+        $files = array_slice(scandir($dir),2);
+
+
+        foreach ($files as $file) {
+
+            $stub = file_get_contents($dir . '/' .$file);
+            // $complied = strtr($stub, $data_map);
+
+            if (!is_dir($r_dir)) {
+                mkdir($r_dir, 0755, true);
+            }
+
+            file_put_contents($r_dir . $file, $stub);
+        }
+
+
+        $json_files = array_slice(scandir($json_dir),2);
+        $r_dir = resource_path("lang/");
+
+        foreach ($json_files as $file) {
+            $stub = file_get_contents($json_dir . '/' .$file);
+            // $complied = strtr($stub, $data_map);
+
+            file_put_contents($r_dir . $file, $stub);
+        }
+
+
+        // change locale configuration in config file
+        $config_path = config_path('app.php');
+
+        $provider = file_get_contents($config_path);
+
+
+        $search = "'locale' => 'en'";
+        $prefix = "'locale' => '{$this->option('locale')}'";
+        $provider = str_replace($search, $prefix, $provider);
+
+        $search = "'faker_locale' => 'en_US'";
+        $prefix = "'faker_locale' => '". $this->option('locale') . '_' . strtoupper($this->option('locale'))."'";
+
+        $provider = str_replace($search, $prefix, $provider);
+
+
+        // Overwrite file
+        file_put_contents($config_path, $provider);
+
+        return $config_path;
+    }
 
 
 

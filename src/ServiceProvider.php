@@ -9,6 +9,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     const CONFIG_PATH = __DIR__ . '/../config/administrable.php';
     const ASSETS_PATH = __DIR__ . '/templates/views/assets';
+    const LOCALE_PATH = __DIR__ . '/templates/locales';
 
     public function boot()
     {
@@ -19,6 +20,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             self::ASSETS_PATH => public_path('vendor/adminlte'),
         ], 'administrable-public');
+
+        $this->publishes([
+            self::LOCALE_PATH => resource_path('lang'),
+        ], 'administrable-locale');
 
 
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');

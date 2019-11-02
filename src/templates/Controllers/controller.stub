@@ -67,7 +67,8 @@ class {{singularClass}}Controller extends Controller
             ]);
 
             flashy('Votre mot de passe a été mis à jour');
-        return back();
+
+        return redirect()->route('admin.profile',$admin);
       }
 
      /**
@@ -75,7 +76,7 @@ class {{singularClass}}Controller extends Controller
      */
       private function redirectIfNotValid(Form $form ) {
         if (! $form->isValid() ) {
-          Flashy::error('Erreur lors de la modification du mot de passe');
+          Flashy::error('Erreur lors de la modification');
         }
         $form->redirectIfNotValid();
       }
@@ -97,7 +98,7 @@ class {{singularClass}}Controller extends Controller
 
           flashy('Le compte a été modifié avec succès');
 
-          return back();
+          return redirect()->route('admin.profile',$admin);
       }
 
       public function updateAvatar(Request $request  )

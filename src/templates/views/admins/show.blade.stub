@@ -3,7 +3,7 @@
 @section('title','Administrateurs')
 
 @section('content')
-   <!-- Content Wrapper. Contains page content -->
+    <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -109,25 +109,37 @@
                               </div>
                           </div>
                           <div class='row'>
-                              <div class='col-md-12'>
+                              <div class='col-md-6'>
                                   {!! form_row($edit_form->email) !!}
                               </div>
+                              @if(current_admin_is_super_admin())
                               <div class='col-md-6'>
-                                  {!! form_row($edit_form->website) !!}
+                                  <br>
+                                  <div class="icheck-primary">
+                                        {!! form_widget($edit_form->is_super_admin) !!}
+                                        <label for="is_super_admin">Super administrateur</label>
+                                    </div>
                               </div>
-                              <div class='col-md-6'>
-                                  {!! form_row($edit_form->phone_number) !!}
-                              </div>
+                              @endif
+
+                          </div>
+                          <div class="row">
+                            <div class='col-md-6'>
+                                    {!! form_row($edit_form->website) !!}
+                                </div>
+                                <div class='col-md-6'>
+                                    {!! form_row($edit_form->phone_number) !!}
+                                </div>
                           </div>
                           <div class='row'>
-                              
+
                               <div class='col-md-6'>
                                   {!! form_row($edit_form->facebook) !!}
                               </div>
                               <div class='col-md-6'>
                                   {!! form_row($edit_form->twitter) !!}
                               </div>
-                              
+
                           </div>
                           <div class='row'>
                               <div class='col-md-12'>
@@ -135,11 +147,11 @@
                               </div>
                           </div>
                           <div class='row'>
-                              
+
                               <div class='col-md-12'>
                                   <button type='submit' class='btn btn-info btn-block'> <i class='fas fa-edit'></i> Modifier</button>
                               </div>
-                              
+
                           </div>
                         {!! form_end($edit_form) !!}
                     </div>
@@ -152,7 +164,7 @@
                             </div> --}}
                             <div class='col-md-12'>
                                 {!! form_row($reset_form->new_password) !!}
-                            </div> 
+                            </div>
                             <div class='col-md-12'>
                                 {!! form_row($reset_form->new_password_confirmation) !!}
                             </div>

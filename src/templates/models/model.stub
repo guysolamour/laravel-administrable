@@ -105,4 +105,9 @@ class {{singularClass}} extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function getRouteKeyName()
+    {
+      return 'pseudo';
+    }
+
 }

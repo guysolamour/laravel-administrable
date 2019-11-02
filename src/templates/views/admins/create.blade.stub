@@ -58,12 +58,9 @@
                                     <div class='col-md-6'>
                                         <br>
                                             <div class="icheck-primary">
-                                                    {!! form_widget($form->is_super_admin) !!}
-                                                    <label for="is_super_admin">Super administrateur</label>
-                                                    </div>
-                                                    {{-- <div class="icheck-primary">
-                                                        {!! form_widget($form->is_super_admin) !!}
-                                                    </div> --}}
+                                            {!! form_widget($form->is_super_admin) !!}
+                                            <label for="is_super_admin">Super administrateur</label>
+                                        </div>
                                     </div>
                                     <div class='col-md-6'>
                                         {!! form_row($form->website) !!}
