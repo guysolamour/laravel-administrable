@@ -26,7 +26,7 @@ class AdminInstallCommand extends Command
     protected $signature = 'admin:install
                                 {name=admin : Name of the guard.}
                                 {--f|force : Whether to override existing files}
-                                {--l|locale=fr : Whether to override existing files}
+                                {--l|locale=fr : Locale to use default fr}
                             ';
 
 
@@ -48,13 +48,15 @@ class AdminInstallCommand extends Command
         $this->override = $this->option('force') ? true : false;
 
 
+
+
         Artisan::call('multi-auth:install',[
             'name' => $this->name,
             '--force' => $this->override
         ]);
 
 
-        $progress = $this->output->createProgressBar(18);
+        $progress = $this->output->createProgressBar(21);
 
 
         // Models
@@ -91,10 +93,6 @@ class AdminInstallCommand extends Command
         $progress->advance();
 
 
-
-
-
-
         // DatabaseSeeder
         $this->info(PHP_EOL . 'Registering seeder...');
         $database_seeder_path = $this->registerSeed(self::TPL_PATH);
@@ -125,8 +123,6 @@ class AdminInstallCommand extends Command
         $traits_path = $this->loadTraits(self::TPL_PATH);
         $this->info('Traits created at ' . $traits_path);
         $progress->advance();
-
-
 
 
         // Forms
@@ -163,10 +159,22 @@ class AdminInstallCommand extends Command
         $this->info('Locale added at ' . $config_path);
         $progress->advance();
 
+        // change default route to controllers
+        $this->info(PHP_EOL . 'Change default home route');
+        $controller_path = $this->changeDefaultRoute();
+        $this->info(PHP_EOL . 'Route change and controller created at '. $controller_path);
+        $progress->advance();
+
         // Social links
         $this->info(PHP_EOL . 'Creating social links...');
         $routes_path = $this->loadSocialLink();
         $this->info('Social links created at ' . $routes_path);
+        $progress->advance();
+
+        // Contact
+        $this->info(PHP_EOL . 'Adding contact form and controller...');
+        $controller_path = $this->loadContact();
+        $this->info('contact form and controller created ' . $controller_path);
         $progress->advance();
 
         // Assets
@@ -970,15 +978,14 @@ class AdminInstallCommand extends Command
     private function loadSocialLinkRoute()
     {
         $routes_path = base_path('/routes/web.php');
-
-        $stub = self::TPL_PATH . '/routes/sociallinks.stub';
         $route = file_get_contents($routes_path);
 
-
+        $stub = self::TPL_PATH . '/routes/sociallinks.stub';
         $stub = file_get_contents($stub);
 
-        $search = '*/';
-        $complied = str_replace($search, $search . "\n\n\n" . $stub, $route);
+
+        $search = '});';
+        $complied = str_replace($search, $stub. PHP_EOL  . $search , $route);
 
         file_put_contents($routes_path, $complied);
     }
@@ -1004,5 +1011,103 @@ class AdminInstallCommand extends Command
         file_put_contents($controller_path , $complied);
     }
 
+    /**
+     * @return string
+     */
+    public function changeDefaultRoute() :string
+    {
+        $data_map = $this->parseName();
+
+        // Change route
+        $routes_path = base_path('/routes/web.php');
+        $stub = self::TPL_PATH . '/routes/default.stub';
+        $route = file_get_contents($stub);
+        file_put_contents($routes_path , $route);
+
+        //  Add controller
+        $controller_stub = self::TPL_PATH . '/Controllers/page.stub';
+        $stub = file_get_contents($controller_stub);
+        $controller = strtr($stub, $data_map);
+        $controller_path = app_path('/Http/Controllers/User/PageController.php');
+
+        $dir = dirname($controller_path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        file_put_contents($controller_path, $controller);
+
+        return $controller_path;
+    }
+
+    public function loadContact()
+    {
+        $data_map = $this->parseName();
+        // Routes
+        $routes_path = base_path('/routes/web.php');
+        $route = file_get_contents($routes_path);
+
+        $stub = self::TPL_PATH . '/routes/contact.stub';
+        $stub = file_get_contents($stub);
+
+        $search = '});';
+        $complied = str_replace($search, $stub. PHP_EOL . PHP_EOL . $search , $route);
+
+        file_put_contents($routes_path, $complied);
+
+        // Form
+        $form_path = app_path('/Forms/User/ContactForm.php');
+
+        $dir = dirname($form_path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $stub = self::TPL_PATH . '/forms/ContactForm.stub';
+        $stub = file_get_contents($stub);
+        $form = strtr($stub, $data_map);
+
+        file_put_contents($form_path, $form);
+
+        // Controller
+        $controller_stub = self::TPL_PATH . '/Controllers/contact.stub';
+        $stub = file_get_contents($controller_stub);
+
+        $controller = strtr($stub, $data_map);
+        $controller_path = app_path('/Http/Controllers/User/ContactController.php');
+
+        $dir = dirname($controller_path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        file_put_contents($controller_path, $controller);
+
+        // Mailable
+        $mail_stub = self::TPL_PATH . '/mail/contact.stub';
+        $stub = file_get_contents($mail_stub);
+
+        $mail = strtr($stub, $data_map);
+        $mail_path = app_path('/Mail/User/ContactMail.php');
+
+        $dir = dirname($mail_path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        file_put_contents($mail_path, $mail);
+
+        // Mailable views
+        $view_stub = self::TPL_PATH . '/views/mail/contact.stub';
+        $stub = file_get_contents($view_stub);
+
+        $view_path = resource_path('/views/emails/user/contact.blade.php');
+
+        $dir = dirname($view_path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        file_put_contents($view_path, $mail);
+
+    }
 
 }

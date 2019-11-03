@@ -1,0 +1,53 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\User;
+
+use {{namespace}}\Models\Mailbox;
+use {{namespace}}\Mail\User\ContactMail;
+use Illuminate\Http\Request;
+use {{namespace}}\Forms\User\ContactForm;
+use {{namespace}}\Traits\FormBuilderTrait;
+use {{namespace}}\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+
+class ContactController extends Controller
+{
+
+    use FormBuilderTrait;
+
+    public function create()
+    {
+        $form = $this->getForm(Mailbox::class,ContactForm::class,false);
+
+        return view('user.contact.create', compact('form'));
+    }
+
+    public function store(Request $request)
+    {
+        $form = $this->getForm( Mailbox::class, ContactForm::class, false );
+        $form->redirectIfNotValid();
+
+
+        // save the message in database and send the mail
+        $Mailbox = Mailbox::create( $request->all() );
+
+        // send email to the web site admin
+        Mail::to( config( 'mail.from.address' ) )
+            ->send( new ContactMail(
+                $request->get( 'name' ),
+                $request->get( 'email' ),
+                $request->get( 'phone_number' ),
+                $request->get( 'content' ),
+        ));
+
+
+        if ( ! $request->ajax() ) {
+            return Redirect::back()->withSuccess( 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !' );
+        }
+
+        if($Mailbox)
+            return 'OK';
+        else
+            return 'Not OK';
+    }
+}

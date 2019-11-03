@@ -28,7 +28,7 @@ class ConfigurationForm extends Form
 //			    'rules' => '',
 		    ])
 		    ->add('cell', 'text', [
-			    'label' => 'Numéro cellulaire',
+			    'label' => 'Numéro céllulaire',
 //			    'rules'  => 'required|email',
 		    ])
 		    ->add('phone', 'text', [
