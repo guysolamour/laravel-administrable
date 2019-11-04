@@ -33,7 +33,7 @@ Route::middleware(['{{singularSlug}}.auth'])->group(function () {
         Route::get( 'profile/{{{singularSlug}}}', '{{singularClass}}Controller@profile')->name('{{singularSlug}}.profile');
         Route::put('profile/{{{singularSlug}}}','{{singularClass}}Controller@update')->name('{{singularSlug}}.update');
         Route::get('{{pluralSlug}}','{{singularClass}}Controller@index')->name('{{singularSlug}}.index');
-        Route::post('/update-{{singularSlug}}-avatar', '{{singularClass}}Controller@updateAvatar');
+        Route::post('/update-{{singularSlug}}-avatar', '{{singularClass}}Controller@updateAvatar')->name('{{singularSlug}}.update-avatar');
         Route::get('{{pluralSlug}}/create','{{singularClass}}Controller@create')->name('{{singularSlug}}.create')->middleware('{{singularSlug}}.super');
         Route::post('{{pluralSlug}}/store','{{singularClass}}Controller@store')->name('{{singularSlug}}.store')->middleware('{{singularSlug}}.super');
         Route::delete('{{singularSlug}}/{{{singularSlug}}}','{{singularClass}}Controller@delete')->name('{{singularSlug}}.delete')->middleware('{{singularSlug}}.super');

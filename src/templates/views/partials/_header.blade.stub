@@ -70,7 +70,7 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <div class="p-2 text-center">
                 <p class="user-header">
-                    <img src="/vendor/adminlte/dist/img/user2-160x160.jpg" class="img-circle img-fluid" alt="User Image">
+                    <img id="header-avatar" src="{{ asset(get_admin()->avatar) }}" class="img-circle img-fluid" alt="{{ get_admin()->pseudo }} Image" style='width: 100px;'>
                 </p>
                 <p class="pb-2">
                     {{ get_admin()->full_name }} <br> <small>{{ Auth::guard('admin')->user()->role }}</small>
@@ -82,7 +82,7 @@
                 </p>
             </div>
 
-            
+
           {{--<span class="dropdown-item dropdown-header">15 Notifications</span>--}}
           {{--<div class="dropdown-divider"></div>--}}
           {{--<a href="#" class="dropdown-item">--}}

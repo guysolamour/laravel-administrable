@@ -12,7 +12,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="/vendor/adminlte/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="{{ get_admin()->full_name }} Image">
+          <img id="aside-avatar" src="{{ asset(get_admin()->avatar) }}" class="img-circle elevation-2" alt="{{ get_admin()->full_name }} Image">
         </div>
         <div class="info">
           <a href="{{ route('admin.profile', get_admin()) }}" class="d-block">{{ get_admin()->pseudo }}</a>
@@ -85,7 +85,7 @@
               </p>
             </a>
           </li>
-         
+
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

@@ -63,9 +63,9 @@
                 <p class="mb-2">
                     <a href="{{ route('admin.password.request') }}">Mot de passe oublié</a>
                 </p>
-                <p class="mb-2">
+                {{-- <p class="mb-2">
                     <a href="{{ route('admin.register')  }}" class="text-center">Pas de compte ? S'inscrire</a>
-                </p>
+                </p> --}}
             </div>
             <!-- /.login-card-body -->
         </div>
