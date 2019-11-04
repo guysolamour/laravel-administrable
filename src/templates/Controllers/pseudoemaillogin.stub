@@ -1,0 +1,37 @@
+     /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            'login' => 'required|string',
+            'password' => 'required|string',
+        ],['login.required' => 'Le Pseudo ou l\'Email est requis']);
+    }
+
+     /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function credentials(Request $request)
+    {
+        return [$this->username() => $request->get('login'), 'password' => $request->get('password')];
+    }
+
+
+
+    public function username()
+    {
+        return $this->guessUsername();
+    }
+
+    private function guessUsername(){
+        return filter_var(request('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'pseudo';
+    }

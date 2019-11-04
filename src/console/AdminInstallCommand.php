@@ -439,6 +439,12 @@ class AdminInstallCommand extends Command
         $search = 'protected $redirectTo = '. "'/{$data_map['{{singularSlug}}']}/login'" . ';';
         $this->replaceAndRegisterStub($search,$stub,$file);
 
+        // PseudoEmailLoginTrait;
+        $file = $controllers_path . '/Auth/LoginController.php';
+        $search = 'use AuthenticatesUsers;';
+        $stub = file_get_contents($template_path . '/Controllers/pseudoemaillogin.stub');
+        $this->replaceAndRegisterStub($search,$search . PHP_EOL. PHP_EOL. $stub,$file);
+
 
 
         return $controllers_path;
@@ -812,9 +818,6 @@ class AdminInstallCommand extends Command
 
 
             $route_mw = strtr($route_mw, $data_map);
-
-
-//            $route_mw_bait = '// $this->call(UsersTableSeeder::class);'."\n";
             $route_mw_bait = "  {\n";
 
 
