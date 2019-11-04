@@ -874,8 +874,17 @@ class AdminInstallCommand extends Command
 
         $env_file = str_replace($search,  $search . ":{$port}" , $env_file);
 
+
+        // add maildev configuration
+        $search = 'MAIL_HOST=smtp.mailtrap.io';
+        $env_file = str_replace($search,  'MAIL_HOST=127.0.0.1' , $env_file);
+
+        $search = 'MAIL_PORT=2525';
+        $env_file = str_replace($search,  'MAIL_PORT=1030' , $env_file);
+
+
         // Overwrite config file
-       file_put_contents($env_path, $env_file);
+        file_put_contents($env_path, $env_file);
 
 
 

@@ -20,7 +20,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Accueil</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Tableau de bord</a></li>
               <li class="breadcrumb-item active">Messagerie</li>
             </ol>
           </div>
@@ -45,30 +45,12 @@
           <div class='row'>
              <div class="col-md-12">
                       <div class="card card-primary card-outline">
-                        <div class="card-header">
-                          <h3 class="card-title">Inbox</h3>
-
-
-                          <!-- /.card-tools -->
-                        </div>
                         <!-- /.card-header -->
                         <div class="card-body p-0">
-                          <div class="mailbox-controls">
-                            <!-- Check all button -->
-                            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
-                            </button>
-                            <div class="btn-group">
-                              <button type="button" class="btn btn-default btn-sm"><i class="far fa-trash-alt"></i></button>
-                              <button type="button" class="btn btn-default btn-sm"><i class="fas fa-reply"></i></button>
-                              <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i></button>
-                            </div>
-
-                          </div>
                           <div class="table-responsive mailbox-messages">
                             <table class="table table-hover table-striped" id="list">
                             <thead>
                                 <tr>
-                                    <th></th>
                                     <th>Lu</th>
                                     <th>Nom</th>
                                     <th>Message</th>
@@ -80,12 +62,6 @@
 
                               @foreach($mailboxes as $message)
                                   <tr>
-                                      <td>
-                                          <div class="icheck-primary">
-                                          <input type="checkbox" value="" id="check{{ $message->id }}">
-                                          <label for="check{{ $message->id }}"></label>
-                                          </div>
-                                      </td>
                                       <td class="mailbox-star"><a href="#"><i class="fas {{ ($message->read) ? 'fa-star-o' : 'fa-star'}} text-warning"></i></a></td>
                                       <td class="mailbox-name"><a href="read-mail.html">{{ $message->name }}</a></td>
                                       <td class="mailbox-subject">{{ Str::limit($message->content,25) }}</td>
@@ -101,7 +77,6 @@
                               </tbody>
                               <tfoot>
                                 <tr>
-                                    <th></th>
                                     <th>Lu</th>
                                     <th>Nom</th>
                                     <th>Message</th>
