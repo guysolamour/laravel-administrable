@@ -18,8 +18,10 @@ return [
             'polymorphic' => true,
         ],
         'category' => [
-            'name' =>['name' => 'name',],
+            'name' =>['name' => 'name'],
+            'title' => ['name' => 'title'],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
+            //'breadcrumb' => 'title'
         ],
 //        'category' => [
 //            'name' =>['name' => 'name', 'type' => 'string', 'rules' => 'required'],

@@ -69,6 +69,11 @@ class MakeCrudCommand extends Command
     protected $slug;
 
     /**
+     * @var string
+     */
+    protected $breadcrumb;
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -77,6 +82,7 @@ class MakeCrudCommand extends Command
                              {model : Model name.}
                              {--s|slug= : The field to slugify}
                              {--d|seed : Seed the table}
+                             {--b|breadcrumb= : Field used in breadcrum show}
                              {--e|entity : The model is only an entity(model and migration only)}
                              {--p|polymorphic : The model will be a polymorphic model (morphTo)}
                              {--t|timestamps : Determine if the model is not timestamped}
@@ -103,6 +109,7 @@ class MakeCrudCommand extends Command
         $this->entity = $this->option('entity');
         $this->polymorphic = $this->option('polymorphic');
         $this->slug = is_string($this->option('slug')) ? strtolower($this->option('slug')) : $this->option('slug');
+        $this->breadcrumb = is_string($this->option('breadcrumb')) ? strtolower($this->option('breadcrumb')) : $this->option('breadcrumb');
         $this->model = $this->argument('model');
 
         // check if the model exists
@@ -112,12 +119,20 @@ class MakeCrudCommand extends Command
 
         if (!empty($config_fields)) {
             $this->fields = $config_fields;
-            $this->setConfigOption(['slug','seed','entity','polymorphic', 'timestamps']);
+            $this->setConfigOption(['slug','seed','entity','polymorphic', 'timestamps','breadcrumb']);
             $this->setDefaultTypeAndRule();
 
         } else {
             $this->fields = $this->getFields();
         }
+        // add breadcrumbs
+        $this->info(PHP_EOL . 'Breadcrumb...');
+        $breadcrumb_path = CreateCrudBreadcumb::generate($this->model,$this->fields,$this->slug,$this->breadcrumb);
+        $this->info('Breadcrumb created at ' . $breadcrumb_path);
+        $progress->advance();
+
+
+        die;
 
 
         // Models
@@ -159,7 +174,7 @@ class MakeCrudCommand extends Command
 
             // add breadcrumbs
             $this->info(PHP_EOL . 'Breadcrumb...');
-            $breadcrumb_path = CreateCrudBreadcumb::generate($this->model,$this->fields,$this->slug);
+            $breadcrumb_path = CreateCrudBreadcumb::generate($this->model,$this->fields,$this->slug,$this->breadcrumb);
             $this->info('Breadcrumb created at ' . $breadcrumb_path);
             $progress->advance();
 
@@ -286,12 +301,8 @@ class MakeCrudCommand extends Command
      */
     private function setConfigOption(array $options): void
     {
-
-
         foreach ($options as $option){
-
             if (isset($this->fields[$option]) && !empty($this->fields[$option])) {
-
                 // is option model (generate only model and migration)
                 if (array_key_exists($option, $this->fields)) {
 

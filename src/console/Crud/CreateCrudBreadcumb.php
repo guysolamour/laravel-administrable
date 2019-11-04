@@ -20,6 +20,10 @@ class CreateCrudBreadcumb
      * @var null|string
      */
     private $slug;
+    /**
+     * @var null|string
+     */
+    private $breadcrumb;
 
 
     /**
@@ -27,17 +31,19 @@ class CreateCrudBreadcumb
      * @param string $name
      * @param array $fields
      * @param null|string $slug
+     * @param null|string $breadcrumb
      */
-    public function __construct(string $name, array $fields, ?string $slug = null)
+    public function __construct(string $name, array $fields, ?string $slug = null, ?string $breadcrumb = null)
     {
         $this->name = $name;
         $this->fields = $fields;
         $this->slug = $slug;
+        $this->breadcrumb = $breadcrumb;
     }
 
-    public static function generate(string $name, array $fields, ?string $slug = null) :string
+    public static function generate(string $name, array $fields, ?string $slug = null, ?string $breadcrumb = null) :string
     {
-        return (new CreateCrudBreadcumb($name,$fields, $slug))
+        return (new CreateCrudBreadcumb($name,$fields, $slug, $breadcrumb))
             ->loadBreadcumb();
     }
 
@@ -76,8 +82,11 @@ class CreateCrudBreadcumb
         );
     }
 
-    private function getBreadcrumbFieldToShow()
+    private function getBreadcrumbFieldToShow() :string
     {
+
+        if (!empty($this->breadcrumb)) return $this->breadcrumb;
+
         foreach ($this->fields as $field) {
             if (
                 $this->getType($field['name']) === 'text' ||
