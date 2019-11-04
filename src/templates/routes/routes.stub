@@ -10,8 +10,8 @@ Route::namespace('{{singularClass}}')->group(function () {
     Route::post('logout', 'Auth\LoginController@logout')->name('{{singularSlug}}.logout');
 
     // Register
-    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('{{singularSlug}}.register');
-    Route::post('register', 'Auth\RegisterController@register');
+    // Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('{{singularSlug}}.register');
+    // Route::post('register', 'Auth\RegisterController@register');
 
     // Passwords
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('{{singularSlug}}.password.email');
