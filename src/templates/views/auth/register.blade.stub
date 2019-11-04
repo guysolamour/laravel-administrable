@@ -19,15 +19,41 @@
                 <form action="{{ route('admin.register') }}" method="post" aria-label="{{ __('Register') }}">
                     @csrf
                     <div class="input-group mb-3">
-                        <input name="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="Nom" value="{{ old('name') }}">
+                        <input name="pseudo" type="text" class="form-control {{ $errors->has('pseudo') ? ' is-invalid' : '' }}" placeholder="Pseudo" value="{{ old('pseudo') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
                             </div>
                         </div>
-                        @if ($errors->has('name'))
+                        @if ($errors->has('pseudo'))
                             <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('name') }}</strong>
+                                <strong>{{ $errors->first('pseudo') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                        <div class="input-group mb-3">
+                            <input name="last_name" type="text" class="form-control {{ $errors->has('last_name') ? ' is-invalid' : '' }}" placeholder="Nom" value="{{ old('last_name') }}">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user"></span>
+                                </div>
+                            </div>
+                            @if ($errors->has('last_name'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('last_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    <div class="input-group mb-3">
+                        <input name="first_name" type="text" class="form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}" placeholder="Prénoms" value="{{ old('first_name') }}">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                        @if ($errors->has('first_name'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('first_name') }}</strong>
                             </span>
                         @endif
                     </div>
@@ -66,14 +92,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
+                        {{-- <div class="col-12">
                             <div class="icheck-primary">
                                 <input type="checkbox" id='agreeTerms' {{ old('remember') ? 'checked' : '' }}>
                                 <label for="agreeTerms">
                                     J'accepte les  <a href="#">CGU</a>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         <!-- /.col -->
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block btn-flat">S'inscrire</button>

@@ -445,6 +445,14 @@ class AdminInstallCommand extends Command
         $stub = file_get_contents($template_path . '/Controllers/pseudoemaillogin.stub');
         $this->replaceAndRegisterStub($search,$search . PHP_EOL. PHP_EOL. $stub,$file);
 
+        // Register
+        $file = $controllers_path . '/Auth/RegisterController.php';
+        $stub = file_get_contents($template_path . '/Controllers/register.stub');
+        $complied = strtr($stub, $data_map);
+        file_put_contents($file,$complied);
+
+
+        $this->replaceAndRegisterStub($search,$search . PHP_EOL. PHP_EOL. $stub,$file);
 
 
         return $controllers_path;
