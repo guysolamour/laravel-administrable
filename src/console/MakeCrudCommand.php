@@ -125,14 +125,8 @@ class MakeCrudCommand extends Command
         } else {
             $this->fields = $this->getFields();
         }
-        // add breadcrumbs
-        $this->info(PHP_EOL . 'Breadcrumb...');
-        $breadcrumb_path = CreateCrudBreadcumb::generate($this->model,$this->fields,$this->slug,$this->breadcrumb);
-        $this->info('Breadcrumb created at ' . $breadcrumb_path);
-        $progress->advance();
+      
 
-
-        die;
 
 
         // Models
@@ -172,7 +166,7 @@ class MakeCrudCommand extends Command
             $this->info('Routes inserted at ' . $route_path);
             $progress->advance();
 
-            // add breadcrumbs
+             // add breadcrumbs
             $this->info(PHP_EOL . 'Breadcrumb...');
             $breadcrumb_path = CreateCrudBreadcumb::generate($this->model,$this->fields,$this->slug,$this->breadcrumb);
             $this->info('Breadcrumb created at ' . $breadcrumb_path);

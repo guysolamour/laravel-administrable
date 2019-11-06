@@ -197,13 +197,13 @@ class AdminInstallCommand extends Command
         $progress->advance();
 
 
-        // update composer autoload for seeding
-        \exec('composer dump-autoload > /dev/null 2>&1');
+        // // update composer autoload for seeding
+        // \exec('composer dump-autoload > /dev/null 2>&1');
 
-        // seed
-        $this->callSilent('db:seed', [
-            '--class' => 'ConfigurationsTableSeeder',
-        ]);
+        // // seed
+        // $this->callSilent('db:seed', [
+        //     '--class' => 'ConfigurationsTableSeeder',
+        // ]);
 
         $progress->finish();
 
