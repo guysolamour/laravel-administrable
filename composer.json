@@ -21,7 +21,7 @@
     "kris/laravel-form-builder": "^1.21",
     "davejamesmiller/laravel-breadcrumbs": "^5.3",
     "mercuryseries/flashy": "^1.0",
-    "unisharp/laravel-filemanager": "^1.9",
+    "unisharp/laravel-filemanager": "^2",
     "cviebrock/eloquent-sluggable": "^6.0",
     "laravel/helpers": "^1.1",
     "illuminate/support": "^6.0"
