@@ -14,7 +14,9 @@
                         <h1>Edition</h1>
                     </div>
                     <div class="col-sm-6">
-                        {{ Breadcrumbs::render('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}
+                         <div class="float-sm-right">
+                            {{ Breadcrumbs::render('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}
+                        </div>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -44,7 +46,7 @@
 
                           {{-- add morphs image  here --}}
                       </div>
-                        
+
                     </div>
                 </div>
 

@@ -14,11 +14,13 @@
                         <h1>Ajout</h1>
                     </div>
                     <div class="col-sm-6">
-                        {{ Breadcrumbs::render('admin.{{singularSlug}}.show', ${{singularSlug}}) }}
+                        <div class="float-sm-right">
+                            {{ Breadcrumbs::render('admin.{{singularSlug}}.show', ${{singularSlug}}) }}
+                        </div>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
-            
+
         </section>
 
         <!-- Main content -->
@@ -46,7 +48,7 @@
                             </div>
                           </section>
                       </div>
-                        
+
                     </div>
                 </div>
 

@@ -63,9 +63,9 @@
 
                             <td>
                               <div class="btn-group" role="group">
-                                    <a href="{{ route('admin.{{singularSlug}}.show', ${{singularSlug}}) }}" class="btn btn-primary" title="Afficher"><i class="fas fa-eye"></i></a>
-                                    <a href="{{ route('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}" class="btn btn-info" title="Editer"><i class="fas fa-edit"></i></a>
-                                    <a href="{{ route('admin.{{singularSlug}}.destroy',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger" title="Supprimer"><i class="fas fa-trash"></i></a>
+                                    <a href="{{ route('admin.{{singularSlug}}.show', ${{singularSlug}}) }}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Afficher"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('admin.{{singularSlug}}.edit', ${{singularSlug}}) }}" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Editer"><i class="fas fa-edit"></i></a>
+                                    <a href="{{ route('admin.{{singularSlug}}.destroy',${{singularSlug}}) }}" data-method="delete" data-toggle="tooltip" data-placement="top" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger" title="Supprimer"><i class="fas fa-trash"></i></a>
                               </div>
                             </td>
                           </tr>
