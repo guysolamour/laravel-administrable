@@ -62,15 +62,16 @@
 
 @endsection
 
-@section('css')
+@push('css')
   {{-- add standalone image css here --}}
 
   {{-- add morphs image css here --}}
-@stop
+@endpush
 
-@section('js')
+@push('js')
   {{-- add standalone image js here --}}
 
   {{-- add morphs image js here --}}
-@stop
+@endpush
+
 

@@ -30,7 +30,7 @@
   <!-- Sweetalert -->
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/sweetalert/sweetalert.css') }}">
 
-  @yield('css')
+  @stack('css')
 </head>
 <body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
@@ -87,7 +87,7 @@
 <script>
     $('.lfm,#lfm').filemanager('file');
 </script>
-@yield('js')
+@stack('js')
 {{-- Flashy view--}}
 @include('flashy::message')
 </body>
