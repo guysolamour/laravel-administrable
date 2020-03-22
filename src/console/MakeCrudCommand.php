@@ -130,13 +130,6 @@ class MakeCrudCommand extends Command
             $this->fields = $this->getFields();
         }
 
-        $this->info(PHP_EOL . 'Forms...');
-        $form_path = CreateCrudForm::generate($this->model, $this->fields, $this->slug);
-        $this->info('Form created at ' . $form_path);
-        $progress->advance();
-
-        die;
-
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');

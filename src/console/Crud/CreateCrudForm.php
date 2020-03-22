@@ -131,8 +131,12 @@ class CreateCrudForm
 //                ])' . "\n";
 
             $fields .= '            ->add(' . "'slug'" . ', ' . "'text'" . ',[
+                \'label\' => \'slug\',
+                \'rules\' => \'required\',
                 ])' . "\n";
         }
+
+
 
         return $fields;
     }

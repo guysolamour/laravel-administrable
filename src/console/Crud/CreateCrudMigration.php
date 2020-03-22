@@ -177,7 +177,7 @@ class CreateCrudMigration
 
                 $fields .= '            $table->' . $this->getFieldType($field['type']) . '(' . "'{$field['name']}'" . ')'. $this->getFieldAttributes($field) .';' . "\n";
 
-                
+
             }
 
             // permettre de generer le slug dans le seed en mettant la variable $slug devant
@@ -234,12 +234,14 @@ class CreateCrudMigration
             $fields .= "\n" . '            $table->timestamps();';
         }
 
+
+
         return [$fields, $seed_fields];
     }
 
     protected function getFieldAttributes($field) {
 
-        
+
         $attr = '';
 
         if(

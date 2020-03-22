@@ -221,11 +221,11 @@ class CreateCrudView
 
         $fields = '';
 
-        if (!is_null($this->slug)) {
-            $fields .= '                                    <th>' . ucfirst($this->slug) . '</th>' . "\n";
-            $values .= '                                        <td>{{ $' . $var_name . '->' . $this->slug . ' }}</td>' . "\n";
+        // if (!is_null($this->slug)) {
+        //     $fields .= '                                    <th>' . ucfirst($this->slug) . '</th>' . "\n";
+        //     $values .= '                                        <td>{{ $' . $var_name . '->' . $this->slug . ' }}</td>' . "\n";
 
-        }
+        // }
 
         foreach ($this->fields as $field) {
 
@@ -258,6 +258,7 @@ class CreateCrudView
             $fields .= '                                    <th>Date ajout</th>' . "\n";
             $values .= '                                        <td>{{ $' . $var_name . '->created_at->format(\'d/m/Y h:i\') }}</td>' . "\n";
         }
+
         return [$values, $fields];
     }
 
@@ -306,10 +307,8 @@ class CreateCrudView
         if ($this->isRelationField($field)) return false;
 
         return
-            $field === 'string' || $field === 'decimal' ||
-            $field === 'double' || $field === 'float' ||
             $field === 'text' || $field === 'mediumText' ||
-            $field === 'longText' || $field === 'bigInteger';
+            $field === 'longText';
     }
 
     /**

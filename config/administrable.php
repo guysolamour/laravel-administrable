@@ -22,6 +22,7 @@ return [
             'title' => ['name' => 'title','default' => 'salut','rules' => 'nullable'],
             'image' => ['name' => 'image','type' => 'image'],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
+            'slug' => 'title',
             //'breadcrumb' => 'title'
         ],
 //        'category' => [
