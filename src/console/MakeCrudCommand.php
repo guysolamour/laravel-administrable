@@ -68,6 +68,7 @@ class MakeCrudCommand extends Command
      */
     protected $slug;
 
+
     /**
      * @var string
      */
@@ -137,12 +138,16 @@ class MakeCrudCommand extends Command
         $this->displayResult($result,$model_path);
         $progress->advance();
 
+
+
         // Migrations and seeds
         $this->info(PHP_EOL . 'Creating Migration...');
         [$migration_result,$migration_path,$seed_result,$seed_path] = CreateCrudMigration::generate($this->model, $this->fields,$this->slug,$this->timestamps,$this->polymorphic);
         $this->displayResult($migration_result,$migration_path);
         $this->displayResult($seed_result,$seed_path);
         $progress->advance();
+
+        die;
 
         // Migrate
         $this->info(PHP_EOL . 'Migrate...');
@@ -211,7 +216,9 @@ class MakeCrudCommand extends Command
             $relation_type = $this->choice('Which type of relation is it ?', self::RELATION_TYPES, 1);
             $relation_property = $this->ask('What property will be used to access relation ?');
             $relation_model = $this->anticipate('Which model is associated to ?', $this->getAllAppModels());
-            $nullable = $this->confirm('This field is nulable ?');
+
+
+
             $relation_model_with_namespace = $this->getAllAppModels(true)[$relation_model];
             $rules = '';
             $this->tempFields[$field] = [
@@ -219,8 +226,18 @@ class MakeCrudCommand extends Command
                 'type'=>
                     [$type => ['name' => $relation_type,'model' => $relation_model_with_namespace,'property' => $relation_property]],
                 'rules' => $rules,
-                'nullable' => $nullable,
+                //'nullable' => $nullable,
+
             ];
+
+            if ($this->confirm('This relation is guest ?')) {
+                $guest = $this->ask('Guest fields');
+
+                while (empty($guest)) {
+                    $guest = $this->ask('Guest fields can not be empty');
+                }
+                $this->tempFields[$field]['guest'] = explode(',', $guest);
+            }
         }else {
             $headers = ['Name', 'Name', 'Name', 'Name'];
 
@@ -233,10 +250,25 @@ class MakeCrudCommand extends Command
 
             $this->table($headers, $rules);
             $rules = $this->ask('Rules');
-            $nullable = $this->confirm('This field is nulable ?');
 
-            $this->tempFields[$field] = ['name' => $field,'type'=> $type,'rules' => $rules, 'nullable' => $nullable];
+            $this->tempFields[$field] = [
+                'name' => $field,'type'=> $type,'rules' => $rules,
+            ];
         }
+
+        if($this->confirm('This field is nulable ?')){
+            $this->tempFields[$field]['nullable'] = true;
+        }
+
+        if($this->confirm('This field has a default value ?')){
+            $default = $this->ask('Default value');
+
+            while (empty($default)) {
+                $default = $this->ask('default value can not be empty');
+            }
+            $this->tempFields[$field]['default'] = $default;
+        }
+
 
         if ($this->confirm('Add another field ?')) {
             $this->getFields();

@@ -51,9 +51,33 @@ return [
             ],
             'slug' => 'name'
         ],
+        'review' => [
+            'name' => ['name' => 'name', 'type' => 'string'],
+            'email' => ['name' => 'email', 'type' => 'string', 'rules' => 'required|email'],
+            'phone_number' => ['name' => 'phone_number', 'type' => 'string'],
+            'content' => ['name' => 'content', 'type' => 'text', 'rules' => 'required|min:20'],
+            'user_id' => [
+                'name' => 'user_id', 'type' => [
+                    'relation' => [
+                        'name' => 'Many to One',
+                        'model' => 'App\User',
+                        'property' => 'name'
+                    ]
+                ],'guest' => ['name','email','phone_number']
+            ],
+            // 'product_id' => [
+            //     'name' => 'product_id', 'type' => [
+            //         'relation' => [
+            //             'name' => 'Many to One',
+            //             'model' => 'App\Models\Product',
+            //             'property' => 'name'
+            //         ]
+            //     ]
+            // ],
+        ],
        'terrain' => [
            'title' => [
-               'name' => 'title' , 'type' => 'string','rules' => 'required'
+               'name' => 'title' , 'type' => 'string','rules' => 'required','default' => 'guy'
            ],
            'morphs' => [
                'name' => 'morphs', 'type' => [

@@ -107,7 +107,7 @@ class CreateCrudModel
      */
     private function parseName(string $name) :array
     {
-        return $parsed = [
+        return [
             '{{namespace}}' => $this->getNamespace(),
             '{{pluralCamel}}' => Str::plural(Str::camel($name)),
             '{{pluralSlug}}' => Str::plural(Str::slug($name)),
@@ -130,7 +130,7 @@ class CreateCrudModel
         return [
             '{{modelPluralSlug}}' => Str::plural(Str::slug($model_name)),
             '{{modelPluralClass}}' => Str::plural(Str::studly($model_name)),
-            '{{modelSingularClass}}' => $model_name,
+            '{{modelSingularClass}}' => Str::studly($model_name),
             '{{modelSingularSlug}}' => Str::singular(Str::slug($model_name)),
             '{{relatedSingularClass}}' => Str::singular(Str::studly($related)),
             '{{relatedPluralSlug}}' => Str::plural(Str::slug($related)),
@@ -193,13 +193,28 @@ class CreateCrudModel
                 [$model_stub, $related_stub] = $this->getModelAndRelatedModelStubs($field);
 
 
+
+
                 $data_map = $this->parseRelationName($this->model, $this->getRelatedModel($field));
+
 
                 /**
                  * mettre le resultat dans l'instance afin de le conserver et ne pas le perdre
                  */
                 $this->new_model_stub .=   strtr($model_stub , $data_map) . PHP_EOL;
+
                 $related = strtr($related_stub, $data_map);
+
+
+                if (!empty($field['guest'])) {
+                    $replace = '->withDefault(function($'. $data_map['{{relatedSingularSlug}}'] .', $'. $data_map['{{modelSingularSlug}}'] . '){' . PHP_EOL;
+                            foreach ($field['guest'] as $value) {
+                                $replace .=     '           $'. $data_map['{{relatedSingularSlug}}'] .'->'. $value . ' = $' . $data_map['{{modelSingularSlug}}'] . '->'. $value . ';' . PHP_EOL;
+                            }
+                    $replace.=  '       });';
+
+                    $this->new_model_stub = str_replace(' ;', $replace   , $this->new_model_stub);
+                }
 
 
                 $related_path = app_path('Models/' . $this->modelNameWithoutNamespace($this->getRelatedModel($field)).'.php');
@@ -210,11 +225,13 @@ class CreateCrudModel
 
                 $related_model = file_get_contents($related_path);
 
+
                 $search = '// add relation methods below';
 
                 // search if the model
 
                 $related_file = str_replace($search,    $search . "\n" . $related    , $related_model);
+
 
                 file_put_contents($related_path,$related_file);
 
@@ -222,7 +239,10 @@ class CreateCrudModel
 
             }
         }
+
+
         $search = '// add relation methods below';
+
         $model_file = str_replace($search,   $search . "\n" . $this->new_model_stub    , $model);
        // dd($this->new_model_stub, $model_path. $model_file);
 
@@ -241,7 +261,9 @@ class CreateCrudModel
     {
         $fillable = '';
         foreach ($this->fields as $field) {
-            if ($field['name'] !== 'morphs'){
+            if (
+                $field['name'] !== 'morphs' || $field['name'] !== 'guest'
+                ){
 
                 $fillable .= "'{$field['name']}'" . ',';
             }
