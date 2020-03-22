@@ -102,7 +102,11 @@ class MakeCrudCommand extends Command
     {
         $this->info('Initiating...');
 
+
+
         $progress = $this->output->createProgressBar(10);
+
+
 
         $this->timestamps = $this->option('timestamps');
         $this->seed = $this->option('seed');
@@ -125,8 +129,6 @@ class MakeCrudCommand extends Command
         } else {
             $this->fields = $this->getFields();
         }
-      
-
 
 
         // Models
@@ -209,13 +211,16 @@ class MakeCrudCommand extends Command
             $relation_type = $this->choice('Which type of relation is it ?', self::RELATION_TYPES, 1);
             $relation_property = $this->ask('What property will be used to access relation ?');
             $relation_model = $this->anticipate('Which model is associated to ?', $this->getAllAppModels());
+            $nullable = $this->confirm('This field is nulable ?');
             $relation_model_with_namespace = $this->getAllAppModels(true)[$relation_model];
             $rules = '';
             $this->tempFields[$field] = [
                 'name' => $field,
                 'type'=>
                     [$type => ['name' => $relation_type,'model' => $relation_model_with_namespace,'property' => $relation_property]],
-                'rules' => $rules];
+                'rules' => $rules,
+                'nullable' => $nullable,
+            ];
         }else {
             $headers = ['Name', 'Name', 'Name', 'Name'];
 
@@ -228,10 +233,12 @@ class MakeCrudCommand extends Command
 
             $this->table($headers, $rules);
             $rules = $this->ask('Rules');
-            $this->tempFields[$field] = ['name' => $field,'type'=> $type,'rules' => $rules];
+            $nullable = $this->confirm('This field is nulable ?');
+
+            $this->tempFields[$field] = ['name' => $field,'type'=> $type,'rules' => $rules, 'nullable' => $nullable];
         }
 
-        if ($this->confirm('Add another field?')) {
+        if ($this->confirm('Add another field ?')) {
             $this->getFields();
         }
 

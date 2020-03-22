@@ -88,6 +88,7 @@ class CreateCrudForm
                     if ($this->isImagesMorphRelation($field)){
                     $morph_field_name = $this->getMorphFieldName($field);
                     $fields .= '            ->add(' . "'{$morph_field_name}'" . ', ' . "'hidden'" . ',[
+                    \'label\' => ' . "'{$morph_field_name}'"   . ',
                     \'rules\' => ' . "'required'," . '
                     \'attr\' => ' . "['id' => '{$morph_field_name}', 'class' => '{$morph_field_name}']" . '
                ])' . "\n";
@@ -103,18 +104,20 @@ class CreateCrudForm
                     }"
 
                         . '
-                    
+
                 ])' . "\n";
                 }
             }
             else if($field['name'] === 'image') {
                 $fields .= '            ->add(' . "'{$this->getFieldName($field['name'])}'" . ', \'hidden\',[
+                \'label\' => ' . "'{$this->getFieldName($field['name'])}'"   . ',
                 '. $this->getRules($field['rules']) .'
                 \'attr\' => [\'id\' => \''. $this->getFieldName($field['name']) .'\'],
                 ])' . "\n";
             }
             else {
                 $fields .= '            ->add(' . "'{$this->getFieldName($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
+                \'label\' => '. "'{$this->getFieldName($field['name'])}'"   .',
                 '. $this->getRules($field['rules']) .'
                 ])' . "\n";
             }

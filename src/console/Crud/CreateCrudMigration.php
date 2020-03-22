@@ -169,13 +169,15 @@ class CreateCrudMigration
             // we generate migrations fields
             if ($this->isRelationField($field['type'])){
                 if (!$this->isMorphsField($field)){
-                    $fields .= '            $table->unsignedBigInteger(' . "'{$field['name']}'" . ');' . "\n";
+                    $fields .= '            $table->unsignedBigInteger(' . "'{$field['name']}'" . ')'. $this->getFieldAttributes($field) .';' . "\n";
                     $fields .= '            $table->foreign(' . "'{$field['name']}'" . ')->references(\'id\')->on('. "'{$this->getModelTableName($field['type']['relation']['model'])}'".')->onDelete("cascade");' . "\n";
                 }
             }
             else{
 
-                $fields .= '            $table->' . $this->getFieldType($field['type']) . '(' . "'{$field['name']}'" . ');' . "\n";
+                $fields .= '            $table->' . $this->getFieldType($field['type']) . '(' . "'{$field['name']}'" . ')'. $this->getFieldAttributes($field) .';' . "\n";
+
+                
             }
 
             // permettre de generer le slug dans le seed en mettant la variable $slug devant
@@ -231,7 +233,27 @@ class CreateCrudMigration
         if (!$this->timestamps) {
             $fields .= "\n" . '            $table->timestamps();';
         }
+
         return [$fields, $seed_fields];
+    }
+
+    protected function getFieldAttributes($field) {
+
+        
+        $attr = '';
+
+        if(
+            (isset($field['nullable']) && $field['nullable']) ||
+            (isset($field['rules']) && Str::contains($field['rules'],'nullable'))
+          ){
+           $attr .=  '->nullable()';
+        }
+
+        if (isset($field['default']) && !empty($field['default'])) {
+            $attr .=  '->default('. "'{$field['default']}'" .')';
+        }
+
+        return $attr;
     }
 
     /**

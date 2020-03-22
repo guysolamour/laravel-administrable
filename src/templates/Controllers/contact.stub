@@ -42,7 +42,7 @@ class ContactController extends Controller
 
 
         if ( ! $request->ajax() ) {
-            return Redirect::back()->withSuccess( 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !' );
+            return redirect()->back()->withSuccess( 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !' );
         }
 
         if($Mailbox)
