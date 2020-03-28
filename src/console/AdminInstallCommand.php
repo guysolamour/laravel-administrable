@@ -67,7 +67,7 @@ class AdminInstallCommand extends BaseCommand
 
 
         $this->info(PHP_EOL . 'Creating Model...');
-        $this->loadModel(self::TPL_PATH);
+        $this->loadModel();
         $this->info('Model created at ');
 
 
@@ -90,7 +90,7 @@ class AdminInstallCommand extends BaseCommand
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
-        $this->loadModel(self::TPL_PATH);
+        $this->loadModel();
         $this->info('Model created at ');
         $progress->advance();
 
@@ -255,49 +255,30 @@ class AdminInstallCommand extends BaseCommand
      * @param $stub_path
      * @return string
      */
-    protected function loadModel($stub_path)
+    protected function loadModel() :string
     {
-        try {
+        $data_map = $this->parseName();
 
-            $data_map = $this->parseName();
+        $guard = $data_map['{{singularClass}}'];
 
-            $models = [
-                [
-                    'stub' =>  $stub_path . '/models/model.stub',
-                    'path'  => app_path($data_map['{{singularClass}}'] . '.php')
-                ],
-                [
-                    'stub'  => $stub_path . '/models/configuration.stub',
-                    'path' =>  app_path('/Models/Configuration.php'),
-                ],
-                [
-                    'stub'  => $stub_path . '/models/BaseModel.stub',
-                    'path' =>  app_path('/Models/BaseModel.php'),
-                ],
-                [
-                    'stub'  => $stub_path . '/models/mailbox.stub',
-                    'path' =>  app_path('/Models/Mailbox.php'),
-                ],
-            ];
+        $models = $this->filesystem->allFiles(self::TPL_PATH . '/models');
 
-            foreach ($models as $model){
-                $stub = file_get_contents($model['stub']);
-                $stub = strtr($stub, $data_map);
+        $model_path =  app_path('Models');
 
-                $dir = dirname($model['path']);
-                if (!is_dir($dir)) {
-                    mkdir($dir, 0755, true);
-                }
+        $this->compliedAndWriteFile(
+            $models,
+            $model_path
+        );
 
-                file_put_contents($model['path'], $stub);
-            }
+        // Renommer du model et le déplacer à la racine du dossier app
+        $this->filesystem->move(
+            $model_path . '/Model.php',
+            app_path($guard.'.php')
+        );
 
-            return app_path('models');
-
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
-        }
+       return $model_path;
     }
+
     protected function loadSeed($stub_path)
     {
         try {
