@@ -1,3 +1,0 @@
-    /*Contact */
-    Route::get('/contact', 'ContactController@create')->name('user.contact');
-    Route::post('/contact', 'ContactController@store')->name('user.contact.store');

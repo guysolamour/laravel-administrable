@@ -3,20 +3,35 @@
 namespace Guysolamour\Administrable\Console;
 
 
-use Illuminate\Console\Command;
-use Illuminate\Container\Container;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 
-class AdminInstallCommand extends Command
+
+use Illuminate\Support\Facades\Artisan;
+
+class AdminInstallCommand extends BaseCommand
 {
     protected  const TPL_PATH = __DIR__. '/../templates';
 
+    /**
+     * @var string
+     */
     protected  $name = '';
-    protected $exits = false;
 
-    protected $override = false;
+    /**
+     * @var boolean
+     */
+    protected  $exits = false;
+
+    /**
+     * @var boolean
+     */
+    protected  $override = false;
+
+
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
 
     /**
      * The name and signature of the console command.
@@ -31,6 +46,9 @@ class AdminInstallCommand extends Command
 
 
     protected $description = 'Install admin package';
+
+
+
 
 
     /**
@@ -48,6 +66,15 @@ class AdminInstallCommand extends Command
         $this->override = $this->option('force') ? true : false;
 
 
+        $this->info(PHP_EOL . 'Creating Model...');
+        $this->loadModel(self::TPL_PATH);
+        $this->info('Model created at ');
+
+
+
+
+        die;
+
 
 
         Artisan::call('multi-auth:install',[
@@ -56,7 +83,9 @@ class AdminInstallCommand extends Command
         ]);
 
 
-        $progress = $this->output->createProgressBar(21);
+        $progress = $this->output->createProgressBar(22);
+
+
 
 
         // Models
@@ -117,6 +146,7 @@ class AdminInstallCommand extends Command
         $this->info(PHP_EOL . 'Registering route middleware...');
         $kernel_path = $this->registerRouteMiddleware(self::TPL_PATH);
         $this->info('Route middleware registered in ' . $kernel_path);
+        $progress->advance();
 
         // Traits
         $this->info(PHP_EOL . 'Creating Traits...');
@@ -141,11 +171,20 @@ class AdminInstallCommand extends Command
 
 
 
-        // routes and breadcrumbs
-        $this->info(PHP_EOL . 'Creating Routes and breadcrumb...');
-        $routes_path = $this->loadRoutes(self::TPL_PATH);
-        $this->info('Routes and breadcrumb created at ' . $routes_path);
+        // routes
+        $this->info(PHP_EOL . 'Creating Routes...');
+        $routes_path = $this->loadRoutes();
+        $this->info('Routes created at ' . $routes_path);
         $progress->advance();
+
+        // routes and breadcrumbs
+        $this->info(PHP_EOL . 'Creating Breadcrumb...');
+        $breadcrumbs_path = $this->loadBreadcrumbs();
+        $this->info('Breadcrumb created at ' . $breadcrumbs_path);
+        $progress->advance();
+
+
+
 
         // Views
         $this->info(PHP_EOL . 'Creating Views...');
@@ -209,41 +248,7 @@ class AdminInstallCommand extends Command
 
     }
 
-    /**
-     * Get project namespace
-     * Default: App
-     * @return string
-     */
-    protected function getNamespace()
-    {
-        $namespace = Container::getInstance()->getNamespace();
-        return rtrim($namespace, '\\');
-    }
 
-
-    /**
-     * Parse guard name
-     * Get the guard name in different cases
-     * @param string $name
-     * @return array
-     */
-    protected function parseName($name = null)
-    {
-        if (!$name)
-            $name = $this->name;
-
-        return $parsed = array(
-            '{{namespace}}' => $this->getNamespace(),
-            '{{pluralCamel}}' => Str::plural(Str::camel($name)),
-            '{{pluralSlug}}' => Str::plural(Str::slug($name)),
-            '{{pluralSnake}}' => Str::plural(Str::snake($name)),
-            '{{pluralClass}}' => Str::plural(Str::studly($name)),
-            '{{singularCamel}}' => Str::singular(Str::camel($name)),
-            '{{singularSlug}}' => Str::singular(Str::slug($name)),
-            '{{singularSnake}}' => Str::singular(Str::snake($name)),
-            '{{singularClass}}' => Str::singular(Str::studly($name)),
-        );
-    }
 
     /**
      * Load model
@@ -390,92 +395,90 @@ class AdminInstallCommand extends Command
 
     }
 
-    protected function loadControllers($template_path)
+    protected function loadControllers()
     {
         $data_map = $this->parseName();
 
         $guard = $data_map['{{singularClass}}'];
 
-        $controllers_path = app_path('/Http/Controllers/' . $guard);
+        $controllers_path =  app_path('/Http/Controllers/');
 
-        $controllers = [
-            [
-                'stub' => $template_path . '/Controllers/controller.stub',
-                'path' => $controllers_path . '/'. $guard . 'Controller.php',
-            ],
-            [
-                'stub' => $template_path . '/Controllers/configuration.stub',
-                'path' => $controllers_path . '/ConfigurationController.php',
-            ],
-            [
-                'stub' => $template_path . '/Controllers/mailbox.stub',
-                'path' => $controllers_path . '/MailboxController.php',
-            ],
-        ];
 
-        foreach ($controllers as $controller) {
-            $stub = file_get_contents($controller['stub']);
-            $complied = strtr($stub, $data_map);
+        // Back controllers
+        $controllers_stub = $this->filesystem->files(self::TPL_PATH . '/controllers/back');
+        $this->compliedAndWriteFile(
+            $controllers_stub,
+            $controllers_path . config('administrable.back_namespace')
+        );
 
-            $dir = dirname($controller['path']);
-            if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
+        // Renommage du controller par défaut et ajouter le guard pour ne pas le fixer sur admin
+        $this->filesystem->move(
+            $controllers_path . config('administrable.back_namespace') . '/Controller.php',
+            $controllers_path . config('administrable.back_namespace') . '/' .$guard . 'Controller.php',
+        );
 
-            file_put_contents($controller['path'], $complied);
-        }
+        // Front controllers
+        $controllers_stub = $this->filesystem->files(self::TPL_PATH . '/controllers/front');
+        $this->compliedAndWriteFile(
+            $controllers_stub,
+            $controllers_path . config('administrable.front_namespace')
+        );
+
 
         // Add redirectTo method to auth controllers
-        $auth_controllers = glob($controllers_path . '/Auth/*.php');
+        $auth_controllers =  $this->filesystem->files($controllers_path . $guard . '/Auth');
         $search = 'protected $redirectTo = '. "'/{$data_map['{{singularSlug}}']}'" . ';';
-        $stub = file_get_contents($template_path . '/Controllers/redirectTo.stub');
+        $replace = $this->filesystem->get(self::TPL_PATH . '/controllers/partials/redirectTo.stub');
 
-
-        $this->replaceAndRegisterStub($search,$stub,$auth_controllers);
+        $this->replaceAndWriteFile(
+            $auth_controllers,
+            $search,
+            $replace,
+            $controllers_path . config('administrable.back_namespace') . '/Auth'
+        );
 
 
         // home controller
-        $file = $controllers_path . '/HomeController.php';
-        $search = 'protected $redirectTo = '. "'/{$data_map['{{singularSlug}}']}/login'" . ';';
-        $this->replaceAndRegisterStub($search,$stub,$file);
+        $home_controller = $this->filesystem->get($controllers_path . $guard . '/HomeController.php');
+        $search = 'protected $redirectTo = ' . "'/{$data_map['{{singularSlug}}']}/login'" . ';';
+
+        $this->replaceAndWriteFile(
+            $home_controller,
+            $search,
+            $replace,
+            $controllers_path . config('administrable.back_namespace') . '/HomeController.php',
+        );
+
 
         // PseudoEmailLoginTrait;
-        $file = $controllers_path . '/Auth/LoginController.php';
+        $login_controller_path = $controllers_path . config('administrable.back_namespace') . '/Auth/LoginController.php';
+        $login_controller = $this->filesystem->get($login_controller_path);
         $search = 'use AuthenticatesUsers;';
-        $stub = file_get_contents($template_path . '/Controllers/pseudoemaillogin.stub');
-        $this->replaceAndRegisterStub($search,$search . PHP_EOL. PHP_EOL. $stub,$file);
+        $replace = $this->filesystem->get(self::TPL_PATH . '/controllers/partials/pseudoemaillogin.stub');
+        $this->replaceAndWriteFile(
+            $login_controller,
+            $search,
+            $search . PHP_EOL . PHP_EOL . $replace,
+            $login_controller_path,
+        );
 
-        // Register
-        $file = $controllers_path . '/Auth/RegisterController.php';
-        $stub = file_get_contents($template_path . '/Controllers/register.stub');
-        $complied = strtr($stub, $data_map);
-        file_put_contents($file,$complied);
+        // RegisterController
+        $register_controller_path = $controllers_path . config('administrable.back_namespace') . '/Auth/RegisterController.php';
+        $register_controller_stub = $this->filesystem->get(self::TPL_PATH . '/controllers/back/auth/RegisterController.stub');
 
+        $this->compliedAndWriteFile(
+            $register_controller_stub,
+            $register_controller_path
+        );
 
-        $this->replaceAndRegisterStub($search,$search . PHP_EOL. PHP_EOL. $stub,$file);
-
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($register_controller_path),
+            $search,
+            $search . PHP_EOL . PHP_EOL . $register_controller_stub,
+            $register_controller_path,
+        );
 
         return $controllers_path;
-    }
-
-    /**
-     * @param $search
-     * @param $replace
-     * @param  string|array $file
-     */
-    private function replaceAndRegisterStub($search, $replace, $file)
-    {
-        if (is_array($file)){
-            foreach ($file as $value) {
-                $this->replaceAndRegisterStub($search,$replace,$value);
-            }
-            return;
-        }
-
-        $provider = file_get_contents($file);
-        $provider = str_replace($search, $replace, $provider);
-        // Overwrite file
-        file_put_contents($file, $provider);
     }
 
     protected function loadTraits($template_path)
@@ -552,52 +555,90 @@ class AdminInstallCommand extends Command
     }
     /**
      * Load routes
-     * @param $stub_path
      * @return string
      */
-    protected function loadRoutes($stub_path)
+    protected function loadRoutes()
     {
+
         $data_map = $this->parseName();
 
-        $guard = $data_map['{{singularSlug}}'];
+        $routes_path = base_path('routes/web/');
 
-        $routes_path = base_path('/routes/');
+        $files = $this->filesystem->allFiles(self::TPL_PATH . '/routes/web/');
 
-        $routes = [
-            [
-                'stub' => $stub_path . '/routes/routes.stub',
-                'path' => $routes_path  . $guard . '.php',
-            ],
-            [
-                'stub' => $stub_path . '/routes/breadcrumbs.stub',
-                'path' => $routes_path . 'breadcrumbs.php',
-            ],
-        ];
 
-        foreach ($routes as $route) {
+        foreach ($files as $file) {
+            $stub = $this->filesystem->get($file->getRealPath());
+            $path = $routes_path . $file->getRelativePath();
 
-            $stub = file_get_contents($route['stub']);
+            $this->createDirectoryIfNotExists($path);
+
             $complied = strtr($stub, $data_map);
 
-            file_put_contents($route['path'], $complied);
+            $this->filesystem->put(
+                $path . '/' . $file->getFilenameWithoutExtension() . '.php',
+                $complied
+            );
         }
 
-        // register route prefix
-        $provider_path = app_path('Providers/RouteServiceProvider.php');
-        $provider = file_get_contents($provider_path);
-        $data_map = $this->parseName();
 
-        $map_call_bait = "Route::prefix('{$data_map['{{singularSlug}}']}')";
+        // Change RouteServiceProvider
+        $route_service_provider_stub = $this->filesystem->get(self::TPL_PATH . '/routes/RouteServiceProvider.stub');
+        $complied = strtr($route_service_provider_stub, $data_map);
 
-        $prefix = "Route::prefix(config('administrable.auth_prefix_path'))";
+        $this->filesystem->put(
+            app_path('Providers/RouteServiceProvider.php'),
+            $complied
+        );
 
-        $provider = str_replace($map_call_bait, $prefix, $provider);
-
-        // Overwrite file
-        file_put_contents($provider_path, $provider);
+        // Suppression des fichiers de routing de base
+        $this->filesystem->delete([
+            base_path('routes/web.php'),
+            base_path('routes/admin.php'),
+        ]);
 
         return $routes_path;
     }
+
+
+    protected function loadBreadcrumbs()
+    {
+        $data_map = $this->parseName();
+        $guard = $data_map['{{singularSlug}}'];
+
+        // modification du fichier de configuration
+        Artisan::call('vendor:publish --tag=breadcrumbs-config');
+
+        $path = config_path('breadcrumbs.php');
+        $config_file = $this->filesystem->get($path);
+
+        $search = "base_path('routes/breadcrumbs.php'),";
+        $replace = "glob(base_path('routes/breadcrumbs/*.php')),";
+
+        $complied = str_replace($search, $replace, $config_file);
+
+        $this->filesystem->put(
+            $path,$complied
+        );
+
+
+        // ajout du breadcrumb par défaut
+        $path = '/routes/breadcrumbs/';
+
+        $stub = $this->filesystem->get(self::TPL_PATH . $path .  'default.stub');
+        $complied = strtr($stub, $data_map);
+
+        $this->createDirectoryIfNotExists(base_path($path));
+
+        $this->filesystem->put(
+            $breadcrumbs_path = base_path($path) . $guard . '.php',
+            $complied
+        );
+
+        return $breadcrumbs_path;
+    }
+
+
 
     protected function loadAdminViews($template_path)
     {
@@ -640,6 +681,10 @@ class AdminInstallCommand extends Command
             [
                 'stub' => $template_path . '/views/partials/_datatable.blade.stub',
                 'path' => $views_path . '/partials/_datatable.blade.php',
+            ],
+            [
+                'stub' => $template_path . '/views/partials/_deleteAll.blade.stub',
+                'path' => $views_path . '/partials/_deleteAll.blade.php',
             ],
             // auth filesS
             [
@@ -1129,5 +1174,8 @@ class AdminInstallCommand extends Command
         file_put_contents($view_path, $mail);
 
     }
+
+
+
 
 }

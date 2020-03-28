@@ -10,6 +10,9 @@ return [
 
     'auth_prefix_path' => 'administrable',
 
+    'front_namespace' => 'Front',
+    'back_namespace' => 'Back',
+
     'models' => [
         'folder' => 'App/Models',
         'image' => [
@@ -18,7 +21,7 @@ return [
             'polymorphic' => true,
         ],
         'category' => [
-            'name' => ['name' => 'name', 'type' => 'string', 'rules' => 'nullable', 'nullable' => true],
+            'name' => ['name' => 'name', 'type' => 'string', 'rules' => 'nullable', 'nullable' => true,],
             'title' => ['name' => 'title','default' => 'salut','rules' => 'nullable'],
             'image' => ['name' => 'image','type' => 'image'],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
@@ -47,14 +50,15 @@ return [
                         'model' => 'App\Models\Image',
                         'property' => 'name'
                     ]
-                ],
+                ]
             ],
+            'trans' => 'imagezoo',
             'slug' => 'name'
         ],
         'review' => [
             'name' => ['name' => 'name', 'type' => 'string'],
             'email' => ['name' => 'email', 'type' => 'string', 'rules' => 'required|email'],
-            'phone_number' => ['name' => 'phone_number', 'type' => 'string'],
+            'phone_number' => ['name' => 'phone_number', 'type' => 'string','trans' => 'Guysolamour'],
             'content' => ['name' => 'content', 'type' => 'text', 'rules' => 'required|min:20'],
             'user_id' => [
                 'name' => 'user_id', 'type' => [
@@ -63,7 +67,9 @@ return [
                         'model' => 'App\User',
                         'property' => 'name'
                     ]
-                ],'guest' => ['name','email','phone_number']
+                ],
+                'trans' => 'client',
+                'guest' => ['name','email','phone_number']
             ],
             // 'product_id' => [
             //     'name' => 'product_id', 'type' => [

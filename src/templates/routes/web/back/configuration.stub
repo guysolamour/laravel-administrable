@@ -1,0 +1,11 @@
+<?php
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace(config('administrable.back_namespace'))->group(function () {
+
+
+        Route::get('configuration', 'ConfigurationController@edit')->name('{{singularSlug}}.configuration.edit');
+        Route::put('configuration', 'ConfigurationController@store')->name('{{singularSlug}}.configuration.store');
+
+    });
+});

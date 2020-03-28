@@ -83,7 +83,7 @@ class MakeCrudCommand extends Command
                              {model : Model name.}
                              {--s|slug= : The field to slugify}
                              {--d|seed : Seed the table}
-                             {--b|breadcrumb= : Field used in breadcrum show}
+                             {--b|breadcrumb= : Field used in breadcrumb show}
                              {--e|entity : The model is only an entity(model and migration only)}
                              {--p|polymorphic : The model will be a polymorphic model (morphTo)}
                              {--t|timestamps : Determine if the model is not timestamped}
@@ -131,6 +131,13 @@ class MakeCrudCommand extends Command
             $this->fields = $this->getFields();
         }
 
+        // Views and registered link to left sidebar
+        $this->info(PHP_EOL . 'Views...');
+        $view_path = CreateCrudView::generate($this->model, $this->fields, $this->slug, $this->timestamps);
+        $this->info('Views created at ' . $view_path);
+        $progress->advance();
+
+        die;
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
@@ -147,7 +154,7 @@ class MakeCrudCommand extends Command
         $this->displayResult($seed_result,$seed_path);
         $progress->advance();
 
-        die;
+
 
         // Migrate
         $this->info(PHP_EOL . 'Migrate...');
@@ -267,6 +274,15 @@ class MakeCrudCommand extends Command
                 $default = $this->ask('default value can not be empty');
             }
             $this->tempFields[$field]['default'] = $default;
+        }
+
+        if ($this->confirm('This field will be translated ?')) {
+            $trans = $this->ask('Give the translated value');
+
+            while (empty($trans)) {
+                $trans = $this->ask('Translated value can not be empty');
+            }
+            $this->tempFields[$field]['trans'] = $trans;
         }
 
 

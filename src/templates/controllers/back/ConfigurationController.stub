@@ -1,14 +1,14 @@
 <?php
 
-namespace {{namespace}}\Http\Controllers\{{singularClass}};
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
-use {{namespace}}\{{singularClass}};
+
 use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Models\Configuration;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Forms\{{singularClass}}\ConfigurationForm;
-use MercurySeries\Flashy\Flashy;
+
 
 class ConfigurationController extends Controller
 {

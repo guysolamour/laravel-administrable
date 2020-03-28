@@ -1,0 +1,11 @@
+<?php
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace(config('administrable.back_namespace'))->group(function () {
+        Route::resource('mailboxes','MailboxController')->names([
+                'index'      => '{{singularSlug}}.mailbox.index',
+                'show'       => '{{singularSlug}}.mailbox.show',
+                'destroy'    => '{{singularSlug}}.mailbox.destroy',
+            ])->except('create','edit','store','update');
+    });
+});

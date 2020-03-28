@@ -1,13 +1,13 @@
 <?php
 
-namespace {{namespace}}\Http\Controllers\{{singularClass}};
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
 use {{namespace}}\{{singularClass}};
 use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Traits\FormBuilderTrait;
-use {{namespace}}\Forms\{{singularClass}}\Reset{{singularClass}}PasswordForm;
-use {{namespace}}\Forms\{{singularClass}}\Create{{singularClass}}Form;
+use {{namespace}}\Forms\{{backNamespace}}\Reset{{singularClass}}PasswordForm;
+use {{namespace}}\Forms\{{backNamespace}}\Create{{singularClass}}Form;
 use Kris\LaravelFormBuilder\Form;
 use MercurySeries\Flashy\Flashy;
 

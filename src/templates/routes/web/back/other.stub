@@ -1,0 +1,9 @@
+<?php
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace(config('administrable.back_namespace'))->group(function () {
+
+         Route::post('model/destroy/all', 'PageController@destroyAll')->name('{{singularSlug}}.model.destroy.all');
+
+    });
+});

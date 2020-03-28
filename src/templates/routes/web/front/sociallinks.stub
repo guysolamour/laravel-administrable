@@ -1,0 +1,10 @@
+<?php
+
+Route::namespace(config('administrable.front_namespace'))->group(function () {
+
+     /* Socials links */
+    Route::get('/facebook', 'RedirectController@facebook')->name('user.facebook');
+    Route::get('/twitter', 'RedirectController@twitter')->name('user.twitter');
+    Route::get('/linkedin', 'RedirectController@linkedin')->name('user.linkedin');
+
+});

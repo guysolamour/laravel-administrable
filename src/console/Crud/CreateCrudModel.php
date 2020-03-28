@@ -97,6 +97,8 @@ class CreateCrudModel
         // add model and base model
         $result = $this->loadModelAndBaseModel($data_map, $model_path, $model);
 
+
+
         return [$result,$model_path];
 
     }
@@ -294,7 +296,12 @@ class CreateCrudModel
     {
         if (!is_null($this->slug)) {
             // the namespace
-            $sluggable_trait = '    use \Cviebrock\EloquentSluggable\Sluggable;';
+            $namespace = 'use Cviebrock\EloquentSluggable\Sluggable;';
+            $search = 'namespace '. $this->getNamespace().'\Models;';
+            $model = str_replace($search, $search . "\n\n" . $namespace, $model);
+
+
+            $sluggable_trait = '    use Sluggable;';
             $slug_mw_bait = "{\n";
             // insert the namespace in the model
             $model = str_replace($slug_mw_bait, $slug_mw_bait . $sluggable_trait, $model);

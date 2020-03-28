@@ -68,6 +68,7 @@ class CreateCrudView
         $this->loadCreateView($guard, $views_path, $data_map);
         $this->loadEditView($guard, $views_path, $data_map);
         $this->loadShowView($guard, $views_path, $data_map);
+        $this->loadFormPartial($guard, $views_path, $data_map);
 
         // register sidebar link
         $this->registerLinkToLeftSidebar($data_map);
@@ -108,6 +109,22 @@ class CreateCrudView
         $view = $this->insertFieldToViewSHow($show_views, $complied);
 
         $this->writeFile($path, $view);
+
+
+    }
+    private function loadFormPartial($guard, $views_path, $data_map)
+    {
+        $stub  = $this->TPL_PATH . '/views/_form.blade.stub';
+        $path =  $views_path . '/' . $guard . '/_form.blade.php';
+
+        $stub = file_get_contents($stub);
+        $complied = strtr($stub, $data_map);
+
+
+        $this->createDirIfNotExists($path);
+
+
+        $this->writeFile($path, $complied);
 
 
     }
@@ -227,23 +244,43 @@ class CreateCrudView
 
         // }
 
+        // ajout du checkbox de suppression multiple
+        $values .= '<td>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" data-check class="custom-control-input" data-id="{{ $' . $var_name . '->id }}" id="check-{{ $' . $var_name . '->id }}">
+                        <label class="custom-control-label" for="check-{{ $' . $var_name . '->id }}"></label>
+                    </div>
+                </td>';
+
+        $values .= '<td>{{ $loop->iteration }}</td>';
+
+        // dd($this->fields);
         foreach ($this->fields as $field) {
+
+            // si le champ est de type image on le saute parcequ'on ne souhaite pas l'afficher sur la page d´index
+            if($field['type'] == 'image'){
+                continue;
+            };
+
 
             if ($this->isRelationField($field['type'])){
 
                 if (!$this->isMorphsFIeld($field)){
-                    $fields .= '                                    <th>' . ucfirst($this->getRelationModelWithoutId($field['name'])) . '</th>' . "\n";
+                    $fields .= '                                    <th>' . ucfirst(translate_model_field($this->getRelationModelWithoutId($field['name']),$field['trans'] ?? null)) . '</th>' . "\n";
                 }
             }else {
-                $fields .= '                                    <th>' . ucfirst($field['name']) . '</th>' . "\n";
+                $fields .= '                                    <th>' . ucfirst(translate_model_field($field['name'],$field['trans'] ?? null)) . '</th>' . "\n";
             }
+
+
+
 
             if ($this->checkTextFieldType($field['type'])){
                 $values .= '                                        <td>{{ Str::limit($' . $var_name . '->' . $field['name'] . ') }}</td>' . "\n";
             } else {
                 if ($this->isRelationField($field['type'])){
                     if (!$this->isMorphsFIeld($field)){
-                        $values .= '                                        <td><a href="{{ route(\'admin.'. $this->getRelationModelWithoutId($field['name']) .'.show\',$'. $var_name .'->'. $this->getRelationModelWithoutId($field['name']) .') }}">{{ $' . $var_name . '->' . $this->getRelationModelWithoutId($field['name']) . '->'. $this->getRelatedModelProperty($field) .' }}</a></td>' . "\n";
+                        $values .= '                                        <td><a href="{{ route(\'admin.'. $this->getRelationModelWithoutId($field['name']) .'.show\',$'. $var_name .'->'. $this->getRelationModelWithoutId($field['name']) .') }}" classs="badge badge-secondary p-2">{{ $' . $var_name . '->' . $this->getRelationModelWithoutId($field['name']) . '->'. $this->getRelatedModelProperty($field) .' }}</a></td>' . "\n";
                     }
 
                 }else {
@@ -255,9 +292,10 @@ class CreateCrudView
         }
 
         if (!$this->timestamps) {
-            $fields .= '                                    <th>Date ajout</th>' . "\n";
+            $fields .= '                                    <th>Date création</th>' . "\n";
             $values .= '                                        <td>{{ $' . $var_name . '->created_at->format(\'d/m/Y h:i\') }}</td>' . "\n";
         }
+
 
         return [$values, $fields];
     }

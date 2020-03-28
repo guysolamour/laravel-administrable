@@ -39,10 +39,7 @@
                 <div class="card-body">
                     <div class='row'>
                       <div class='col-md-8'>
-                        {!! form_start($form) !!}
-                        {!! form_rest($form) !!}
-                        <button type="submit" class="btn btn-success" id="submit"><i class="fa fa-plus"></i> Ajouter</button>
-                        {!! form_end($form) !!}
+                        @include('admin.{{pluralSlug}}._form')
                       </div>
                       <div class='col-md-4'>
                           {{-- add standalone image  here --}}

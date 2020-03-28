@@ -4,7 +4,7 @@ namespace {{namespace}}\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BaseModel extends Model {
+abstract class BaseModel extends Model {
 
     /**
      * Get the lasts items ordered by id DESC

@@ -68,7 +68,7 @@ class CreateCrudBreadcumb
 
     private function parseName(string $name)
     {
-        return $parsed = array(
+        return array(
             '{{namespace}}' => $this->getNamespace(),
             '{{pluralCamel}}' => Str::plural(Str::camel($name)),
             '{{pluralSlug}}' => Str::plural(Str::slug($name)),
@@ -87,6 +87,7 @@ class CreateCrudBreadcumb
 
         if (!empty($this->breadcrumb)) return $this->breadcrumb;
 
+        // guest a default breadcrumb
         foreach ($this->fields as $field) {
             if (
                 $this->getType($field['name']) === 'text' ||

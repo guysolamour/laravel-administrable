@@ -36,10 +36,7 @@
                 <div class="card-body">
                     <div class='row'>
                       <div class='col-md-8'>
-                        {!! form_start($form) !!}
-                        {!! form_rest($form) !!}
-                            <button type="submit" id="save" class="btn btn-success"><i class='fa fa-edit'></i> Modifier</button>
-                        {!! form_end($form) !!}
+                        @include('admin.{{pluralSlug}}._form',['edit' => true])
                       </div>
                       <div class='col-md-4'>
                           {{-- add standalone image  here --}}

@@ -1,11 +1,11 @@
 <?php
 
-namespace {{namespace}}\Http\Controllers\User;
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
 use {{namespace}}\Models\Mailbox;
-use {{namespace}}\Mail\User\ContactMail;
+use {{namespace}}\Mail\{{frontNamespace}}\ContactMail;
 use Illuminate\Http\Request;
-use {{namespace}}\Forms\User\ContactForm;
+use {{namespace}}\Forms\{{frontNamespace}}\ContactForm;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
