@@ -2,11 +2,12 @@
 
 namespace Guysolamour\Administrable\Console;
 
-
+use RuntimeException;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 
 
 class BaseCommand extends Command {
@@ -56,7 +57,9 @@ class BaseCommand extends Command {
             '{{singularSnake}}' => Str::singular(Str::snake($name)),
             '{{singularClass}}' => Str::singular(Str::studly($name)),
             '{{frontNamespace}}'=> ucfirst(config('administrable.front_namespace')),
+            '{{frontLowerNamespace}}'=> Str::lower(config('administrable.front_namespace')),
             '{{backNamespace}}'=> ucfirst(config('administrable.back_namespace')),
+            '{{backLowerNamespace}}'=> Str::lower(config('administrable.back_namespace')),
         );
     }
 
@@ -90,6 +93,22 @@ class BaseCommand extends Command {
             $this->isSingleFile($files) ? $path : $path . '/' . $files->getFilenameWithoutExtension() . '.php'
         );
 
+
+    }
+
+    protected function compliedAndWriteFileRecursively($files, string $path)
+    {
+        if (is_array($files)) {
+            foreach ($files as $file) {
+                $this->compliedAndWriteFileRecursively($file, $path);
+            }
+            return;
+        }
+
+        $this->compliedAndWriteFile(
+            $this->filesystem->get($files),
+            $path . '/' . $files->getRelativePath() .  '/' . $files->getFilenameWithoutExtension() . '.php'
+        );
 
     }
 
@@ -146,6 +165,15 @@ class BaseCommand extends Command {
         }
     }
 
+    protected function recurseRmdir($dir)
+    {
+        $files = array_diff(scandir($dir), array('.', '..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
+    }
+
     /**
     * @param mixte $compiled
     * @param string $path
@@ -160,4 +188,16 @@ class BaseCommand extends Command {
         );
     }
 
+	protected function runProcess(string $command)
+	{
+		$process = new Process(explode(' ', $command), null, null, null, 3600);
+
+		$process->run(function ($type, $buffer) {
+			// $this->getOutput()->write('> '.$buffer);
+		});
+
+		if (! $process->isSuccessful()) {
+			throw new RuntimeException($process->getErrorOutput());
+		}
+	}
 }

@@ -20,18 +20,18 @@ class {{singularClass}}Controller extends Controller
       $edit_form = $this->getForm(${{singularSlug}});
       $reset_form = $this->getForm(${{singularSlug}},Reset{{singularClass}}PasswordForm::class);
 
-      return view('{{singularSlug}}.{{pluralSlug}}.show', compact('{{singularSlug}}','edit_form','reset_form'));
+      return view('{{backNamespace}}.{{pluralSlug}}.show', compact('{{singularSlug}}','edit_form','reset_form'));
     }
 
     public function index() {
         ${{pluralSlug}} = $this->get{{pluralClass}}();
-        return view( '{{singularSlug}}.{{pluralSlug}}.index', compact( '{{pluralSlug}}' ) );
+        return view( '{{backNamespace}}.{{pluralSlug}}.index', compact( '{{pluralSlug}}' ) );
     }
 
     public function create( ) {
         $form = $this->getForm( new {{singularClass}}, Create{{singularClass}}Form::class );
 
-        return view( '{{singularSlug}}.{{pluralSlug}}.create', compact( 'form' ) );
+        return view( '{{backNamespace}}.{{pluralSlug}}.create', compact( 'form' ) );
     }
 
     public function store( Request $request ) {
@@ -68,7 +68,7 @@ class {{singularClass}}Controller extends Controller
 
             flashy('Votre mot de passe a été mis à jour');
 
-        return redirect()->route('admin.profile',$admin);
+        return redirect()->route('{{singularSlug}}.profile',${{singularSlug}});
       }
 
      /**
@@ -98,7 +98,7 @@ class {{singularClass}}Controller extends Controller
 
           flashy('Le compte a été modifié avec succès');
 
-          return redirect()->route('admin.profile',$admin);
+          return redirect()->route('{{singularSlug}}.profile',${{singularSlug}});
       }
 
       public function updateAvatar(Request $request  )

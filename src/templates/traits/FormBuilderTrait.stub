@@ -62,8 +62,6 @@ trait FormBuilderTrait {
             return explode('\\', $modelNamespace)[1];
         }
 
-        //dd( $model );
-
         //return  explode('Controller',explode('\\',explode('\\Controllers\\',get_called_class())[1])[1])[0];
 
     }

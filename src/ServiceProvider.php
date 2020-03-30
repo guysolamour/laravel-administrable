@@ -9,7 +9,7 @@ use Guysolamour\Administrable\Console\MakeEntityCommand;
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     const CONFIG_PATH = __DIR__ . '/../config/administrable.php';
-    const ASSETS_PATH = __DIR__ . '/templates/views/assets';
+    const ASSETS_PATH = __DIR__ . '/templates/assets';
     const LOCALE_PATH = __DIR__ . '/templates/locales';
 
     public function boot()
@@ -27,9 +27,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         ], 'administrable-locale');
 
 
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+       // $this->loadRoutesFrom(__DIR__.'/routes/web.php');
 
-        $this->loadHelpersFile();
+        $this->loadHelperFile();
     }
 
     public function register()
@@ -47,15 +47,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             ]);
         }
 
-        $this->app->bind('admin', function () {
-            return new Admin();
-        });
+        // $this->app->bind('admin', function () {
+        //     return new Admin();
+        // });
     }
 
-    private function loadHelpersFile()
+    private function loadHelperFile()
     {
-        foreach (glob(__DIR__ .'/Helpers' . '/*.php') as $file) {
-            require_once $file;
-        }
+        require __DIR__ . '/helpers.php';
     }
 }

@@ -1,0 +1,91 @@
+<?php
+
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Creativeorange\Gravatar\Facades\Gravatar;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+class {{pluralClass}}TableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Faker::create();
+        DB::table('{{pluralSlug}}')->insert([
+            'pseudo' => 'aswebagency',
+            'first_name' => 'Guy-roland',
+            'last_name' => 'Assale',
+            'email' => $email = 'contact@aswebagency.com',
+            'avatar' => Gravatar::get($email),
+            'is_super_{{singularSlug}}' => true,
+            'password' => bcrypt('12345678'),
+            'facebook' => $faker->url,
+            'twitter' => $faker->url,
+            'phone_number' => $faker->phoneNumber,
+            'website' => $faker->url,
+            'about' => $faker->realText(),
+            'created_at' => $faker->date,
+            'updated_at' => $faker->date,
+        ]);
+
+        DB::table('{{pluralSlug}}')->insert([
+            'pseudo' => 'Guysolamour',
+            'first_name' => 'Guy-roland',
+            'last_name' => 'ASSALE',
+            'email' => $email = 'rolandassale@gmail.com',
+            'avatar' => Gravatar::get($email),
+            'is_super_{{singularSlug}}' => true,
+            'password' => bcrypt('12345678'),
+            'facebook' => $faker->url,
+            'twitter' => $faker->url,
+            'phone_number' => $faker->phoneNumber,
+            'website' => $faker->url,
+            'about' => $faker->realText(),
+            'created_at' => $faker->date,
+            'updated_at' => $faker->date,
+        ]);
+
+        DB::table('{{pluralSlug}}')->insert([
+            'pseudo' => 'Roland',
+            'first_name' => 'Kouadio',
+            'last_name' => 'Roland',
+            'email' => $email = 'rolandassale@outlook.com',
+            'avatar' => Gravatar::get($email),
+            'is_super_{{singularSlug}}' => true,
+            'password' => bcrypt('12345678'),
+            'facebook' => $faker->url,
+            'twitter' => $faker->url,
+            'phone_number' => $faker->phoneNumber,
+            'website' => $faker->url,
+            'about' => $faker->realText(),
+            'created_at' => $faker->date,
+            'updated_at' => $faker->date,
+        ]);
+
+
+
+        for ($i = 1; $i < 5; $i++) {
+            DB::table('{{pluralSlug}}')->insert([
+              'pseudo' => $faker->userName,
+              'first_name' => $faker->firstName,
+              'last_name' => $faker->lastName,
+              'email' => $faker->email,
+              'avatar' => $faker->imageUrl(200,200),
+              'is_super_{{singularSlug}}' => false,
+              'password' => bcrypt('12345678'),
+              'facebook' => $faker->url,
+              'twitter' => $faker->url,
+              'phone_number' => $faker->phoneNumber,
+              'website' => $faker->url,
+              'about' => $faker->realText(),
+              'created_at' => $faker->date,
+              'updated_at' => $faker->date,
+            ]);
+        }
+    }
+}

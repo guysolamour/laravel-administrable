@@ -1,0 +1,58 @@
+<?php
+
+namespace {{namespace}}\Forms\{{backNamespace}};
+
+use Kris\LaravelFormBuilder\Form;
+
+class ConfigurationForm extends Form
+{
+    public function buildForm()
+    {
+
+        $this->formOptions = [
+		    'method' => 'PUT',
+		    'url'    => route('{{singularSlug}}.configuration.store',$this->getModel()),
+        ];
+
+	    $this
+		    ->add('email','text', [
+			    'label' => 'Email du site',
+//			    'rules' => 'nullable|email',
+		    ])
+		    ->add('postal','text', [
+			    'label' => 'Code postal',
+//			    'rules' => 'required',
+		    ])
+		    ->add('area','text', [
+			    'label' => 'Localisation',
+//			    'rules' => '',
+		    ])
+		    ->add('cell', 'text', [
+			    'label' => 'Numéro céllulaire',
+//			    'rules'  => 'required|email',
+		    ])
+		    ->add('phone', 'text', [
+			    'label' => 'Numéro de téléphone',
+		    ])
+		    ->add('youtube', 'text', [
+			    'label' => 'Lien de la page youtube',
+		    ])
+		    ->add('twitter', 'text', [
+			    'label' => 'Lien de la page twitter',
+		    ])
+		    ->add('facebook', 'text', [
+			    'label' => 'Lien de la page facebook',
+		    ])
+		    ->add('linkedin', 'text', [
+			    'label' => 'Lien de la page linkedin',
+		    ])
+		    ->add('about', 'textarea', [
+			    'label' => 'La section à propos située en pied de page',
+		    ])
+
+		   // ->add('cgu', 'text', [
+//			    'label' => 'CGU',
+//		    ])
+        ;
+    }
+}

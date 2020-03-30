@@ -1,0 +1,57 @@
+<?php
+
+namespace {{namespace}}\Mail\{{frontNamespace}};
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class ContactMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    	/**
+	 * @var
+	 */
+	public $name;
+	/**
+	 * @var
+	 */
+	public $email;
+	/**
+	 * @var
+	 */
+    public $msg;
+
+
+	public $phone_number;
+
+
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($name,$email,$phone_number,$msg)
+    {
+        $this->name = $name;
+	    $this->email = $email;
+	    $this->phone_number = $phone_number;
+	    $this->msg = $msg;
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+
+        return $this
+		    ->from($this->email )
+		    ->subject('Mail de contact '.config('app.name'))
+		    ->markdown('emails.user.contact');
+    }
+}
