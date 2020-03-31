@@ -16,15 +16,22 @@
   ],
   "require": {
     "php": ">=7.2",
+    "alexusmai/laravel-file-manager": "^2.4",
     "bmatovu/multi-auth": "^8.0",
     "creativeorange/gravatar": "^1.0",
-    "kris/laravel-form-builder": "^1.21",
-    "davejamesmiller/laravel-breadcrumbs": "^5.3",
-    "mercuryseries/flashy": "^1.0",
-    "unisharp/laravel-filemanager": "^2",
     "cviebrock/eloquent-sluggable": "^6.0",
+    "davejamesmiller/laravel-breadcrumbs": "^5.3",
+    "genealabs/laravel-model-caching": "^0.7.3",
+    "laravel/horizon": "^3.7",
+    "laravel/telescope": "^3.0",
+    "illuminate/support": "^6.0",
+    "spatie/laravel-backup": "^6.7",
+    "spatie/laravel-cookie-consent": "^2.11",
+    "kris/laravel-form-builder": "^1.21",
     "laravel/helpers": "^1.1",
-    "illuminate/support": "^6.0"
+    "mercuryseries/flashy": "^1.0",
+    "spatie/laravel-honeypot": "^1.4",
+    "unisharp/laravel-filemanager": "^2"
   },
   "require-dev": {
     "orchestra/testbench": "^4.0",

@@ -67,6 +67,7 @@ class AdminInstallCommand extends BaseCommand
             '--force' => $this->override
         ]);
 
+        // faire un composer update pour installer honeypot et faire le test
 
         // Models
         $model_path = $this->info(PHP_EOL . 'Creating Model...');

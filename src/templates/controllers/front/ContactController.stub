@@ -19,7 +19,7 @@ class ContactController extends Controller
     {
         $form = $this->getForm(Mailbox::class,ContactForm::class,false);
 
-        return view('user.contact.create', compact('form'));
+        return view('{{frontLowerNamespace}}.contact.create', compact('form'));
     }
 
     public function store(Request $request)
