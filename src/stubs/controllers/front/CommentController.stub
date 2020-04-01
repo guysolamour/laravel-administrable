@@ -7,6 +7,8 @@ use {{namespace}}\{{modelsFolder}}\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\Mail\{{frontNamespace}}\ReplyCommentMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Notification;
 use {{namespace}}\Notifications\{{backNamespace}}\CommentNotification;
@@ -22,11 +24,12 @@ class CommentController extends Controller
 
         // Validate
         $request->validate([
-            'guest_name'       => 'sometimes|required|string|max:255',
-            'guest_email'      => 'sometimes|required|string|email|max:255',
-            'commentable_type' => 'required|string',
-            'commentable_id'   => 'required|string|min:1',
-            'content'          => 'required|string'
+            'guest_name'         => 'sometimes|required|string|max:255',
+            'guest_email'        => 'sometimes|required|string|email|max:255',
+            'commentable_type'   => 'required|string',
+            'commentable_id'     => 'required|string|min:1',
+            'content'            => 'required|string',
+            'reply_notification' => 'required|in:on,off'
         ]);
 
         $model = $request->get('commentable_type')::findOrFail($request->get('commentable_id'));
@@ -40,6 +43,8 @@ class CommentController extends Controller
             $comment->commenter()->associate($request->user('{{singularSlug}}') ?? $request->user());
         }
 
+        $comment->reply_notification = $request->get('reply_notification') === 'on' ? true : false;
+
         $comment->commentable()->associate($model);
         $comment->comment = $request->get('content');
 
@@ -49,9 +54,9 @@ class CommentController extends Controller
         // send notification to {{plualSlug}}
         if (!get_{{singularSlug}}()) {
             Notification::send({{singularClass}}::getNotifiables()->get(), new CommentNotification($comment));
-            flashy('Votre commentaire a bien été ajouté.');
-        }else {
             flashy('Votre commentaire a bien été ajouté. Ce dernier sera affiché dès lors qu\'il sera aprouvé. ');
+        }else {
+            flashy('Votre commentaire a bien été ajouté.');
         }
 
         return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
@@ -76,6 +81,14 @@ class CommentController extends Controller
         $reply->comment = $request->get('content');
         $reply->approved = get_{{singularSlug}}() ? true : !config('administrable.comments.approval_required');
         $reply->save();
+
+        // check if  reply notification and send notifcation
+        if ($comment->reply_notification && $comment->getCommenterEmail() != $reply->getCommenterEmail()) {
+            Mail::to($comment->getCommenterEmail())->send(new ReplyCommentMail($comment));
+        }
+
+        flashy('Votre réponse a bien été ajoutée. Ce dernière sera affichée dès lors qu\'ells sera aprouvée. ');
+
 
         return Redirect::to(URL::previous() . '#comment-' . $reply->getKey());
     }

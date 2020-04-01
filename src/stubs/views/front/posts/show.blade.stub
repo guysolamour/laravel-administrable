@@ -11,7 +11,7 @@
         <div class="col-md-8">
              <h1 class="text-center">{{ $post->title }}</h1>
              <p>
-                 Catégorie : <a href="" class="btn btn-link">{{ $post->category->name }}</a>
+                 Catégorie : <a href="{{ route('{{frontLowerNamespace}}.post.category',$post->category) }}" class="btn btn-link">{{ $post->category->name }}</a>
              </p>
              <p>
                  {!! $post->content !!}

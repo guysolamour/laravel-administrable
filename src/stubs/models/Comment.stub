@@ -11,7 +11,7 @@ class Comment extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'comment', 'approved', 'guest_name', 'guest_email'
+        'comment', 'approved', 'guest_name', 'guest_email', 'reply_notification'
     ];
 
     /**
@@ -20,7 +20,8 @@ class Comment extends BaseModel
      * @var array
      */
     protected $casts = [
-        'approved' => 'boolean'
+        'approved' => 'boolean',
+        'reply_notification' => 'boolean',
     ];
 
     /**

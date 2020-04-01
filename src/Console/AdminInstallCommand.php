@@ -50,11 +50,11 @@ class AdminInstallCommand extends BaseCommand
             'back'  => ['Users', 'Auth', 'Configuration', 'Dashboard', 'Guard', 'Layouts', 'Media', 'Partials', 'Comments', 'Pages']
         ],
         'emails' => [
-            'front' => [],
+            'front' => ['Replycomment'],
             'back'  => ['Comment']
         ],
         'mails' => [
-            'front' => [],
+            'front' => ['ReplyComment'],
             'back'  => ['Comment']
         ],
         'notifications' => [

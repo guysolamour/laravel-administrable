@@ -67,6 +67,13 @@
                 </div>
                 @enderror
             </div>
+            <div class="form-group">
+               <div class="custom-control custom-switch">
+                    <input type="hidden"  name="reply_notification" value="off">
+                    <input type="checkbox" class="custom-control-input" id="reply_notification" name="reply_notification" checked>
+                    <label class="custom-control-label" for="reply_notification">M'avertir par mail lors d'une réponse à ce commentaire.</label>
+                </div>
+           </div>
             <button type="submit" class="btn btn-sm btn-outline-success text-uppercase">Envoyer</button>
         </form>
     </div>

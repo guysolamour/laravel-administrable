@@ -30,6 +30,7 @@ class CreateCommentsTable extends Migration
             $table->text('comment');
 
             $table->boolean('approved')->default(true);
+            $table->boolean('reply_notification')->default(true);
 
             $table->foreignId('child_id')->nullable()->constrained('comments')->onDelete('cascade');
 
