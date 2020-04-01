@@ -62,12 +62,15 @@ class AdminInstallCommand extends BaseCommand
         $this->override = $this->option('force') ? true : false;
 
 
+
         Artisan::call('multi-auth:install',[
             'name' => $this->name,
             '--force' => $this->override
         ]);
 
         // faire un composer update pour installer honeypot et faire le test
+
+
 
         // Models
         $model_path = $this->info(PHP_EOL . 'Creating Model...');
@@ -187,6 +190,21 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Adding notification');
         $notification_path = $this->loadNotifications();
         $this->info('notifications created ' . $notification_path);
+
+        // Utils packages
+        $this->info(PHP_EOL . 'Load utils package');
+        $this->loadUtilPackage();
+        $this->info('Packages loaded successfuly');
+
+        // Commands
+        $this->info(PHP_EOL . 'Load commands');
+        $kernel_path = $this->loadCommands();
+        $this->info('Commands loaded successfuly at ' . $kernel_path);
+
+        // Config
+        $this->info(PHP_EOL . 'Load config');
+        $config_path = $this->loadConfigs();
+        $this->info('Config loaded successfuly at ' . $config_path);
 
 
         // Assets
@@ -329,20 +347,20 @@ class AdminInstallCommand extends BaseCommand
         $controllers_stub = $this->filesystem->files(self::TPL_PATH . '/controllers/back');
         $this->compliedAndWriteFile(
             $controllers_stub,
-            $controllers_path . $data_map["{{backLowerNamespace}}"]
+            $controllers_path . $data_map["{{backNamespace}}"]
         );
 
         // Renommage du controller par défaut et ajouter le guard pour ne pas le fixer sur admin
         $this->filesystem->move(
-            $controllers_path . $data_map["{{backLowerNamespace}}"] . '/Controller.php',
-            $controllers_path . $data_map["{{backLowerNamespace}}"] . '/' .$guard . 'Controller.php',
+            $controllers_path . $data_map["{{backNamespace}}"] . '/Controller.php',
+            $controllers_path . $data_map["{{backNamespace}}"] . '/' .$guard . 'Controller.php',
         );
 
         // Front controllers
         $controllers_stub = $this->filesystem->files(self::TPL_PATH . '/controllers/front');
         $this->compliedAndWriteFile(
             $controllers_stub,
-            $controllers_path . $data_map["{{frontLowerNamespace}}"]
+            $controllers_path . $data_map["{{frontNamespace}}"]
         );
 
 
@@ -355,7 +373,7 @@ class AdminInstallCommand extends BaseCommand
             $auth_controllers,
             $search,
             $replace,
-            $controllers_path . $data_map["{{backLowerNamespace}}"] . '/Auth'
+            $controllers_path . $data_map["{{backNamespace}}"] . '/Auth'
         );
 
 
@@ -367,12 +385,12 @@ class AdminInstallCommand extends BaseCommand
             $home_controller,
             $search,
             $replace,
-            $controllers_path . $data_map["{{backLowerNamespace}}"] . '/HomeController.php',
+            $controllers_path . $data_map["{{backNamespace}}"] . '/HomeController.php',
         );
 
 
         // PseudoEmailLoginTrait;
-        $login_controller_path = $controllers_path . $data_map["{{backLowerNamespace}}"] . '/Auth/LoginController.php';
+        $login_controller_path = $controllers_path . $data_map["{{backNamespace}}"] . '/Auth/LoginController.php';
         $login_controller = $this->filesystem->get($login_controller_path);
         $search = 'use AuthenticatesUsers;';
         $replace = $this->filesystem->get(self::TPL_PATH . '/controllers/partials/pseudoemaillogin.stub');
@@ -384,7 +402,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
         // RegisterController
-        $register_controller_path = $controllers_path . $data_map["{{backLowerNamespace}}"] . '/Auth/RegisterController.php';
+        $register_controller_path = $controllers_path . $data_map["{{backNamespace}}"] . '/Auth/RegisterController.php';
         $register_controller_stub = $this->filesystem->get(self::TPL_PATH . '/controllers/back/auth/RegisterController.stub');
 
         $this->compliedAndWriteFile(
@@ -575,6 +593,20 @@ class AdminInstallCommand extends BaseCommand
             $views_path . $data_map["{{frontLowerNamespace}}"]
         );
 
+        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/vendor');
+        $this->compliedAndWriteFileRecursively(
+            $views_stub,
+            $views_path . '/vendor'
+        );
+
+        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/emails');
+        $this->compliedAndWriteFileRecursively(
+            $views_stub,
+            $views_path . $data_map["{{frontLowerNamespace}}"]
+        );
+
+
+
         $this->loadEmailsViews();
 
 
@@ -586,6 +618,9 @@ class AdminInstallCommand extends BaseCommand
 
         // suppression des vues générées par le package Multi Auth
         $this->filesystem->deleteDirectory(resource_path('views/') . $data_map['{{singularSlug}}']);
+
+        // Default welcome page
+        $this->filesystem->delete(resource_path('views/welcome.blade.php'));
 
         return $views_path;
     }
@@ -819,6 +854,78 @@ class AdminInstallCommand extends BaseCommand
         return $notification_path;
     }
 
+
+    protected function loadCommands(){
+        $kernel_path = app_path('Console/Kernel.php');
+        $kernel = $this->filesystem->get($kernel_path);
+        $commands_stub = $this->filesystem->get(self::TPL_PATH . '/commands/kernel.stub');
+
+        $search = 'protected function schedule(Schedule $schedule)' . PHP_EOL .   '    {';
+        $this->replaceAndWriteFile(
+            $kernel,
+            $search,
+            $search . PHP_EOL . $commands_stub,
+            $kernel_path
+        );
+
+        return $kernel_path;
+    }
+
+    protected function loadConfigs(){
+
+        $config_path = config_path();
+        $config_stub = $this->filesystem->files(self::TPL_PATH . '/config');
+
+        $this->compliedAndWriteFile(
+            $config_stub,
+            $config_path
+        );
+
+        return $config_path;
+    }
+
+
+    protected function loadUtilPackage()
+    {
+
+        // Telescope
+        Artisan::call('telescope:install');
+        Artisan::call('migrate');
+
+        $telescope_service_provider_path = app_path('Providers/TelescopeServiceProvider.php');
+        $telescope_service_provider_path_stub = $this->filesystem->get(self::TPL_PATH . '/providers/TelescopeServiceProvider.stub');
+
+        // Update TelescopeServiceProvider
+        $this->compliedAndWriteFile(
+            $telescope_service_provider_path_stub,
+            $telescope_service_provider_path,
+        );
+
+        // Backup
+        $config_filesystems_path = config_path('filesystems.php');
+        $config_filesystem = $this->filesystem->get($config_filesystems_path);
+        $replace = "        'ftp' => [
+            'driver'   => 'ftp',
+            'host'     => env('FTP_HOST'),
+            'username' => env('FTP_USERNAME'),
+            'password' => env('FTP_PASSWORD'),
+
+            // Optional FTP Settings...
+            // 'port'     => 21,
+            // 'root'     => '',
+            // 'passive'  => true,
+            // 'ssl'      => true,
+            // 'timeout'  => 30,
+        ],";
+
+        $this->replaceAndWriteFile(
+            $config_filesystem,
+            $search = "'disks' => [\n",
+            $search . PHP_EOL . $replace,
+            $config_filesystems_path
+        );
+
+    }
 
 
     public function loadEmails() :string

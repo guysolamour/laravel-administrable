@@ -3,8 +3,11 @@
 namespace {{namespace}}\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 abstract class BaseModel extends Model {
+
+   //  use Cachable;
 
     /**
      * Get the lasts items ordered by id DESC

@@ -22,7 +22,6 @@
     "cviebrock/eloquent-sluggable": "^6.0",
     "davejamesmiller/laravel-breadcrumbs": "^5.3",
     "genealabs/laravel-model-caching": "^0.7.3",
-    "laravel/horizon": "^3.7",
     "laravel/telescope": "^3.0",
     "illuminate/support": "^6.0",
     "spatie/laravel-backup": "^6.7",

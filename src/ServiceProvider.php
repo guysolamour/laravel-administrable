@@ -2,15 +2,16 @@
 
 namespace Guysolamour\Administrable;
 
-use Guysolamour\Administrable\Console\AdminInstallCommand;
 use Guysolamour\Administrable\Console\MakeCrudCommand;
 use Guysolamour\Administrable\Console\MakeEntityCommand;
+use Guysolamour\Administrable\Console\AdminInstallCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     const CONFIG_PATH = __DIR__ . '/../config/administrable.php';
     const ASSETS_PATH = __DIR__ . '/templates/assets';
     const LOCALE_PATH = __DIR__ . '/templates/locales';
+    const RESOURCES_PATH = __DIR__ . '/templates/resources';
 
     public function boot()
     {
@@ -23,8 +24,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         ], 'administrable-public');
 
         $this->publishes([
-            self::LOCALE_PATH => resource_path('lang'),
-        ], 'administrable-locale');
+            self::RESOURCES_PATH => public_path(),
+        ], 'administrable-resources');
 
 
        // $this->loadRoutesFrom(__DIR__.'/routes/web.php');

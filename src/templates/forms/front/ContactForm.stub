@@ -10,7 +10,7 @@ class ContactForm extends Form
 	{
 		$this->formOptions = [
 			'method'      => 'POST',
-			'url'         => route('user.contact.store'),
+			'url'         => route('{{frontLowerNamespace}}.contact.store'),
 		];
 
 

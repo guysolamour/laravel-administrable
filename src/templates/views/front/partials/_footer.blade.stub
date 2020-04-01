@@ -1,0 +1,10 @@
+<footer class="footer" id="footer">
+    <div class="container">
+        <p class="text-center mt-5">
+            Copyright &copy; {{ date('Y') }} | Tous droits reservés <br/>
+            Il est strictement interdit de copier ou cloner le contenu du site sans l'accord express du propriétaire.
+                <br>
+            N'oubliez pas de nous suivre !
+        </p>
+    </div>
+</footer>
