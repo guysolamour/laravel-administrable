@@ -2,30 +2,19 @@
 
 namespace {{namespace}}\Mail\{{frontNamespace}};
 
+use {{namespace}}\{{singularClass}};
+use {{namespace}}\Models\Mailbox;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ContactMail extends Mailable
+class ContactUsMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    	/**
-	 * @var
-	 */
-	public $name;
-	/**
-	 * @var
-	 */
-	public $email;
-	/**
-	 * @var
-	 */
-    public $msg;
-
-
-	public $phone_number;
+    public $mailbox;
+	  public ${{singularSlug}};
 
 
     /**
@@ -33,13 +22,12 @@ class ContactMail extends Mailable
      *
      * @return void
      */
-    public function __construct($name,$email,$phone_number,$msg)
+    public function __construct({{singularClass}} ${{singularSlug}}, Mailbox $mailbox)
     {
-        $this->name = $name;
-	    $this->email = $email;
-	    $this->phone_number = $phone_number;
-	    $this->msg = $msg;
+        $this->{{singularSlug}} = ${{singularSlug}};
+        $this->mailbox = $mailbox;
     }
+
 
     /**
      * Build the message.
@@ -50,8 +38,8 @@ class ContactMail extends Mailable
     {
 
         return $this
-		    ->from($this->email )
-		    ->subject('Mail de contact '.config('app.name'))
-		    ->markdown('emails.user.contact');
+		      ->from($this->mailbox->email )
+		      ->subject('Mail de contact '.config('app.name'))
+		      ->markdown('emails.{{backLowerNamespace}}.contact');
     }
 }

@@ -1,4 +1,4 @@
-@extends('admin.layouts.base')
+@extends('{{backLowerNamespace}}.layouts.base')
 
 @section('title','Configuration')
 

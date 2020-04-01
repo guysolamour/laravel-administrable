@@ -1,4 +1,4 @@
-@extends('{{singularSlug}}.layouts.app')
+@extends('{{backLowerNamespace}}.layouts.app')
 
 @section('title','Inscription')
 
@@ -16,7 +16,7 @@
             <div class="card-body register-card-body">
                 <p class="login-box-msg">Inscription</p>
 
-                <form action="{{ route('admin.register') }}" method="post" aria-label="{{ __('Register') }}">
+                <form action="{{ route('{{singularSlug}}.register') }}" method="post" aria-label="{{ __('Register') }}">
                     @csrf
                     <div class="input-group mb-3">
                         <input name="pseudo" type="text" class="form-control {{ $errors->has('pseudo') ? ' is-invalid' : '' }}" placeholder="Pseudo" value="{{ old('pseudo') }}">
@@ -108,7 +108,7 @@
                     </div>
                 </form>
 
-                <a href="{{ route('admin.login') }}" class="text-center">Déjà inscrit ? Démarrer une session</a>
+                <a href="{{ route('{{singularSlug}}.login') }}" class="text-center">Déjà inscrit ? Démarrer une session</a>
             </div>
             <!-- /.form-box -->
         </div><!-- /.card -->

@@ -20,18 +20,18 @@ class {{singularClass}}Controller extends Controller
       $edit_form = $this->getForm(${{singularSlug}});
       $reset_form = $this->getForm(${{singularSlug}},Reset{{singularClass}}PasswordForm::class);
 
-      return view('{{backNamespace}}.{{pluralSlug}}.show', compact('{{singularSlug}}','edit_form','reset_form'));
+      return view('{{backLowerNamespace}}.{{pluralSlug}}.show', compact('{{singularSlug}}','edit_form','reset_form'));
     }
 
     public function index() {
         ${{pluralSlug}} = $this->get{{pluralClass}}();
-        return view( '{{backNamespace}}.{{pluralSlug}}.index', compact( '{{pluralSlug}}' ) );
+        return view( '{{backLowerNamespace}}.{{pluralSlug}}.index', compact( '{{pluralSlug}}' ) );
     }
 
     public function create( ) {
         $form = $this->getForm( new {{singularClass}}, Create{{singularClass}}Form::class );
 
-        return view( '{{backNamespace}}.{{pluralSlug}}.create', compact( 'form' ) );
+        return view( '{{backLowerNamespace}}.{{pluralSlug}}.create', compact( 'form' ) );
     }
 
     public function store( Request $request ) {

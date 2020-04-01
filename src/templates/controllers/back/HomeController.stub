@@ -1,0 +1,37 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
+
+use {{namespace}}\Http\Controllers\Controller;
+
+class HomeController extends Controller
+{
+
+
+    public function redirectTo()
+    {
+        return config('administrable.auth_prefix_path');
+    }
+
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('{{singularSlug}}.auth:{{singularSlug}}');
+    }
+
+    /**
+     * Show the Admin dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index() {
+
+        return view('{{backLowerNamespace}}.home');
+    }
+
+}

@@ -2,13 +2,14 @@
 
 namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
+use {{namespace}}\Admin;
 use {{namespace}}\Models\Mailbox;
-use {{namespace}}\Mail\{{frontNamespace}}\ContactMail;
 use Illuminate\Http\Request;
 use {{namespace}}\Forms\{{frontNamespace}}\ContactForm;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
+use {{namespace}}\Notifications\{{backNamespace}}\ContactUsNotification;
 
 class ContactController extends Controller
 {
@@ -29,25 +30,13 @@ class ContactController extends Controller
 
 
         // save the message in database and send the mail
-        $Mailbox = Mailbox::create( $request->all() );
+        $mailbox = Mailbox::create( $request->all() );
 
-        // send email to the web site admin
-        Mail::to( config( 'mail.from.address' ) )
-            ->send( new ContactMail(
-                $request->get( 'name' ),
-                $request->get( 'email' ),
-                $request->get( 'phone_number' ),
-                $request->get( 'content' ),
-        ));
+        // Notify admins
+        Notification::send(Admin::all(), new ContactUsNotification($mailbox));
 
+        flashy( 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !' );
+        return back();
 
-        if ( ! $request->ajax() ) {
-            return redirect()->back()->withSuccess( 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !' );
-        }
-
-        if($Mailbox)
-            return 'OK';
-        else
-            return 'Not OK';
     }
 }

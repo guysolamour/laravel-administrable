@@ -8,7 +8,7 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/vendor/fontawesome.css') }}">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bbootstrap 4 -->
@@ -35,15 +35,15 @@
 <body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
 
-    @include('admin.partials._header')
+    @include('{{backLowerNamespace}}.partials._header')
 
 
-    @include('admin.partials._aside')
+    @include('{{backLowerNamespace}}.partials._aside')
 
 
     @yield('content')
 
-    @include('admin.partials._footer')
+    @include('{{backLowerNamespace}}.partials._footer')
 </div>
 <!-- ./wrapper -->
 
@@ -73,6 +73,8 @@
 <script src="{{ asset('vendor/adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 <!-- Summernote -->
 <script src="{{ asset('vendor/adminlte/plugins/summernote/summernote-bs4.min.js') }}"></script>
+
+<script src="{{ asset('js/vendor/fontawesome.js') }}"></script>
 <!-- overlayScrollbars -->
 <script src="{{ asset('vendor/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <!-- AdminLTE App -->

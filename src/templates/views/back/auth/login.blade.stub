@@ -1,5 +1,7 @@
-@extends('{{singularSlug}}.layouts.app')
+@extends('{{backLowerNamespace}}.layouts.app')
+
 @section('title','Connexion')
+
 @section('content')
     <div class="login-box">
         <div class="login-logo">
@@ -14,7 +16,7 @@
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Connecter vous afin de démarrer votre session</p>
 
-                <form action="{{ route('admin.login') }}" method="post">
+                <form action="{{ route('{{singularSlug}}.login') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="text" name="login" class="form-control {{ $errors->has('login') || $errors->has('email') || $errors->has('pseudo') ? 'is-invalid' : '' }}" placeholder="Pseuo ou Email" value="{{ old('login') }}">
@@ -61,10 +63,10 @@
                 </form>
 
                 <p class="mb-2">
-                    <a href="{{ route('admin.password.request') }}">Mot de passe oublié</a>
+                    <a href="{{ route('{{singularSlug}}.password.request') }}">Mot de passe oublié</a>
                 </p>
                 {{-- <p class="mb-2">
-                    <a href="{{ route('admin.register')  }}" class="text-center">Pas de compte ? S'inscrire</a>
+                    <a href="{{ route('{{singularSlug}}.register')  }}" class="text-center">Pas de compte ? S'inscrire</a>
                 </p> --}}
             </div>
             <!-- /.login-card-body -->

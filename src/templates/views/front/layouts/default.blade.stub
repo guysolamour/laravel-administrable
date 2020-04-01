@@ -31,9 +31,9 @@
 <body>
 
 <main id="app">
-    @include('front.partials._header')
+    @include('{{frontLowerNamespace}}.partials._header')
     @yield('content')
-    @include('front.partials._footer')
+    @include('{{frontLowerNamespace}}.partials._footer')
 </main>
 
 

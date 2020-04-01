@@ -1,4 +1,4 @@
-@extends('front.layouts.default')
+@extends('{{frontLowerNamespace}}.layouts.default')
 
 @section('title','Contact')
 

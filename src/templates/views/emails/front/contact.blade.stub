@@ -1,8 +1,0 @@
-@component('mail::message')
-Bonjour, un message de contact vient d'être envoyé
-sur la plateforme par {{ $mailbox->name }} chez {{ $mailbox->email }}
-
-
-Merci, de bien vouloir traiter ce message<br>
-{{ config('app.name') }}
-@endcomponent

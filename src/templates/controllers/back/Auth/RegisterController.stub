@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Auth;
+namespace {{namespace}}\Http\Controllers\{{backNamespace}}\Auth;
 
 use {{namespace}}\Admin;
 use {{namespace}}\Http\Controllers\Controller;
@@ -42,7 +42,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('admin.guest:admin');
+        $this->middleware('{{singularSlug}}.guest:{{singularSlug}}');
     }
 
     /**
@@ -66,11 +66,11 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param array $data
-     * @return \App\Admin
+     * @return \{{namespace}}\{{singularClass}}
      */
     protected function create(array $data)
     {
-        return Admin::create([
+        return {{singularClass}}::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'pseudo' => $data['pseudo'],
@@ -86,7 +86,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('admin.auth.register');
+        return view('{{singularSlug}}.auth.register');
     }
 
     /**
@@ -96,7 +96,7 @@ class RegisterController extends Controller
      */
     protected function guard()
     {
-        return Auth::guard('admin');
+        return Auth::guard('{{singularSlug}}');
     }
 
 }

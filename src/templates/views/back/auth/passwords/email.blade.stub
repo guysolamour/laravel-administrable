@@ -1,4 +1,5 @@
-@extends('{{singularSlug}}.layouts.app')
+@extends('{{backLowerNamespace}}.layouts.app')
+
 @section('title','Réinitialisation de mot de passe')
 
 @section('content')
@@ -20,7 +21,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.password.email') }}" method="post">
+                <form action="{{ route('{{singularSlug}}.password.email') }}" method="post">
                     @csrf
                     {{--<input type="hidden" name="token" value="{{ $token }}">--}}
                     <div class="input-group mb-3">

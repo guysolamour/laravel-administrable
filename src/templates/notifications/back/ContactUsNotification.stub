@@ -1,0 +1,49 @@
+<?php
+
+namespace {{namespace}}\Notifications\Back;
+
+use {{namespace}}\Models\Mailbox;
+use Illuminate\Bus\Queueable;
+use {{namespace}}\Mail\{{frontNamespace}}\ContactUsMail;
+use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class ContactUsNotification extends Notification
+{
+    use Queueable;
+
+    public $mailbox;
+
+    /**
+     * Create a new notification instance.
+     *
+     * @return void
+     */
+    public function __construct(Mailbox $mailbox)
+    {
+        $this->mailbox = $mailbox;
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
+
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toMail($notifiable)
+    {
+        return (new ContactUsMail($notifiable, $this->mailbox))->to($notifiable->email);
+    }
+}

@@ -2,11 +2,11 @@
 
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
-use {{namespace}}\{{singularClass}};
 use Illuminate\Http\Request;
-use {{namespace}}\Http\Controllers\Controller;
-use {{namespace}}\Models\Mailbox;
 use MercurySeries\Flashy\Flashy;
+use {{namespace}}\Models\Mailbox;
+use {{namespace}}\{{singularClass}};
+use {{namespace}}\Http\Controllers\Controller;
 
 class MailboxController extends Controller
 {
@@ -22,7 +22,7 @@ class MailboxController extends Controller
 
           $unread = Mailbox::unRead()->count();
 
-          return view('admin.mailbox.index', compact('mailboxes','unread'));
+          return view('{{backLowerNamespace}}.mailbox.index', compact('mailboxes','unread'));
       }
 
 
@@ -39,7 +39,7 @@ class MailboxController extends Controller
           if(!$mailbox->read){
               $mailbox->update(['read' => true]);
           }
-         return view('admin.mailbox.show', compact('mailbox'));
+         return view('{{backLowerNamespace}}.mailbox.show', compact('mailbox'));
       }
 
 
@@ -55,6 +55,6 @@ class MailboxController extends Controller
       {
           $mailbox->delete();
           // flashy('L\' élément a bien été supprimé');
-          return redirect()->route('admin.mailbox.index');
+          return redirect()->route('{{singularSlug}}.mailbox.index');
       }
 }
