@@ -8,7 +8,6 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="{{ url('/') }}" class="nav-link  text-primary" target="_blank">Voir le site</a>
       </li>
-
     </ul>
 
     <!-- SEARCH FORM -->
@@ -55,7 +54,7 @@
                 </a>
                 <div class="dropdown-divider"></div>
             @endforeach
-          <a href="{{ route('{{singularSlug}}.mailbox.index') }}" class="dropdown-item dropdown-footer">Voir tous les Messages</a>
+          <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}" class="dropdown-item dropdown-footer">Voir tous les Messages</a>
         </div>
       </li>
       <!-- Notifications Dropdown Menu -->
@@ -77,30 +76,10 @@
                 </p>
                 <!-- Menu Footer-->
                 <p class="d-flex justify-content-between">
-                    <a href="{{ route('admin.profile', get_admin()) }}" class="btn btn-default btn-flat">Profil</a>
+                    <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_admin()) }}" class="btn btn-default btn-flat">Profil</a>
                     <a data-method="post" href="{{ route('{{singularSlug}}.logout') }}" class="btn btn-default btn-flat">Déconnexion</a>
                 </p>
             </div>
-
-
-          {{--<span class="dropdown-item dropdown-header">15 Notifications</span>--}}
-          {{--<div class="dropdown-divider"></div>--}}
-          {{--<a href="#" class="dropdown-item">--}}
-            {{--<i class="fas fa-envelope mr-2"></i> 4 new messages--}}
-            {{--<span class="float-right text-muted text-sm">3 mins</span>--}}
-          {{--</a>--}}
-          {{--<div class="dropdown-divider"></div>--}}
-          {{--<a href="#" class="dropdown-item">--}}
-            {{--<i class="fas fa-users mr-2"></i> 8 friend requests--}}
-            {{--<span class="float-right text-muted text-sm">12 hours</span>--}}
-          {{--</a>--}}
-          {{--<div class="dropdown-divider"></div>--}}
-          {{--<a href="#" class="dropdown-item">--}}
-            {{--<i class="fas fa-file mr-2"></i> 3 new reports--}}
-            {{--<span class="float-right text-muted text-sm">2 days</span>--}}
-          {{--</a>--}}
-          {{--<div class="dropdown-divider"></div>--}}
-          {{--<a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>--}}
         </div>
       </li>
     </ul>

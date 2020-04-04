@@ -1,0 +1,56 @@
+@extends('{{frontLowerNamespace}}.layouts.default')
+
+@section('title',$post->title)
+
+@section('meta-description','Contact')
+
+@section('content')
+<div class='container mt-5 pt-5'>
+    <div class="row">
+        <div class="col-md-8">
+             <h1 class="text-center">{{ $post->title }}</h1>
+             <p>
+                 Catégorie : <a href="" class="btn btn-link">{{ $post->category->name }}</a>
+             </p>
+             <p>
+                 {!! $post->content !!}
+             </p>
+             <div class="row mt-5">
+                 @if(!is_null($post->previous))
+                 <div class="col-md-6 d-flex justify-content-start">
+                     <div>
+                         <h6>Précédent</h6>
+                         <p class="text-uppercase"><a
+                                 href="{{ route('{{frontLowerNamespace}}.post.show',$post->previous) }}">{{ $post->previous->title }}</a></p>
+                     </div>
+                 </div>
+                 @endif
+                 @if(!is_null($post->next))
+                 <div class="col-md-6 d-flex justify-content-end">
+                     <div>
+                         <h6>Suivant</h6>
+                         <p class="text-uppercase"><a
+                                 href="{{ route('{{frontLowerNamespace}}.post.show',$post->next) }}">{{ $post->next->title }}</a>
+                         </p>
+                     </div>
+                 </div>
+                 @endif
+             </div>
+        </div>
+        <div class="col-md-4">
+
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">
+                    Liste des categories
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach ($categories as $category)
+                    <li class="list-group-item">{{ $category->name }} ({{ $category->posts_count }})</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+@endsection

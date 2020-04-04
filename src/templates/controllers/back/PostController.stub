@@ -1,0 +1,108 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
+
+use {{namespace}}\Models\Post;
+use Illuminate\Http\Request;
+use {{namespace}}\Traits\FormBuilderTrait;
+use {{namespace}}\Http\Controllers\Controller;
+
+class PostController extends Controller
+{
+    use FormBuilderTrait;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $posts = Post::with('category')->last()->get();
+        return view('{{backLowerNamespace}}.posts.index', compact('posts'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $form = $this->getForm();
+        return view('{{backLowerNamespace}}.posts.create', compact('form'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $form = $this->getForm();
+
+        $form->redirectIfNotValid();
+
+        Post::create($request->all());
+
+        flashy('L\' élément a bien été ajouté');
+        return redirect()->route('{{backLowerNamespace}}.post.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Post $post)
+    {
+        return view('{{backLowerNamespace}}.posts.show', compact('post'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Post $post)
+    {
+        $form = $this->getForm($post);
+        return view('{{backLowerNamespace}}.posts.edit', compact('post', 'form'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Post $post)
+    {
+        $form = $this->getForm($post);
+        $form->redirectIfNotValid();
+        $post->update($request->all());
+
+        flashy('L\' élément a bien été modifié');
+        return redirect()->route('{{backLowerNamespace}}.post.index');
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        flashy('L\' élément a bien été supprimé');
+        return back();
+    }
+
+}

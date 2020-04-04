@@ -12,7 +12,7 @@ class {{singularClass}}Form extends Form
 
         $this->formOptions = [
 		    'method' => 'PUT',
-		    'url'    => route('{{singularSlug}}.update',$this->getModel()),
+		    'url'    => route('{{backLowerNamespace}}.{{singularSlug}}.update',$this->getModel()),
         ];
 
 	    $this

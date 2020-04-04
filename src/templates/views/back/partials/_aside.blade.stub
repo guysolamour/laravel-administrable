@@ -15,7 +15,7 @@
           <img id="aside-avatar" src="{{ asset(get_admin()->avatar) }}" class="img-circle elevation-2" alt="{{ get_admin()->full_name }} Image">
         </div>
         <div class="info">
-          <a href="{{ route('{{singularSlug}}.profile', get_admin()) }}" class="d-block">{{ get_admin()->pseudo }}</a>
+          <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_admin()) }}" class="d-block">{{ get_admin()->pseudo }}</a>
         </div>
       </div>
 
@@ -26,13 +26,44 @@
                with font-awesome or any other icon font library -->
 
         <li class="nav-item">
-        <a href="#" class="lfm nav-link">
+          <a href="#" class="lfm nav-link">
             <i class="nav-icon far fa-image"></i>
             <p>Gestionnaire de fichiers </p>
-        </a>
+          </a>
+        </li>
+
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-swatchbook"></i>
+                <p>
+                    Articles
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.post.create') }}" class="nav-link">
+                        <i class="far fa-plus nav-icon"></i>
+                        <p>Ecrire</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.post.index') }}" class="nav-link">
+                        <i class="far fa-th-list nav-icon"></i>
+                        <p>Liste</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.category.index') }}" class="nav-link">
+                        <i class="far fa-folder-open nav-icon"></i>
+                        <p>Catégories</p>
+                    </a>
+                </li>
+
+            </ul>
         </li>
           <li class="nav-item">
-             <a href="{{ route('{{singularSlug}}.mailbox.index') }}" class="nav-link">
+             <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}" class="nav-link">
                <i class="nav-icon far fa-envelope"></i>
                  Messagerie
                <p>
@@ -56,20 +87,20 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('{{singularSlug}}.index') }}" class="nav-link">
+                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Liste</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('{{singularSlug}}.profile', get_admin()) }}" class="nav-link">
+                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_admin()) }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Mon profil</p>
                 </a>
               </li>
                 @if (current_admin_is_super_admin())
                     <li class="nav-item">
-                        <a href="{{ route('{{singularSlug}}.create') }}" class="nav-link">
+                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Ajouter</p>
                         </a>
@@ -78,7 +109,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="{{ route('{{singularSlug}}.configuration.edit') }}" class="nav-link">
+            <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}" class="nav-link">
               <i class="nav-icon fas fa-tools"></i>
               <p>
                 Configuration

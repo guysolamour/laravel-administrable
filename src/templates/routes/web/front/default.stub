@@ -1,6 +1,6 @@
 <?php
 
-Route::namespace(config('administrable.front_namespace'))->group(function () {
+Route::namespace('{{frontNamespace}}')->group(function () {
 
     Route::get('/','PageController@home')->name('home');
 

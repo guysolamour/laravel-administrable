@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Support\Str;
+
+// Posts
+Breadcrumbs::for('{{backLowerNamespace}}.post.index', function ($trail) {
+    $trail->parent('{{singularSlug}}.dashboard');
+    $trail->push('Articles', route('{{backLowerNamespace}}.post.index'));
+});
+
+Breadcrumbs::for('{{backLowerNamespace}}.post.create', function ($trail) {
+    $trail->parent('{{backLowerNamespace}}.post.index');
+    $trail->push('Ajout', route('{{backLowerNamespace}}.post.create'));
+});
+
+Breadcrumbs::for('{{backLowerNamespace}}.post.show', function ($trail, $post) {
+    $trail->parent('{{backLowerNamespace}}.post.index');
+    $trail->push(ucfirst(Str::limit($post->title, 20)), route('{{backLowerNamespace}}.post.show', $post));
+});
+
+Breadcrumbs::for('{{backLowerNamespace}}.post.edit', function ($trail, $post) {
+    $trail->parent('{{backLowerNamespace}}.post.show', $post);
+    $trail->push('Edition', route('{{backLowerNamespace}}.post.edit', $post));
+});

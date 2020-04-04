@@ -228,7 +228,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '{{ route('{{singularSlug}}.update-avatar') }}',
+                url: '{{ route('{{backLowerNamespace}}.{{singularSlug}}.update-avatar') }}',
                 type: 'post',
                 data:data,
                 cache: false,

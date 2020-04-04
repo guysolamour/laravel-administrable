@@ -1,0 +1,29 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
+
+use Illuminate\Http\Request;
+use {{namespace}}\Models\Post;
+use {{namespace}}\Models\Category;
+use {{namespace}}\Http\Controllers\Controller;
+
+class PostController extends Controller
+{
+    public function index()
+    {
+      $posts = Post::online()->with('category')->last()->paginate(9);
+
+      $categories = Category::withCount('posts')->last()->get();
+
+      return view('{{frontLowerNamespace}}.posts.index', compact('posts','categories'));
+    }
+
+    public function show(Post $post)
+    {
+      $categories = Category::withCount('posts')->last()->get();
+
+      return view('{{frontLowerNamespace}}.posts.show', compact('post','categories'));
+    }
+
+
+}

@@ -16,7 +16,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Tableau de bord</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.index') }}">Administrateurs</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">Administrateurs</a></li>
                             <li class="breadcrumb-item active">Ajout</li>
                         </ol>
                     </div>

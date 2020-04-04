@@ -54,11 +54,11 @@
                   <div class="text-right">
 
                    @if (current_admin_is_super_admin())
-                      <a href="{{ route('{{singularSlug}}.delete',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger btn-sm">
+                      <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.delete',${{singularSlug}}) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger btn-sm">
                         <i class="fas fa-trash"></i> Supprimer
                       </a>
                     @endif
-                    <a href="{{ route('{{singularSlug}}.profile', ${{singularSlug}}) }}" class="btn btn-sm btn-primary">
+                    <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}" class="btn btn-sm btn-primary">
                       <i class="fas fa-user"></i> View Profile
                     </a>
                   </div>

@@ -2,10 +2,7 @@
 
 use Illuminate\Support\Str;
 
-  /*
-    add breadcrumbs here (please don't remove  this  comments  lines, it's used
-     to add other breadcrumbs dynamically)
-  */
+
 
   // {{pluralClass}}
   Breadcrumbs::for('{{singularSlug}}.dashboard', function ($trail) {
@@ -25,5 +22,5 @@ use Illuminate\Support\Str;
 
   Breadcrumbs::for('{{singularSlug}}.profile', function ($trail, ${{singularSlug}}) {
       $trail->parent('{{singularSlug}}.index');
-      $trail->push(${{singularSlug}}->name, route('{{singularSlug}}.profile', ${{singularSlug}}));
+      $trail->push(ucfirst(Str::limit(${{singularSlug}}->name,20)), route('{{singularSlug}}.profile', ${{singularSlug}}));
   });

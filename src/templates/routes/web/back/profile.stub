@@ -1,17 +1,17 @@
 <?php
 
 Route::middleware(['{{singularSlug}}.auth'])->group(function () {
-    Route::namespace(config('administrable.back_namespace'))->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
 
         // Profile
-        Route::get( 'profile/{{{singularSlug}}}', '{{singularClass}}Controller@profile')->name('{{singularSlug}}.profile');
-        Route::put('profile/{{{singularSlug}}}','{{singularClass}}Controller@update')->name('{{singularSlug}}.update');
-        Route::get('{{pluralSlug}}','{{singularClass}}Controller@index')->name('{{singularSlug}}.index');
-        Route::post('/update-{{singularSlug}}-avatar', '{{singularClass}}Controller@updateAvatar')->name('{{singularSlug}}.update-avatar');
-        Route::get('{{pluralSlug}}/create','{{singularClass}}Controller@create')->name('{{singularSlug}}.create')->middleware('{{singularSlug}}.super');
-        Route::post('{{pluralSlug}}/store','{{singularClass}}Controller@store')->name('{{singularSlug}}.store')->middleware('{{singularSlug}}.super');
-        Route::delete('{{singularSlug}}/{{{singularSlug}}}','{{singularClass}}Controller@delete')->name('{{singularSlug}}.delete')->middleware('{{singularSlug}}.super');
-        Route::put('change-password/{{{singularSlug}}}','{{singularClass}}Controller@changePassword')->name('{{singularSlug}}.change.password');
+        Route::get( 'profile/{{{singularSlug}}}', '{{singularClass}}Controller@profile')->name('{{backLowerNamespace}}.{{singularSlug}}.profile');
+        Route::put('profile/{{{singularSlug}}}','{{singularClass}}Controller@update')->name('{{backLowerNamespace}}.{{singularSlug}}.update');
+        Route::get('{{pluralSlug}}','{{singularClass}}Controller@index')->name('{{backLowerNamespace}}.{{singularSlug}}.index');
+        Route::post('/update-{{singularSlug}}-avatar', '{{singularClass}}Controller@updateAvatar')->name('{{backLowerNamespace}}.{{singularSlug}}.update-avatar');
+        Route::get('{{pluralSlug}}/create','{{singularClass}}Controller@create')->name('{{backLowerNamespace}}.{{singularSlug}}.create')->middleware('{{singularSlug}}.super');
+        Route::post('{{pluralSlug}}/store','{{singularClass}}Controller@store')->name('{{backLowerNamespace}}.{{singularSlug}}.store')->middleware('{{singularSlug}}.super');
+        Route::delete('{{singularSlug}}/{{{singularSlug}}}','{{singularClass}}Controller@delete')->name('{{backLowerNamespace}}.{{singularSlug}}.delete')->middleware('{{singularSlug}}.super');
+        Route::put('change-password/{{{singularSlug}}}','{{singularClass}}Controller@changePassword')->name('{{backLowerNamespace}}.{{singularSlug}}.change.password');
 
     });
 });

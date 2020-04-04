@@ -1,0 +1,15 @@
+<?php
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
+        Route::resource('categories','CategoryController')->names([
+                'index'      => 'back.category.index',
+                'show'       => 'back.category.show',
+                'create'     => 'back.category.create',
+                'store'      => 'back.category.store',
+                'edit'       => 'back.category.edit',
+                'update'     => 'back.category.update',
+                'destroy'    => 'back.category.destroy',
+        ]);
+    });
+});

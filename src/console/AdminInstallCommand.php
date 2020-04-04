@@ -63,7 +63,11 @@ class AdminInstallCommand extends BaseCommand
             '--force' => $this->override
         ]);
 
-        // faire un composer update pour installer honeypot et faire le test
+
+        // Helpers
+        $helper_path = $this->info(PHP_EOL . 'Creating Helper...');
+        $this->loadHelpers();
+        $this->info('Helper created at ' . $helper_path);
 
 
         // Models
@@ -206,15 +210,37 @@ class AdminInstallCommand extends BaseCommand
         Artisan::call('vendor:publish --tag=administrable-public');
         $this->info('Assets published at ' . public_path('vendor/adminlte'));
 
+        // Composer dump-autoload
+        $this->info("Running composer dump-autoload");
+        $this->runProcess("composer dump-autoload -o");
+
 
         // Seed Database
-        $this->info(PHP_EOL . 'Seeding database...');
-        $this->seedDatabase();
-        $this->info('Database seeding completed successfully.');
+        // $this->info(PHP_EOL . 'Seeding database...');
+        // $this->seedDatabase();
+        // $this->info('Database seeding completed successfully.');
 
     }
 
 
+    protected function loadHelpers()
+    {
+        // Helper
+        Artisan::call('make:helper', [
+            'name' => 'helpers'
+        ]);
+
+        $helper_path = app_path('Helpers');
+
+        // Front
+        $helper_stub = $this->filesystem->allFiles(self::TPL_PATH . '/helpers');
+        $this->compliedAndWriteFileRecursively(
+            $helper_stub,
+            $helper_path
+        );
+
+        return $helper_path;
+    }
 
 
     protected function loadModel() :string
@@ -271,6 +297,8 @@ class AdminInstallCommand extends BaseCommand
         $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
         $seeds = $this->filesystem->files(self::TPL_PATH . '/seeds');
 
+
+        // La fonction array_reverse permet de seeder la categorie avant les
         foreach ($seeds as $seed) {
             $name = $seed->getFileNameWithoutExtension();
 
@@ -463,36 +491,34 @@ class AdminInstallCommand extends BaseCommand
         $forms_stub = $this->filesystem->files(self::TPL_PATH . '/forms/front');
         $this->compliedAndWriteFile(
             $forms_stub,
-            $form_path . $data_map["{{frontLowerNamespace}}"]
+            $form_path . $data_map["{{frontNamespace}}"]
         );
 
         // Back forms;
         $forms_stub = $this->filesystem->files(self::TPL_PATH . '/forms/back');
         $this->compliedAndWriteFile(
             $forms_stub,
-            $form_path . $data_map["{{backLowerNamespace}}"]
+            $form_path . $data_map["{{backNamespace}}"]
         );
 
         // Renommer certains form afin d'ajouter le guard
         $this->filesystem->move(
-            $form_path . $data_map["{{backLowerNamespace}}"] . '/CreateForm.php',
-            $form_path . $data_map["{{backLowerNamespace}}"] . '/Create'. $guard .'Form.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/CreateForm.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/Create'. $guard .'Form.php',
         );
         $this->filesystem->move(
-            $form_path . $data_map["{{backLowerNamespace}}"] . '/Form.php',
-            $form_path . $data_map["{{backLowerNamespace}}"] . '/'. $guard .'Form.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/Form.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/'. $guard .'Form.php',
         );
         $this->filesystem->move(
-            $form_path . $data_map["{{backLowerNamespace}}"] . '/ResetPasswordForm.php',
-            $form_path . $data_map["{{backLowerNamespace}}"] . '/Reset'. $guard . 'PasswordForm.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/ResetPasswordForm.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/Reset'. $guard . 'PasswordForm.php',
         );
 
         return $form_path;
     }
-    /**
-     * Load routes
-     * @return string
-     */
+
+
     protected function loadRoutes()
     {
 
@@ -538,7 +564,6 @@ class AdminInstallCommand extends BaseCommand
     protected function loadBreadcrumbs()
     {
         $data_map = $this->parseName();
-        $guard = $data_map['{{singularSlug}}'];
 
         // modification du fichier de configuration
         Artisan::call('vendor:publish --tag=breadcrumbs-config');
@@ -547,7 +572,7 @@ class AdminInstallCommand extends BaseCommand
         $config_file = $this->filesystem->get($path);
 
         $search = "base_path('routes/breadcrumbs.php'),";
-        $replace = "glob(base_path('routes/breadcrumbs/*.php')),";
+        $replace = "glob(base_path('routes/breadcrumbs/*/*.php')),";
 
         $this->replaceAndWriteFile(
             $config_file,
@@ -556,17 +581,29 @@ class AdminInstallCommand extends BaseCommand
             $path,
         );
 
-        // ajout du breadcrumb par défaut
-        $path = '/routes/breadcrumbs/';
+        $breadcrumb_path = base_path('routes/breadcrumbs/');
 
-        $stub = $this->filesystem->get(self::TPL_PATH . $path .  'default.stub');
-
+        // Front
+        $breadcrumb_stub = $this->filesystem->files(self::TPL_PATH . '/routes/breadcrumbs/front');
         $this->compliedAndWriteFile(
-            $stub,
-            $breadcrumbs_path = base_path($path) . $guard . '.php'
+            $breadcrumb_stub,
+            $breadcrumb_path . $data_map["{{frontLowerNamespace}}"]
         );
 
-        return $breadcrumbs_path;
+        // Front
+        $breadcrumb_stub = $this->filesystem->files(self::TPL_PATH . '/routes/breadcrumbs/back');
+        $this->compliedAndWriteFile(
+            $breadcrumb_stub,
+            $breadcrumb_path . $data_map["{{backLowerNamespace}}"]
+        );
+
+        // renommage du dossier avec le guard
+        $this->filesystem->move(
+            $breadcrumb_path . $data_map["{{backLowerNamespace}}"] . '/default.php',
+            $breadcrumb_path . $data_map["{{backLowerNamespace}}"] . '/' .  $data_map['{{singularSlug}}'] .'.php'
+        );
+
+        return $breadcrumb_path;
     }
 
     protected function loadEmailsViews(){
@@ -819,8 +856,8 @@ class AdminInstallCommand extends BaseCommand
     public function seedDatabase()
     {
         // update Composer autoload for seeding
-        $this->info(".........Running composer dump-autoload");
-        $this->runProcess("composer dump-autoload -o");
+        // $this->info("Running composer dump-autoload");
+        // $this->runProcess("composer dump-autoload -o");
 
         // Seed
         $data_map = $this->parseName();
@@ -834,7 +871,7 @@ class AdminInstallCommand extends BaseCommand
                 $name = $data_map['{{pluralClass}}'] . 'TableSeeder';
             }
 
-            $this->callSilent('db:seed', [
+            $this->call('db:seed', [
                 '--class' => $name
             ]);
         }
@@ -845,7 +882,7 @@ class AdminInstallCommand extends BaseCommand
 
 
 
-    protected function loadNotifications() :string
+    protected function loadNotifications()
     {
 
         // deplacer les notifs auth dans le dossier back

@@ -2,40 +2,42 @@
 
 namespace {{namespace}}\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
+
 class Mailbox extends BaseModel
 {
-      use \Cviebrock\EloquentSluggable\Sluggable;
+    use Sluggable;
 
-        public $fillable = ['email','phone_number','content','name','slug','read'];
-
-
-        public function scopeUnread($query)
-        {
-            return $query->where('read',false);
-        }
-
-        public function scopeRead($query)
-        {
-            return $query->where('read',true);
-        }
+    public $fillable = ['email','phone_number','content','name','slug','read'];
 
 
-       public function getRouteKeyName()
-       {
-           return 'slug';
-       }
+    public function scopeUnread($query)
+    {
+        return $query->where('read',false);
+    }
 
-       /**
-        * Return the sluggable configuration array for this model.
-        *
-        * @return array
-        */
-       public function sluggable(): array
-       {
-           return [
-               'slug' => ['source' => 'name']
-           ];
-       }
+    public function scopeRead($query)
+    {
+        return $query->where('read',true);
+    }
+
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
+    * Return the sluggable configuration array for this model.
+    *
+    * @return array
+    */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => ['source' => 'name']
+        ];
+    }
 
 
 

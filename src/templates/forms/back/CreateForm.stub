@@ -10,7 +10,7 @@ class Create{{singularClass}}Form extends Form
     {
         $this->formOptions = [
 		    'method' => 'POST',
-		    'url'    => route('{{singularSlug}}.store'),
+		    'url'    => route('{{backLowerNamespace}}.{{singularSlug}}.store'),
 	    ];
 
 	    $this

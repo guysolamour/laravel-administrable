@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Support\Str;
+
+// Categories
+Breadcrumbs::for('{{backLowerNamespace}}.category.index', function ($trail) {
+    $trail->parent('{{singularSlug}}.dashboard');
+    $trail->push('Catégories', route('{{backLowerNamespace}}.category.index'));
+});
+
+Breadcrumbs::for('{{backLowerNamespace}}.category.create', function ($trail) {
+    $trail->parent('{{backLowerNamespace}}.category.index');
+    $trail->push('Ajout', route('{{backLowerNamespace}}.category.create'));
+});
+
+Breadcrumbs::for('{{backLowerNamespace}}.category.show', function ($trail, $category) {
+    $trail->parent('{{backLowerNamespace}}.category.index');
+    $trail->push(ucfirst(Str::limit($category->name, 20)), route('{{backLowerNamespace}}.category.show', $category));
+});
+
+Breadcrumbs::for('{{backLowerNamespace}}.category.edit', function ($trail, $category) {
+    $trail->parent('{{backLowerNamespace}}.category.show', $category);
+    $trail->push('Edition', route('{{backLowerNamespace}}.category.edit', $category));
+});

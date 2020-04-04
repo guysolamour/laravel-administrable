@@ -1,6 +1,6 @@
 <?php
 
-Route::namespace(config('administrable.back_namespace'))->group(function () {
+Route::namespace('{{backNamespace}}')->group(function () {
 
     Route::get('/', 'HomeController@index')->name('{{singularSlug}}.dashboard');
 
@@ -15,7 +15,7 @@ Route::namespace(config('administrable.back_namespace'))->group(function () {
 
     // Passwords
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('{{singularSlug}}.password.email');
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('admin.password.update');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('{{singularSlug}}.password.update');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('{{singularSlug}}.password.request');
     Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('{{singularSlug}}.password.reset');
 

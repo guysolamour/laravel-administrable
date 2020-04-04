@@ -1,6 +1,6 @@
 <?php
 
-Route::namespace(config('administrable.front_namespace'))->group(function () {
+Route::namespace('{{frontNamespace}}')->group(function () {
 
      /* Socials links */
     Route::get('/facebook', 'RedirectController@facebook')->name('{{frontLowerNamespace}}.facebook');

@@ -2,12 +2,14 @@
 
 namespace {{namespace}}\Models;
 
+use {{namespace}}\Traits\DraftableTrait;
 use Illuminate\Database\Eloquent\Model;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 abstract class BaseModel extends Model {
 
    //  use Cachable;
+   use DraftableTrait;
 
     /**
      * Get the lasts items ordered by id DESC

@@ -1,7 +1,7 @@
  <?php
 use Spatie\Honeypot\ProtectAgainstSpam;
 
-Route::namespace(config('administrable.front_namespace'))->group(function () {
+Route::namespace('{{frontNamespace}}')->group(function () {
 
     /*Contact */
     Route::get('/contact', 'ContactController@create')->name('{{frontLowerNamespace}}.contact.create');

@@ -10,7 +10,7 @@
 
 <div class='container mt-5 pt-5'>
   <div class="jumbotron">
-    <h1 class="display-4">Bienvenue, {{ config('app.name') }}!</h1>
+    <h1 class="display-4 text-center">Bienvenue, {{ config('app.name') }}!</h1>
     <p class="lead">
       orem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,

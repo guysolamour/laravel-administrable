@@ -1,0 +1,48 @@
+<?php
+
+namespace {{namespace}}\Models;
+
+use Cviebrock\EloquentSluggable\Sluggable;
+
+class Category extends BaseModel
+{
+    use Sluggable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name','slug'];
+
+
+    // Attributes
+
+
+    // add relation methods below
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+
+    // add sluggable methods below
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => ['source' => 'name']
+        ];
+    }
+}
