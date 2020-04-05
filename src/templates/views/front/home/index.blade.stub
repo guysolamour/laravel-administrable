@@ -8,9 +8,10 @@
 
 @section('content')
 
-<div class='container mt-5 pt-5'>
+
+<div class='container mt-5 pt-5 text-center'>
   <div class="jumbotron">
-    <h1 class="display-4 text-center">Bienvenue, {{ config('app.name') }}!</h1>
+    <h1 class="display-4 ">Bienvenue, {{ config('app.name') }}!</h1>
     <p class="lead">
       orem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -21,7 +22,7 @@
     </p>
     <hr class="my-4">
     <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    <a class="btn btn-primary btn-lg text-center" href="#" role="button">Learn more</a>
+    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
   </div>
 
 </div>
@@ -30,9 +31,11 @@
 @stop
 
 @push('css')
+
 @endpush
 
 @push('js')
+
 @endpush
 
 

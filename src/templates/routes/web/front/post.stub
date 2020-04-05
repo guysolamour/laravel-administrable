@@ -2,9 +2,9 @@
 
 Route::namespace('{{frontNamespace}}')->group(function () {
 
-    Route::get('posts','PostController@index')->name('front.post.index');
+    Route::get('posts','PostController@index')->name('{{frontLowerNamespace}}.post.index');
 
-    Route::get('posts/{post}', 'PostController@show')->name('front.post.show');
+    Route::get('posts/{post}', 'PostController@show')->name('{{frontLowerNamespace}}.post.show');
 
 });
 

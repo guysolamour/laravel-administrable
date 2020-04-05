@@ -1,0 +1,164 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title','Témoignages')
+
+@section('content')
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    {{-- <h1>Catégories</h1> --}}
+                </div>
+                <div class="col-sm-6">
+                    <div class='float-sm-right'>
+                        {{ Breadcrumbs::render('{{backLowerNamespace}}.testimonial.index') }}
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                        title="Réduire">
+                        <i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class='row'>
+                    <div class="col-md-12">
+                        <div class="card" style='box-shadow: 0 0 1px rgba(0,0,0,0), 0 1px 3px rgba(0,0,0,0);'>
+
+                            <!-- /.card-header -->
+                            <div class="card-body p-0">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Témoignages</h3>
+                                        <div class="btn-group float-right">
+                                            <a href="{{ route('{{backLowerNamespace}}.testimonial.create') }}" class="btn  btn-primary"> <i
+                                                    class="fa fa-plus"></i> Ajouter</a>
+                                            <a href="#" class="btn btn-danger d-none" data-model="\App\Models\Testimonial"
+                                                id="delete-all"> <i class="fa fa-trash"></i> Tous supprimer</a>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped" id="list">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    id="check-all">
+                                                                <label class="custom-control-label"
+                                                                    for="check-all"></label>
+                                                            </div>
+                                                        </th>
+                                                        <th></th>
+                                                        <th>Nom</th>
+                                                        <th>Email</th>
+                                                        <th>Job</th>
+                                                        <th>Status</th>
+                                                        <th>Contenu</th>
+                                                        <th>Date ajout</th>
+
+                                                        <th>Actions</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($testimonials as $testimonial)
+                                                    <tr>
+                                                        <td>
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input type="checkbox" data-check
+                                                                    class="custom-control-input"
+                                                                    data-id="{{ $testimonial->id }}"
+                                                                    id="check-{{ $testimonial->id }}">
+                                                                <label class="custom-control-label"
+                                                                    for="check-{{ $testimonial->id }}"></label>
+                                                            </div>
+                                                        </td>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $testimonial->name }}</td>
+                                                        <td>{{ $testimonial->email }}</td>
+                                                        <td>{{ $testimonial->job }}</td>
+                                                        <td>
+                                                            @if ($testimonial->isOnline())
+                                                                <a data-toggle="tooltip" data-placement="top" title="En ligne"><i class="fas fa-circle text-success" ></i></a>
+                                                                @else
+                                                                <a data-toggle="tooltip" data-placement="top" title="Hors ligne"><i class="fas fa-circle text-secondary" ></i></a>
+                                                            @endif
+                                                        </td>
+                                                        <td>{!! Str::limit(strip_tags($testimonial->content),50) !!}</td>
+
+
+                                                        <td>{{ $testimonial->created_at->format('d/m/Y h:i') }}</td>
+                                                        <td>
+                                                            <div class="btn-group" role="group">
+                                                                <a href="{{ route('{{backLowerNamespace}}.testimonial.show', $testimonial) }}"
+                                                                    class="btn btn-primary" data-toggle="tooltip"
+                                                                    data-placement="top" title="Afficher"><i
+                                                                        class="fas fa-eye"></i></a>
+
+                                                                <a href="{{ route('{{backLowerNamespace}}.testimonial.edit', $testimonial) }}"
+                                                                    class="btn btn-info" data-toggle="tooltip"
+                                                                    data-placement="top" title="Editer"><i
+                                                                        class="fas fa-edit"></i></a>
+                                                                <a href="{{ route('{{backLowerNamespace}}.testimonial.destroy',$testimonial) }}"
+                                                                    data-method="delete"
+                                                                    data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?"
+                                                                    class="btn btn-danger" data-toggle="tooltip"
+                                                                    data-placement="top" title="Supprimer"><i
+                                                                        class="fas fa-trash"></i></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.mail-box-messages -->
+                            </div>
+
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+</div>
+
+
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@endsection
+
+
+
+
+@push('js')
+<script src="{{ asset('js/axios.js') }}"></script>
+<script src="{{ asset('js/deleteAll.js') }}"></script>
+@endpush

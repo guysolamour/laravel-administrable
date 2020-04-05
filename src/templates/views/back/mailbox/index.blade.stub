@@ -68,8 +68,8 @@
                                       <td>{{ $message->created_at->diffForHumans() }}</td>
                                       <td>
                                           <div class="btn-group" role="group">
-                                              <a href="{{ route('{{singularSlug}}.mailbox.show',$message) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
-                                              <a href="{{ route('{{singularSlug}}.mailbox.destroy',$message) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                              <a href="{{ route('{{backLowerNamespace}}.mailbox.show',$message) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                              <a href="{{ route('{{backLowerNamespace}}.mailbox.destroy',$message) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                                           </div>
                                       </td>
                                   </tr>

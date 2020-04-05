@@ -1,0 +1,54 @@
+<?php
+
+namespace {{namespace}}\Models;
+
+use Cviebrock\EloquentSluggable\Sluggable;
+
+class Testimonial extends BaseModel
+{
+    use Sluggable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'email', 'job', 'online', 'slug', 'content'];
+
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'online' => 'boolean',
+    ];
+
+    // Attributes
+
+
+
+    // add relation methods below
+
+
+
+    // add sluggable methods below
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => ['source' => 'name']
+        ];
+    }
+}

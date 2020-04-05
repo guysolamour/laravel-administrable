@@ -57,8 +57,9 @@ class AdminInstallCommand extends BaseCommand
         $this->name = $this->argument('name');
         $this->override = $this->option('force') ? true : false;
 
+        // Passer des options pour generer les articles, mentions legales, temoignages en option
 
-        Artisan::call('multi-auth:install',[
+        Artisan::call('multi-auth:install', [
             'name' => $this->name,
             '--force' => $this->override
         ]);
@@ -149,9 +150,9 @@ class AdminInstallCommand extends BaseCommand
 
 
         // lfm congfig
-        $this->info(PHP_EOL . 'Creating Lfm config...');
-        $config_path = $this->loadLfmConfig(self::TPL_PATH);
-        $this->info('Forms created at ' . $config_path);
+        // $this->info(PHP_EOL . 'Creating Lfm config...');
+        // $config_path = $this->loadLfmConfig(self::TPL_PATH);
+        // $this->info('Forms created at ' . $config_path);
 
 
         // routes

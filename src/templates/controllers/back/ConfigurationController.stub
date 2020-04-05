@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Models\Configuration;
 use {{namespace}}\Traits\FormBuilderTrait;
-use {{namespace}}\Forms\{{singularClass}}\ConfigurationForm;
+use {{namespace}}\Forms\{{backNamespace}}\ConfigurationForm;
 
 
 class ConfigurationController extends Controller
@@ -19,7 +19,7 @@ class ConfigurationController extends Controller
         $configuration = Configuration::first();
         $form = $this->getForm( $configuration, ConfigurationForm::class );
 
-        return view('{{singularSlug}}.configuration.edit', compact('form'));
+        return view('{{backLowerNamespace}}.configuration.edit', compact('form'));
     }
 
 

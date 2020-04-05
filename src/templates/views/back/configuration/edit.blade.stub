@@ -1,4 +1,4 @@
-@extends('{{backLowerNamespace}}.layouts.app')
+@extends('{{backLowerNamespace}}.layouts.base')
 
 @section('title','Configuration')
 

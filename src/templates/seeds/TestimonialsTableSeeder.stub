@@ -1,0 +1,30 @@
+<?php
+
+use {{namespace}}\Models\Testimonial;
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+
+class TestimonialsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Faker::create();
+
+        for ($i = 0; $i < 15; $i++) {
+            $category = Testimonial::create([
+                'name' => $faker->firstname,
+                'email' => $faker->safeEmail(),
+                'job'   => $faker->title,
+                'content' => $faker->realText(500),
+                'online' => $faker->randomElement([true,false]),
+            ]);
+
+
+        }
+    }
+}

@@ -16,7 +16,7 @@
   ],
   "require": {
     "php": ">=7.2",
-    "alexusmai/laravel-file-manager": "^2.4",
+    "alexusmai/laravel-file-manager": "^2.4.13",
     "bmatovu/multi-auth": "^8.0",
     "creativeorange/gravatar": "^1.0",
     "cviebrock/eloquent-sluggable": "^6.0",
@@ -30,8 +30,7 @@
     "mercuryseries/flashy": "^1.0",
     "spatie/laravel-backup": "^6.7",
     "spatie/laravel-cookie-consent": "^2.11",
-    "spatie/laravel-honeypot": "^1.4",
-    "unisharp/laravel-filemanager": "^2"
+    "spatie/laravel-honeypot": "^1.4"
   },
   "require-dev": {
     "orchestra/testbench": "^4.0",

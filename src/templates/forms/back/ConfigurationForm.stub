@@ -11,7 +11,7 @@ class ConfigurationForm extends Form
 
         $this->formOptions = [
 		    'method' => 'PUT',
-		    'url'    => route('{{singularSlug}}.configuration.store',$this->getModel()),
+		    'url'    => route('{{backLowerNamespace}}.configuration.store',$this->getModel()),
         ];
 
 	    $this

@@ -1,0 +1,15 @@
+<?php
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
+        Route::resource('testimonials','TestimonialController')->names([
+                'index'      => '{{backLowerNamespace}}.testimonial.index',
+                'show'       => '{{backLowerNamespace}}.testimonial.show',
+                'create'       => '{{backLowerNamespace}}.testimonial.create',
+                'store'       => '{{backLowerNamespace}}.testimonial.store',
+                'edit'       => '{{backLowerNamespace}}.testimonial.edit',
+                'update'       => '{{backLowerNamespace}}.testimonial.update',
+                'destroy'    => '{{backLowerNamespace}}.testimonial.destroy',
+            ]);
+    });
+});

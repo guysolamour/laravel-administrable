@@ -1,10 +1,26 @@
+<hr>
 <footer class="footer" id="footer">
     <div class="container">
-        <p class="text-center mt-5">
-            Copyright &copy; {{ date('Y') }} | Tous droits reservés <br/>
-            Il est strictement interdit de copier ou cloner le contenu du site sans l'accord express du propriétaire.
+       <div class="col-12">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.post.index') }}">Articles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.testimonial.index') }}">Témoignages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.legal-mention.index') }}">Politique de confidentialité</a>
+                </li>
+
+            </ul>
+            <p class="text-center mt-5">
+                Copyright &copy; {{ date('Y') }} | Tous droits reservés <br />
+                Il est strictement interdit de copier ou cloner le contenu du site sans l'accord express du propriétaire.
                 <br>
-            N'oubliez pas de nous suivre !
-        </p>
+                N'oubliez pas de nous suivre !
+            </p>
+       </div>
+
     </div>
 </footer>

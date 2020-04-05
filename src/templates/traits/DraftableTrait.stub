@@ -6,6 +6,7 @@ namespace {{namespace}}\Traits;
 trait DraftableTrait
 {
 
+
     /**
      * Get online elements
      *
