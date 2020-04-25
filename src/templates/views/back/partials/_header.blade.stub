@@ -77,8 +77,13 @@
                 <!-- Menu Footer-->
                 <p class="d-flex justify-content-between">
                     <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_admin()) }}" class="btn btn-default btn-flat">Profil</a>
-                    <a data-method="post" href="{{ route('{{singularSlug}}.logout') }}" class="btn btn-default btn-flat">Déconnexion</a>
+
+                     <a href="{{ route('{{singularSlug}}.logout') }}" class="btn btn-default btn-flat"
+                      onclick="event.preventDefault();document.getElementById('{{singularSlug}}-logout-form').submit();">Déconnexion</a>
                 </p>
+                 <form id="{{singularSlug}}-logout-form" action="{{ route('{{singularSlug}}.logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </div>
       </li>

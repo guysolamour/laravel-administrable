@@ -68,6 +68,9 @@ class AdminInstallCommand extends BaseCommand
         ]);
 
 
+        // Gerer l'authentification
+        Artisan::call('ui vue --auth');
+
         // Helpers
         $helper_path = $this->info(PHP_EOL . 'Creating Helper...');
         $this->loadHelpers();
@@ -260,6 +263,13 @@ class AdminInstallCommand extends BaseCommand
             app_path($guard.'.php')
         );
 
+
+        // Renommer du model user et le déplacer à la racine du dossier app
+        $this->filesystem->move(
+            $model_path . '/User.php',
+            app_path('User.php')
+        );
+
        return $model_path;
     }
 
@@ -338,6 +348,12 @@ class AdminInstallCommand extends BaseCommand
         $migrations = $this->filesystem->files(self::TPL_PATH . '/migrations');
         $migrations_path =  database_path('migrations');
 
+        // suppression de la migration user par défaut
+        $this->filesystem->delete([
+            $this->filesystem->glob($migrations_path . '/*_create_users_table.php')[0]
+        ]);
+
+
         $this->compliedAndWriteFile(
             $migrations,
             $migrations_path
@@ -348,6 +364,8 @@ class AdminInstallCommand extends BaseCommand
             $migrations_path . '/provider.php',
             $this->filesystem->glob($migrations_path . '/*_create_' . $guard . '_table.php')[0]
         );
+
+        // Remplacer la migration des users
 
         return $migrations_path;
     }
@@ -360,6 +378,12 @@ class AdminInstallCommand extends BaseCommand
 
         $controllers_path =  app_path('/Http/Controllers/');
 
+        // Auth controllers
+        $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/auth');
+        $this->compliedAndWriteFileRecursively(
+            $controllers_stub,
+            $controllers_path . 'Auth',
+        );
         // Front controllers
         $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/front');
         $this->compliedAndWriteFileRecursively(
@@ -652,11 +676,17 @@ class AdminInstallCommand extends BaseCommand
             $views_path . '/vendor'
         );
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/emails');
+        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/auth');
         $this->compliedAndWriteFileRecursively(
             $views_stub,
-            $views_path . $data_map["{{frontLowerNamespace}}"]
+            $views_path. '/auth'
         );
+
+        // $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/emails');
+        // $this->compliedAndWriteFileRecursively(
+        //     $views_stub,
+        //     $views_path . $data_map["{{frontLowerNamespace}}"]
+        // );
 
 
         $this->loadEmailsViews();
