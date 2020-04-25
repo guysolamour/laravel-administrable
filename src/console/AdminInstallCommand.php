@@ -2,6 +2,7 @@
 
 namespace Guysolamour\Administrable\Console;
 
+use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Facades\Artisan;
 
 class AdminInstallCommand extends BaseCommand
@@ -197,6 +198,12 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Config loaded successfuly at ' . $config_path);
 
 
+
+        // Move User|Guard={admin} To Models Directory
+        $this->info("Moving User.php and ". ucfirst($this->name) . ".php to app/Models folder");
+        $this->moveDefaultModelsToNewModelsDirectory();
+
+
         // Assets
         $this->info(PHP_EOL . 'Publishing Assets...');
         Artisan::call('vendor:publish --tag=administrable-public');
@@ -263,8 +270,64 @@ class AdminInstallCommand extends BaseCommand
             app_path('User.php')
         );
 
+
+
        return $model_path;
     }
+
+    /**
+     * Move User|Guard={admin} To Models Directory
+     *
+     * @return $this
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function moveDefaultModelsToNewModelsDirectory()
+    {
+
+        $data_map = $this->parseName();
+        $guard = $data_map['{{singularClass}}'];
+
+        foreach (['User', $guard] as $model ) {
+            if ($this->filesystem->exists($userPath = app_path("$model.php"))) {
+                $this->filesystem->move($userPath, $targetPath = app_path("Models/$model.php"));
+                $this->filesystem->put(
+                    $targetPath,
+                    strtr($this->filesystem->get($targetPath), [
+                        'App;' => "App\\Models;",
+                    ])
+                );
+
+                $this->changeNamespaceEverywhereItUses($model);
+            }
+        }
+    }
+
+
+    /**
+     * Change User|Guard={admin} Namespace Everywhere It Uses
+     *
+     */
+    protected function changeNamespaceEverywhereItUses(string $model)
+    {
+        $this->info("Changing $model uses and imports from App\\$model to App\\Models\\$model");
+
+        $files = Finder::create()
+            ->in(base_path())
+            ->contains("App\\$model")
+            ->exclude('vendor')
+            ->name('*.php');
+
+        foreach ($files as $file) {
+            $path = $file->getRealPath();
+            if ($this->filesystem->exists($path)) {
+                $this->filesystem->put($path, strtr($this->filesystem->get($path), [
+                    "App\\$model" => "App\\Models\\$model",
+                ]));
+            }
+        }
+    }
+
+
 
     protected function loadSeed()
     {
@@ -643,6 +706,15 @@ class AdminInstallCommand extends BaseCommand
         $this->compliedAndWriteFile(
             $redirect_middleware,
             $middleware_path . '/RedirectIfNotSuper' . $data_map['{{singularClass}}'] . '.php'
+        );
+
+        // Ajout de middleware RedirectIfNotSuper
+        $redirect_authenticated_middleware_stub = self::TPL_PATH . '/middleware/RedirectIfAuthenticated.stub';
+        $redirect_authenticated_middleware = $this->filesystem->get($redirect_authenticated_middleware_stub);
+
+        $this->compliedAndWriteFile(
+            $redirect_authenticated_middleware,
+            $middleware_path . '/RedirectIfAuthenticated.php'
         );
 
         // Change middleware redirectifNot{$guard) redirect

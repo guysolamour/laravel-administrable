@@ -64,7 +64,7 @@ return [
                 'name' => 'user_id', 'type' => [
                     'relation' => [
                         'name' => 'Many to One',
-                        'model' => 'App\User',
+                        'model' => 'App\Models\User',
                         'property' => 'name'
                     ]
                 ],

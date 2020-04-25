@@ -105,6 +105,16 @@ class {{singularClass}} extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    /**
+    * @param string $email
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null|static
+    */
+    public static function findByEmail($email)
+    {
+      return static::where('email', $email)->first();
+    }
+
     public function getRouteKeyName()
     {
       return 'pseudo';
