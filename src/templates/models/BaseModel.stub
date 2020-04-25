@@ -3,13 +3,16 @@
 namespace {{namespace}}\Models;
 
 use {{namespace}}\Traits\DraftableTrait;
+use {{namespace}}\Traits\MediaableTrait;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-abstract class BaseModel extends Model {
+abstract class BaseModel extends Model implements HasMedia
+{
 
    //  use Cachable;
-   use DraftableTrait;
+   use DraftableTrait, MediaableTrait;
 
     /**
      * Get the lasts items ordered by id DESC
@@ -26,8 +29,39 @@ abstract class BaseModel extends Model {
     }
 
 
+    /**
+     * Get elemet by Id
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $slug
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeFindBySlug($query, string $slug)
     {
         return $query->where('slug',$slug);
     }
+
+
+    /**
+     * Get elements by slug
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $slugs
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFindAllBySlug($query, array $slugs)
+    {
+        return $query->whereIn('slug', $slugs);
+    }
+
+    /**
+     * Guest form name
+     *
+     * @return string
+     */
+    public function getFormNameAttribute() :string
+    {
+        return get_form_name($this);
+    }
+
 }

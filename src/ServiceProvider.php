@@ -12,6 +12,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     const ASSETS_PATH = __DIR__ . '/templates/assets';
     const LOCALE_PATH = __DIR__ . '/templates/locales';
     const RESOURCES_PATH = __DIR__ . '/templates/resources';
+    const IMAGEMANAGER_PATH = __DIR__ . '/templates/imagemanager';
 
     public function boot()
     {
@@ -26,6 +27,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             self::RESOURCES_PATH => public_path(),
         ], 'administrable-resources');
+
+        $this->publishes([
+            self::IMAGEMANAGER_PATH => public_path('vendor/imagemanager'),
+        ], 'administrable-imagemanager');
 
 
        // $this->loadRoutesFrom(__DIR__.'/routes/web.php');

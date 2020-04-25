@@ -91,6 +91,8 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-@endsection
+
 
 @include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+@endsection

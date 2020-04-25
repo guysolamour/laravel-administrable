@@ -38,9 +38,18 @@
                         @include('{{backLowerNamespace}}.posts._form')
                     </div>
                     <div class='col-md-4'>
-                        {{-- add standalone image  here --}}
+                        @include('{{backLowerNamespace}}.media._imagemanager',[
+                            'front_image_label'      => 'Image à la une',
+                            'back_image_label'        => 'Image à la une (2)',
+                            'images_label'           => 'Gallerie',
 
-                        {{-- add morphs image  here --}}
+                            'model'                     => new {{namespace}}\Models\Post,
+                            'model_name'            => {{namespace}}\Models\Post::class,
+                            'front_image'           => true,
+                            'back_image'              => true,
+                            'images'               => true,
+                            'form_name'                => get_form_name({{namespace}}\Models\Post::class),
+                        ])
                     </div>
 
                 </div>

@@ -9,10 +9,11 @@ class ConfigurationForm extends Form
     public function buildForm()
     {
 
-        $this->formOptions = [
-		    'method' => 'PUT',
-		    'url'    => route('{{backLowerNamespace}}.configuration.store',$this->getModel()),
-        ];
+      $this->formOptions = [
+        'method' => 'PUT',
+        'url'    => route('{{backLowerNamespace}}.configuration.store',$this->getModel()),
+        'name'   => get_form_name($this->getModel())
+      ];
 
 	    $this
 		    ->add('email','text', [

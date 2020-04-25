@@ -3,7 +3,7 @@
 Route::middleware(['{{singularSlug}}.auth'])->group(function () {
     Route::namespace('{{backNamespace}}')->group(function () {
 
-         Route::post('model/destroy/all', 'PageController@destroyAll')->name('{{backLowerNamespace}}.model.destroy.all');
+         Route::post('model/destroy/all', 'HomeController@destroyModels')->name('{{backLowerNamespace}}.model.destroy.all');
 
     });
 });

@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 // Categories
 Breadcrumbs::for('{{backLowerNamespace}}.testimonial.index', function ($trail) {
     $trail->parent('{{singularSlug}}.dashboard');
-    $trail->push('Catégories', route('{{backLowerNamespace}}.testimonial.index'));
+    $trail->push('Témoignages', route('{{backLowerNamespace}}.testimonial.index'));
 });
 
 Breadcrumbs::for('{{backLowerNamespace}}.testimonial.create', function ($trail) {

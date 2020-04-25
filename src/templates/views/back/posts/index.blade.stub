@@ -149,14 +149,6 @@
 </div>
 
 
-
 @include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
 @endsection
-
-
-
-
-@push('js')
-<script src="{{ asset('js/axios.js') }}"></script>
-<script src="{{ asset('js/deleteAll.js') }}"></script>
-@endpush

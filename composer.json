@@ -15,26 +15,26 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
-    "alexusmai/laravel-file-manager": "^2.4.13",
-    "bmatovu/multi-auth": "^8.0",
+    "php": ">=7.3",
+    "bmatovu/multi-auth": "^9.0",
     "creativeorange/gravatar": "^1.0",
-    "cviebrock/eloquent-sluggable": "^6.0",
+    "cviebrock/eloquent-sluggable": "^7.0",
     "davejamesmiller/laravel-breadcrumbs": "^5.3",
-    "genealabs/laravel-model-caching": "^0.7.3",
-    "guysolamour/laravel-commands": "^1.0",
-    "illuminate/support": "^6.0",
-    "kris/laravel-form-builder": "^1.21",
-    "laravel/helpers": "^1.1",
-    "laravel/telescope": "^3.0",
-    "mercuryseries/flashy": "^1.0",
-    "spatie/laravel-backup": "^6.7",
-    "spatie/laravel-cookie-consent": "^2.11",
-    "spatie/laravel-honeypot": "^1.4"
+    "genealabs/laravel-model-caching": "^0.8",
+    "guysolamour/laravel-commands": "^1.1",
+    "illuminate/support": "^7.0",
+    "kris/laravel-form-builder": "^1.30",
+    "laravel/telescope": "^3.2",
+    "laravel/ui": "^2.0",
+    "mercuryseries/flashy": "^1.0.4",
+    "spatie/laravel-backup": "^6.9",
+    "spatie/laravel-cookie-consent": "^2.12",
+    "spatie/laravel-honeypot": "^2.0",
+    "spatie/laravel-medialibrary": "^8.0.0"
   },
   "require-dev": {
-    "orchestra/testbench": "^4.0",
-    "phpunit/phpunit": "^8.0"
+    "orchestra/testbench": "^5.0",
+    "phpunit/phpunit": "^8.5"
   },
   "autoload": {
     "psr-4": {

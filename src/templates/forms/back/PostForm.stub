@@ -20,7 +20,7 @@ class PostForm extends Form
         $this->formOptions = [
             'method' => $method,
             'url'    => $url,
-            // 'name'   => get_form_name($this->getModel()),
+            'name'   => get_form_name($this->getModel()),
         ];
 
 	    $this

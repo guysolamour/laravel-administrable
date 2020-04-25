@@ -1,0 +1,147 @@
+<?php
+
+namespace {{namespace}}\Traits;
+
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+
+trait MediaableTrait
+{
+    use InteractsWithMedia;
+
+
+    public function getFrontImageAttribute()
+    {
+        return $this->getMedia(config('media-library.collections.front'),['select' => true])->first();
+    }
+
+
+    public function getBackImageAttribute()
+    {
+        return $this->getMedia(config('media-library.collections.back'), ['select' => true])->first();
+    }
+
+
+    public function getImagesAttribute()
+    {
+        $medias = $this->getMedia(config('media-library.collections.images'), ['select' => true]);
+
+        return $this->sortImages($medias);
+    }
+
+    public function registerMediaCollections(Media $media = null) :void
+    {
+        foreach (config('medialibrary.collections')  as $collection) {
+            $this
+                ->addMediaCollection($collection)
+                ->useDisk(
+                    config('media-library.collections_disc')
+                )
+                // ->singleFile()
+                // ->acceptsMimeTypes(['image/jpeg'])
+
+                ->withResponsiveImages();
+        }
+
+    }
+
+    /**
+     * @param Media $media
+     * @return void
+     */
+    public function registerMediaConversions(Media $media = null) :void
+    {
+         $this->addMediaConversion('avatar')
+            ->height(100)
+            ->width(100)
+            ->performOnCollections(join(',', config('media-library.collections')));
+
+        $this->addMediaConversion('avatar-sm')
+            ->height(50)
+            ->width(50)
+            ->performOnCollections(join(',', config('media-library.collections')));
+
+        $this->addMediaConversion('avatar-xs')
+            ->height(30)
+            ->width(30)
+            ->performOnCollections(join(',', config('media-library.collections')));
+
+        $this->addMediaConversion('thumb')
+            ->height(100)
+            ->performOnCollections('front-image', 'back-image', 'images');
+
+        $this->addMediaConversion('thumb-sm')
+            ->height(250)
+            ->performOnCollections('front-image', 'back-image', 'images');
+    }
+
+    /**
+     *
+     * @param \Illuminate\Support\Collection $medias
+     * @param string $sort_key
+     * @return void
+     */
+    public function sortImages($medias, string $sort_key = 'order')
+    {
+        return $medias->sortBy(function ($media, $key) use($sort_key) {
+            return $media->getCustomProperty($sort_key);
+        })->values()->all();
+    }
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        /**
+         * @param \App\Models\BaseModel $model
+         */
+        static::created(function ($model) {
+            foreach (config('media-library.collections')  as $collection) {
+                if (request($collection)) {
+                    self::saveImages($model, request($collection), $collection);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param  \App\Models\BaseModel $model
+     * @param array $images
+     * @return void
+     */
+    private static function saveImages($model, $images, string $collection)
+    {
+        $attributes = self::getCollectionAttributes(request($collection . '-attributes'));
+
+        foreach ($images as $image) {
+            $attr = $attributes[$image->getClientOriginalName()];
+            $model->addMedia($image)
+                ->setName($attr['name'])
+                ->withCustomProperties([
+                    'order' => $attr['order'],
+                    'select' => $attr['select'],
+                ])
+                ->toMediaCollection($collection)
+                ;
+        }
+    }
+
+    /**
+     *
+     * @param string $attributes
+     * @return array
+     */
+    private static function getCollectionAttributes($attributes) :array
+    {
+        $attr = [];
+        foreach (json_decode($attributes,true) as $attribute) {
+            foreach ($attribute as $key => $value) {
+                $attr[$key] = $value;
+            }
+        }
+        return $attr;
+
+    }
+}

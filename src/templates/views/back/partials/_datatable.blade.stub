@@ -12,6 +12,7 @@
     <script>
         $(function () {
             $('#list').DataTable({
+                responsive: true,
                 "language": {
                     "sProcessing":     "Traitement en cours...",
                     "sSearch":         "Rechercher&nbsp;:",

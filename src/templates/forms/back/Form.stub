@@ -10,10 +10,11 @@ class {{singularClass}}Form extends Form
     public function buildForm()
     {
 
-        $this->formOptions = [
-		    'method' => 'PUT',
-		    'url'    => route('{{backLowerNamespace}}.{{singularSlug}}.update',$this->getModel()),
-        ];
+      $this->formOptions = [
+        'method' => 'PUT',
+        'url'    => route('{{backLowerNamespace}}.{{singularSlug}}.update',$this->getModel()),
+        'name'   => get_form_name($this->getModel())
+      ];
 
 	    $this
         ->add('pseudo','text', [

@@ -8,9 +8,10 @@ class Create{{singularClass}}Form extends Form
 {
     public function buildForm()
     {
-        $this->formOptions = [
+      $this->formOptions = [
 		    'method' => 'POST',
 		    'url'    => route('{{backLowerNamespace}}.{{singularSlug}}.store'),
+        'name'   => get_form_name($this->getModel())
 	    ];
 
 	    $this

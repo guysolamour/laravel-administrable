@@ -57,6 +57,9 @@ class AdminInstallCommand extends BaseCommand
         $this->name = $this->argument('name');
         $this->override = $this->option('force') ? true : false;
 
+
+
+
         // Passer des options pour generer les articles, mentions legales, temoignages en option
 
         Artisan::call('multi-auth:install', [
@@ -99,7 +102,6 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Adding config keys...');
         $env_path = $this->addAppConfigKeys();
         $this->info('App config set at ' . $env_path);
-
 
         // Run migrations
         $this->info(PHP_EOL . 'Migrate');
@@ -147,13 +149,6 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Creating Forms...');
         $forms_path = $this->loadForms();
         $this->info('Forms created at ' . $forms_path);
-
-
-        // lfm congfig
-        // $this->info(PHP_EOL . 'Creating Lfm config...');
-        // $config_path = $this->loadLfmConfig(self::TPL_PATH);
-        // $this->info('Forms created at ' . $config_path);
-
 
         // routes
         $this->info(PHP_EOL . 'Creating Routes...');
@@ -680,34 +675,6 @@ class AdminInstallCommand extends BaseCommand
 
         return $views_path;
     }
-    protected function loadLfmConfig($template_path)
-    {
-        $data_map = $this->parseName();
-
-        $files = array(
-            [
-                'stub' => $template_path . '/lfm/lfm.stub',
-                'path' => config_path('lfm.php'),
-            ],
-            [
-                'stub' => $template_path . '/lfm/LfmConfigHandler.stub',
-                'path' => app_path('/Handlers/LfmConfigHandler.php'),
-            ],
-        );
-
-        foreach ($files as $file) {
-            $stub = file_get_contents($file['stub']);
-            $complied = strtr($stub, $data_map);
-
-            $dir = dirname($file['path']);
-            if (!is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
-
-            file_put_contents($file['path'], $complied);
-        }
-
-    }
 
 
     protected function loadMiddleware()
@@ -960,24 +927,11 @@ class AdminInstallCommand extends BaseCommand
         // Backup
         $config_filesystems_path = config_path('filesystems.php');
         $config_filesystem = $this->filesystem->get($config_filesystems_path);
-        $replace = "        'ftp' => [
-            'driver'   => 'ftp',
-            'host'     => env('FTP_HOST'),
-            'username' => env('FTP_USERNAME'),
-            'password' => env('FTP_PASSWORD'),
-
-            // Optional FTP Settings...
-            // 'port'     => 21,
-            // 'root'     => '',
-            // 'passive'  => true,
-            // 'ssl'      => true,
-            // 'timeout'  => 30,
-        ],";
 
         $this->replaceAndWriteFile(
             $config_filesystem,
             $search = "'disks' => [\n",
-            $search . PHP_EOL . $replace,
+            $search . PHP_EOL . $this->filesystem->get(self::TPL_PATH . '/config/partials/filesystem.stub'),
             $config_filesystems_path
         );
 

@@ -63,14 +63,15 @@
             confirmButtonColor: "#DD6B55"
         }, function (isConfirm) {
             if (isConfirm) {
-                const ids = Array.from(document.querySelectorAll("[data-check]:checked")).map(item => item.getAttribute('data-id'))
+                const checked = Array.from(document.querySelectorAll("[data-check]:checked"))
+                const ids = checked.map(item => item.getAttribute('data-id'))
 
                 axios.post(`/{{ config('administrable.auth_prefix_path') }}/model/destroy/all`,{ model: deleteButton.getAttribute('data-model'),ids })
                 .then(({data}) => {
-                    //toastr.success(data.success);
+                    checked.map(item => item.checked = false)
                     window.location.reload()
                 }).catch((err) => {
-
+                    alert('Une erreur empêche la Suppression')
                 });
             }
         });
