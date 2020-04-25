@@ -19,7 +19,7 @@
                 <form action="{{ route('{{singularSlug}}.login') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
-                        <input type="text" name="login" class="form-control {{ $errors->has('login') || $errors->has('email') || $errors->has('pseudo') ? 'is-invalid' : '' }}" placeholder="Pseuo ou Email" value="{{ old('login') }}">
+                        <input type="text" name="login" class="form-control {{ $errors->has('login') || $errors->has('email') || $errors->has('pseudo') ? 'is-invalid' : '' }}" placeholder="Pseudo ou Email" value="{{ old('login') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -50,7 +50,7 @@
                             <div class="icheck-primary">
                                 <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                 <label for="remember">
-                                    Connexion permanente
+                                    Se souvenir de moi
                                 </label>
                             </div>
                         </div>

@@ -25,11 +25,6 @@ class AdminInstallCommand extends BaseCommand
 
 
     /**
-     * @var Filesystem
-     */
-    protected $filesystem;
-
-    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -56,8 +51,6 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Initiating...');
         $this->name = $this->argument('name');
         $this->override = $this->option('force') ? true : false;
-
-
 
 
         // Passer des options pour generer les articles, mentions legales, temoignages en option
@@ -378,12 +371,7 @@ class AdminInstallCommand extends BaseCommand
 
         $controllers_path =  app_path('/Http/Controllers/');
 
-        // Auth controllers
-        $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/auth');
-        $this->compliedAndWriteFileRecursively(
-            $controllers_stub,
-            $controllers_path . 'Auth',
-        );
+
         // Front controllers
         $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/front');
         $this->compliedAndWriteFileRecursively(
@@ -404,81 +392,13 @@ class AdminInstallCommand extends BaseCommand
             $controllers_path . $data_map["{{backNamespace}}"] . '/' .$guard . 'Controller.php',
         );
 
-
-
-
-        // Add redirectTo method to auth controllers
-        // $auth_controllers =  $this->filesystem->files($controllers_path . $guard . '/Auth');
-        // $search = 'protected $redirectTo = '. "'/{$data_map['{{singularSlug}}']}'" . ';';
-        // $replace = $this->filesystem->get(self::TPL_PATH . '/controllers/partials/redirectTo.stub');
-
-        // $this->replaceAndWriteFile(
-        //     $auth_controllers,
-        //     $search,
-        //     $replace,
-        //     $controllers_path . $data_map["{{backNamespace}}"] . '/Auth'
-        // );
-
-
-        // home controller
-        // $home_controller = $this->filesystem->get($controllers_path . $guard . '/HomeController.php');
-        // $search = 'protected $redirectTo = ' . "'/{$data_map['{{singularSlug}}']}/login'" . ';';
-
-        // $this->replaceAndWriteFile(
-        //     $home_controller,
-        //     $search,
-        //     $replace,
-        //     $controllers_path . $data_map["{{backNamespace}}"] . '/HomeController.php',
-        // );
-
-
-
-        // PseudoEmailLoginTrait;
-        // $login_controller_path = $controllers_path . $data_map["{{backNamespace}}"] . '/Auth/LoginController.php';
-        // $login_controller = $this->filesystem->get($login_controller_path);
-        // $search = 'use AuthenticatesUsers;';
-        // $replace = $this->filesystem->get(self::TPL_PATH . '/controllers/partials/pseudoemaillogin.stub');
-        // $this->replaceAndWriteFile(
-        //     $login_controller,
-        //     $search,
-        //     $search . PHP_EOL . PHP_EOL . $replace,
-        //     $login_controller_path,
-        // );
-
-        // RegisterController
-        // $register_controller_path = $controllers_path . $data_map["{{backNamespace}}"] . '/Auth/RegisterController.php';
-        // $register_controller_stub = $this->filesystem->get(self::TPL_PATH . '/controllers/back/auth/RegisterController.stub');
-
-        // $this->compliedAndWriteFile(
-        //     $register_controller_stub,
-        //     $register_controller_path
-        // );
-
-        // $this->replaceAndWriteFile(
-        //     $this->filesystem->get($register_controller_path),
-        //     $search,
-        //     $search . PHP_EOL . PHP_EOL . $register_controller_stub,
-        //     $register_controller_path,
-        // );
-
-        // Changer le namespace de tous les controllers du dossier Auth dans admin
-        // $this->replaceAndWriteFile(
-        //     $home_controller,
-        //     "namespace App\Http\Controllers\Admin;",
-        //     "namespace App\Http\Controllers\\" . $data_map["{{backNamespace}}"] . ";",
-        //     $controllers_path . $data_map["{{backNamespace}}"] . '/HomeController.php',
-        // );
-
-        // $path = $controllers_path . $data_map["{{backNamespace}}"] . '/Auth';
-        // $this->replaceAndWriteFile(
-        //     $this->filesystem->files($path),
-        //     "namespace App\Http\Controllers\Admin\Auth;",
-        //     "namespace App\Http\Controllers\\" . $data_map["{{backNamespace}}"] . "\Auth;",
-        //     $path
-        // );
-
+        // Delete default HomeController
+        $this->filesystem->delete([
+            $controllers_path . 'HomeController.php',
+        ]);
 
         $this->filesystem->deleteDirectory($controllers_path  . $data_map['{{singularClass}}']);
+        $this->filesystem->deleteDirectory($controllers_path  . 'Auth');
 
 
         return $controllers_path;
@@ -676,11 +596,6 @@ class AdminInstallCommand extends BaseCommand
             $views_path . '/vendor'
         );
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/auth');
-        $this->compliedAndWriteFileRecursively(
-            $views_stub,
-            $views_path. '/auth'
-        );
 
         // $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/emails');
         // $this->compliedAndWriteFileRecursively(
@@ -700,8 +615,15 @@ class AdminInstallCommand extends BaseCommand
         // suppression des vues générées par le package Multi Auth
         $this->filesystem->deleteDirectory(resource_path('views/') . $data_map['{{singularSlug}}']);
 
+        // Layouts
+        $this->filesystem->deleteDirectory(resource_path('views/layouts'));
+        $this->filesystem->deleteDirectory(resource_path('views/auth'));
+
         // Default welcome page
         $this->filesystem->delete(resource_path('views/welcome.blade.php'));
+
+        // Default home page
+        $this->filesystem->delete(resource_path('views/home.blade.php'));
 
         return $views_path;
     }

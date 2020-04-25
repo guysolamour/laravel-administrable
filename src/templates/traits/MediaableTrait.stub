@@ -32,7 +32,7 @@ trait MediaableTrait
 
     public function registerMediaCollections(Media $media = null) :void
     {
-        foreach (config('medialibrary.collections')  as $collection) {
+        foreach (config('media-library.collections')  as $collection) {
             $this
                 ->addMediaCollection($collection)
                 ->useDisk(

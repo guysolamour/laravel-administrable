@@ -15,6 +15,8 @@ class BaseCommand extends Command {
     protected  const TPL_PATH = __DIR__ . '/../templates';
 
 
+    protected $filesystem;
+
 
     public function __construct(Filesystem $filesystem)
     {

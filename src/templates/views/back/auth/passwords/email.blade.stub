@@ -43,7 +43,7 @@
 
                         <!-- /.col -->
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block btn-flat">Connexion</button>
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">Envoyer le lien de réinitialisation</button>
                         </div>
                         <!-- /.col -->
                     </div>

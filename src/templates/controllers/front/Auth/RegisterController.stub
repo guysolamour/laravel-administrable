@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}}\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use App\User;
+use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\Providers\RouteServiceProvider;
+use {{namespace}}\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -40,6 +40,17 @@ class RegisterController extends Controller
     {
         $this->middleware('guest');
     }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        return view('{{frontLowerNamespace}}.auth.register');
+    }
+
 
     /**
      * Get a validator for an incoming registration request.

@@ -2,11 +2,11 @@
 
 namespace {{namespace}};
 
-use {{namespace}}\Notifications\{{singularClass}}\Auth\ResetPassword;
-use {{namespace}}\Notifications\{{singularClass}}\Auth\VerifyEmail;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Creativeorange\Gravatar\Facades\Gravatar;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use {{namespace}}\Notifications\{{backNamespace}}\Auth\VerifyEmail;
+use {{namespace}}\Notifications\{{backNamespace}}\Auth\ResetPassword;
 
 class {{singularClass}} extends Authenticatable
 {

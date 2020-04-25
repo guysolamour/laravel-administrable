@@ -32,7 +32,7 @@ class HomeController extends Controller
      */
     public function index() {
 
-        return view('{{backLowerNamespace}}.home');
+        return view('{{backLowerNamespace}}.dashboard.index');
     }
 
 
