@@ -12,7 +12,7 @@ use Symfony\Component\Process\Process;
 
 class BaseCommand extends Command {
 
-    protected  const TPL_PATH = __DIR__ . '/../templates';
+    protected  const TPL_PATH = __DIR__ . '/../stubs';
 
 
     protected $filesystem;

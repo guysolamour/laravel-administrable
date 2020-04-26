@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class AdminInstallCommand extends BaseCommand
 {
-    protected  const TPL_PATH = __DIR__. '/../templates';
+    protected  const TPL_PATH = __DIR__. '/../stubs';
 
     /**
      * @var string

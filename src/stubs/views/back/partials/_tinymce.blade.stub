@@ -1,0 +1,27 @@
+@push('js')
+<script src="{{ asset('vendor/tinymce/tinymce.min.js') }}"></script>
+
+<script>
+    const tinymce_config = {
+        model: @json($model),
+        model_name: @json($model_name),
+        prefix: @json($prefix),
+    }
+
+    tinymce.init({
+        selector: @json($selector),
+        language: 'fr_FR',
+
+        plugins: [
+            "imagemanager",
+            "advlist autolink lists link image autoresize autosave charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "emoticons autoresize autosave template paste textcolor colorpicker textpattern"
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media colorpicker | imagemanager",
+        relative_urls: false,
+    });
+</script>
+
+@endpush

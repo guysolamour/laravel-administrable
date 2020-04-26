@@ -1,0 +1,70 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title','Ajout')
+
+@section('content')
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Ajout</h1>
+                </div>
+                <div class="col-sm-6">
+                  <div class="float-sm-right">
+                     {{ Breadcrumbs::render('{{backLowerNamespace}}.category.create') }}
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                        title="Réduire">
+                        <i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class='row'>
+                    <div class='col-md-8'>
+                        @include('{{backLowerNamespace}}.posts._form')
+                    </div>
+                    <div class='col-md-4'>
+                        @include('{{backLowerNamespace}}.media._imagemanager',[
+                            'front_image_label'      => 'Image à la une',
+                            'back_image_label'        => 'Image à la une (2)',
+                            'images_label'           => 'Gallerie',
+
+                            'model'                     => new {{namespace}}\Models\Post,
+                            'model_name'            => {{namespace}}\Models\Post::class,
+                            'front_image'           => true,
+                            'back_image'              => true,
+                            'images'               => true,
+                            'form_name'                => get_form_name({{namespace}}\Models\Post::class),
+                        ])
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@endsection

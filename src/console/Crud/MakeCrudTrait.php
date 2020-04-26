@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 trait MakeCrudTrait
 {
 
-    public   $TPL_PATH = __DIR__ . '/../../templates/crud';
+    public   $TPL_PATH = __DIR__ . '/../../stubs/crud';
 
     protected function parseName(string $name)
     {

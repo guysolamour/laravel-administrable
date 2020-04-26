@@ -1,0 +1,144 @@
+<?php
+
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
+
+
+
+if (!function_exists('get_month')) {
+    function get_month(\Carbon\Carbon $date, bool $longFormat = false)
+    {
+
+        $date_fr = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet',
+            'Août','Septembre','Octobre','Novembre','Décembre'];
+        return !$longFormat ? Str::limit($date_fr[$date->format('n') - 1],3,'') : $date_fr[$date->format('n') - 1];
+
+    }
+}
+
+if (!function_exists('get_current_month')) {
+    function get_current_month(bool $longFormat = false)
+    {
+        $date = now();
+
+        $date_fr = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet',
+            'Août','Septembre','Octobre','Novembre','Décembre'];
+        return !$longFormat ? Str::limit($date_fr[$date->format('n') - 1],3,'') : $date_fr[$date->format('n') - 1];
+
+    }
+}
+
+
+
+if (!function_exists('get_day')) {
+    function get_day(\Carbon\Carbon $date)
+    {
+        $date_fr = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+        return $date_fr[$date->format('N') - 1];
+
+    }
+}
+
+if (!function_exists('get_full_date')) {
+    function get_full_date(?\Carbon\Carbon $date = null) :string
+    {
+        // Jeudi 30 Octobre 2018
+
+        $date = is_null($date) ? now() : $date;
+        $day = get_day($date);
+        $day_int = $date->format('d');
+        $month = get_month($date,true);
+        $year = $date->format('Y');
+
+        return sprintf('%s %d %s %d',$day,$day_int,$month,$year);
+    }
+}
+
+
+if (!function_exists('get_form_name')) {
+    function get_form_name($model) :string
+    {
+        return 'entity-'.  strtolower(class_basename(($model)));
+    }
+}
+
+
+if (!function_exists('format_price')) {
+    function format_price($price)
+    {
+        return number_format($price, 0, ',', ' ');
+    }
+}
+
+if (!function_exists('random_element')) {
+    function random_element($model, int $limit = 9)
+    {
+        $count = $model->count();
+
+        // if count is 0 return because there are no elements to random
+        if (!$count) {
+            return collect();
+        }
+
+        if ($count < $limit) {
+            return $model->random($count);
+        }
+        return $model->random($limit);
+    }
+}
+
+if (!function_exists('merge_collections')) {
+    function merge_collections( ...$collections)
+    {
+        $collect = collect();
+
+        foreach ($collections as $collection){
+            if (is_collection($collection)) {
+                foreach ($collection as $model){
+                    $collect->push($model);
+                }
+            }else {
+                $collect->push($collection);
+            }
+        }
+        return $collect;
+    }
+}
+
+if (!function_exists('is_collection')) {
+    function is_collection( $data ) :bool
+    {
+        return $data instanceof Illuminate\Database\Eloquent\Collection || $data instanceof Illuminate\Support\Collection;
+    }
+}
+
+if (!function_exists('previous_route')) {
+    /**
+     * Generate a route name for the previous request.
+     *
+     * @return string|null
+     */
+    function previous_route()
+    {
+        $previousRequest = app('request')->create(app('url')->previous());
+
+        try {
+            $routeName = app('router')->getRoutes()->match($previousRequest)->getName();
+        } catch (Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+            return null;
+        }
+
+        return $routeName;
+    }
+}
+
+if (!function_exists('set_active_link')) {
+    function set_active_link(...$routes)
+    {
+        foreach ($routes as $route) {
+            if (Route::is($route)) return 'active';
+        }
+        return '';
+    }
+}
+

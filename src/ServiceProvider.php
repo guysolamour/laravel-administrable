@@ -9,10 +9,11 @@ use Guysolamour\Administrable\Console\AdminInstallCommand;
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     const CONFIG_PATH = __DIR__ . '/../config/administrable.php';
-    const ASSETS_PATH = __DIR__ . '/templates/assets';
-    const LOCALE_PATH = __DIR__ . '/templates/locales';
-    const RESOURCES_PATH = __DIR__ . '/templates/resources';
-    const IMAGEMANAGER_PATH = __DIR__ . '/templates/imagemanager';
+    const ASSETS_PATH = __DIR__ . '/stubs/assets';
+    const LOCALE_PATH = __DIR__ . '/stubs/locales';
+    const RESOURCES_PATH = __DIR__ . '/stubs/resources';
+    const IMAGEMANAGER_PATH = __DIR__ . '/stubs/imagemanager';
+    const TINYMCE_PATH = __DIR__ . '/stubs/tinymce';
 
     public function boot()
     {
@@ -31,6 +32,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             self::IMAGEMANAGER_PATH => public_path('vendor/imagemanager'),
         ], 'administrable-imagemanager');
+
+        $this->publishes([
+            self::TINYMCE_PATH => public_path('vendor/tinymce'),
+        ], 'administrable-tinymce');
 
 
        // $this->loadRoutesFrom(__DIR__.'/routes/web.php');
