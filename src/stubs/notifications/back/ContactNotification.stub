@@ -4,11 +4,11 @@ namespace {{namespace}}\Notifications\Back;
 
 use {{namespace}}\Models\Mailbox;
 use Illuminate\Bus\Queueable;
-use {{namespace}}\Mail\{{frontNamespace}}\ContactUsMail;
+use {{namespace}}\Mail\{{frontNamespace}}\ContactMail;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ContactUsNotification extends Notification
+class ContactNotification extends Notification
 {
     use Queueable;
 
@@ -44,6 +44,6 @@ class ContactUsNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new ContactUsMail($notifiable, $this->mailbox))->to($notifiable->email);
+        return (new ContactMail($notifiable, $this->mailbox))->to($notifiable->email);
     }
 }

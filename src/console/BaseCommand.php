@@ -65,6 +65,12 @@ class BaseCommand extends Command {
         );
     }
 
+    protected function compliedFile($file, $get_content = true)
+    {
+        $file = $get_content ? $this->filesystem->get($file) : $file;
+        return strtr($file, $this->parseName());
+    }
+
     /**
     * @param string|array $files
     * @param string $path

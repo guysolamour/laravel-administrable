@@ -1,0 +1,30 @@
+  <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-swatchbook"></i>
+                <p>
+                    Articles
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.post.create') }}" class="nav-link">
+                        <i class="far fa-plus nav-icon"></i>
+                        <p>Ecrire</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.post.index') }}" class="nav-link">
+                        <i class="far fa-th-list nav-icon"></i>
+                        <p>Liste</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.category.index') }}" class="nav-link">
+                        <i class="far fa-folder-open nav-icon"></i>
+                        <p>Catégories</p>
+                    </a>
+                </li>
+
+            </ul>
+        </li>

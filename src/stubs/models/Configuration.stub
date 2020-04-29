@@ -4,7 +4,7 @@ namespace {{namespace}}\Models;
 
 class Configuration extends BaseModel
 {
-    public $table = 'administrable';
+    public $table = 'administrables';
 
     public $fillable = [
         'about','email','postal','area','cell','phone','youtube','facebook','twitter','linkedin','cgu',

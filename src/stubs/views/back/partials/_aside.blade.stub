@@ -22,59 +22,8 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
 
-        <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-swatchbook"></i>
-                <p>
-                    Articles
-                    <i class="right fas fa-angle-left"></i>
-                </p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item">
-                    <a href="{{ route('{{backLowerNamespace}}.post.create') }}" class="nav-link">
-                        <i class="far fa-plus nav-icon"></i>
-                        <p>Ecrire</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('{{backLowerNamespace}}.post.index') }}" class="nav-link">
-                        <i class="far fa-th-list nav-icon"></i>
-                        <p>Liste</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('{{backLowerNamespace}}.category.index') }}" class="nav-link">
-                        <i class="far fa-folder-open nav-icon"></i>
-                        <p>Catégories</p>
-                    </a>
-                </li>
 
-            </ul>
-        </li>
-          <li class="nav-item">
-             <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}" class="nav-link">
-               <i class="nav-icon far fa-envelope"></i>
-                 Messagerie
-               <p>
-                   @php
-                       $new =  \App\Models\Mailbox::unread()->count()
-                   @endphp
-                   @if($new)
-                      <span class="badge badge-success right">{{ 'new ' .$new  }}</span>
-                   @endif
-               </p>
-             </a>
-           </li>
-          <li class="nav-item">
-            <a href="{{ route('{{backLowerNamespace}}.testimonial.index') }}" class="nav-link">
-              <i class="nav-icon far  fa-comments-alt"></i>
-              <p>Témoignages </p>
-            </a>
-          </li>
            {{-- insert sidebar links here --}}
            <li class="nav-item has-treeview">
             <a href="#" class="nav-link">

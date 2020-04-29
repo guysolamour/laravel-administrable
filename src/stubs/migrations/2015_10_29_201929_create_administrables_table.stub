@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdministrableTable extends Migration
+class CreateAdministrablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAdministrableTable extends Migration
      */
     public function up()
     {
-        Schema::create('administrable', function (Blueprint $table) {
+        Schema::create('administrables', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('about')->nullable();
             $table->string('email')->nullable();
@@ -36,6 +36,6 @@ class CreateAdministrableTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('administrable');
+        Schema::dropIfExists('administrables');
     }
 }

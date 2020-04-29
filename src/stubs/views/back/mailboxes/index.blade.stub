@@ -12,11 +12,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Messagerie
+            {{-- <h3>Messagerie
                @if ($unread != 0)
                   (<small class="text-info">{{ $unread }} messages non lus</small>)
               @endif
-            </h1>
+            </h3> --}}
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -44,13 +44,31 @@
         <div class="card-body">
           <div class='row'>
              <div class="col-md-12">
-                      <div class="card card-primary card-outline">
-                        <!-- /.card-header -->
+                      <div class="card" style='box-shadow: 0 0 1px rgba(0,0,0,0), 0 1px 3px rgba(0,0,0,0);'>
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                Messagerie
+                                @if ($unread != 0)
+                                (<small class="text-info">{{ $unread }} messages non lus</small>)
+                                @endif
+                            </h3>
+                            <div class="btn-group float-right">
+                                <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\Models\Mailbox" id="delete-all"> <i
+                                        class="fa fa-trash"></i> Tous supprimer</a>
+                            </div>
+                        </div>
                         <div class="card-body p-0">
                           <div class="table-responsive">
                             <table class="table table-hover table-striped" id="list">
                             <thead>
                                 <tr>
+                                    <th>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="check-all">
+                                            <label class="custom-control-label" for="check-all"></label>
+                                        </div>
+                                    </th>
+                                    <th></th>
                                     <th>Lu</th>
                                     <th>Nom</th>
                                     <th>Message</th>
@@ -62,8 +80,16 @@
 
                               @foreach($mailboxes as $message)
                                   <tr>
-                                      <td><a href="#"><i class="fas {{ ($message->read) ? 'fa-star-o' : 'fa-star'}} text-warning"></i></a></td>
-                                      <td><a href="#">{{ $message->name }}</a></td>
+                                      <td>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" data-check class="custom-control-input" data-id="{{ $message->id }}"
+                                                    id="check-{{ $message->id }}">
+                                                <label class="custom-control-label" for="check-{{ $message->id }}"></label>
+                                            </div>
+                                        </td>
+                                      <td>{{ $loop->iteration }}</td>
+                                      <td><a href="Javascript:void(1)"><i class="fas {{ ($message->read) ? 'fa-star-o' : 'fa-star'}} text-warning"></i></a></td>
+                                      <td><a href="Javascript:void(1)">{{ $message->name }}</a></td>
                                       <td>{{ Str::limit($message->content,25) }}</td>
                                       <td>{{ $message->created_at->diffForHumans() }}</td>
                                       <td>
@@ -93,6 +119,6 @@
   <!-- /.content-wrapper -->
 
 
-@include('{{backLowerNamespace}}.partials._datatable')
-@include('{{backLowerNamespace}}.partials._deleteAll')
+@include('back.partials._datatable')
+@include('back.partials._deleteAll')
 @endsection

@@ -22,7 +22,7 @@ class MailboxController extends Controller
 
           $unread = Mailbox::unRead()->count();
 
-          return view('{{backLowerNamespace}}.mailbox.index', compact('mailboxes','unread'));
+          return view('{{backLowerNamespace}}.mailboxes.index', compact('mailboxes','unread'));
       }
 
 
@@ -39,7 +39,7 @@ class MailboxController extends Controller
           if(!$mailbox->read){
               $mailbox->update(['read' => true]);
           }
-         return view('{{backLowerNamespace}}.mailbox.show', compact('mailbox'));
+         return view('{{backLowerNamespace}}.mailboxes.show', compact('mailbox'));
       }
 
 

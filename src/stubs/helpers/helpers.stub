@@ -142,3 +142,16 @@ if (!function_exists('set_active_link')) {
     }
 }
 
+if (!function_exists('array_remove_by_value')) {
+    function array_remove_by_value(array $array, $value, bool $return = false)
+    {
+        if(($key = array_search($value, $array)) !== false){
+          unset($array[$key]);
+        }
+
+        if($return){
+          return $array;
+        }
+    }
+}
+

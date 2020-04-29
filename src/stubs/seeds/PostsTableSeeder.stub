@@ -4,7 +4,7 @@ use {{namespace}}\Models\Category;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class CategoriesTableSeeder extends Seeder
+class PostsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -1,0 +1,14 @@
+           <li class="nav-item">
+             <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}" class="nav-link">
+               <i class="nav-icon far fa-envelope"></i>
+                 Messagerie
+               <p>
+                   @php
+                       $new =  \App\Models\Mailbox::unread()->count()
+                   @endphp
+                   @if($new)
+                      <span class="badge badge-success right">{{ 'new ' .$new  }}</span>
+                   @endif
+               </p>
+             </a>
+           </li>

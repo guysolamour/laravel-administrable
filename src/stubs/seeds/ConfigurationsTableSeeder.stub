@@ -2,10 +2,9 @@
 
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use {{namespace}}\Models\Configuration;
 
-class ConfigurationTableSeeder extends Seeder
+class ConfigurationsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

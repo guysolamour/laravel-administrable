@@ -5,7 +5,8 @@ namespace Guysolamour\Administrable\Console;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Facades\Artisan;
-
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 
 class AdminInstallCommand extends BaseCommand
 {
@@ -86,68 +87,105 @@ class AdminInstallCommand extends BaseCommand
      */
     protected $preset = 'vue';
 
-
-    /**
-     * @var string
-     */
-    protected $models_folder_name = 'Models';
-
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'administrable:install
+    protected $signature = 'admin:install
                                 {name=admin : Name of the guard }
-                                {--g|generate=Mailbox,Testimonial,Post : Default models crud to generate }
-                                {--p|preset=vue : Ui preset to use }
-                                {--m|model=Models : Models folder name inside App directory }
+                                {--g|generate= : Default models crud to generate }
+                                {--p|preset= : Ui preset to use }
                                 {--f|force : Whether to override existing files }
                                 {--l|locale=fr : Locale to use default fr }
+                                {--d|default : Use defaault configuration }
                             ';
 
 
     protected $description = 'Install admin package';
 
 
-    protected function init()
+    protected function init() :bool
     {
+        // Demander le nom du dossier Models et aussi ajouter la debug bar
+        // si on n'a pas d'option par défaut alors on demande
+        if (!$this->option('default')) {
+            if (!$this->option('generate')) {
+                if ($this->confirm('Do you want to generate some default models crud ?')) {
+                    $this->crud_models = $this->choice('Give the model name (seperate by comma).', $this->crud_models, 0, null, true);
+                }
+            }
 
-        $this->name = $this->argument('name');
-        $this->override = $this->option('force') ? true : false;
+            if (!$this->option('preset')) {
+                if ($this->confirm('Do you want to scafold front end ?')) {
+                    $this->preset = $this->choice('Which preset do you want to use ?', $this->presets, 0);
+                }
+            }
+        } else {
+            // Si l'option --d est defini alors on génere les valeurs par défaut
+            // $this->crud_models = array_merge(
+            //     $this->crud_models,
+            //     $this->default_crud_models
+            // );
 
-        /**
-         * Le filter permet de retirer les élémenst vides du tableau comme des , simples
-         */
-        $models = array_filter(explode(',', $this->option('generate')));
+            // $this->preset = 'vue';
+        }
 
-        // Sanitize data
-        $models = array_map(fn($model) => ucfirst(trim($model)),$models);
+        if (!$this->option('default')) {
+            if ($this->option('generate')) {
 
-        /**
-         * Validation
-         */
-        foreach ($models as $model) {
-            if (!in_array(ucfirst($model), $this->crud_models)) {
-                throw new \Exception(sprintf('Le modèle {%s} n\'est pas disponible. Les modèles disponible sont {%s}', $model, join(',', $this->crud_models)));
+                /**
+                 * Le filter permet de retirer les élémenst vides du tableau comme des , simples
+                 */
+                $models = array_filter(explode(',', $this->option('generate')));
+
+                $models = array_filter($models);
+
+
+                // Sanitize data
+                $models = array_map(function ($model) {
+                    return ucfirst(trim($model));
+                }, $models);
+
+                /**
+                 * Validation
+                 */
+                foreach ($models as $model) {
+                    if (!in_array(ucfirst($model), $this->crud_models)) {
+                        $this->error(
+                            sprintf('Le modèle {%s} n\'est pas disponible. Les modèles disponible sont {%s}', $model, join(',', $this->crud_models))
+                        );
+                        return false;
+                    }
+                }
+
+
+                $this->crud_models = $models;
+
+                // Si le modele post est defini alors on ajoute le modele category et autre
+            }
+
+            if ($this->option('preset')) {
+                $preset = strtolower($this->option('preset'));
+
+                if (!in_array($preset, $this->presets)) {
+                    $this->error(
+                        sprintf('Le preset {%s} n\'est pas disponible. Les presets disponible sont {%s}', $preset, join(',', $this->presets))
+                    );
+                    return false;
+                }
+
+                $this->preset = $this->option('preset');
             }
         }
 
 
-        $this->crud_models = $models;
-
-
-        $preset = strtolower($this->option('preset'));
-
-        if (!in_array($preset, $this->presets)) {
-            throw new \Exception(sprintf('Le preset {%s} n\'est pas disponible. Les presets disponible sont {%s}', $preset, join(',', $this->presets)));
+        // On ajoute le modele Category si le Post est dans la liste
+        if (in_array('Post', $this->crud_models)) {
+            $this->crud_models[] = 'Category';
         }
 
-        $this->preset = $preset;
-
-
-        $this->models_folder_name = ucfirst($this->option('model'));
-
+        return true;
     }
 
     /**
@@ -157,10 +195,18 @@ class AdminInstallCommand extends BaseCommand
     {
 
         $this->info('Initiating...');
+        $this->name = $this->argument('name');
+        $this->override = $this->option('force') ? true : false;
+
+
+        if(!$this->init()){
+            return;
+        }
 
 
 
-        $this->init();
+
+
 
 
         // Passer des options pour generer les articles, mentions legales, temoignages en option
@@ -384,12 +430,11 @@ class AdminInstallCommand extends BaseCommand
 
     protected function loadModel() :string
     {
-        // On ajoute le modele Category si le Post est dans la liste
-        if (in_array('Post', $this->crud_models)) {
-            $this->crud_models[] = 'Category';
-        }
 
-        $models_to_create = [...$this->crud_models, ...self::DEFAULTS['models']];
+        $models_to_create = array_merge(
+            $this->crud_models,
+            self::DEFAULTS['models']
+        );
 
         $data_map = $this->parseName();
 
@@ -400,8 +445,9 @@ class AdminInstallCommand extends BaseCommand
         /**
          * Remove uncreate models in the list
          */
-
-        $models = array_filter($models,fn($model) => in_array($model->getFilenameWithoutExtension(), $models_to_create));
+        $models = (collect($models)->filter( function($model) use ($models_to_create) {
+            return in_array($model->getFilenameWithoutExtension(), $models_to_create);
+        }))->toArray();
 
 
         $model_path =  app_path('Models');
@@ -425,7 +471,8 @@ class AdminInstallCommand extends BaseCommand
         );
 
 
-        return $model_path;
+
+       return $model_path;
     }
 
     /**
@@ -996,6 +1043,7 @@ class AdminInstallCommand extends BaseCommand
 
         $links_stub = array_filter($links_stub, function($link){
             $name = ucfirst(Str::before($link->getFileNameWithoutExtension(), 'Link'));
+            dump($name);
             return in_array($name, $this->crud_models);
         });
         $search = "{{-- insert sidebar links here --}}";
@@ -1027,7 +1075,21 @@ class AdminInstallCommand extends BaseCommand
         }
 
 
+
+        // $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/emails');
+        // $this->compliedAndWriteFileRecursively(
+        //     $views_stub,
+        //     $views_path . $data_map["{{frontLowerNamespace}}"]
+        // );
+
+
         $this->loadEmailsViews();
+
+        // renommage du dossier avec le guard
+        // $this->filesystem->moveDirectory(
+        //     $views_path . '/guard',
+        //     $views_path . '/' . $data_map['{{pluralSlug}}']
+        // );
 
         // suppression des vues générées par le package Multi Auth
         $this->filesystem->deleteDirectory(resource_path('views/') . $data_map['{{singularSlug}}']);

@@ -1,6 +1,6 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
-@section('title','Administrateurs')
+@section('title', ${{singularSlug}}->name)
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -29,7 +29,7 @@
           <div class="col-md-3">
 
             <!-- Profile Image -->
-            <div class="card card-primary card-outline">
+            <div class="card">
               <div class="card-body box-profile">
                 <div class="text-center">
                   <img id="holder" class="profile-user-img img-fluid img-circle"
