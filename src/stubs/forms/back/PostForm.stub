@@ -29,12 +29,12 @@ class PostForm extends Form
 			    'rules' => 'required',
             ])
             ->add('prestation_id', 'entity', [
-                "class" => \App\Models\Category::class,
+                "class" => \App\{{modelsFolder}}\Category::class,
                 "property" => 'name',
                 "label" => 'Catégorie',
-                "rules" => 'required|exists:App\Models\Category,id',
-                "query_builder" => function(\App\Models\Category $category){
-                    return $category->where('id','!=', \App\Models\Category::UNCATEGORIZED)->get();
+                "rules" => 'required|exists:App\{{modelsFolder}}\Category,id',
+                "query_builder" => function(\App\{{modelsFolder}}\Category $category){
+                    return $category->where('id','!=', \App\{{modelsFolder}}\Category::UNCATEGORIZED)->get();
                 },
                 'attr' => [
                     'class' => 'custom-select'

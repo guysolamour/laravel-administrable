@@ -74,7 +74,6 @@ class TinymceImageManager {
 
   init() {
     // fecth images
-    console.log(this.getModal().find(this.config.uploadimage))
     this.getModal().find(this.config.uploadimage).on('click', this.uploadModal)
     this.generateFormFor(this.collection)
 

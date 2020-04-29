@@ -95,7 +95,7 @@ trait MediaableTrait
         parent::boot();
 
         /**
-         * @param \App\Models\BaseModel $model
+         * @param \{{namespace}}\{{modelsFolder}}\BaseModel $model
          */
         static::created(function ($model) {
             foreach (config('media-library.collections')  as $collection) {
@@ -107,7 +107,7 @@ trait MediaableTrait
     }
 
     /**
-     * @param  \App\Models\BaseModel $model
+     * @param  \{{namespace}}\{{modelsFolder}}\BaseModel $model
      * @param array $images
      * @return void
      */

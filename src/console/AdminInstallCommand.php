@@ -116,6 +116,9 @@ class AdminInstallCommand extends BaseCommand
         $this->name = $this->argument('name');
         $this->override = $this->option('force') ? true : false;
 
+
+        $this->models_folder_name = ucfirst($this->option('model'));
+
         /**
          * Le filter permet de retirer les élémenst vides du tableau comme des , simples
          */
@@ -144,9 +147,6 @@ class AdminInstallCommand extends BaseCommand
         }
 
         $this->preset = $preset;
-
-
-        $this->models_folder_name = ucfirst($this->option('model'));
 
     }
 
@@ -340,7 +340,7 @@ class AdminInstallCommand extends BaseCommand
 
 
         // Move User|Guard={admin} To Models Directory
-        $this->info("Moving User.php and ". ucfirst($this->name) . ".php to app/Models folder");
+        $this->info("Moving User.php and ". ucfirst($this->name) . ".php to app/{$this->models_folder_name} folder");
         $this->moveDefaultModelsToNewModelsDirectory();
 
 
@@ -404,7 +404,8 @@ class AdminInstallCommand extends BaseCommand
         $models = array_filter($models,fn($model) => in_array($model->getFilenameWithoutExtension(), $models_to_create));
 
 
-        $model_path =  app_path('Models');
+        $model_path =  app_path($this->models_folder_name);
+
 
         $this->compliedAndWriteFile(
             $models,
@@ -424,7 +425,6 @@ class AdminInstallCommand extends BaseCommand
             app_path('User.php')
         );
 
-
         return $model_path;
     }
 
@@ -442,11 +442,11 @@ class AdminInstallCommand extends BaseCommand
 
         foreach (['User', $guard] as $model ) {
             if ($this->filesystem->exists($userPath = app_path("$model.php"))) {
-                $this->filesystem->move($userPath, $targetPath = app_path("Models/$model.php"));
+                $this->filesystem->move($userPath, $targetPath = app_path("{$this->models_folder_name}/$model.php"));
                 $this->filesystem->put(
                     $targetPath,
                     strtr($this->filesystem->get($targetPath), [
-                        'App;' => "App\\Models;",
+                        'App;' => "App\\{$this->models_folder_name};",
                     ])
                 );
 
@@ -462,7 +462,7 @@ class AdminInstallCommand extends BaseCommand
      */
     protected function changeNamespaceEverywhereItUses(string $model)
     {
-        $this->info("Changing $model uses and imports from App\\$model to App\\Models\\$model");
+        $this->info("Changing $model uses and imports from App\\$model to App\\{$this->models_folder_name}\\$model");
 
         $files = Finder::create()
             ->in(base_path())
@@ -474,7 +474,7 @@ class AdminInstallCommand extends BaseCommand
             $path = $file->getRealPath();
             if ($this->filesystem->exists($path)) {
                 $this->filesystem->put($path, strtr($this->filesystem->get($path), [
-                    "App\\$model" => "App\\Models\\$model",
+                    "App\\$model" => "App\\{$this->models_folder_name}\\$model",
                 ]));
             }
         }

@@ -2,7 +2,7 @@
 
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use {{namespace}}\Models\Configuration;
+use {{namespace}}\{{modelsFolder}}\Configuration;
 
 class ConfigurationsTableSeeder extends Seeder
 {

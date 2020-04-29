@@ -5,7 +5,7 @@ namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 use {{namespace}}\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Redirect;
-use {{namespace}}\Models\Configuration;
+use {{namespace}}\{{modelsFolder}}\Configuration;
 
 class RedirectController extends Controller
 {

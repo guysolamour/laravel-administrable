@@ -46,7 +46,7 @@
                                         <div class="btn-group float-right">
                                             <a href="{{ route('{{backLowerNamespace}}.post.create') }}" class="btn  btn-primary"> <i
                                                     class="fa fa-plus"></i> Ajouter</a>
-                                            <a href="#" class="btn btn-danger d-none" data-model="\App\Models\Post"
+                                            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Post"
                                                 id="delete-all"> <i class="fa fa-trash"></i> Tous supprimer</a>
                                         </div>
                                     </div>

@@ -45,12 +45,12 @@
                             'back_image_label'        => 'Image à la une (2)',
                             'images_label'           => 'Gallerie',
 
-                            'model'                     => new {{namespace}}\Models\Post,
-                            'model_name'            => {{namespace}}\Models\Post::class,
+                            'model'                     => new {{namespace}}\{{modelsFolder}}\Post,
+                            'model_name'            => {{namespace}}\{{modelsFolder}}\Post::class,
                             'front_image'           => true,
                             'back_image'              => true,
                             'images'               => true,
-                            'form_name'                => get_form_name({{namespace}}\Models\Post::class),
+                            'form_name'                => get_form_name({{namespace}}\{{modelsFolder}}\Post::class),
                         ])
                     </div>
 

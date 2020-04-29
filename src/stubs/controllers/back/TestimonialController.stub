@@ -2,10 +2,10 @@
 
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
-use {{namespace}}\Models\Testimonial;
 use Illuminate\Http\Request;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\{{modelsFolder}}\Testimonial;
 
 class TestimonialController extends Controller
 {
@@ -54,7 +54,7 @@ class TestimonialController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Testimonial  $testimonial
+     * @param  \App\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
     public function show(Testimonial $testimonial)
@@ -65,7 +65,7 @@ class TestimonialController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Testimonial  $testimonial
+     * @param  \App\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
     public function edit(Testimonial $testimonial)
@@ -78,7 +78,7 @@ class TestimonialController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Testimonial  $testimonial
+     * @param  \App\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Testimonial $testimonial)
@@ -95,7 +95,7 @@ class TestimonialController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Testimonial  $testimonial
+     * @param  \App\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
     public function destroy(Testimonial $testimonial)

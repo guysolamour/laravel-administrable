@@ -43,7 +43,7 @@ trait FormBuilderTrait {
      */
     private function getModelClassName() :string
     {
-        return sprintf("App\Models\%s",$this->getModelName(false));
+        return sprintf("{{namespace}}\{{modelsFolder}}\%s",$this->getModelName(false));
     }
 
     /**

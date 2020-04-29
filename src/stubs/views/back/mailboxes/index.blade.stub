@@ -53,7 +53,7 @@
                                 @endif
                             </h3>
                             <div class="btn-group float-right">
-                                <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\Models\Mailbox" id="delete-all"> <i
+                                <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Mailbox" id="delete-all"> <i
                                         class="fa fa-trash"></i> Tous supprimer</a>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                                             </div>
                                         </td>
                                       <td>{{ $loop->iteration }}</td>
-                                      <td><a href="Javascript:void(1)"><i class="fas {{ ($message->read) ? 'fa-star-o' : 'fa-star'}} text-warning"></i></a></td>
+                                      <td><a href="Javascript:void(1)"><i class=" {{ ($message->read) ? 'far fa-star' : 'fas fa-star'}} text-warning"></i></a></td>
                                       <td><a href="Javascript:void(1)">{{ $message->name }}</a></td>
                                       <td>{{ Str::limit($message->content,25) }}</td>
                                       <td>{{ $message->created_at->diffForHumans() }}</td>

@@ -3,12 +3,12 @@
 namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
 use {{namespace}}\Admin;
-use {{namespace}}\Models\Mailbox;
 use Illuminate\Http\Request;
-use {{namespace}}\Forms\{{frontNamespace}}\ContactForm;
 use {{namespace}}\Traits\FormBuilderTrait;
-use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\{{modelsFolder}}\Mailbox;
 use Illuminate\Support\Facades\Notification;
+use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\Forms\{{frontNamespace}}\ContactForm;
 use {{namespace}}\Notifications\{{backNamespace}}\ContactNotification;
 
 class ContactController extends Controller

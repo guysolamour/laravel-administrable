@@ -3,7 +3,7 @@
 namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
 use Illuminate\Http\Request;
-use {{namespace}}\Models\Testimonial;
+use {{namespace}}\{{modelsFolder}}\Testimonial;
 use {{namespace}}\Http\Controllers\Controller;
 
 class TestimonialController extends Controller

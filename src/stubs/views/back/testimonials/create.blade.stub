@@ -47,12 +47,12 @@
                             'back_image_label'        => 'Image à la une (2)',
                             'images_label'           => 'Gallerie',
 
-                            'model'                     => new {{namespace}}\Models\Testimonial,
-                            'model_name'            => {{namespace}}\Models\Testimonial::class,
+                            'model'                     => new {{namespace}}\{{modelsFolder}}\Testimonial,
+                            'model_name'            => {{namespace}}\{{modelsFolder}}\Testimonial::class,
                             'front_image'           => true,
                             'back_image'              => true,
                             'images'               => true,
-                            'form_name'                => get_form_name({{namespace}}\Models\Testimonial::class),
+                            'form_name'                => get_form_name({{namespace}}\{{modelsFolder}}\Testimonial::class),
                         ])
                     </div>
 

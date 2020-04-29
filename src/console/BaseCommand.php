@@ -48,7 +48,7 @@ class BaseCommand extends Command {
         if (!$name)
         $name = $this->name;
 
-        return array(
+        return [
             '{{namespace}}' => $this->getNamespace(),
             '{{pluralCamel}}' => Str::plural(Str::camel($name)),
             '{{pluralSlug}}' => Str::plural(Str::slug($name)),
@@ -62,7 +62,8 @@ class BaseCommand extends Command {
             '{{frontLowerNamespace}}'=> Str::lower(config('administrable.front_namespace')),
             '{{backNamespace}}'=> ucfirst(config('administrable.back_namespace')),
             '{{backLowerNamespace}}'=> Str::lower(config('administrable.back_namespace')),
-        );
+            '{{modelsFolder}}' => ucfirst($this->models_folder_name),
+        ];
     }
 
     protected function compliedFile($file, $get_content = true)

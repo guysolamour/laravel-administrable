@@ -3,7 +3,7 @@
 namespace {{namespace}}\Mail\{{frontNamespace}};
 
 use {{namespace}}\{{singularClass}};
-use {{namespace}}\Models\Mailbox;
+use {{namespace}}\{{modelsFolder}}\Mailbox;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

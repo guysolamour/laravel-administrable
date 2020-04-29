@@ -3,8 +3,8 @@
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
 use Illuminate\Http\Request;
+use {{namespace}}\{{modelsFolder}}\Media;
 use {{namespace}}\Http\Controllers\Controller;
-use {{namespace}}\Models\Media;
 
 class MediaController extends Controller
 {

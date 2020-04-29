@@ -4,7 +4,7 @@ namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
 use Illuminate\Http\Request;
 use MercurySeries\Flashy\Flashy;
-use {{namespace}}\Models\Mailbox;
+use {{namespace}}\{{modelsFolder}}\Mailbox;
 use {{namespace}}\{{singularClass}};
 use {{namespace}}\Http\Controllers\Controller;
 
@@ -30,7 +30,7 @@ class MailboxController extends Controller
       /**
        * Display the specified resource.
        *
-       * @param  \App\Models\Mailbox  $mailbox
+       * @param  \App\{{modelsFolder}}\Mailbox  $mailbox
        * @return \Illuminate\Http\Response
        */
       public function show(Mailbox $mailbox)
@@ -48,7 +48,7 @@ class MailboxController extends Controller
       /**
        * Remove the specified resource from storage.
        *
-       * @param  \{{namespace}}\Models\Mailbox  $mailbox
+       * @param  \{{namespace}}\{{modelsFolder}}\Mailbox  $mailbox
        * @return \Illuminate\Http\Response
        */
       public function destroy(Mailbox $mailbox)

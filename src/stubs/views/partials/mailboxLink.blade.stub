@@ -4,7 +4,7 @@
                  Messagerie
                <p>
                    @php
-                       $new =  \App\Models\Mailbox::unread()->count()
+                       $new =  \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->count()
                    @endphp
                    @if($new)
                       <span class="badge badge-success right">{{ 'new ' .$new  }}</span>

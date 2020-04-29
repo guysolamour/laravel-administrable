@@ -2,7 +2,7 @@
 
 namespace {{namespace}}\Notifications\Back;
 
-use {{namespace}}\Models\Mailbox;
+use {{namespace}}\{{modelsFolder}}\Mailbox;
 use Illuminate\Bus\Queueable;
 use {{namespace}}\Mail\{{frontNamespace}}\ContactMail;
 use Illuminate\Notifications\Notification;
