@@ -102,6 +102,7 @@ class AdminInstallCommand extends BaseCommand
                                 {--g|generate=Mailbox,Testimonial,Post : Default models crud to generate }
                                 {--p|preset=vue : Ui preset to use }
                                 {--m|model=Models : Models folder name inside App directory }
+                                {--s|seed : Seed database with fake data }
                                 {--f|force : Whether to override existing files }
                                 {--l|locale=fr : Locale to use default fr }
                             ';
@@ -354,9 +355,11 @@ class AdminInstallCommand extends BaseCommand
         $this->loadDebugbar();
 
         // Seed Database
-        // $this->info(PHP_EOL . 'Seeding database...');
-        // Artisan::call('db:seed');
-        // $this->info('Database seeding completed successfully.');
+        if($this->option('seed')){
+            $this->info(PHP_EOL . 'Seeding database...');
+            Artisan::call('db:seed');
+            $this->info('Database seeding completed successfully.');
+        }
 
     }
 
