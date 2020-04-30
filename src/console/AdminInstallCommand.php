@@ -163,13 +163,14 @@ class AdminInstallCommand extends BaseCommand
         $this->init();
 
 
+
+
         // Passer des options pour generer les articles, mentions legales, temoignages en option
 
         Artisan::call('multi-auth:install', [
             'name' => $this->name,
             '--force' => $this->override
         ]);
-
 
 
         // Gerer l'authentification
@@ -243,12 +244,10 @@ class AdminInstallCommand extends BaseCommand
 
 
 
-
         // Middleware
         $this->info(PHP_EOL . 'Creating Middleware...');
         $middleware_path = $this->loadMiddleware();
         $this->info('Middleware created at ' . $middleware_path);
-
 
 
 
@@ -317,20 +316,16 @@ class AdminInstallCommand extends BaseCommand
         $this->info('notifications created ' . $notification_path);
 
 
-
-
         // Utils packages
         $this->info(PHP_EOL . 'Load utils package');
         $this->loadUtilPackage();
         $this->info('Packages loaded successfuly');
 
 
-
         // Commands
         $this->info(PHP_EOL . 'Load commands');
         $kernel_path = $this->loadCommands();
         $this->info('Commands loaded successfuly at ' . $kernel_path);
-
 
 
         // Config
@@ -354,9 +349,13 @@ class AdminInstallCommand extends BaseCommand
         $this->runProcess("composer dump-autoload -o");
 
 
+        // Add debugbar and IDE helper
+        $this->info(PHP_EOL . 'Add debugbar, IDE helper some dev packages');
+        $this->loadDebugbar();
+
         // Seed Database
         // $this->info(PHP_EOL . 'Seeding database...');
-        // $this->seedDatabase();
+        // Artisan::call('db:seed');
         // $this->info('Database seeding completed successfully.');
 
     }
@@ -430,9 +429,6 @@ class AdminInstallCommand extends BaseCommand
 
     /**
      * Move User|Guard={admin} To Models Directory
-     *
-     * @return $this
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function moveDefaultModelsToNewModelsDirectory()
     {
@@ -1387,6 +1383,45 @@ class AdminInstallCommand extends BaseCommand
         );
 
         return $mail_path;
+    }
+
+    public function loadDebugbar()
+    {
+        $composer_path = base_path('composer.json');
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($composer_path),
+            $search = '"require-dev": {',
+            <<<TEXT
+            $search
+                    "garygreen/pretty-routes": "^1.0",
+                    "barryvdh/laravel-debugbar": "^3.3",
+                    "barryvdh/laravel-ide-helper": "^2.7",
+                    "sven/artisan-view": "^3.3",
+            TEXT,
+            $composer_path
+        );
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($composer_path),
+            $search = '"scripts": {',
+            <<<TEXT
+            {$search}
+                    "post-update-cmd": [
+                        "Illuminate\\\Foundation\\\ComposerScripts::postUpdate",
+                        "@php artisan ide-helper:generate --memory --helpers",
+                        "@php artisan ide-helper:meta",
+                        "@php artisan ide-helper:models --write"
+                    ],
+            TEXT,
+            $composer_path
+        );
+
+        Artisan::call('clear-compiled');
+
+        // composer install
+        $this->runProcess("composer update");
+
     }
 
 }
