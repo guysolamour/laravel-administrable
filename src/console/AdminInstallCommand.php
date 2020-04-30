@@ -114,9 +114,12 @@ class AdminInstallCommand extends BaseCommand
     protected function init()
     {
 
+        if ($this->filesystem->exists(base_path('administrable.yaml'))) {
+            throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
+        }
+
         $this->name = $this->argument('name');
         $this->override = $this->option('force') ? true : false;
-
 
         $this->models_folder_name = ucfirst($this->option('model'));
 
@@ -159,12 +162,7 @@ class AdminInstallCommand extends BaseCommand
 
         $this->info('Initiating...');
 
-
-
         $this->init();
-
-
-
 
         // Passer des options pour generer les articles, mentions legales, temoignages en option
 
@@ -177,11 +175,16 @@ class AdminInstallCommand extends BaseCommand
         // Gerer l'authentification
         Artisan::call("ui {$this->preset} --auth");
 
+        //  Administrable yaml file
+        $administrable_path = $this->info(PHP_EOL . 'Creating models administrable crud configuration yaml file');
+        $this->loadCrudConfiguration();
+        $this->info('Administrable crud configuration yaml ' . $administrable_path);
+
+
         // Helpers
         $helper_path = $this->info(PHP_EOL . 'Creating Helper...');
         $this->loadHelpers();
         $this->info('Helper created at ' . $helper_path);
-
 
 
 
@@ -191,20 +194,16 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Model created at ' . $model_path);
 
 
-
-
         // Factories
         $this->info(PHP_EOL . 'Creating Factory...');
         $factory_path = $this->loadFactory();
         $this->info('Factory created at ' . $factory_path);
 
 
-
         // Migrations
         $this->info(PHP_EOL . 'Creating Migrations...');
         $migrations_path = $this->loadMigrations();
         $this->info('Migrations created at ' . $migrations_path);
-
 
 
         // add variable in .env file
@@ -230,12 +229,10 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Seed created at ' . $seed_path);
 
 
-
         // Registering seeder
         $this->info(PHP_EOL . 'Registering seeder...');
         $database_seeder_path = $this->registerSeed();
         $this->info('Seed registered in ' . $database_seeder_path);
-
 
 
         // Controllers
@@ -244,12 +241,10 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Controllers created at ' . $controllers_path);
 
 
-
         // Middleware
         $this->info(PHP_EOL . 'Creating Middleware...');
         $middleware_path = $this->loadMiddleware();
         $this->info('Middleware created at ' . $middleware_path);
-
 
 
         // Route Middleware
@@ -265,12 +260,10 @@ class AdminInstallCommand extends BaseCommand
 
 
 
-
         // Forms
         $this->info(PHP_EOL . 'Creating Forms...');
         $forms_path = $this->loadForms();
         $this->info('Forms created at ' . $forms_path);
-
 
 
         // routes
@@ -279,14 +272,10 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Routes created at ' . $routes_path);
 
 
-
-
         // routes and breadcrumbs
         $this->info(PHP_EOL . 'Creating Breadcrumb...');
         $breadcrumbs_path = $this->loadBreadcrumbs();
         $this->info('Breadcrumb created at ' . $breadcrumbs_path);
-
-
 
 
         // Views
@@ -295,20 +284,16 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Views created at ' . $admin_views_path);
 
 
-
-
         // Locales
         $this->info(PHP_EOL . 'Adding locale...');
         $config_path = $this->loadLocale();
         $this->info('Locale added at ' . $config_path);
 
 
-
         // Emails
         $this->info(PHP_EOL . 'Adding email');
         $email_path = $this->loadEmails();
         $this->info('emails created ' . $email_path);
-
 
 
         // Notifications
@@ -361,6 +346,21 @@ class AdminInstallCommand extends BaseCommand
             $this->info('Database seeding completed successfully.');
         }
 
+    }
+
+
+    protected function loadCrudConfiguration()
+    {
+        $path = base_path('administrable.yaml');
+
+        $helper_stub = $this->filesystem->get(self::TPL_PATH . '/crud/configuration/administrable.stub');
+
+        $this->writeFile(
+            $this->compliedFile($helper_stub, false),
+            $path
+        );
+
+        return $path;
     }
 
 

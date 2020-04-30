@@ -1,0 +1,16 @@
+models:
+  Post:
+    title:
+      name: title,
+      type: string,
+      rules: required
+
+    content: longText
+    published_at: nullable timestamp
+
+  Comment:
+    content: longtext
+    # name: string
+    relation:
+      user_id: 5
+      type: hasMany
