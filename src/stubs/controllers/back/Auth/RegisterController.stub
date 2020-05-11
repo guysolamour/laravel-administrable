@@ -86,7 +86,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('{{singularSlug}}.auth.register');
+        return view('{{backLowerNamespace}}.auth.register');
     }
 
     /**

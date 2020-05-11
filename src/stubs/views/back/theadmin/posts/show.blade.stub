@@ -1,0 +1,82 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title',$post->title)
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+            {{ Breadcrumbs::render('{{backLowerNamespace}}.post.show', $post) }}
+        </nav>
+
+    </div>
+    <div class="card shadow-1 row">
+        <div class="col-md-8">
+            <header class="card-header bg-lightest">
+                <div class="card-title flexbox w-100 align-items-center">
+                    <div>
+                        <img class="avatar" src="/vendor/theadmin/assets/img/avatar/2.jpg" alt="...">
+                        <div>
+                            <h6 class="mb-0">Hossein Shams</h6>
+                            <small>Today at 11:34 AM</small>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="{{ route('{{backLowerNamespace}}.category.show', $post->category) }}">{{ $post->category->name }}</a>
+                    </div>
+                </div>
+            </header>
+
+
+            <div class="card-body">
+                {!! $post->content !!}
+            </div>
+        </div>
+        <div class="col-md-4">
+            @include('{{backLowerNamespace}}.media._show', [
+                'model' => $post,
+            // 'front_image_label' => 'titi',
+            // 'back_image_label' => 'tata',
+            // 'images_label' => 'toto',
+            ])
+        </div>
+
+    </div>
+</div>
+
+<div class="fab fab-fixed">
+    <button class="btn btn-float btn-primary" data-toggle="button">
+        <i class="fab-icon-default ti-plus"></i>
+        <i class="fab-icon-active ti-close"></i>
+    </button>
+
+    <ul class="fab-buttons">
+        <li><a class="btn btn-float btn-sm btn-info" href="{{ route('{{backLowerNamespace}}.post.edit', $post) }}" title="" data-provide="tooltip" data-placement="left"
+            data-original-title="Editer"><i class="ti-pencil"></i> </a></li>
+            <li><a class="btn btn-float btn-sm btn-danger" href="{{ route('{{backLowerNamespace}}.post.destroy',$post) }}" title="" data-provide="tooltip" data-placement="left"
+                data-method="delete"
+                data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?"
+                data-original-title="Supprimer"><i class="ti-trash"></i> </a></li>
+
+    </ul>
+</div>
+
+
+
+@endsection
+
+
+
+
+
+
+
+
+
+
+
+
+

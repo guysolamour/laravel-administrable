@@ -16,16 +16,6 @@ class AdminInstallCommand extends BaseCommand
      */
     protected  $name = '';
 
-    /**
-     * @var boolean
-     */
-    protected  $exits = false;
-
-    /**
-     * @var boolean
-     */
-    protected  $override = false;
-
 
     /**
      * @var array
@@ -86,6 +76,16 @@ class AdminInstallCommand extends BaseCommand
      */
     protected $preset = 'vue';
 
+    /**
+     * @var array
+     */
+    protected  $themes = ['adminlte', 'theadmin', 'cooladmin','tabler', 'themekit'];
+
+    /**
+     * @var string
+     */
+    protected $theme = '';
+
 
     /**
      * @var string
@@ -103,7 +103,8 @@ class AdminInstallCommand extends BaseCommand
                                 {--p|preset=vue : Ui preset to use }
                                 {--m|model=Models : Models folder name inside App directory }
                                 {--s|seed : Seed database with fake data }
-                                {--f|force : Whether to override existing files }
+                                {--d|create_db : Create database with default connection }
+                                {--t|theme= : Theme to use }
                                 {--l|locale=fr : Locale to use default fr }
                             ';
 
@@ -114,12 +115,11 @@ class AdminInstallCommand extends BaseCommand
     protected function init()
     {
 
-        if ($this->filesystem->exists(base_path('administrable.yaml'))) {
-            throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
-        }
+        // if ($this->filesystem->exists(base_path('administrable.yaml'))) {
+        //     throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
+        // }
 
         $this->name = $this->argument('name');
-        $this->override = $this->option('force') ? true : false;
 
         $this->models_folder_name = ucfirst($this->option('model'));
 
@@ -147,10 +147,24 @@ class AdminInstallCommand extends BaseCommand
         $preset = strtolower($this->option('preset'));
 
         if (!in_array($preset, $this->presets)) {
-            throw new \Exception(sprintf('Le preset {%s} n\'est pas disponible. Les presets disponible sont {%s}', $preset, join(',', $this->presets)));
+            throw new \Exception(sprintf('Le preset {%s} n\'est pas disponible. Les presets disponiblent sont {%s}', $preset, join(',', $this->presets)));
         }
 
         $this->preset = $preset;
+
+
+
+
+
+        $theme = $this->option('theme') ?: strtolower(config('administrable.theme','theadmin'));
+
+
+        if(! in_array($theme, $this->themes)){
+            throw new \Exception(sprintf('Le thème {%s} n\'est pas disponible. Les thèmes disponiblent sont {%s}', $theme, join(',', $this->themes)));
+        }
+
+
+        $this->theme = $theme;
 
     }
 
@@ -162,15 +176,14 @@ class AdminInstallCommand extends BaseCommand
 
         $this->info('Initiating...');
 
+
         $this->init();
 
         // Passer des options pour generer les articles, mentions legales, temoignages en option
 
         Artisan::call('multi-auth:install', [
-            'name' => $this->name,
-            '--force' => $this->override
+            'name'    => $this->name,
         ]);
-
 
         // Gerer l'authentification
         Artisan::call("ui {$this->preset} --auth");
@@ -185,7 +198,6 @@ class AdminInstallCommand extends BaseCommand
         $helper_path = $this->info(PHP_EOL . 'Creating Helper...');
         $this->loadHelpers();
         $this->info('Helper created at ' . $helper_path);
-
 
 
         // Models
@@ -219,7 +231,7 @@ class AdminInstallCommand extends BaseCommand
 
         // Run migrations
         $this->info(PHP_EOL . 'Migrate');
-        Artisan::call('migrate');
+        $this->call('migrate');
         $this->info('Migrations done');
 
 
@@ -257,7 +269,6 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Creating Traits...');
         $traits_path = $this->loadTraits();
         $this->info('Traits created at ' . $traits_path);
-
 
 
         // Forms
@@ -301,7 +312,6 @@ class AdminInstallCommand extends BaseCommand
         $notification_path = $this->loadNotifications();
         $this->info('notifications created ' . $notification_path);
 
-
         // Utils packages
         $this->info(PHP_EOL . 'Load utils package');
         $this->loadUtilPackage();
@@ -325,10 +335,10 @@ class AdminInstallCommand extends BaseCommand
         $this->moveDefaultModelsToNewModelsDirectory();
 
 
-        // Assets
+        // Publish assets
         $this->info(PHP_EOL . 'Publishing Assets...');
-        Artisan::call('vendor:publish --tag=administrable-public');
-        $this->info('Assets published at ' . public_path('vendor/adminlte'));
+        $this->publishAssets();
+        $this->info('Assets published successfuly');
 
         // Composer dump-autoload
         $this->info("Running composer dump-autoload");
@@ -337,14 +347,41 @@ class AdminInstallCommand extends BaseCommand
 
         // Add debugbar and IDE helper
         $this->info(PHP_EOL . 'Add debugbar, IDE helper some dev packages');
-        $this->loadDebugbar();
+        // $this->loadDebugbar();
+
 
         // Seed Database
         if($this->option('seed')){
             $this->info(PHP_EOL . 'Seeding database...');
-            Artisan::call('db:seed');
-            $this->info('Database seeding completed successfully.');
+            $this->call('db:seed');
         }
+
+    }
+
+
+    protected function publishAssets()
+    {
+        // Faire les copies
+        $this->filesystem->copyDirectory(
+            self::TPL_PATH . "/assets/{$this->theme}",
+            public_path("vendor/{$this->theme}"),
+        );
+
+        $this->filesystem->copyDirectory(
+            self::TPL_PATH . "/resources",
+            public_path(),
+        );
+
+        $this->filesystem->copyDirectory(
+            self::TPL_PATH . "/imagemanager",
+            public_path('vendor/imagemanager'),
+        );
+
+        $this->filesystem->copyDirectory(
+            self::TPL_PATH . "/tinymce",
+            public_path('vendor/tinymce'),
+        );
+
 
     }
 
@@ -955,7 +992,7 @@ class AdminInstallCommand extends BaseCommand
         $crud_models = array_map(fn($item) => Str::plural($item),$this->crud_models);
 
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/back');
+        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . "/views/back/{$this->theme}");
         $views_to_create = [...self::DEFAULTS['views']['back'], ...$crud_models];
         $views_stub = array_filter($views_stub, fn($view) => in_array(ucfirst(Str::before($view->getRelativePathname(), '/')), $views_to_create));
 
@@ -988,19 +1025,18 @@ class AdminInstallCommand extends BaseCommand
 
 
         // Gestion des liens (aside) en administration
-        $aside_path = resource_path("views/{$data_map["{{backLowerNamespace}}"]}/partials/_aside.blade.php");
+        $aside_path = resource_path("views/{$data_map["{{backLowerNamespace}}"]}/partials/_sidebar.blade.php");
 
 
-        $links_stub = $this->filesystem->files(self::TPL_PATH . '/views/partials');
+        $links_stub = $this->filesystem->files(self::TPL_PATH . "/views/back/{$this->theme}/stubs");
 
-        $links_stub = array_filter($links_stub, function($link){
+        $links_stub = array_filter($links_stub, function ($link) {
             $name = ucfirst(Str::before($link->getFileNameWithoutExtension(), 'Link'));
             return in_array($name, $this->crud_models);
         });
         $search = "{{-- insert sidebar links here --}}";
 
-        foreach ($links_stub as $link ) {
-
+        foreach ($links_stub as $link) {
             $this->replaceAndWriteFile(
                 $this->filesystem->get($aside_path),
                 $search,
@@ -1011,9 +1047,9 @@ class AdminInstallCommand extends BaseCommand
 
 
         // Gestion du lien dans le header
-        if(in_array('Mailbox', $this->crud_models)){
+        if (in_array('Mailbox', $this->crud_models)) {
             $header_path = resource_path("views/{$data_map["{{backLowerNamespace}}"]}/partials/_header.blade.php");
-            $stub = $this->filesystem->get(self::TPL_PATH . '/views/partials/headerLink.blade.stub');
+            $stub = $this->filesystem->get(self::TPL_PATH . "/views/back/{$this->theme}/stubs/headerLink.blade.stub");
 
             $search = "{{-- Insert Mailbox Link --}}";
 
@@ -1024,6 +1060,7 @@ class AdminInstallCommand extends BaseCommand
                 $header_path
             );
         }
+
 
 
         $this->loadEmailsViews();
@@ -1420,7 +1457,7 @@ class AdminInstallCommand extends BaseCommand
             $composer_path
         );
 
-        Artisan::call('clear-compiled');
+        $this->call('clear-compiled');
 
         // composer install
         $this->runProcess("composer update");

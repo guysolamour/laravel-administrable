@@ -8,9 +8,25 @@ class Mailbox extends BaseModel
 {
     use Sluggable;
 
+    /**
+    * The attributes that are mass assignable.
+    *
+    * @var array
+    */
     public $fillable = ['email','phone_number','content','name','slug','read'];
 
 
+    /**
+    * The attributes that should be cast to native types.
+    *
+    * @var array
+    */
+    protected $casts = [
+        'read' => 'boolean',
+    ];
+
+
+    // Attributes
     public function scopeUnread($query)
     {
         return $query->where('read',false);
@@ -20,6 +36,20 @@ class Mailbox extends BaseModel
     {
         return $query->where('read',true);
     }
+
+
+    // add relation methods below
+
+    public function markAsRead()
+    {
+        if (!$this->read) {
+            $this->update(['read' => true]);
+        }
+    }
+
+    // add sluggable methods below
+
+
 
 
     public function getRouteKeyName()

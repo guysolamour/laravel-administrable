@@ -1,0 +1,92 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Configuration')
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Configuration</li>
+            </ol>
+        </nav>
+
+    </div>
+
+    <div class="card">
+        <h4 class="card-title">
+            Modification des paramètres généraux du site
+        </h4>
+
+        <div class="card-body form-type-material">
+
+                {!! form_start($form) !!}
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->email) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! form_row($form->postal) !!}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->area) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! form_row($form->cell) !!}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->phone) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! form_row($form->youtube) !!}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->facebook) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! form_row($form->twitter) !!}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! form_row($form->linkedin) !!}
+                    </div>
+
+                    {{--<div class="col-md-6">--}}
+                    {{--{!! form_row($form->cgu) !!}--}}
+                    {{--</div>--}}
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {!! form_row($form->about) !!}
+                    </div>
+
+                    {{--<div class="col-md-6">--}}
+                    {{--{!! form_row($form->cgu) !!}--}}
+                    {{--</div>--}}
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-edit"></i> Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                {!! form_end($form) !!}
+        </div>
+    </div>
+</div>
+
+
+
+@endsection

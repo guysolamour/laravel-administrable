@@ -1,0 +1,30 @@
+@extends('{{backLowerNamespace}}.layouts.app')
+
+@section('title','Vérification de votre email')
+
+@section('content')
+
+<div class="container-tight py-6">
+    <div class="text-center mb-4">
+        <img src="{{ config('administrable.logo_url') }}" height="36" alt="{{ config('administrable.name')}}">
+    </div>
+    <div class="card-body">
+        @if (session('resent'))
+        <div class="alert alert-success" role="alert">
+            Un nouveau lien de vérification vient de vous être envoyé par email.
+        </div>
+        @endif
+        Avant de continuer, merci de vérifier votre boite de réception pour le lien de vérification
+        Si vous n'avez pas recu de mail,
+        <form class="card card-md" method="POST" action="{{ route('{{singularSlug}}.verification.resend') }}">
+          <div class="card-body">
+            @csrf
+            <button type="submit" class="btn btn-primary btn-block">Cliquer ici pour envoyer un autre</button>
+          </div>
+        </form>
+    </div>
+    <div class="text-center text-muted">
+        Mot de passe oublié ?, <a href="{{ route('{{singularSlug}}.password.request') }}">réinitialisez le ici.</a>
+    </div>
+</div>
+@endsection

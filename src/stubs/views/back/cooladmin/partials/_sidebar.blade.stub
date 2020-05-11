@@ -1,0 +1,58 @@
+<!-- MENU SIDEBAR-->
+<aside class="menu-sidebar2 {{ $classNames ?? '' }}">
+    <div class="logo">
+        <a href="{{ route('{{singularSlug}}.dashboard') }}">
+            <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('app.name') }} Logo" />
+        </a>
+    </div>
+    <div class="menu-sidebar2__content js-scrollbar1">
+       <div class="account2">
+            <div class="image img-cir img-120">
+                <img src="{{ get_{{singularSlug}}('avatar') }}" alt="{{ get_{{singularSlug}}('full_name') }}" />
+            </div>
+            <h4 class="name">
+                <a href="{{ route('back.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">{{ get_{{singularSlug}}('full_name') }}</a>
+            </h4>
+            <a >{{ get_{{singularSlug}}('role') }}</a>
+
+        </div>
+        <nav class="navbar-sidebar2">
+            <ul class="list-unstyled navbar__list">
+
+                {{-- insert sidebar links here --}}
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-users"></i>Administrateurs
+                        <span class="arrow">
+                            <i class="fas fa-angle-down"></i>
+                        </span>
+                    </a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                        <li>
+                            <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
+                                <i class="far fa-th-list"></i>Liste</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
+                                <i class="far fa-circle"></i>Mon profil</a>
+                        </li>
+                        @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
+                        <li>
+                            <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}">
+                                <i class="far fa-plus"></i>Ajouter</a>
+                        </li>
+                        @endif
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}">
+                        <i class="far  fa-tools"></i>Configuration</a>
+                </li>
+
+
+            </ul>
+        </nav>
+    </div>
+</aside>
+<!-- END MENU SIDEBAR-->

@@ -1,0 +1,88 @@
+<!-- Sidebar -->
+<aside class="sidebar sidebar-icons-right sidebar-icons-boxed sidebar-expand-lg sidebar-dark">
+    <header class="sidebar-header">
+        <a class="logo-icon" href="{{ route('{{singularSlug}}.dashboard') }}">{{ config('app.name') }}</a>
+        {{-- <span class="logo">
+            <a href="../index.html"><img src="/vendor/theadmin/assets/img/logo-light.png" alt="logo"></a>
+        </span> --}}
+        <span class="sidebar-toggle-fold"></span>
+    </header>
+
+    <nav class="sidebar-navigation">
+        <ul class="menu">
+            <div class="sidebar-profile">
+                <div class="dropdown">
+                    <span class="dropdown-toggle no-caret" data-toggle="dropdown">
+                        <img class="avatar"
+                            src="{{ asset(get_admin()->avatar) }}" alt="{{ get_admin()->full_name }} avatar"
+                            style="width:60px; height: 60px"
+                            >
+                        </span>
+                    <div class="dropdown-menu open-top-center">
+                        <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_admin()) }}"><i class="ti-user"></i> Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ route('{{singularSlug}}.logout') }}" onclick="event.preventDefault();document.getElementById('{{singularSlug}}-logout-form').submit();"><i class="ti-power-off"></i> Déconnexion</a>
+                    </div>
+                </div>
+
+                <div class="profile-info">
+                    <h4 class="mb-0">{{ get_admin('full_name') }}</h4>
+                    <p>{{ get_admin('role') }}</p>
+                </div>
+            </div>
+            {{-- insert sidebar links here --}}
+
+
+
+
+            <li class="menu-item">
+                <a class="menu-link" href="#">
+                    <span class="icon fa fa-user"></span>
+                    <span class="title">Administrateurs</span>
+                    <span class="arrow"></span>
+                </a>
+
+                <ul class="menu-submenu">
+                    <li class="menu-item">
+                        <a class="menu-link" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
+                            <span class="dot"></span>
+                            <span class="title">Liste</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-item">
+                        <a class="menu-link" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
+                            <span class="dot"></span>
+                            <span class="title">Mon profil</span>
+                        </a>
+                    </li>
+                    @if (current_admin_is_super_admin())
+                    <li class="menu-item">
+                        <a class="menu-link" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}">
+                            <span class="dot"></span>
+                            <span class="title">Ajouter</span>
+                        </a>
+                    </li>
+                    @endif
+                </ul>
+            </li>
+
+
+
+            <li class="menu-category"></li>
+
+
+            <li class="menu-item ">
+                <a class="menu-link" href="{{ route('{{backLowerNamespace}}.configuration.edit') }}">
+                   <span class="icon fas fa-tools"></span>
+                    <span class="title">Configuration</span>
+                </a>
+            </li>
+
+
+
+        </ul>
+    </nav>
+
+</aside>
+<!-- END Sidebar -->

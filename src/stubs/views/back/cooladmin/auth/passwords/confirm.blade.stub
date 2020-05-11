@@ -1,0 +1,44 @@
+@extends('{{backLowerNamespace}}.layouts.app')
+
+@section('title','Confirmation de mot de passe')
+
+@section('content')
+
+<div class="login-content">
+    <div class="login-logo">
+        <a href="/">
+            <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('administrable.name')}}">
+        </a>
+
+    </div>
+    <div class="login-form">
+        Merci de confirmer votre mot de passe avant de continuer
+        <form action="{{ route('{{singularSlug}}.password.confirm') }}" method="post">
+            @csrf
+            <div class="form-group">
+                <label for="password" class="form-control col-md-4 col-form-label text-md-right">Mot de passe< </label>
+
+                <input id="password" type="password"
+                                    class="au-input au-input--full form-control @error('password') is-invalid @enderror" name="password"
+                                    required autocomplete="current-password">
+               @error('password')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+
+            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Envoyer le lien de
+                réinitialisation</button>
+
+            @if (Route::has('password.request'))
+            <a class="au-btn au-btn--block au-btn--green m-b-20" href="{{ route('{{singularSlug}}.password.request') }}">
+                Mot de passe oublié ?
+            </a>
+            @endif
+        </form>
+
+    </div>
+</div>
+
+@endsection

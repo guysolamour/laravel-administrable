@@ -1,0 +1,86 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title', $mailbox->name)
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">Messagerie</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Lecture</li>
+            </ol>
+        </nav>
+
+    </div>
+
+    <div class="card">
+        <header class="card-header cursor-pointer" data-toggle="collapse" data-target="#email-2">
+            <div class="card-title flexbox">
+                <img class="avatar" src="{{ $mailbox->getFrontImageUrl() }}" alt="{{ $mailbox->name }}">
+                <div>
+                    <h6 class="mb-0">{{ $mailbox->name }}</h6>
+                    <small> {{ $mailbox->created_at->format('d/m/Y h:i') }} </small>
+                    <small><a class="text-info no-collapsing ml-1" href="#email-info-2"
+                            data-toggle="collapse">Détails</a></small>
+
+                    <div class="collapse no-collapsing cursor-text" id="email-info-2">
+                        <small class="d-inline-block w-40px mt-1">De:</small>
+                        <small>{{ $mailbox->name }}</small>
+
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <div class="collapse show" id="email-2">
+            <div class="card-body">
+                <p>Uniquely restore granular schemas with enterprise services. Competently maximize team driven networks and
+                    cross-platform users. Completely recaptiualize cross-platform networks functionalized services.
+                    Holisticly matrix extensible models via corporate value. Continually revolutionize open-source markets
+                    through high-quality functionalities.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="fab fab-fixed">
+        <button class="btn btn-float btn-primary" data-toggle="button">
+            <i class="fab-icon-default ti-plus"></i>
+            <i class="fab-icon-active ti-close"></i>
+        </button>
+
+        <ul class="fab-buttons">
+
+            <li><a class="btn btn-float btn-sm btn-danger" href="{{ route('{{backLowerNamespace}}.mailbox.destroy',$mailbox) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" title="" data-provide="tooltip"
+                    data-placement="left" data-original-title="Supprimer"><i class="fa fa-trash"></i> </a></li>
+
+        </ul>
+    </div>
+</div>
+
+
+
+@endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

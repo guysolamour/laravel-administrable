@@ -1,0 +1,146 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Témoignages')
+
+
+
+@section('content')
+
+
+<div class="main-content">
+    <div class="container-fluid">
+       <div class="page-header">
+        <div class="row align-items-end">
+            <div class="col-lg-8">
+            </div>
+            <div class="col-lg-4">
+                <nav class="breadcrumb-container" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ik ik-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Témoignages</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="card-title">Témoignages</h3>
+                    <div class="btn-group float-right">
+                        <a href="{{ route('{{backLowerNamespace}}.testimonial.create') }}" class="btn  btn-primary"> <i
+                                class="fa fa-plus"></i> Ajouter</a>
+                        <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Testimonial" id="delete-all">
+                            <i class="fa fa-trash"></i> Tous supprimer</a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-vcenter card-table" id='list'>
+                        <thead>
+                            <th></th>
+                            <th>
+                                {{-- <label class="au-checkbox" for="check-all">
+                                    <input type="checkbox" id="check-all">
+                                    <span class="au-checkmark"></span>
+                                </label>
+                                <div class="form-check mx-sm-2">
+                                </div> --}}
+                                {{-- <label class="custom-control custom-checkbox" for="check-all">
+                                    <input type="checkbox" class="custom-control-input" id="check-all">
+                                    <span class="custom-control-label"></span>
+                                </label> --}}
+                                <div class="checkbox-fade fade-in-success ">
+                                    <label for="check-all">
+                                        <input type="checkbox" value=""  id="check-all">
+                                        <span class="cr">
+                                            <i class="cr-icon ik ik-check txt-success"></i>
+                                        </span>
+                                        {{-- <span>Default</span> --}}
+                                    </label>
+                                </div>
+                            </th>
+
+                            <th>#</th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Job</th>
+                            <th>Status</th>
+                            <th>Contenu</th>
+                            <th>Date ajout</th>
+
+                            <th>Actions</th>
+                        </thead>
+                        <tbody>
+                            @foreach($testimonials as $testimonial)
+                            <tr class="tr-shadow">
+
+                                <td></td>
+                                <td>
+                                    {{-- <label class="form-check" for="check-{{ $testimonial->id }}">
+                                        <input class="form-check-input" type="checkbox" data-check data-id="{{ $testimonial->id }}"
+                                            id="check-{{ $testimonial->id }}"> <span class="form-check-label"></span>
+                                    </label> --}}
+
+                                    <div class="checkbox-fade fade-in-success ">
+                                        <label for="check-{{ $testimonial->id }}">
+                                            <input type="checkbox" data-check data-id="{{ $testimonial->id }}"  id="check-{{ $testimonial->id }}">
+                                            <span class="cr">
+                                                <i class="cr-icon ik ik-check txt-success"></i>
+                                            </span>
+                                            {{-- <span>Default</span> --}}
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $testimonial->name }}</td>
+                                <td>{{ $testimonial->email }}</td>
+                                <td>{{ $testimonial->job }}</td>
+
+                                <td>
+                                    @if ($testimonial->isOnline())
+                                    <a data-toggle="tooltip" data-placement="top" title="En ligne"><i
+                                            class="fas fa-circle text-success"></i></a>
+                                    @else
+                                    <a data-toggle="tooltip" data-placement="top" title="Hors ligne"><i
+                                            class="fas fa-circle text-secondary"></i></a>
+                                    @endif
+                                </td>
+
+                                <td>{!! Str::limit(strip_tags($testimonial->content),50) !!}</td>
+
+                                <td>{{ $testimonial->created_at->format('d/m/Y h:i') }}</td>
+
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('{{backLowerNamespace}}.testimonial.show', $testimonial) }}" class="btn btn-primary"
+                                            data-toggle="tooltip" data-placement="top" title="Afficher"><i class="fas fa-eye"></i></a>
+
+                                        <a href="{{ route('{{backLowerNamespace}}.testimonial.edit', $testimonial) }}" class="btn btn-info"
+                                            data-toggle="tooltip" data-placement="top" title="Editer"><i class="fas fa-edit"></i></a>
+                                        <a href="{{ route('{{backLowerNamespace}}.testimonial.destroy',$testimonial) }}" data-method="delete"
+                                            data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?" class="btn btn-danger"
+                                            data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+@endsection

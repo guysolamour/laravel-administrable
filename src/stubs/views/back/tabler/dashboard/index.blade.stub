@@ -1,0 +1,19 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title','Tableau de bord')
+
+
+@section('content')
+
+<div class="row row-deck row-cards">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h2>Tableau de bord</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@endsection

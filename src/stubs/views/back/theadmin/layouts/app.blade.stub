@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title> @yield('title') | Administration</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i" rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{{ asset('vendor/theadmin/css/core.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/theadmin/css/app.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/theadmin/css/style.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/theadmin/css/fontawesome.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/vendor/sweetalert.css') }}">
+
+    @stack('css')
+
+</head>
+
+<body>
+
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="spinner-dots">
+            <span class="dot1"></span>
+            <span class="dot2"></span>
+            <span class="dot3"></span>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Main container -->
+    <main class="main-container">
+
+        @yield('content')
+        <!--/.main-content -->
+
+
+    </main>
+    <!-- END Main container -->
+
+    <!-- Global quickview -->
+    {{-- <div id="qv-global" class="quickview" data-url=/data/quickview-global.html">
+        <div class="spinner-linear">
+            <div class="line"></div>
+        </div>
+    </div> --}}
+    <!-- END Global quickview -->
+
+
+
+    <!-- Scripts -->
+    <script src="{{ asset('vendor/theadmin/js/core.min.js') }}"></script>
+    <script src="{{ asset('vendor/theadmin/js/app.min.js') }}"></script>
+    <script src="{{ asset('vendor/theadmin/js/script.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/theadmin/js/fontawesome.js') }}"></script> --}}
+    <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/larails-alert.js') }}"></script>
+
+    @stack('js')
+    @include('flashy::message')
+
+</body>
+
+</html>

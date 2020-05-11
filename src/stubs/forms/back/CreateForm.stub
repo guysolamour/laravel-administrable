@@ -16,19 +16,19 @@ class Create{{singularClass}}Form extends Form
 
 	    $this
         ->add('pseudo','text', [
-            'label' => 'Pseudo *',
+            'label' => 'Pseudo',
             'rules' => 'required|min:2|unique:admins',
         ])
         ->add('first_name','text', [
-            'label' => 'Prénoms *',
+            'label' => 'Prénoms',
             'rules' => 'required|min:2',
         ])
         ->add('last_name','text', [
-            'label' => 'Nom *',
+            'label' => 'Nom',
             'rules' => 'required|min:2',
         ])
         ->add('email', 'email', [
-            'label' => 'Email *',
+            'label' => 'Email',
             'rules'  => 'required|email|unique:admins',
         ])
         ->add('facebook', 'text', [
@@ -50,7 +50,7 @@ class Create{{singularClass}}Form extends Form
           'label' => 'Super admin',
         ])
         ->add('password', 'password', [
-          'label' => 'Mot de passe *',
+          'label' => 'Mot de passe',
           'rules'  => 'required|min:8|confirmed',
         ])
         ->add('password_confirmation', 'password', [

@@ -19,7 +19,9 @@ class TestimonialController extends Controller
     public function index()
     {
         $testimonials = Testimonial::last()->get();
-        return view('{{backLowerNamespace}}.testimonials.index', compact('testimonials'));
+        $form = $this->getForm();
+
+        return view('{{backLowerNamespace}}.testimonials.index', compact('testimonials','form'));
     }
 
     /**
@@ -102,7 +104,8 @@ class TestimonialController extends Controller
     {
         $testimonial->delete();
         flashy('L\' élément a bien été supprimé');
-        return back();
+
+        return redirect()->route('{{backLowerNamespace}}.testimonial.index');
     }
 
 }

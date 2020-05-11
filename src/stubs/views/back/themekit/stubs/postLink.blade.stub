@@ -1,0 +1,8 @@
+ <div class="nav-item has-sub">
+                    <a href="#"><i class="fas fa-swatchbook"></i><span>Articles</span></a>
+                    <div class="submenu-content">
+                        <a href="{{ route('{{backLowerNamespace}}.post.create') }}" class="menu-item">Ecrire</a>
+                        <a href="{{ route('{{backLowerNamespace}}.post.index') }}" class="menu-item">Liste</a>
+                        <a href="{{ route('{{backLowerNamespace}}.category.index') }}" class="menu-item">Catégories</a>
+                    </div>
+                </div>

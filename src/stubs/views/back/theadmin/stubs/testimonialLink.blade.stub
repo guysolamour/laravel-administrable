@@ -1,0 +1,6 @@
+   <li class="menu-item ">
+                <a class="menu-link" href="{{ route('{{backLowerNamespace}}.testimonial.index') }}">
+                    <span class="icon far fa-comments-alt"></span>
+                    <span class="title">Témoignages</span>
+                </a>
+            </li>

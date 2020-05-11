@@ -155,3 +155,45 @@ if (!function_exists('array_remove_by_value')) {
     }
 }
 
+
+
+
+if (!function_exists('get_{{singularSlug}}')) {
+    function get_{{singularSlug}}(?string $field = null) {
+        if ( is_null( $field ) ) {
+            return auth()->guard( '{{singularSlug}}' )->user();
+        }
+
+        return auth()->guard( '{{singularSlug}}' )->user()->$field;
+    }
+
+}
+
+if (!function_exists('current_{{singularSlug}}_is_super_{{singularSlug}}')) {
+    function current_{{singularSlug}}_is_super_{{singularSlug}}() : bool
+    {
+        return (bool) get_{{singularSlug}}( 'is_super_{{singularSlug}}' );
+    }
+}
+
+if (!function_exists('current_{{singularSlug}}_profil')) {
+    function current_{{singularSlug}}_profil(${{singularSlug}}) : bool
+    {
+        return get_{{singularSlug}}('id') == ${{singularSlug}}->id;
+    }
+}
+
+if (!function_exists('get_{{singularSlug}}_role')) {
+    function get_{{singularSlug}}_role(${{singularSlug}}) : string
+    {
+        return ${{singularSlug}}->isSuper{{singularClass}}() ? 'Super administrateur' : 'Administrateur';
+    }
+}
+
+if (!function_exists('get_current_{{singularSlug}}_role')) {
+    function get_current_{{singularSlug}}_role() : string
+    {
+        return get_{{singularSlug}}_role(get_{{singularSlug}}());
+    }
+}
+

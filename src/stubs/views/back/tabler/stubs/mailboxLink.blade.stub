@@ -1,0 +1,10 @@
+                    <li class="nav-item {{ set_active_link('{{backLowerNamespace}}.mailbox.index') }}">
+                        <a class="nav-link" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="fa fa-envelope icon"></i>
+                            </span>
+                            <span class="nav-link-title">
+                                Messagerie
+                            </span>
+                        </a>
+                    </li>

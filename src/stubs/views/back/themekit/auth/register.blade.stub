@@ -1,0 +1,89 @@
+@extends('{{backLowerNamespace}}.layouts.app')
+
+@section('title','Connexion')
+
+@section('content')
+
+<div class="container-fluid h-100">
+    <div class="row flex-row h-100 bg-white">
+        <div class="col-xl-8 col-lg-6 col-md-5 p-0 d-md-block d-lg-block d-sm-none d-none">
+            <div class="lavalite-bg" style="background-image: url('/vendor/themekit/img/auth/register-bg.jpg')">
+                <div class="lavalite-overlay"></div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 col-md-7 my-auto p-0">
+            <div class="authentication-form mx-auto">
+                <div class="logo-centered text-center" style="width: auto">
+                    <a href="#"><img src="{{ config('administrable.logo_url') }}" alt="{{ config('app.name') }}"></a>
+                </div>
+                <h3>Rejoignez-nous! Cela ne vous prendra que quelques minutes</h3>
+                <form class="card card-md" action="{{ route('{{singularSlug}}.register') }}" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <input class="form-control {{ $errors->has('pseudo') ? ' is-invalid' : '' }}" type="text" name="pseudo" id="pseudo"
+                            placeholder="Pseudo" value="{{ old('pseudo') }}" required>
+                            <i class="ik ik-user"></i>
+                        @if ($errors->has('pseudo'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('pseudo') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control {{ $errors->has('last_name') ? ' is-invalid' : '' }}" type="text" name="last_name"
+                            id="last_name" placeholder="Nom" value="{{ old('last_name') }}" required>
+                            <i class="ik ik-user"></i>
+                        @if ($errors->has('last_name'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('last_name') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}" type="text" name="first_name"
+                            id="first_name" placeholder="Prénoms" value="{{ old('first_name') }}" required>
+                        <i class="ik ik-user"></i>
+                        @if ($errors->has('first_name'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('first_name') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" type="text" name="email" id="email"
+                            placeholder="Email" value="{{ old('email') }}" required>
+                            <i class="ik ik-user"></i>
+                        @if ($errors->has('email'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" type="password" name="password"
+                            id="password" placeholder="Mot de passe" required>
+                            <i class="ik ik-lock"></i>
+                        @if ($errors->has('password'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password_confirmation" id="password_confirmation"
+                            placeholder="Confirmation mot de passe" required>
+                            <i class="ik ik-lock"></i>
+                    </div>
+
+                    <div class="sign-btn text-center">
+                        <button class="btn btn-theme" type="submit">S'inscrire</button>
+                    </div>
+                </form>
+                <div class="register">
+                    <p>Déjà inscrit ? <a href="{{ route('{{singularSlug}}.login') }}">Connectez-vous</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

@@ -1,0 +1,16 @@
+<footer class="footer footer-transparent">
+    <div class="container">
+        <div class="row text-center align-items-center flex-row-reverse">
+            <div class="col-lg-auto ml-lg-auto">
+                <p class="font-italic">
+                    Réalise par <a href="//roland-assale.info" target="_blank"><b>Guysolamour</b></a>
+                </p>
+            </div>
+            <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                Copyright © {{ date('Y') }}
+                <a href="https://aswebagency.com" class="link-secondary" target="_blanck">AswebAgency</a>.
+                Tous droits reservés.
+            </div>
+        </div>
+    </div>
+</footer>

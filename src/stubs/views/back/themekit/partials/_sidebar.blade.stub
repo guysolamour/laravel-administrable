@@ -1,0 +1,42 @@
+<div class="app-sidebar colored">
+    <div class="sidebar-header">
+        <a class="header-brand" href="index.html">
+            {{-- <div class="logo-img">
+                <img src="{{ config('administrable.logo_url') }}" class="header-brand-img" alt="{{ config('app.name') }}">
+            </div> --}}
+            <span class="text">{{ config('app.name') }}</span>
+        </a>
+        <button type="button" class="nav-toggle"><i data-toggle="expanded"
+                class="ik ik-toggle-right toggle-icon"></i></button>
+        <button id="sidebarClose" class="nav-close"><i class="ik ik-x"></i></button>
+    </div>
+
+    <div class="sidebar-content">
+        <div class="nav-container">
+            <nav id="main-menu-navigation" class="navigation-main">
+                <div class="nav-lavel">Menu</div>
+                <div class="nav-item active">
+                    <a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ik ik-bar-chart-2"></i><span>Tableau de bord</span></a>
+                </div>
+                {{-- insert sidebar links here --}}
+
+                <div class="nav-item has-sub">
+                    <a href="javascript:void(0)"><i class="fa fa-users"></i><span>{{pluralClass}}</span></a>
+                    <div class="submenu-content">
+                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}" class="menu-item">Liste</a>
+                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}" class="menu-item">Mon profil</a>
+                        @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
+                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}" class="menu-item">Ajouter</a>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}">
+                        <i class="fa fa-tools"></i><span>Configuration</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>

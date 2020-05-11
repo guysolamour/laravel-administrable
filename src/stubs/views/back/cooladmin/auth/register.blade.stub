@@ -1,0 +1,96 @@
+@extends('{{backLowerNamespace}}.layouts.app')
+
+@section('title','Connexion')
+
+@section('content')
+
+<div class="login-content">
+    <div class="login-logo">
+        <a href="/">
+            <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('administrable.name')}}">
+        </a>
+
+    </div>
+    <div class="login-form">
+        <form action="{{ route('{{singularSlug}}.register') }}" method="post">
+            @csrf
+            <div class="form-group">
+                <label>Pseudo </label>
+
+                <input
+                    class="au-input au-input--full form-control {{ $errors->has('pseudo') ? ' is-invalid' : '' }}"
+                    type="text" name="pseudo" id="pseudo" placeholder="Pseudo ou Email" value="{{ old('pseudo') }}">
+                @if ($errors->has('pseudo'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('pseudo') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group">
+                <label>Nom </label>
+
+                <input
+                    class="au-input au-input--full form-control {{ $errors->has('last_name') ? ' is-invalid' : '' }}"
+                    type="text" name="last_name" id="last_name" placeholder="Nom" value="{{ old('last_name') }}">
+                @if ($errors->has('last_name'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('last_name') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group">
+                <label>Prénoms </label>
+
+                <input
+                    class="au-input au-input--full form-control {{ $errors->has('first_name') ? ' is-invalid' : '' }}"
+                    type="text" name="first_name" id="first_name" placeholder="Prénoms" value="{{ old('first_name') }}">
+                @if ($errors->has('first_name'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('first_name') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group">
+                <label>Email </label>
+
+                <input
+                    class="au-input au-input--full form-control {{ $errors->has('email') ? ' is-invalid' : '' }}"
+                    type="text" name="email" id="email" placeholder="Email" value="{{ old('email') }}">
+                @if ($errors->has('email'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('email') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input class="au-input au-input--full form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
+                    type="password" name="password" id="password" placeholder="Mot de passe">
+                @if ($errors->has('password'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('password') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group">
+                <label>Confirmation mot de passe</label>
+                <input class="au-input au-input--full form-control"
+                    type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirmation mot de passe">
+
+            </div>
+
+
+            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">S'inscrire</button>
+        </form>
+        <div class="register-link">
+            <p>
+                Déjà inscrit ?
+                <a class="chosen-single" href="{{ route('{{singularSlug}}.login') }}">Démarrer une session</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+@endsection

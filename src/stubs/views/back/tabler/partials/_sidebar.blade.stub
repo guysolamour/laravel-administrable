@@ -1,0 +1,21 @@
+<div class="navbar-expand-md">
+    <div class="collapse navbar-collapse" id="navbar-menu">
+        <div class="navbar navbar-light">
+            <div class="container-xl">
+                <ul class="navbar-nav">
+                    <li class="nav-item {{ set_active_link('{{singularSlug}}.dashboard') }}">
+                        <a class="nav-link" href="{{ route('{{singularSlug}}.dashboard') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="fa fa-home icon"></i>
+                            </span>
+                            <span class="nav-link-title">
+                                Tableau de bord
+                            </span>
+                        </a>
+                    </li>
+                    {{-- insert sidebar links here --}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

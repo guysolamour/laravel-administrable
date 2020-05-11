@@ -1,0 +1,23 @@
+
+   <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fa fa-swatchbook"></i>Articles
+                        <span class="arrow">
+                            <i class="fas fa-angle-down"></i>
+                        </span>
+                    </a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                        <li>
+                            <a href="{{ route('{{backLowerNamespace}}.post.create') }}">
+                                <i class="far fa-plus"></i>Ecrire</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('{{backLowerNamespace}}.post.index') }}">
+                                <i class="far fa-th-list"></i>Liste</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('{{backLowerNamespace}}.category.index') }}">
+                                <i class="far fa-folder-open"></i>Catégories</a>
+                        </li>
+                    </ul>
+                </li>

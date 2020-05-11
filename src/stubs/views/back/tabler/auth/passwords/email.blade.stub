@@ -1,0 +1,38 @@
+@extends('{{backLowerNamespace}}.layouts.app')
+
+@section('title','Réinitialisation de mot de passe')
+
+@section('content')
+
+<div class="container-tight py-6">
+    <div class="text-center mb-4">
+        <img src="{{ config('administrable.logo_url') }}" height="36" alt="{{ config('administrable.name')}}">
+    </div>
+    @if (session('status'))
+        <div class="alert alert-success" role="alert">
+            {{ session('status') }}
+        </div>
+    @endif
+   <form action="{{ route('{{singularSlug}}.password.email') }}" method="post">
+        <div class="card-body">
+            @csrf
+            <div class="form-group">
+                <label>Email </label>
+
+                <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="text"
+                    name="email" id="email" required placeholder="Email" value="{{ old('email') }}">
+                @if ($errors->has('email'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('email') }}</strong>
+                </span>
+                @endif
+            </div>
+
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary btn-block">Envoyer le lien de réinitialisation</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@endsection

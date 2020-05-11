@@ -1,0 +1,12 @@
+                <li>
+                    <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
+                        <i class="far fa-envelope"></i>Messagerie</a>
+                        @php
+                            $new =  \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->count()
+                        @endphp
+                        @if($new)
+                            <span class="inbox-num">{{ $new }}</span>
+                        @endif
+
+                </li>
+

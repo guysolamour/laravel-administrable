@@ -1,0 +1,12 @@
+<section>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="copyright">
+                    <p>Copyright © {{ date('Y') }} <a href="https://aswebagency.com">AswebAgency</a>.
+                        Tous droits reservés.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,198 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Témoignages')
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+           {{ Breadcrumbs::render('{{backLowerNamespace}}.testimonial.index') }}
+        </nav>
+
+    </div>
+
+    <div class="card">
+        {{-- <h4 class="card-title">
+                Articles
+            </h4> --}}
+
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title h3">
+                        Témoignages
+                    </h5>
+                    <div>
+                        <a href="{{ route('{{backLowerNamespace}}.testimonial.create') }}" class="btn btn-sm btn-label btn-round btn-primary"><label><i
+                                    class="ti-plus"></i></label> Ajouter</a>
+                        <a href="#" class="btn btn-sm btn-label btn-round btn-danger d-none" data-model="\App\Models\Testimonial"
+                            id="delete-all"><label><i class="fa fa-trash"></i></label> Tous supprimer</a>
+
+                    </div>
+                </div>
+
+                <table class="table table-hover table-has-action" data-provide="datatables">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="check-all">
+                                    <label class="custom-control-label" for="check-all"></label>
+                                </div>
+                            </th>
+                            <th></th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Job</th>
+                            <th>Status</th>
+                            <th>Contenu</th>
+                            <th>Date ajout</th>
+
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($testimonials as $testimonial)
+                        <tr>
+                            <td>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" data-check class="custom-control-input" data-id="{{ $testimonial->id }}"
+                                        id="check-{{ $testimonial->id }}">
+                                    <label class="custom-control-label" for="check-{{ $testimonial->id }}"></label>
+                                </div>
+                            </td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td><a href="#qv-testimonials-details-{{ $testimonial->id }}" data-toggle="quickview">{{ $testimonial->name }}</a></td>
+                            <td>{{ $testimonial->email }}</td>
+                            <td>{{ $testimonial->job }}</td>
+                            <td>
+                                @if ($testimonial->isOnline())
+                                <a data-toggle="tooltip" data-placement="top" title="En ligne"><i class="fas fa-circle text-success"></i></a>
+                                @else
+                                <a data-toggle="tooltip" data-placement="top" title="Hors ligne"><i class="fas fa-circle text-secondary"></i></a>
+                                @endif
+                            </td>
+                            <td>{!! Str::limit(strip_tags($testimonial->content),50) !!}</td>
+
+
+                            <td>{{ $testimonial->created_at->format('d/m/Y h:i') }}</td>
+                            <td>
+                                <nav class="nav no-gutters gap-2 fs-16">
+                                    <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.testimonial.show',$testimonial) }}" data-provide="tooltip" title=""
+                                        data-original-title="Afficher"><i class="ti-eye"></i></a>
+                                    <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.testimonial.edit',$testimonial) }}" data-provide="tooltip" title=""
+                                        data-original-title="Editer"><i class="ti-pencil"></i></a>
+                                    <a class="nav-link hover-danger" href="#" data-provide="tooltip" title=""
+                                        data-method="delete"
+                                        data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?"
+                                        data-original-title="Supprimer"><i class="ti-close"></i></a>
+                                </nav>
+                            </td>
+                            <div id="qv-testimonials-details-{{ $testimonial->id }}" class="quickview quickview-lg">
+                                <div class="quickview-body">
+
+                                    <div class="card card-inverse bg-img"
+                                        style="background-image: url(/vendor/theadmin/assets/img/gallery/thumb/2.jpg);">
+                                        <div class="flexbox px-20 pt-20">
+
+                                            <a class="text-white fs-20 lh-1" href="{{ route('{{backLowerNamespace}}.testimonial.show',$testimonial) }}">
+                                                <i class="fa fa-eye"></i></a>
+                                        </div>
+
+
+                                        <div class="card-body text-center pb-50">
+                                            <h4 class="mt-2 mb-0"><a class="hover-primary text-white" href="#">Témoignage</a></h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="quickview-block">
+                                       <div>
+                                            <p><span class="font-weight-bold">Nom:</span></p>
+                                            <p>
+                                                {{ $testimonial->name }}
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <p><span class="font-weight-bold">Email:</span></p>
+                                            <p>
+                                                {{ $testimonial->email }}
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <p><span class="font-weight-bold">Job:</span></p>
+                                            <p>
+                                                {{ $testimonial->job }}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p><span class="font-weight-bold">Contenu:</span></p>
+                                            <p>
+                                                {!! $testimonial->content !!}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p><span class="font-weight-bold">Date ajout:</span></p>
+                                            <p>
+                                                {{ $testimonial->created_at->format('d/m/Y h:i') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <footer class="p-12 text-right">
+                                    <button class="btn btn-flat btn-secondary" type="button" data-toggle="quickview">Annuler</button>
+                                </footer>
+                            </div>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="fab fab-fixed">
+    <a class="btn btn-float btn-primary" href="#dock-new-testimonial" title="Nouveau témoignage" data-provide="tooltip"
+        data-toggle="dock"><i class="fa fa-plus"></i></a>
+</div>
+
+<!-- Dock - Add user -->
+<div class="dock-list">
+
+    <!-- Dock - Compose an email -->
+    <div id="dock-new-testimonial" class="dock dock-sm">
+        <header class="dock-header dock-header-inverse bg-info">
+            <div class="dock-title">
+                <span><i class="fa fa-plus"></i></span>
+                <span>Nouveau témoignage</span>
+            </div>
+
+            <div class="dock-actions">
+                <span title="Fermer" data-provide="tooltip" data-dock="close"></span>
+                <span title="Réduire" data-provide="tooltip" data-dock="minimize"></span>
+            </div>
+        </header>
+
+        <div class="dock-body dock-block form-type-liner">
+            {!! form($form) !!}
+        </div>
+
+        <footer class="dock-footer text-right">
+            <button class="btn btn-flat btn-secondary" type="button" data-dock="close">Annuler</button>
+            <button class="btn btn-flat btn-primary" type="submit"
+                onclick="$('#dock-new-testimonial form[name={{ $testimonial->form_name }}]').submit()">Enregistrer</button>
+        </footer>
+    </div>
+
+</div>
+
+@endsection

@@ -1,0 +1,14 @@
+
+            <li class="menu-item ">
+                <a class="menu-link" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
+                    <span class="icon far fa-envelope"></span>
+                    <span class="title">Messagerie</span>
+
+                    @php
+                       $new =  \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->count()
+                    @endphp
+                    @if($new)
+                      <span class="badge badge-pill badge-primary">{{ 'new ' .$new  }}</span>
+                    @endif
+                </a>
+            </li>

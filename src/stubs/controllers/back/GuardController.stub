@@ -25,8 +25,11 @@ class {{singularClass}}Controller extends Controller
 
     public function index() {
         ${{pluralSlug}} = $this->get{{pluralClass}}();
-        return view( '{{backLowerNamespace}}.{{pluralSlug}}.index', compact( '{{pluralSlug}}' ) );
+        $form = $this->getForm(new {{singularClass}}, Create{{singularClass}}Form::class);
+
+        return view( '{{backLowerNamespace}}.{{pluralSlug}}.index', compact( '{{pluralSlug}}','form' ) );
     }
+
 
     public function create( ) {
         $form = $this->getForm( new {{singularClass}}, Create{{singularClass}}Form::class );
@@ -35,7 +38,6 @@ class {{singularClass}}Controller extends Controller
     }
 
     public function store( Request $request ) {
-
         $form = $this->getForm( new {{singularClass}}, Create{{singularClass}}Form::class );
 
         $form->redirectIfNotValid();
@@ -45,7 +47,6 @@ class {{singularClass}}Controller extends Controller
         flashy('Le compte {{singularSlug}} a été créé avec le succeès');
 
         return redirect()->route('{{backLowerNamespace}}.{{singularSlug}}.profile',${{singularSlug}});
-
     }
 
      /**
@@ -61,12 +62,12 @@ class {{singularClass}}Controller extends Controller
 
         $this->redirectIfNotValid($reset_form);
 
-            // update password
-            ${{singularSlug}}->update([
-              'password' => $request->input('new_password')
-            ]);
+        // update password
+        ${{singularSlug}}->update([
+          'password' => $request->get('new_password')
+        ]);
 
-            flashy('Votre mot de passe a été mis à jour');
+        flashy('Votre mot de passe a été mis à jour');
 
         return redirect()->route('{{backLowerNamespace}}.{{singularSlug}}.profile',${{singularSlug}});
       }
@@ -89,7 +90,6 @@ class {{singularClass}}Controller extends Controller
       */
       public function update(Request $request, {{singularClass}} ${{singularSlug}})
       {
-
           $form = $this->getForm(${{singularSlug}});
 
           $this->redirectIfNotValid($form);
@@ -106,24 +106,26 @@ class {{singularClass}}Controller extends Controller
           ${{singularSlug}} = {{singularClass}}::find($request->get('id'));
 
           ${{singularSlug}}->update([
-              'avatar' => $request->get('avatar')
-              ]);
+            'avatar' => $request->get('avatar')
+          ]);
+
           return ${{singularSlug}};
       }
 
-      public function delete( {{singularClass}} ${{singularSlug}}) {
-
+      public function delete( {{singularClass}} ${{singularSlug}})
+      {
           ${{singularSlug}}->delete();
-          flashy('{{singularClass}} a été retiré avec succès');
+          flashy('{{singularClass}} retiré avec succès');
 
           return redirect()->route('{{backLowerNamespace}}.{{singularSlug}}.index');
       }
 
 
-      private function get{{pluralClass}}() {
+      private function get{{pluralClass}}()
+      {
           // The id 1 is for the super super admin used by the web agency
           // his account must be hidden for the others admins
-          if (get_admin()->id === 1){
+          if (auth()->guard('{{singularSlug}}')->user()->id === 1){
               ${{pluralSlug}} = {{singularClass}}::all();
           }else {
               ${{pluralSlug}} = {{singularClass}}::where('id','!=',1)->get();
@@ -131,7 +133,5 @@ class {{singularClass}}Controller extends Controller
 
           return ${{pluralSlug}};
       }
-
-
 
 }

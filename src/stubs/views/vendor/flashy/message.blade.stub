@@ -9,6 +9,7 @@
     right: 20px;
     font-size: 16px;
     color: #fff;
+    z-index: 200;
 } */
 
 .flashy {
@@ -21,6 +22,7 @@
     right: 20px;
     font-size: 16px;
     color: #fff;
+    z-index: 200;
 }
 
 .flashy--success {
@@ -102,9 +104,9 @@
         var template = $($("#flashy-template").html());
         $(".flashy").remove();
         template.find(".flashy__body").html(message).attr("href", link || "#").end()
-         .appendTo("body").hide().fadeIn(300).delay(2800).animate({
+         .appendTo("body").hide().fadeIn(600).delay(3100).animate({
             marginRight: "-100%"
-        }, 300, "swing", function() {
+        }, 600, "swing", function() {
             $(this).remove();
         });
     }

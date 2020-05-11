@@ -1,0 +1,127 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title','Catégories')
+
+
+
+@section('content')
+
+
+<section class="au-breadcrumb m-t-75">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="au-breadcrumb-content">
+                        <div class="au-breadcrumb-left">
+                            <span class="au-breadcrumb-span">Vous êtes ici:</span>
+                            <ul class="list-unstyled list-inline au-breadcrumb__list">
+                                <li class="list-inline-item">
+                                    <a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a>
+                                </li>
+                                <li class="list-inline-item seprate">
+                                    <span>/</span>
+                                </li>
+                                <li class="list-inline-item active">Catégories</li>
+                            </ul>
+                        </div>
+                        <a href="{{ route('{{backLowerNamespace}}.category.create') }}" class="au-btn au-btn-icon au-btn--green">
+                            <i class="zmdi zmdi-plus"></i>Ajouter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="main-content mb-5 pt-5">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                </div>
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">
+                        Catégories
+                    </h3>
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left">
+
+                        </div>
+                        <div class="table-data__tool-right">
+                            <a href="#" class="au-btn au-btn-icon btn-danger au-btn--small d-none"
+                                data-model="\{{namespace}}\{{modelsFolder}}\Category" id="delete-all"><i class="fa fa-trash"></i> Tous
+                                supprimer</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2" id='list'>
+                            <thead>
+                                <th>
+                                    <label class="au-checkbox" for="check-all">
+                                        <input type="checkbox" id="check-all">
+                                        <span class="au-checkmark"></span>
+                                    </label>
+                                </th>
+
+                                <th>#</th>
+                                <th>Nom</th>
+                                <th>Date ajout</th>
+
+                                <th>Actions</th>
+                            </thead>
+                            <tbody>
+                                @foreach($categories as $category)
+                                <tr class="tr-shadow">
+                                    <td>
+                                        <label class="au-checkbox" for="check-{{ $category->id }}">
+                                            <input type="checkbox" data-check data-id="{{ $category->id }}"
+                                                id="check-{{ $category->id }}">
+                                            <span class="au-checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $category->name }}</td>
+                                    <td>{{ $category->created_at->format('d/m/Y h:i') }}</td>
+
+
+                                    <td>
+                                        <div class="table-data-feature justify-content-start">
+                                            <a href="{{ route('{{backLowerNamespace}}.category.show', $category) }}" class="item"
+                                                data-toggle="tooltip" data-placement="top" title="Afficher">
+                                                <i class="zmdi zmdi-eye"></i>
+                                            </a>
+                                            <a href="{{ route('{{backLowerNamespace}}.category.edit', $category) }}" class="item"
+                                                data-toggle="tooltip" data-placement="top" title="Editer">
+                                                <i class="zmdi zmdi-edit"></i>
+                                            </a>
+
+                                            <a href="{{ route('{{backLowerNamespace}}.category.destroy', $category) }}"
+                                                class="chosen-single item" data-toggle="tooltip" data-placement="top"
+                                                title="Supprimer" data-method="delete"
+                                                data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END DATA TABLE -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+
+@endsection

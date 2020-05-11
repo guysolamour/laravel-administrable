@@ -36,10 +36,9 @@ class MailboxController extends Controller
       public function show(Mailbox $mailbox)
       {
           // mark the message as read if unread
-          if(!$mailbox->read){
-              $mailbox->update(['read' => true]);
-          }
-         return view('{{backLowerNamespace}}.mailboxes.show', compact('mailbox'));
+          $mailbox->markAsRead();
+
+          return view('{{backLowerNamespace}}.mailboxes.show', compact('mailbox'));
       }
 
 
@@ -54,7 +53,7 @@ class MailboxController extends Controller
       public function destroy(Mailbox $mailbox)
       {
           $mailbox->delete();
-          // flashy('L\' élément a bien été supprimé');
-          return redirect()->route('{{singularSlug}}.mailbox.index');
+          flashy('L\' élément a bien été supprimé');
+          return redirect()->route('{{backLowerNamespace}}.mailbox.index');
       }
 }

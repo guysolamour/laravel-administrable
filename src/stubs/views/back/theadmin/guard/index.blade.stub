@@ -1,0 +1,174 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','{{pluralSlug}}')
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+            <ol class="breadcrumb breadcrumb-arrow">
+                <li class="breadcrumb-item"><a class='text-primary' href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{pluralSlug}}</li>
+            </ol>
+        </nav>
+
+    </div>
+
+  <div class="row">
+      @foreach (${{pluralSlug}} as ${{singularSlug}})
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card card-body">
+                <div class="flexbox align-items-center">
+                    <label class="toggler toggler-yellow fs-16">
+                        <input type="checkbox" checked>
+                        <i class="fa fa-star"></i>
+                    </label>
+                    <div class="dropdown">
+                        <a data-toggle="dropdown" href="#" aria-expanded="false"><i
+                                class="ti-more-alt rotate-90 text-muted"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+
+                            @if (current_admin_is_super_admin() && !get_admin()->is($admin))
+                            <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.delete',${{singularSlug}}) }}" data-method="delete"
+                                  data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
+                                  <i class="fa fa-fw fa-remove"></i> Supprimer</a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center pt-3">
+                    <a href="#">
+                        <img class="avatar avatar-xxl" src="{{ ${{singularSlug}}->avatar }}">
+                    </a>
+                    <h5 class="mt-3 mb-0"><a class="hover-primary"  href="#qv-user-details-{{ ${{singularSlug}}->id }}" data-toggle="quickview">{{ ${{singularSlug}}->full_name }}</a></h5>
+                    <span>{{ ${{singularSlug}}->role }}</span>
+                </div>
+                <!-- Quickview - User detail -->
+                <div id="qv-user-details-{{ ${{singularSlug}}->id }}" class="quickview quickview-lg">
+                    <div class="quickview-body">
+
+                        <div class="card card-inverse bg-img" style="background-image: url(/vendor/theadmin/img/gallery/thumb/2.jpg);">
+                            <div class="flexbox px-20 pt-20">
+                              <label class="toggler text-white">
+                                <input type="checkbox" {{ ${{singularSlug}}->isSuperAdmin() ? 'checked' : '' }}>
+                                <i class="fa fa-star"></i>
+                               </label>
+                                <a class="text-white fs-20 lh-1" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}"><i class="fa fa-eye"></i></a>
+                            </div>
+
+                            <div class="card-body text-center pb-50">
+                                <a href="#">
+                                    <img class="avatar avatar-xxl avatar-bordered" src="{{ ${{singularSlug}}->avatar }}">
+                                </a>
+                                <h4 class="mt-2 mb-0"><a class="hover-primary text-white" href="#">{{ ${{singularSlug}}->full_name }}</a></h4>
+                                <span><i class="fa fa-phone w-20px"></i> {{ ${{singularSlug}}->phone_number }}</span>
+                            </div>
+                        </div>
+
+                        <div class="quickview-block">
+                            @if(${{singularSlug}}->email)
+                            <div>
+                                <p><span class="font-weight-bold">Email:</span></p>
+                                <p>
+                                    {{ ${{singularSlug}}->email }}
+                                </p>
+                            </div>
+                            @endif
+
+                            <div>
+                                <p><span class="font-weight-bold">Rôle:</span></p>
+                                <p>
+                                    {{ ${{singularSlug}}->role }}
+                                </p>
+                            </div>
+                            @if(${{singularSlug}}->facebook)
+                            <div>
+                                <p><span class="font-weight-bold">Facebook:</span></p>
+                                <p>
+                                    {{ ${{singularSlug}}->facebook }}
+                                </p>
+                            </div>
+                            @endif
+                            @if(${{singularSlug}}->twitter)
+                            <div>
+                                <p><span class="font-weight-bold">Twitter:</span></p>
+                                <p>
+                                    {{ ${{singularSlug}}->twitter }}
+                                </p>
+                            </div>
+                            @endif
+                            @if(${{singularSlug}}->website)
+                            <div>
+                                <p><span class="font-weight-bold">Site internet:</span></p>
+                                <p>
+                                    {{ ${{singularSlug}}->website }}
+                                </p>
+                            </div>
+                            @endif
+                            @if(${{singularSlug}}->about)
+                            <div>
+                                <p><span class="font-weight-bold">A propos:</span></p>
+                                <p>
+                                    {{ ${{singularSlug}}->about }}
+                                </p>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <footer class="p-12 text-right">
+                        <button class="btn btn-flat btn-secondary" type="button" data-toggle="quickview">Annuler</button>
+                    </footer>
+                </div>
+                <!-- END Quickview - User detail -->
+
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+
+</div>
+
+
+  @if (current_admin_is_super_admin())
+  <div class="fab fab-fixed">
+      <a class="btn btn-float btn-primary" href="#dock-new-{{singularSlug}}" title="Nouveau {{singularSlug}}" data-provide="tooltip"
+          data-toggle="dock"><i class="ti-plus"></i></a>
+  </div>
+
+<!-- Dock - Add user -->
+    <div class="dock-list dock-lg">
+
+        <!-- Dock - Compose an email -->
+        <div id="dock-new-{{singularSlug}}" class="dock dock-sm">
+            <header class="dock-header dock-header-inverse bg-info">
+                <div class="dock-title">
+                    <span><i class="fa fa-user"></i></span>
+                    <span>Nouveau {{singularSlug}}</span>
+                </div>
+
+                <div class="dock-actions">
+                    <span title="Close" data-provide="tooltip" data-dock="close"></span>
+                    <span title="Réduire" data-provide="tooltip" data-dock="minimize"></span>
+                </div>
+            </header>
+
+            <div class="dock-body dock-block form-type-material">
+
+                @include('{{backLowerNamespace}}.admins._form')
+            </div>
+
+            <footer class="dock-footer text-right">
+                <button class="btn btn-flat btn-secondary" type="button" data-dock="close">Annuler</button>
+            </footer>
+        </div>
+
+    </div>
+    <!-- END Dock - Add user -->
+  @endif
+@endsection

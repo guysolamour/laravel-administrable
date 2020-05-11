@@ -3,6 +3,7 @@
 namespace {{namespace}}\Traits;
 
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Creativeorange\Gravatar\Facades\Gravatar;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
@@ -14,6 +15,17 @@ trait MediaableTrait
     public function getFrontImageAttribute()
     {
         return $this->getMedia(config('media-library.collections.front'),['select' => true])->first();
+    }
+
+    public function getFrontImageUrl()
+    {
+        $media = $this->front_image;
+
+        if (!$media && $this->email) {
+            return Gravatar::get($this->email);
+        }
+
+        return $media->getUrl();
     }
 
 

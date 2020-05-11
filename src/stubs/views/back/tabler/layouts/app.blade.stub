@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title> @yield('title') | Administration</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+
+    <!-- CSS files -->
+    <link href="{{ asset('vendor/tabler/libs/bootstrap/dist/bootstrap.min.css') }}" rel="stylesheet" />
+    {{-- <link href="{{ asset('vendor/tabler/libs/jqvmap/dist/jqvmap.min.css') }}" rel="stylesheet" /> --}}
+    <link href="{{ asset('vendor/tabler/css/tabler.min.css') }}" rel="stylesheet" />
+    {{-- <link href="{{ asset('vendor/tabler/jqvmap/css/demo.min.css') }}" rel="stylesheet" /> --}}
+
+    <link href="{{ asset('css/vendor/fontawesome.css') }}" rel="stylesheet" media="all">
+
+    {{-- <link href="{{ asset('css/vendor/sweetalert.css') }}" rel="stylesheet"> --}}
+
+    @stack('css')
+
+    <style>
+        body {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+
+    </style>
+</head>
+
+<body class="antialiased border-top-wide border-primary d-flex flex-column">
+    <div class="flex-fill d-flex flex-column justify-content-center">
+        @yield('content')
+    </div>
+
+    <!-- Libs JS -->
+    {{-- <script src="{{ asset('vendor/tabler/libs/jquery/dist/jquery.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('vendor/tabler/libs/bootstrap/dist/popper.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('vendor/tabler/libs/bootstrap/dist/bootstrap.min.js') }}"></script> --}}
+    <script src="{{ asset('vendor/tabler/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/tabler/libs/apexcharts/dist/apexcharts.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('vendor/tabler/libs/jqvmap/dist/jquery.vmap.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('vendor/tabler/libs/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script> --}}
+    {{-- <script src="{{ asset('vendor/tabler/libs/peity/jquery.peity.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('js/vendor/axios.js') }}"></script> --}}
+    {{-- <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('js/vendor/larails-alert.js') }}"></script> --}}
+    <script src="{{ asset('js/vendor/fontawesome.js') }}"></script>
+
+    <script>
+        document.body.style.display = "block"
+    </script>
+
+    @stack('js')
+    {{-- @include('flashy::message') --}}
+</body>
+
+</html>

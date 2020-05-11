@@ -4,9 +4,15 @@ return [
 
     'app_first_name' => config('app.first_name', 'Admin'),
     'app_last_name' => config('app.last_name', 'Admin'),
-    'app_short_name' => config('app.short_namr', 'Lvl'),
+    'app_short_name' => config('app.short_name', 'Lvl'),
 
-    'logo_url' => '/img/logo.png',
+     /**
+      * Thèmes disponiblent adminlte,theadmin,cooladmin,tabler,themekit
+      * Le thème ne doit pas être changé une fois que l'installation a été faite
+      */
+    'theme' => 'adminlte',
+
+    'logo_url' => asset('img/logo-administrable.png'),
 
     'auth_prefix_path' => 'administrable',
 

@@ -1,0 +1,46 @@
+<header class="navbar navbar-expand-md navbar-dark">
+    <div class="container-xl">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href="{{ route('{{singularSlug}}.dashboard') }}" class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pr-0 pr-md-3">
+            <img src="{{administrableLogo}}" alt="{{ config('app.name','Administrable') }}" class="navbar-brand-image">
+        </a>
+
+        <div class="navbar-nav flex-row order-md-last">
+            {{-- Insert Mailbox Link --}}
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-toggle="dropdown">
+                    <span class="avatar" style="background-image: url({{ Gravatar::get($message->email) }})"></span>
+                    <div class="d-none d-xl-block pl-2">
+                        <div>{{ get_{{singularSlug}}('full_name') }}</div>
+                        <div class="mt-1 small text-muted">{{ get_{{singularSlug}}('role') }}</div>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="{{ route('back.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
+                        <i class="fa fa-user icon dropdown-item-icon"></i>
+                        Mon profil
+                    </a>
+                    <a class="dropdown-item" href="{{ route('back.{{singularSlug}}.index') }}">
+                       <i class="fa fa-users icon dropdown-item-icon"></i>
+                        {{pluralClass}}
+                    </a>
+                    <a class="dropdown-item" href="{{ route('back.configuration.edit') }}">
+                        <i class="fa fa-tools icon dropdown-item-icon"></i>
+                        Configuration
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('{{singularSlug}}.logout') }}" onclick="event.preventDefault();document.getElementById('{{singularSlug}}-logout-form').submit();">
+                        <i class="fa fa-sign-out icon dropdown-item-icon"></i>
+                        Déconnexion</a>
+
+                        <form id="{{singularSlug}}-logout-form" action="{{ route('{{singularSlug}}.logout') }}" method="POST"
+                            style="display: none;">
+                            @csrf
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

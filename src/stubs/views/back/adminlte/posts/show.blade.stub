@@ -1,0 +1,96 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title',$post->title)
+
+@section('content')
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    {{-- <h1>Ajout</h1> --}}
+                </div>
+                <div class="col-sm-6">
+                    <div class="float-sm-right">
+                        {{ Breadcrumbs::render('{{backLowerNamespace}}.post.show', $post) }}
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                        title="Réduire">
+                        <i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class='row'>
+                    <div class='col-md-8'>
+                        <section style="margin-bottom: 2rem;">
+
+                            <div class="btn-group-horizontal">
+                                <a href="{{ route('{{backLowerNamespace}}.post.edit', $post) }}" class="btn btn-info" data-toggle="tooltip" data-placement="top"
+                                    title="Editer"><i class="fas fa-edit"></i>Editer</a>
+                                <a href="{{ route('{{backLowerNamespace}}.post.destroy',$post) }}" data-method="delete"
+                                    data-toggle="tooltip" data-placement="top" title="Supprimer"
+                                    data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i
+                                        class="fa fa-trash"></i> Supprimer</a>
+                            </div>
+                        </section>
+                        <div>
+                            <p><span class="font-weight-bold">Titre:</span></p>
+                            <p>
+                                {{ $post->title }}
+                            </p>
+                        </div>
+                        <div>
+                            <p><span class="font-weight-bold">Catégorie:</span></p>
+                            <p>
+                                {{ $post->category->name }}
+                            </p>
+                        </div>
+                        <div>
+                            <p><span class="font-weight-bold">Contenu:</span></p>
+                            <p>
+                                {!! $post->content !!}
+                            </p>
+                        </div>
+
+
+
+                    </div>
+                    <div class='col-md-4'>
+                         @include('{{backLowerNamespace}}.media._show', [
+                           'model' => $post,
+                        //    'front_image_label' => 'titi',
+                        //    'back_image_label' => 'tata',
+                        //    'images_label' => 'toto',
+                        ])
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@endsection

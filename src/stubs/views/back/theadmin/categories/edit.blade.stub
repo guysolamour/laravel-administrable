@@ -1,0 +1,38 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Edition ' . $category->name)
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+            {{ Breadcrumbs::render('{{backLowerNamespace}}.category.edit', $category) }}
+        </nav>
+
+
+    </div>
+
+    <div class="card">
+        <h4 class="card-title">
+            Edition
+        </h4>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    @include('{{backLowerNamespace}}.categories._form',['edit' => true])
+                </div>
+                <div class="col-md-4">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@endsection

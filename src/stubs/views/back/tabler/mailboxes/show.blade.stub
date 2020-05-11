@@ -1,0 +1,74 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title', $mailbox->name)
+
+
+@section('content')
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">Messagerie</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{ $mailbox->name }}</a></li>
+            </ol>
+
+            <div class="btn-group">
+                <a href="{{ route('{{backLowerNamespace}}.mailbox.destroy', $mailbox) }}" class="btn btn-danger" data-method="delete"
+                    data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
+                    <i class="fas fa-trash"></i> Supprimer</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>
+                    De: {{ $mailbox->name }}
+                </h3>
+                <div class="card-body p-0">
+                    <div class="mailbox-read-info mb-4">
+                        <h4>{{ $mailbox->email }} | {{ $mailbox->phone_number }}
+                            <span class="mailbox-read-time float-right">{{ $mailbox->created_at->format('d/m/Y h:i') }}</span></h4>
+                    </div>
+                    <!-- /.mailbox-read-info -->
+
+                    <!-- /.mailbox-controls -->
+                    <div class="mailbox-read-message">
+                        <p>
+                            {!! $mailbox->content !!}
+                        </p>
+                    </div>
+                    <!-- /.mailbox-read-message -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

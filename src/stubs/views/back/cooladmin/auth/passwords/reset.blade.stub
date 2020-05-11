@@ -1,0 +1,56 @@
+@extends('{{backLowerNamespace}}.layouts.app')
+
+@section('title','Réinitialisation de mot de passe')
+
+@section('content')
+
+      <div class="login-content">
+        <div class="login-logo">
+            <a href="/">
+                <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('administrable.name')}}">
+            </a>
+
+        </div>
+        <div class="login-form">
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+            @endif
+            <form class="form-type-material" action="{{ route('{{singularSlug}}.password.update') }}" method="post">
+                <input type="hidden" name="token" value="{{ $token }}">
+                @csrf
+
+                <div class="form-group">
+                  <input type="text" class="au-input au-input--full form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email">
+                  <label for="email">Email</label>
+                  @error('email')
+                      <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                      </span>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <input type="password" class="au-input au-input--full form-control @error('password') is-invalid @enderror" id="password" required name="password"  required>
+                  <label for="email">Mot de passe</label>
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                  <input type="password" class="au-input au-input--full form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" required name="password_confirmation"  required>
+                  <label for="email">Confirmation mot de passe</label>
+                </div>
+
+                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Réinitialiser</button>
+            </form>
+
+        </div>
+    </div>
+
+@endsection
+

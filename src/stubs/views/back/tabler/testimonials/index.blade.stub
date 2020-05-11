@@ -1,0 +1,107 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Témoignages')
+
+
+
+@section('content')
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Témoignages</a></li>
+            </ol>
+
+            <a href="{{ route('{{backLowerNamespace}}.testimonial.create') }}" class="btn btn-success">
+                <i class="fa fa-plus"></i>Ajouter</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+
+       <div class="d-flex justify-content-between mb-3">
+            <h3> Témoignages </h3>
+            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Testimonial" id="delete-all"><i
+                    class="fa fa-trash"></i> &nbsp; Tous supprimer</a>
+        </div>
+        <table class="table table-vcenter card-table" id='list'>
+            <thead>
+                <th></th>
+                <th>
+                    <label class="au-checkbox" for="check-all">
+                        <input type="checkbox" id="check-all">
+                        <span class="au-checkmark"></span>
+                    </label>
+                </th>
+
+                <th>#</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Job</th>
+                <th>Status</th>
+                <th>Contenu</th>
+                <th>Date ajout</th>
+
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                @foreach($testimonials as $testimonial)
+                <tr class="tr-shadow">
+
+                    <td></td>
+                    <td>
+                        <label class="form-check" for="check-{{ $testimonial->id }}">
+                            <input class="form-check-input" type="checkbox" data-check data-id="{{ $testimonial->id }}" id="check-{{ $testimonial->id }}"
+                                <span class="form-check-label"></span>
+                        </label>
+                    </td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $testimonial->name }}</td>
+                    <td>{{ $testimonial->email }}</td>
+                    <td>{{ $testimonial->job }}</td>
+
+                    <td>
+                        @if ($testimonial->isOnline())
+                        <a data-toggle="tooltip" data-placement="top" title="En ligne"><i
+                                class="fas fa-circle text-success"></i></a>
+                        @else
+                        <a data-toggle="tooltip" data-placement="top" title="Hors ligne"><i
+                                class="fas fa-circle text-secondary"></i></a>
+                        @endif
+                    </td>
+
+                    <td>{!! Str::limit(strip_tags($testimonial->content),50) !!}</td>
+
+                    <td>{{ $testimonial->created_at->format('d/m/Y h:i') }}</td>
+
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="{{ route('{{backLowerNamespace}}.testimonial.show', $testimonial) }}" class="btn btn-primary"
+                                data-toggle="tooltip" data-placement="top" title="Afficher"><i
+                                    class="fas fa-eye"></i></a>
+
+                            <a href="{{ route('{{backLowerNamespace}}.testimonial.edit', $testimonial) }}" class="btn btn-info"
+                                data-toggle="tooltip" data-placement="top" title="Editer"><i
+                                    class="fas fa-edit"></i></a>
+                            <a href="{{ route('{{backLowerNamespace}}.testimonial.destroy',$testimonial) }}" data-method="delete"
+                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                class="btn btn-danger" data-toggle="tooltip" data-placement="top"
+                                title="Supprimer"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+@endsection

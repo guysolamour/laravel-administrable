@@ -1,0 +1,30 @@
+@extends('{{backLowerNamespace}}.layouts.app')
+
+@section('title','Vérification de votre email')
+
+@section('content')
+
+<div class="login-content">
+    <div class="login-logo">
+        <a href="/">
+            <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('administrable.name')}}">
+        </a>
+
+    </div>
+    <div class="login-form">
+        @if (session('resent'))
+        <div class="alert alert-success" role="alert">
+            Un nouveau lien de vérification vient de vous être envoyé par email.
+        </div>
+        @endif
+        Avant de continuer, merci de vérifier votre boite de réception pour le lien de vérification
+        Si vous n'avez pas recu de mail,
+        <form class="d-inline" method="POST" action="{{ route('{{singularSlug}}.verification.resend') }}">
+            @csrf
+            <button type="submit" class="au-btn au-btn--block au-btn--green m-b-20">Cliquer ici pour envoyer un autre</button>.
+        </form>
+
+    </div>
+</div>
+
+@endsection

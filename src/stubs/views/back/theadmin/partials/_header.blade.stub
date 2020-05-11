@@ -1,0 +1,142 @@
+<!-- Topbar -->
+<header class="topbar">
+    <div class="topbar-left">
+        <span class="topbar-btn sidebar-toggler"><i>&#9776;</i></span>
+
+        <a class="topbar-btn d-none d-md-block" href="#" data-provide="fullscreen tooltip" title="Plein écran">
+            <i class="material-icons fullscreen-default">fullscreen</i>
+            <i class="material-icons fullscreen-active">fullscreen_exit</i>
+        </a>
+
+         <div class="dropdown d-none d-md-block">
+            <span class="topbar-btn" data-toggle="dropdown"><i class="ti-layout-grid3-alt"></i></span>
+            <div class="dropdown-menu dropdown-grid">
+                <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                    <span data-i8-icon="home"></span>
+                    <span class="title">Tableau de bord</span>
+                </a>
+                <a class="dropdown-item" href="{{ route('back.testimonial.index') }}">
+                    <span data-i8-icon="sms"></span>
+                    <span class="title">Témoignages</span>
+                </a>
+                <a class="dropdown-item" href="{{ route('back.category.index') }}">
+                    <span data-i8-icon="folder"></span>
+                    <span class="title">Catégories</span>
+                </a>
+
+                <a class="dropdown-item" href="{{ route('back.post.index') }}">
+                    <span data-i8-icon="document"></span>
+                    <span class="title">Articles</span>
+                </a>
+                <a class="dropdown-item" href="{{ route('back.mailbox.index') }}">
+                    <span data-i8-icon="invite"></span>
+                    <span class="title">Messagerie</span>
+                </a>
+
+                <a class="dropdown-item" href="{{ route('back.configuration.edit') }}">
+                    <span data-i8-icon="settings"></span>
+                    <span class="title">Configuration</span>
+                </a>
+                <a class="dropdown-item" href="{{ route('back.admin.profile', get_admin()) }}">
+                    <span data-i8-icon="portrait_mode"></span>
+                    <span class="title">Profile</span>
+                </a>
+                <a class="dropdown-item" href="{{ route('back.admin.index') }}">
+                    <span data-i8-icon="businessman"></span>
+                    <span class="title">Administrateurs</span>
+                </a>
+
+            </div>
+        </div>
+
+        <div class="topbar-divider d-none d-md-block"></div>
+
+        {{-- <div class="lookup d-none d-md-block topbar-search" id="theadmin-search">
+            <input class="form-control w-300px" type="text">
+            <div class="lookup-placeholder">
+                <i class="ti-search"></i>
+                <span data-provide="typing"
+                    data-type="&lt;strong&gt;Type&lt;/strong&gt; Button|&lt;strong&gt;Type&lt;/strong&gt; Slider|&lt;strong&gt;Type&lt;/strong&gt; Layout|&lt;strong&gt;Type&lt;/strong&gt; Modal|&lt;strong&gt;Try&lt;/strong&gt; typing any keyword..."
+                    data-loop="false" data-type-speed="90" data-back-speed="50" data-show-cursor="false"></span>
+            </div>
+        </div> --}}
+    </div>
+
+    <div class="topbar-right">
+
+         <ul class="topbar-btns">
+            <li class="dropdown">
+                <span class="topbar-btn" data-toggle="dropdown"><img class="avatar" src="{{ get_admin('avatar') }}"
+                        alt="{{ get_admin('full_name') }}"></span>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_admin()) }}"><i class="ti-user"></i> Profile</a>
+                    <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
+                        <div class="flexbox">
+                            <i class="ti-email"></i>
+                            <span class="flex-grow">Messagerie</span>
+                            @php
+                              $messages =  \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->get()
+                            @endphp
+                            @if($messages->count())
+                            <span class="badge badge-pill badge-info">{{ $messages->count() }}</span>
+                            @endif
+                        </div>
+                    </a>
+                    <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.configuration.edit') }}"><i class="ti-settings"></i> Configuration</a>
+                    <div class="dropdown-divider"></div>
+
+
+
+
+                    <a class="dropdown-item" href="{{ route('{{singularSlug}}.logout') }}" onclick="event.preventDefault();document.getElementById('{{singularSlug}}-logout-form').submit();"><i class="ti-power-off"></i> Déconnexion</a>
+                    <form id="{{singularSlug}}-logout-form" action="{{ route('{{singularSlug}}.logout') }}" method="POST"
+                        style="display: none;">
+                        @csrf
+                    </form>
+                </div>
+            </li>
+
+
+
+            <!-- Messages -->
+            <li class="dropdown d-none d-md-block">
+                <span class="topbar-btn" data-toggle="dropdown"><i class="ti-email"></i></span>
+                <div class="dropdown-menu dropdown-menu-right">
+
+                    <div class="media-list media-list-divided media-list-hover media-list-xs scrollable"
+                        style="height: 290px">
+
+                        @foreach ($messages as $message)
+                            <a class="media media-new1" href="{{ route('{{backLowerNamespace}}.mailbox.show', $message) }}">
+                                <span class="avatar status-success">
+                                    <img src="{{ $message->getFrontImageUrl() }}" alt="{{ $message->name }}">
+                                </span>
+
+                                <div class="media-body">
+                                    <p><strong>{{ $message->name }}</strong> <time class="float-right" datetime="{{ $message->created_at }}">{{ $message->created_at->diffForHumans() }}</time></p>
+                                    <p class="text-truncate">{{ $message->content }}</p>
+                                </div>
+                            </a>
+                        @endforeach
+
+                    </div>
+
+                    <div class="dropdown-footer">
+                        <div class="left">
+                            {{-- <a href="#">Voir les autres messages</a> --}}
+                        </div>
+
+                       <div class="right">
+                            <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">Voir les autres messages</a>
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+            <!-- END Messages -->
+
+        </ul>
+
+    </div>
+</header>
+<!-- END Topbar -->

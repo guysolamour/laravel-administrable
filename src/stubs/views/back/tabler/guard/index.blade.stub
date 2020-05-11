@@ -1,0 +1,47 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','{{pluralClass}}')
+
+
+@section('content')
+
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{pluralClass}}</a></li>
+            </ol>
+            @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
+            <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}" class="btn btn-success">
+                <i class="fa fa-plus"></i>&nbsp; Ajouter</a>
+            @endif
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+        @foreach (${{pluralSlug}} as ${{singularSlug}})
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="avatar avatar-xl" style="background-image: url({{ ${{singularSlug}}->avatar }})"></span>
+                    </div>
+                    <div class="card-title mb-1">
+                        <a href="{{ route('back.{{singularSlug}}.profile', ${{singularSlug}}) }}" title="Profil">{{ ${{singularSlug}}->full_name }}</a>
+                    </div>
+                    <div class="text-muted">{{ ${{singularSlug}}->role }}</div>
+                </div>
+                <a href="{{ route('back.{{singularSlug}}.profile', ${{singularSlug}}) }}" class="card-btn">Voir le profil</a>
+            </div>
+        </div>
+        @endforeach
+</div>
+
+@endsection
+
+
