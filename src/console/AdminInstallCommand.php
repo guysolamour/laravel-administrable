@@ -153,9 +153,6 @@ class AdminInstallCommand extends BaseCommand
         $this->preset = $preset;
 
 
-
-
-
         $theme = $this->option('theme') ?: strtolower(config('administrable.theme','theadmin'));
 
 
@@ -173,9 +170,7 @@ class AdminInstallCommand extends BaseCommand
      */
     public function handle()
     {
-
         $this->info('Initiating...');
-
 
         $this->init();
 
@@ -281,13 +276,6 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Creating Routes...');
         $routes_path = $this->loadRoutes();
         $this->info('Routes created at ' . $routes_path);
-
-
-        // routes and breadcrumbs
-        $this->info(PHP_EOL . 'Creating Breadcrumb...');
-        $breadcrumbs_path = $this->loadBreadcrumbs();
-        $this->info('Breadcrumb created at ' . $breadcrumbs_path);
-
 
         // Views
         $this->info(PHP_EOL . 'Creating Views...');
@@ -884,59 +872,6 @@ class AdminInstallCommand extends BaseCommand
     }
 
 
-    protected function loadBreadcrumbs()
-    {
-        $data_map = $this->parseName();
-
-        // modification du fichier de configuration
-        Artisan::call('vendor:publish --tag=breadcrumbs-config');
-
-        $path = config_path('breadcrumbs.php');
-        $config_file = $this->filesystem->get($path);
-
-        $search = "base_path('routes/breadcrumbs.php'),";
-
-        $replace = "glob(base_path('routes/breadcrumbs/*/*.php')),";
-
-
-        $this->replaceAndWriteFile(
-            $config_file,
-            $search,
-            $replace,
-            $path,
-        );
-
-        $breadcrumb_path = base_path('routes/breadcrumbs/');
-
-        // Front
-        $breadcrumb_stub = $this->filesystem->files(self::TPL_PATH . '/routes/breadcrumbs/front');
-        $breadcrumb_to_create = array_merge(self::DEFAULTS['breadcrumbs']['front'], $this->crud_models);
-        $breadcrumb_stub = array_filter($breadcrumb_stub, function ($form) use ($breadcrumb_to_create) {
-            return in_array(ucfirst($form->getFilenameWithoutExtension()), $breadcrumb_to_create);
-        });
-        $this->compliedAndWriteFile(
-            $breadcrumb_stub,
-            $breadcrumb_path . $data_map["{{frontLowerNamespace}}"]
-        );
-
-        // Front
-        $breadcrumb_stub = $this->filesystem->files(self::TPL_PATH . '/routes/breadcrumbs/back');
-        $breadcrumb_to_create = array_merge(self::DEFAULTS['breadcrumbs']['back'], $this->crud_models);
-        $breadcrumb_stub = array_filter($breadcrumb_stub, fn ($form) => in_array(ucfirst($form->getFilenameWithoutExtension()), $breadcrumb_to_create));
-
-        $this->compliedAndWriteFile(
-            $breadcrumb_stub,
-            $breadcrumb_path . $data_map["{{backLowerNamespace}}"]
-        );
-
-        // renommage du dossier avec le guard
-        $this->filesystem->move(
-            $breadcrumb_path . $data_map["{{backLowerNamespace}}"] . '/guard.php',
-            $breadcrumb_path . $data_map["{{backLowerNamespace}}"] . '/' .  $data_map['{{singularSlug}}'] .'.php'
-        );
-
-        return $breadcrumb_path;
-    }
 
     protected function loadEmailsViews(){
         $data_map = $this->parseName();
@@ -988,7 +923,6 @@ class AdminInstallCommand extends BaseCommand
         $views_path = resource_path('views/');
 
         // Mettre les models au pluriel pour les Views
-
         $crud_models = array_map(fn($item) => Str::plural($item),$this->crud_models);
 
 

@@ -2,9 +2,8 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('{{singularSlug}}.dashboard') }}" class="brand-link">
-      <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('app.name') }} Logo" class="brand-image img-circle elevation-3"
-           style="opacity: .8">
-      <span class="brand-text font-weight-light">{{ config('app.last_name','vel') }}</span>
+      <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('app.name') }} Logo" class="brand-image img-circle">
+      {{-- <span class="brand-text font-weight-light">{{ config('app.last_name','vel') }}</span> --}}
     </a>
 
     <!-- Sidebar -->

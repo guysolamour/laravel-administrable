@@ -15,7 +15,11 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        {{ Breadcrumbs::render('{{backLowerNamespace}}.category.show', $category) }}
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.category.index') }}">Catégories</a></li>
+                            <li class="breadcrumb-item active">{{ $category->name }}</li>
+                        </ol>
                     </div>
                 </div>
             </div>
@@ -52,8 +56,6 @@
                                 {{ $category->created_at->format('d/m/Y h:i') }}
                             </p>
                         </div>
-
-
                     </div>
                     <div class='col-md-4'>
                         <section style="margin-bottom: 2rem;">

@@ -15,7 +15,11 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="float-sm-right">
-                        {{ Breadcrumbs::render('{{backLowerNamespace}}.category.create') }}
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.category.index') }}">Catégories</a></li>
+                            <li class="breadcrumb-item active">Ajout</li>
+                        </ol>
                     </div>
                 </div>
             </div>

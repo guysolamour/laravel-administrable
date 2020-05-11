@@ -9,7 +9,11 @@
 <div class="main-content">
     <div class="card ">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
-            {{ Breadcrumbs::render('{{backLowerNamespace}}.post.show', $post) }}
+             <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                  <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.post.index') }}">Articles</a></li>
+                  <li class="breadcrumb-item active">{{ $post->title }}</li>
+              </ol>
         </nav>
 
     </div>
@@ -17,13 +21,13 @@
         <div class="col-md-8">
             <header class="card-header bg-lightest">
                 <div class="card-title flexbox w-100 align-items-center">
-                    <div>
+                    {{-- <div>
                         <img class="avatar" src="/vendor/theadmin/assets/img/avatar/2.jpg" alt="...">
                         <div>
                             <h6 class="mb-0">Hossein Shams</h6>
                             <small>Today at 11:34 AM</small>
                         </div>
-                    </div>
+                    </div> --}}
                     <div>
                         <a href="{{ route('{{backLowerNamespace}}.category.show', $post->category) }}">{{ $post->category->name }}</a>
                     </div>

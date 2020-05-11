@@ -7,7 +7,12 @@
 <div class="main-content">
     <div class="card ">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
-            {{ Breadcrumbs::render('{{backLowerNamespace}}.testimonial.edit', $testimonial) }}
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.testimonial.index') }}">Témoignages</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.testimonial.show', $testimonial) }}">{{ $testimonial->name }}</a></li>
+                <li class="breadcrumb-item active">Edition</li>
+            </ol>
         </nav>
 
     </div>

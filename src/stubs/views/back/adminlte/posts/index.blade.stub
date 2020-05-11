@@ -13,8 +13,11 @@
                     {{-- <h1>Articles</h1> --}}
                 </div>
                 <div class="col-sm-6">
-                    <div class='float-sm-right'>
-                        {{ Breadcrumbs::render('{{backLowerNamespace}}.post.index') }}
+                     <div class='float-sm-right'>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                            <li class="breadcrumb-item active">Articles</li>
+                        </ol>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,11 @@
     <div class="card ">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
             <ol class="breadcrumb">
-                {{ Breadcrumbs::render('{{backLowerNamespace}}.category.show', $category) }}
+                 <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                      <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.category.index') }}">Catégories</a></li>
+                      <li class="breadcrumb-item active">{{ $category->name }}</li>
+                  </ol>
             </ol>
         </nav>
 
