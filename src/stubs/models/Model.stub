@@ -19,7 +19,7 @@ class {{singularClass}} extends Authenticatable
      */
     protected $fillable = [
         'pseudo', 'first_name', 'last_name', 'email', 'password','avatar','is_super_{{singularSlug}}',
-        'facebook', 'twitter','phone_number','website','about'
+        'facebook', 'twitter','linkedin','phone_number','website','about'
     ];
 
     /**
@@ -68,7 +68,7 @@ class {{singularClass}} extends Authenticatable
     }
 
     /**
-     * Get the admin's full name.
+     * Get the {{singularSlug}}'s full name.
      *
      * @return string
      */
@@ -78,13 +78,13 @@ class {{singularClass}} extends Authenticatable
     }
 
     /**
-     * Get the admin's role.
+     * Get the {{singularSlug}}'s role.
      *
      * @return string
      */
     public function getRoleAttribute() :string
     {
-        return $this->is_super_admin ? 'Super administrateur' : 'Administrateur';
+        return $this->is_super_{{singularSlug}} ? 'Super {{singularSlug}}' : '{{pluralClass}}';
     }
 
 

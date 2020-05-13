@@ -47,8 +47,9 @@
               <!-- /.mailbox-read-info -->
               <div class="mailbox-controls with-border text-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-container="body" title="Supprimer">
-                    <i class="far fa-trash-alt"></i></button>
+                  <a href="{{ route('{{backLowerNamespace}}.mailbox.destroy', $mailbox) }}" class="btn btn-danger"
+                         data-method="delete" data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
+                            <i class="fas fa-trash"></i> Supprimer</a>
                 </div>
                 <!-- /.btn-group -->
               </div>
@@ -63,7 +64,9 @@
             <!-- /.card-body -->
             <!-- /.card-footer -->
             <div class="card-footer">
-              <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete</button>
+               <a href="{{ route('{{backLowerNamespace}}.mailbox.destroy', $mailbox) }}" class="btn btn-danger"
+                         data-method="delete" data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
+                            <i class="fas fa-trash"></i> Supprimer</a>
             </div>
             <!-- /.card-footer -->
           </div>

@@ -8,6 +8,8 @@
     <title> @yield('title') | Administration</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+
     <!-- Fontfaces CSS-->
     <link href="{{ asset('vendor/cooladmin/css/font-face.css') }}" rel="stylesheet" media="all">
     <link href="{{ asset('css/vendor/fontawesome.css') }}" rel="stylesheet" media="all">

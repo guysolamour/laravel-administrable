@@ -75,7 +75,7 @@ trait FormBuilderTrait {
      */
     private function getFormName(bool $withNamespace = true ) :string
     {
-        return sprintf("App\Forms\%sForm",$this->getModelName($withNamespace));
+        return sprintf("{{namespace}}\Forms\%sForm",$this->getModelName($withNamespace));
     }
 
 

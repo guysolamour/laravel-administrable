@@ -5,6 +5,10 @@
                 <div class="copyright">
                     <p>Copyright © {{ date('Y') }} <a href="https://aswebagency.com">AswebAgency</a>.
                         Tous droits reservés.</p>
+                    <p>
+                        Réalisé avec <i class="fa fa-heart text-danger"></i> par <a href="//roland-assale.info"
+                                target="_blank"><b>Guysolamour</b></a>
+                    </p>
                 </div>
             </div>
         </div>

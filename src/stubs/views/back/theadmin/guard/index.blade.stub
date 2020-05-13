@@ -31,7 +31,7 @@
                         <div class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}"><i class="fa fa-fw fa-user"></i> Profile</a>
 
-                            @if (current_admin_is_super_admin() && !get_admin()->is($admin))
+                            @if (current_{{singularSlug}}_is_super_{{singularSlug}}() && !get_{{singularSlug}}()->is(${{singularSlug}}))
                             <div class="dropdown-divider"></div>
                               <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.delete',${{singularSlug}}) }}" data-method="delete"
                                   data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
@@ -54,7 +54,7 @@
                         <div class="card card-inverse bg-img" style="background-image: url(/vendor/theadmin/img/gallery/thumb/2.jpg);">
                             <div class="flexbox px-20 pt-20">
                               <label class="toggler text-white">
-                                <input type="checkbox" {{ ${{singularSlug}}->isSuperAdmin() ? 'checked' : '' }}>
+                                <input type="checkbox" {{ ${{singularSlug}}->isSuper{{singularClass}}() ? 'checked' : '' }}>
                                 <i class="fa fa-star"></i>
                                </label>
                                 <a class="text-white fs-20 lh-1" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}"><i class="fa fa-eye"></i></a>
@@ -135,7 +135,7 @@
 </div>
 
 
-  @if (current_admin_is_super_admin())
+  @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
   <div class="fab fab-fixed">
       <a class="btn btn-float btn-primary" href="#dock-new-{{singularSlug}}" title="Nouveau {{singularSlug}}" data-provide="tooltip"
           data-toggle="dock"><i class="ti-plus"></i></a>
@@ -160,7 +160,7 @@
 
             <div class="dock-body dock-block form-type-material">
 
-                @include('{{backLowerNamespace}}.admins._form')
+                @include('{{backLowerNamespace}}.{{pluralSlug}}._form')
             </div>
 
             <footer class="dock-footer text-right">

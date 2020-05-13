@@ -1,4 +1,4 @@
-                <li>
+                <li class="{{ set_active_link('{{backLowerNamespace}}.mailbox.index') }}">
                     <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
                         <i class="far fa-envelope"></i>Messagerie</a>
                         @php

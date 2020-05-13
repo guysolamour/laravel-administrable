@@ -31,7 +31,7 @@ class MediaController extends Controller
             $model = base64_decode($model)::find($id);
         }
 
-        return view('back.media.tinymce', [
+        return view('{{backLowerNamespace}}.media.tinymce', [
             'model' => $model,
             'model_name' => get_class($model),
             'form_name' => $model->form_name,

@@ -23,7 +23,7 @@ return [
     /*
      * The fully qualified class name of the media model.
      */
-    'media_model' => App\{{modelsFolder}}\Media::class,
+    'media_model' => {{namespace}}\{{modelsFolder}}\Media::class,
 
       /**
      * Default app collections

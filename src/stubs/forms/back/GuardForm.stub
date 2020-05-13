@@ -48,6 +48,9 @@ class {{singularClass}}Form extends Form
 		    ->add('twitter', 'text', [
 			    'label' => 'Twitter',
 		    ])
+		    ->add('linkedin', 'text', [
+			    'label' => 'Linkedin',
+		    ])
 		    ->add('phone_number', 'text', [
 			    'label' => 'Numéro de téléphone',
 		    ])

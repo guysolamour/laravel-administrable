@@ -30,7 +30,7 @@
                           (<small>{{ $unread }} messages non lus</>)
                         @endif
                     </h5>
-                    <div>
+                    <div class="btn-group">
 
                         <a href="#" class="btn btn-sm btn-label btn-round btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Mailbox" id="delete-all"><label><i
                                     class="fa fa-trash"></i></label> Tous supprimer</a>
@@ -39,13 +39,13 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <table class="table table-separated" data-provide="datatables">
+                        <table class="table table-separated" id='list'>
                             <thead>
                                  <tr>
                                     <th>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="check-all">
-                                            <label class="custom-control-label" for="check-all"></label>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="check-all">
+                                            <label class="form-check-label" for="check-all"></label>
                                         </div>
                                     </th>
                                     <th></th>
@@ -60,23 +60,23 @@
                               @foreach($mailboxes as $message)
                                 <tr>
                                     <td>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" data-check class="custom-control-input" data-id="{{ $message->id }}"
+                                         <div class="form-check">
+                                            <input type="checkbox" data-check class="form-check-input" data-id="{{ $message->id }}"
                                                 id="check-{{ $message->id }}">
-                                            <label class="custom-control-label" for="check-{{ $message->id }}"></label>
+                                            <label class="form-check-label" for="check-{{ $message->id }}"></label>
                                         </div>
                                     </td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td><a href="Javascript:void(1)"><i class=" {{ ($message->read) ? 'far fa-star' : 'fas fa-star'}} text-warning"></i></a></td>
-                                    <td><a href="#qv-mailboxes-details-{{ $message->id }}" data-toggle="quickview">{{ $message->name }}</a></td>
+                                    <td><a class="text-dark" data-provide="tooltip" title="Apercu rapide"  href="#qv-mailboxes-details-{{ $message->id }}" data-toggle="quickview">{{ $message->name }}</a></td>
                                     <td>{{ Str::limit($message->content,25) }}</td>
                                     <td>{{ $message->created_at->diffForHumans() }}</td>
                                     <td>
                                         <nav class="nav no-gutters gap-2 fs-16">
                                             <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.mailbox.show', $message) }}" data-provide="tooltip"
-                                                title="" data-original-title="Afficher"><i class="ti-eye"></i></a>
+                                                title="Afficher" ><i class="ti-eye"></i></a>
 
-                                            <a class="nav-link hover-danger" href="{{ route('{{backLowerNamespace}}.mailbox.destroy',$message) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" data-provide="tooltip" title="" data-original-title="Supprimer"><i
+                                            <a class="nav-link hover-danger" href="{{ route('{{backLowerNamespace}}.mailbox.destroy',$message) }}" data-method="delete" data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" data-provide="tooltip"  title="Supprimer" data-original-title="Supprimer"><i
                                                     class="ti-close"></i></a>
                                         </nav>
                                     </td>
@@ -129,7 +129,8 @@
 </div>
 
 
-
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
 
 
 @endsection

@@ -34,8 +34,6 @@
     </header>
 
 
-
-
     <div class="main-content">
         <div class="row">
 
@@ -61,12 +59,12 @@
                             <div class='col-md-6'>
                                 {!! form_row($edit_form->email) !!}
                             </div>
-                            @if(current_admin_is_super_admin())
+                            @if(current_{{singularSlug}}_is_super_{{singularSlug}}())
                             <div class='col-md-6'>
                                <br>
                                 <div class="custom-control custom-checkbox">
-                                    {!! form_widget($edit_form->is_super_admin, ['attr' => ['class' => 'custom-control-input','checked' => '']]) !!}
-                                    <label class="custom-control-label" for="is_super_admin">Super {{singularSlug}}</label>
+                                    {!! form_widget($edit_form->is_super_{{singularSlug}}, ['attr' => ['class' => 'custom-control-input','checked' => '']]) !!}
+                                    <label class="custom-control-label" for="is_super_{{singularSlug}}">Super {{singularSlug}}</label>
                                 </div>
                             </div>
                             @endif
@@ -82,11 +80,14 @@
                         </div>
                         <div class='row'>
 
-                            <div class='col-md-6'>
+                            <div class='col-md-4'>
                                 {!! form_row($edit_form->facebook) !!}
                             </div>
-                            <div class='col-md-6'>
+                            <div class='col-md-4'>
                                 {!! form_row($edit_form->twitter) !!}
+                            </div>
+                             <div class='col-md-4'>
+                                {!! form_row($edit_form->linkedin) !!}
                             </div>
 
                         </div>

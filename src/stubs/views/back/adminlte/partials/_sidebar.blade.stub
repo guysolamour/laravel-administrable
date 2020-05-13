@@ -25,29 +25,29 @@
 
            {{-- insert sidebar links here --}}
            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index','{{backLowerNamespace}}.{{singularSlug}}.profile','{{backLowerNamespace}}.{{singularSlug}}.create') }}">
               <i class="nav-icon fas fa-users"></i>
               <p>
-                Administrateurs
+                {{pluralClass}}
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}" class="nav-link">
+              <li class="nav-item ">
+                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
                   <i class="far fa-th-list nav-icon"></i>
                   <p>Liste</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}" class="nav-link">
+              <li class="nav-item ">
+                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.profile') }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Mon profil</p>
                 </a>
               </li>
                 @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
                     <li class="nav-item">
-                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}" class="nav-link">
+                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.create') }}">
                             <i class="far fa-plus nav-icon"></i>
                             <p>Ajouter</p>
                         </a>
@@ -56,7 +56,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}" class="nav-link">
+            <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.configuration.edit') }}">
               <i class="nav-icon fas fa-tools"></i>
               <p>
                 Configuration

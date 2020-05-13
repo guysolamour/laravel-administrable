@@ -186,7 +186,7 @@ if (!function_exists('current_{{singularSlug}}_profil')) {
 if (!function_exists('get_{{singularSlug}}_role')) {
     function get_{{singularSlug}}_role(${{singularSlug}}) : string
     {
-        return ${{singularSlug}}->isSuper{{singularClass}}() ? 'Super administrateur' : 'Administrateur';
+        return ${{singularSlug}}->isSuper{{singularClass}}() ? 'Super {{singularSlug}}' : '{{singularClass}}';
     }
 }
 

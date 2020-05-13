@@ -1,5 +1,5 @@
 
-   <li class="has-sub">
+              <li class="has-sub class="{{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index','{{backLowerNamespace}}.post.create','{{backLowerNamespace}}.category.index') }}"">
                     <a class="js-arrow" href="#">
                         <i class="fa fa-swatchbook"></i>Articles
                         <span class="arrow">
@@ -7,15 +7,15 @@
                         </span>
                     </a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
-                        <li>
+                        <li class="{{ set_active_link('{{backLowerNamespace}}.post.create') }}">
                             <a href="{{ route('{{backLowerNamespace}}.post.create') }}">
                                 <i class="far fa-plus"></i>Ecrire</a>
                         </li>
-                        <li>
+                        <li class="{{ set_active_link('{{backLowerNamespace}}.post.index') }}">
                             <a href="{{ route('{{backLowerNamespace}}.post.index') }}">
                                 <i class="far fa-th-list"></i>Liste</a>
                         </li>
-                        <li>
+                        <li class="{{ set_active_link('{{backLowerNamespace}}.category.index') }}">
                             <a href="{{ route('{{backLowerNamespace}}.category.index') }}">
                                 <i class="far fa-folder-open"></i>Catégories</a>
                         </li>

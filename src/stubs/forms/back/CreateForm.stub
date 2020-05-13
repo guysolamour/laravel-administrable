@@ -11,13 +11,13 @@ class Create{{singularClass}}Form extends Form
       $this->formOptions = [
 		    'method' => 'POST',
 		    'url'    => route('{{backLowerNamespace}}.{{singularSlug}}.store'),
-        'name'   => get_form_name($this->getModel())
+          'name'   => get_form_name($this->getModel())
 	    ];
 
 	    $this
         ->add('pseudo','text', [
             'label' => 'Pseudo',
-            'rules' => 'required|min:2|unique:admins',
+            'rules' => 'required|min:2|unique:{{pluralSlug}}',
         ])
         ->add('first_name','text', [
             'label' => 'Prénoms',
@@ -29,13 +29,16 @@ class Create{{singularClass}}Form extends Form
         ])
         ->add('email', 'email', [
             'label' => 'Email',
-            'rules'  => 'required|email|unique:admins',
+            'rules'  => 'required|email|unique:{{pluralSlug}}',
         ])
         ->add('facebook', 'text', [
             'label' => 'Facebook',
         ])
         ->add('twitter', 'text', [
             'label' => 'Twitter',
+        ])
+        ->add('linkedin', 'text', [
+            'label' => 'Linkedin',
         ])
         ->add('phone_number', 'text', [
             'label' => 'Numéro de téléphone',
@@ -46,8 +49,8 @@ class Create{{singularClass}}Form extends Form
         ->add('about', 'textarea', [
             'label' => 'A propos',
         ])
-        ->add('is_super_admin', 'checkbox', [
-          'label' => 'Super admin',
+        ->add('is_super_{{singularSlug}}', 'checkbox', [
+          'label' => 'Super {{singularSlug}}',
         ])
         ->add('password', 'password', [
           'label' => 'Mot de passe',

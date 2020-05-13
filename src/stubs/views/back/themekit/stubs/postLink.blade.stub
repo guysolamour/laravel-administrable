@@ -1,8 +1,8 @@
- <div class="nav-item has-sub">
+                <div class="nav-item has-sub">
                     <a href="#"><i class="fas fa-swatchbook"></i><span>Articles</span></a>
                     <div class="submenu-content">
-                        <a href="{{ route('{{backLowerNamespace}}.post.create') }}" class="menu-item">Ecrire</a>
-                        <a href="{{ route('{{backLowerNamespace}}.post.index') }}" class="menu-item">Liste</a>
-                        <a href="{{ route('{{backLowerNamespace}}.category.index') }}" class="menu-item">Catégories</a>
+                        <a href="{{ route('{{backLowerNamespace}}.post.create') }}" class="menu-item {{ set_active_link('{{backLowerNamespace}}.post.create') }}">Ecrire</a>
+                        <a href="{{ route('{{backLowerNamespace}}.post.index') }}" class="menu-item {{ set_active_link('{{backLowerNamespace}}.post.index') }}">Liste</a>
+                        <a href="{{ route('{{backLowerNamespace}}.category.index') }}" class="menu-item {{ set_active_link('{{backLowerNamespace}}.category.index') }}">Catégories</a>
                     </div>
                 </div>

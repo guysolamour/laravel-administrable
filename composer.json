@@ -20,7 +20,7 @@
     "creativeorange/gravatar": "^1.0",
     "cviebrock/eloquent-sluggable": "^7.0",
     "genealabs/laravel-model-caching": "^0.8",
-    "guysolamour/laravel-commands": "^1.1",
+    "guysolamour/laravel-commands": "^1.2",
     "illuminate/support": "^7.0",
     "kris/laravel-form-builder": "^1.30",
     "laravel/telescope": "^3.2",

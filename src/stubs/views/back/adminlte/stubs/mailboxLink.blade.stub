@@ -1,5 +1,5 @@
            <li class="nav-item">
-             <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}" class="nav-link">
+             <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.mailbox.index') }}">
                <i class="nav-icon far fa-envelope"></i>
                  Messagerie
                <p>

@@ -2,7 +2,7 @@
 
 namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
-use {{namespace}}\Admin;
+use {{namespace}}\{{singularClass}};
 use Illuminate\Http\Request;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\{{modelsFolder}}\Mailbox;
@@ -33,7 +33,7 @@ class ContactController extends Controller
         $mailbox = Mailbox::create( $request->all() );
 
         // Notify admins
-        Notification::send(Admin::all(), new ContactNotification($mailbox));
+        Notification::send({{singularClass}}::all(), new ContactNotification($mailbox));
 
         flashy( 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !' );
         return back();

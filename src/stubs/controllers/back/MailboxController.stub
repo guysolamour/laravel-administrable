@@ -30,7 +30,7 @@ class MailboxController extends Controller
       /**
        * Display the specified resource.
        *
-       * @param  \App\{{modelsFolder}}\Mailbox  $mailbox
+       * @param  \{{namespace}}\{{modelsFolder}}\Mailbox  $mailbox
        * @return \Illuminate\Http\Response
        */
       public function show(Mailbox $mailbox)

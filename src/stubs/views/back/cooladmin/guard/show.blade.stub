@@ -100,12 +100,15 @@
                                     </div>
                                     <div class='row'>
 
-                                        <div class='col-md-6'>
+                                        <div class='col-md-4'>
                                             {!! form_row($edit_form->facebook) !!}
                                         </div>
-                                        <div class='col-md-6'>
+                                        <div class='col-md-4'>
                                             {!! form_row($edit_form->twitter) !!}
                                         </div>
+                                         <div class='col-md-4'>
+                                          {!! form_row($edit_form->linkedin) !!}
+                                      </div>
 
                                     </div>
                                     <div class='row'>
@@ -151,7 +154,7 @@
                                     <h6 class="text-uppercase ls-2">A propos</h6>
                                 </div>
                                 <div class="gap-items-2 gap-y">
-                                    {{ $admin->about }}
+                                    {{ ${{singularSlug}}->about }}
                                 </div>
                             </div>
                         </div>

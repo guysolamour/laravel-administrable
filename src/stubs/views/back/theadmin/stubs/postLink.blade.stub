@@ -1,5 +1,5 @@
 
-   <li class="menu-item">
+            <li class="menu-item {{ set_active_link('{{backLowerNamespace}}.post.create','{{backLowerNamespace}}.post.index','{{backLowerNamespace}}.category.index') }}">
                 <a class="menu-link" href="#">
                     <span class="icon fa fa-swatchbook"></span>
                     <span class="title">Articles</span>

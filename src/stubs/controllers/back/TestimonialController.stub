@@ -56,7 +56,7 @@ class TestimonialController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\{{modelsFolder}}\Testimonial  $testimonial
+     * @param  \{{namespace}}\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
     public function show(Testimonial $testimonial)
@@ -67,7 +67,7 @@ class TestimonialController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\{{modelsFolder}}\Testimonial  $testimonial
+     * @param  \{{namespace}}\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
     public function edit(Testimonial $testimonial)
@@ -80,7 +80,7 @@ class TestimonialController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\{{modelsFolder}}\Testimonial  $testimonial
+     * @param  \{{namespace}}\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Testimonial $testimonial)
@@ -97,7 +97,7 @@ class TestimonialController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\{{modelsFolder}}\Testimonial  $testimonial
+     * @param  \{{namespace}}\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
     public function destroy(Testimonial $testimonial)

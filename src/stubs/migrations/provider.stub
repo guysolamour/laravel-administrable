@@ -25,6 +25,7 @@ class Create{{pluralClass}}Table extends Migration
             $table->string('password');
             $table->string('facebook')->nullable();
             $table->string('twitter')->nullable();
+            $table->string('linkedin')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('website')->nullable();
             $table->string('about')->nullable();

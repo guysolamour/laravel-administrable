@@ -27,23 +27,23 @@
                     <h5 class="card-title h3">
                         Catégories
                     </h5>
-                    <div>
+                    <div class="btn-group">
                         <a href="{{ route('{{backLowerNamespace}}.category.create') }}"
                             class="btn btn-sm btn-label btn-round btn-primary"><label><i class="fa fa-plus"></i></label>
                             Ajouter</a>
-                        <a href="#" data-model="\App\Models\Category" id="delete-all" class="btn btn-sm btn-label btn-round btn-danger d-none"><label><i
+                        <a href="#" data-model="\{{namespace}}\{{modelsFolder}}\Category" id="delete-all" class="btn btn-sm btn-label btn-round btn-danger d-none"><label><i
                                     class="fa fa-trash"></i></label> Tous Supprimer</a>
 
                     </div>
                 </div>
 
-                <table class="table table-hover table-has-action" data-provide="datatables"  data-datatables>
+                <table class="table table-hover table-has-action" id='list'>
                     <thead>
                         <tr>
                             <th>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="check-all">
-                                    <label class="custom-control-label" for="check-all"></label>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="check-all">
+                                    <label class="form-check-label" for="check-all"></label>
                                 </div>
                             </th>
                             <th></th>
@@ -56,27 +56,28 @@
                         @foreach($categories as $category)
                         <tr>
                             <td>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" data-check class="custom-control-input" data-id="{{ $category->id }}"
+                                 <div class="form-check">
+                                    <input type="checkbox" data-check class="form-check-input" data-id="{{ $category->id }}"
                                         id="check-{{ $category->id }}">
-                                    <label class="custom-control-label" for="check-{{ $category->id }}"></label>
+                                    <label class="form-check-label" for="check-{{ $category->id }}"></label>
                                 </div>
                             </td>
                             <td>{{ $loop->iteration }}</td>
-                            <td><a  href="#qv-categories-details-{{ $category->id }}" data-toggle="quickview">{{ $category->name }}</a></td>
+                            <td><a class="text-dark" data-provide="tooltip" title="Apercu rapide"   href="#qv-categories-details-{{ $category->id }}" data-toggle="quickview">{{ $category->name }}</a></td>
                             <td>{{ $category->created_at->format('d/m/Y h:i') }}</td>
 
                             <td>
                                 <nav class="nav no-gutters gap-2 fs-16">
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.category.show', $category) }}"
-                                        data-provide="tooltip" title="" data-original-title="Afficher"><i
+                                        data-provide="tooltip" title="Afficher"><i
                                             class="ti-eye"></i></a>
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.category.edit', $category) }}"
-                                        data-provide="tooltip" title="" data-original-title="Editer"><i
+                                        data-provide="tooltip" title="Editer"><i
                                             class="ti-pencil"></i></a>
                                     <a class="nav-link hover-danger" href="{{ route('{{backLowerNamespace}}.category.destroy',$category) }}" data-provide="tooltip" title=""
                                         data-method="delete"
-                                        data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?"
+                                        data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                        title='Supprimer'
                                         data-original-title="Supprimer"><i class="ti-close"></i></a>
                                 </nav>
                             </td>
@@ -162,4 +163,7 @@
 
 </div>
 
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
 @endsection

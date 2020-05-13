@@ -1,7 +1,7 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','{{pluralSlug}}')
+@section('title','{{pluralClass}}')
 
 
 @section('content')
@@ -51,7 +51,8 @@
                                     <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}" title="Profil">{{ ${{singularSlug}}->full_name }}</a>
                                 </h5>
                                 <div class="location text-sm-center">
-                                    {{ ${{singularSlug}}->role }}</div>
+                                    {{ ${{singularSlug}}->role }}
+                                </div>
                             </div>
                             <hr>
                             <div class="card-text text-sm-center">

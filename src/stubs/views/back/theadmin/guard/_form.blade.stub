@@ -27,15 +27,21 @@
     <div class='col-md-6'>
         {!! form_row($form->phone_number) !!}
     </div>
+
 </div>
 <div class='row'>
 
-    <div class='col-md-6'>
+    <div class='col-md-4'>
         {!! form_row($form->facebook) !!}
     </div>
-    <div class='col-md-6'>
+    <div class='col-md-4'>
         {!! form_row($form->twitter) !!}
     </div>
+     <div class='col-md-4'>
+        {!! form_row($form->linkedin) !!}
+    </div>
+
+
 
 </div>
 <div class='row'>

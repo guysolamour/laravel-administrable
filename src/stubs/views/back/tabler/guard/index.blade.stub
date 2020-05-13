@@ -32,11 +32,11 @@
                         <span class="avatar avatar-xl" style="background-image: url({{ ${{singularSlug}}->avatar }})"></span>
                     </div>
                     <div class="card-title mb-1">
-                        <a href="{{ route('back.{{singularSlug}}.profile', ${{singularSlug}}) }}" title="Profil">{{ ${{singularSlug}}->full_name }}</a>
+                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}" title="Profil">{{ ${{singularSlug}}->full_name }}</a>
                     </div>
                     <div class="text-muted">{{ ${{singularSlug}}->role }}</div>
                 </div>
-                <a href="{{ route('back.{{singularSlug}}.profile', ${{singularSlug}}) }}" class="card-btn">Voir le profil</a>
+                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}" class="card-btn">Voir le profil</a>
             </div>
         </div>
         @endforeach

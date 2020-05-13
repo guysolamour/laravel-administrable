@@ -20,24 +20,24 @@
             <ul class="list-unstyled navbar__list">
 
                 {{-- insert sidebar links here --}}
-                <li class="has-sub">
+                <li class="has-sub {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index','{{backLowerNamespace}}.{{singularSlug}}.profile','{{backLowerNamespace}}.{{singularSlug}}.create') }}">
                     <a class="js-arrow" href="#">
-                        <i class="fas fa-users"></i>Administrateurs
+                        <i class="fas fa-users"></i>{{pluralClass}}
                         <span class="arrow">
                             <i class="fas fa-angle-down"></i>
                         </span>
                     </a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
-                        <li>
+                        <li class="{{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
                             <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
                                 <i class="far fa-th-list"></i>Liste</a>
                         </li>
-                        <li>
+                        <li class="{{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.profile') }}">
                             <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
                                 <i class="far fa-circle"></i>Mon profil</a>
                         </li>
                         @if (current_{{singularSlug}}_is_super_{{singularSlug}}())
-                        <li>
+                        <li class="{{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.create') }}">
                             <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}">
                                 <i class="far fa-plus"></i>Ajouter</a>
                         </li>
@@ -45,7 +45,7 @@
                     </ul>
                 </li>
 
-                <li>
+                <li class="{{ set_active_link('{{backLowerNamespace}}.configuration.edit') }}">
                     <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}">
                         <i class="far  fa-tools"></i>Configuration</a>
                 </li>

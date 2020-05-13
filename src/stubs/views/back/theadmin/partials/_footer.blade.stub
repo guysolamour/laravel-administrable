@@ -9,8 +9,8 @@
             <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
 
                 <li class="nav-item">
-                    <a class="nav-link"
-                        href="https://roland-assale.info">By Guy-roland ASSALE </a>
+                    Réalisé avec <i class="fa fa-heart text-danger"></i> par
+                    <a class="nav-link" href="//roland-assale.info" target="_blank"><b>Guysolamour</b></a>
                 </li>
             </ul>
         </div>

@@ -115,11 +115,11 @@ class AdminInstallCommand extends BaseCommand
     protected function init()
     {
 
-        // if ($this->filesystem->exists(base_path('administrable.yaml'))) {
-        //     throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
-        // }
+        if ($this->filesystem->exists(base_path('administrable.yaml'))) {
+            throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
+        }
 
-        $this->name = $this->argument('name');
+        $this->name = strtolower($this->argument('name'));
 
         $this->models_folder_name = ucfirst($this->option('model'));
 
@@ -176,12 +176,16 @@ class AdminInstallCommand extends BaseCommand
 
         // Passer des options pour generer les articles, mentions legales, temoignages en option
 
-        Artisan::call('multi-auth:install', [
+        $this->call('multi-auth:install', [
             'name'    => $this->name,
         ]);
 
         // Gerer l'authentification
-        Artisan::call("ui {$this->preset} --auth");
+        $this->call("ui", [
+            'type'   => $this->preset,
+            '--auth' => true,
+        ]);
+
 
         //  Administrable yaml file
         $administrable_path = $this->info(PHP_EOL . 'Creating models administrable crud configuration yaml file');
@@ -1099,16 +1103,73 @@ class AdminInstallCommand extends BaseCommand
 
     protected function addEnvVariables()
     {
+        // $data_map = $this->parseName();
         $env_path = base_path('.env');
+        //$env = $this->filesystem->get($env_path);
 
-        $env_stub = $this->filesystem->get(self::TPL_PATH . '/env/env.stub');
-        $this->compliedAndWriteFile(
-            $env_stub,
+
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($env_path),
+            "APP_NAME=Laravel",
+            'APP_NAME=Administrable',
+            $env_path
+        );
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($env_path),
+            $search = "APP_ENV",
+            <<<TEXT
+            APP_FIRST_NAME={$this->name}
+            APP_LAST_NAME={$this->name}
+            APP_SHORT_NAME=lvl
+            {$search}
+            TEXT,
+            $env_path
+        );
+
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($env_path),
+            $search = "MAIL_MAILER",
+            <<<TEXT
+            FTP_HOST=
+            FTP_USERNAME=
+            FTP_PASSWORD=
+
+
+            MODEL_CACHE_ENABLED=false
+            COOKIE_CONSENT_ENABLED=true
+
+
+            {$search}
+            TEXT,
+            $env_path
+        );
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($env_path),
+            "MAIL_HOST=smtp.mailtrap.io",
+            'MAIL_HOST=127.0.0.1',
+            $env_path
+        );
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($env_path),
+            "MAIL_PORT=2525",
+            'MAIL_PORT=1030',
             $env_path
         );
 
         // generate a new key
-        Artisan::call('key:generate');
+        $this->call('key:generate');
+
+        // Create database
+        if($this->option('create_db')){
+            $this->call('commands:db:create',[
+                '--connection' => config('database.default')
+            ]);
+        }
 
         return $env_path;
     }
@@ -1296,8 +1357,8 @@ class AdminInstallCommand extends BaseCommand
     {
 
         // Telescope
-        Artisan::call('telescope:install');
-        Artisan::call('migrate');
+       $this->call('telescope:install');
+       $this->call('migrate');
 
         $telescope_service_provider_path = app_path('Providers/TelescopeServiceProvider.php');
         $telescope_service_provider_path_stub = $this->filesystem->get(self::TPL_PATH . '/providers/TelescopeServiceProvider.stub');

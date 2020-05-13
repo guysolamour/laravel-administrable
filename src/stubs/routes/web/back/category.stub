@@ -3,13 +3,13 @@
 Route::middleware(['{{singularSlug}}.auth'])->group(function () {
     Route::namespace('{{backNamespace}}')->group(function () {
         Route::resource('categories','CategoryController')->names([
-                'index'      => 'back.category.index',
-                'show'       => 'back.category.show',
-                'create'     => 'back.category.create',
-                'store'      => 'back.category.store',
-                'edit'       => 'back.category.edit',
-                'update'     => 'back.category.update',
-                'destroy'    => 'back.category.destroy',
+                'index'      => '{{backLowerNamespace}}.category.index',
+                'show'       => '{{backLowerNamespace}}.category.show',
+                'create'     => '{{backLowerNamespace}}.category.create',
+                'store'      => '{{backLowerNamespace}}.category.store',
+                'edit'       => '{{backLowerNamespace}}.category.edit',
+                'update'     => '{{backLowerNamespace}}.category.update',
+                'destroy'    => '{{backLowerNamespace}}.category.destroy',
         ]);
     });
 });

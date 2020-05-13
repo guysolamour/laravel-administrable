@@ -11,39 +11,46 @@
          <div class="dropdown d-none d-md-block">
             <span class="topbar-btn" data-toggle="dropdown"><i class="ti-layout-grid3-alt"></i></span>
             <div class="dropdown-menu dropdown-grid">
-                <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                <a class="dropdown-item" href="{{ route('{{singularSlug}}.dashboard') }}">
                     <span data-i8-icon="home"></span>
                     <span class="title">Tableau de bord</span>
                 </a>
-                <a class="dropdown-item" href="{{ route('back.testimonial.index') }}">
+                @if(Route::has('{{backLowerNamespace}}.testimonial.index'))
+                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.testimonial.index') }}">
                     <span data-i8-icon="sms"></span>
                     <span class="title">Témoignages</span>
                 </a>
-                <a class="dropdown-item" href="{{ route('back.category.index') }}">
+                @endif
+                @if(Route::has('{{backLowerNamespace}}.category.index'))
+                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.category.index') }}">
                     <span data-i8-icon="folder"></span>
                     <span class="title">Catégories</span>
                 </a>
-
-                <a class="dropdown-item" href="{{ route('back.post.index') }}">
+                @endif
+                @if(Route::has('{{backLowerNamespace}}.post.index'))
+                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.post.index') }}">
                     <span data-i8-icon="document"></span>
                     <span class="title">Articles</span>
                 </a>
-                <a class="dropdown-item" href="{{ route('back.mailbox.index') }}">
+                @endif
+                @if(Route::has('{{backLowerNamespace}}.mailbox.index'))
+                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
                     <span data-i8-icon="invite"></span>
                     <span class="title">Messagerie</span>
                 </a>
+                @endif
 
-                <a class="dropdown-item" href="{{ route('back.configuration.edit') }}">
+                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.configuration.edit') }}">
                     <span data-i8-icon="settings"></span>
                     <span class="title">Configuration</span>
                 </a>
-                <a class="dropdown-item" href="{{ route('back.admin.profile', get_admin()) }}">
+                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
                     <span data-i8-icon="portrait_mode"></span>
                     <span class="title">Profile</span>
                 </a>
-                <a class="dropdown-item" href="{{ route('back.admin.index') }}">
+                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
                     <span data-i8-icon="businessman"></span>
-                    <span class="title">Administrateurs</span>
+                    <span class="title">{{pluralClass}}</span>
                 </a>
 
             </div>
@@ -66,10 +73,11 @@
 
          <ul class="topbar-btns">
             <li class="dropdown">
-                <span class="topbar-btn" data-toggle="dropdown"><img class="avatar" src="{{ get_admin('avatar') }}"
-                        alt="{{ get_admin('full_name') }}"></span>
+                <span class="topbar-btn" data-toggle="dropdown"><img class="avatar" src="{{ get_{{singularSlug}}('avatar') }}"
+                        alt="{{ get_{{singularSlug}}('full_name') }}"></span>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_admin()) }}"><i class="ti-user"></i> Profile</a>
+                    <a class="dropdown-item" href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ti-home"></i> Tableau de bord</a>
+                    <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}"><i class="ti-user"></i> Profile</a>
                     <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
                         <div class="flexbox">
                             <i class="ti-email"></i>

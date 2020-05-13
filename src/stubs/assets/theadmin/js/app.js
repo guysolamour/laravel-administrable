@@ -480,15 +480,15 @@ jQuery.fn.scrollToEnd = function() {
 
     // Google Analytics
     //
-    if ( app.defaults.googleAnalyticsId ) {
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    // if ( app.defaults.googleAnalyticsId ) {
+    //   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    //   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    //   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    //   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-      ga('create', app.defaults.googleAnalyticsId, 'auto');
-      ga('send', 'pageview');
-    }
+    //   ga('create', app.defaults.googleAnalyticsId, 'auto');
+    //   ga('send', 'pageview');
+    // }
 
 
     // Recover saved states
@@ -3103,7 +3103,7 @@ jQuery.fn.scrollToEnd = function() {
           });
         });
       }
-      
+
 
       $( this ).imagesLoaded( function() {
         shuffleInstance.layout()
@@ -4077,7 +4077,7 @@ jQuery.fn.scrollToEnd = function() {
     $(document).on('click', '[data-open="quickview"]', function(e) {
       e.preventDefault();
 
-      
+
       if ( $(this).closest('.quickview').length && $(this).hasDataAttr('url') ) {
         return;
       }
@@ -4086,7 +4086,7 @@ jQuery.fn.scrollToEnd = function() {
       var target = app.getTarget($(this));
 
       if (target == false) {
-        
+
       }
       else {
         var url = '';
@@ -4181,7 +4181,7 @@ jQuery.fn.scrollToEnd = function() {
     if ( ! quickview.hasClass('backdrop-remove') ) {
       quickview.after('<div class="app-backdrop backdrop-quickview" data-target="'+ e +'"></div>');
     }
-    
+
   };
 
 
@@ -4726,6 +4726,7 @@ jQuery.fn.scrollToEnd = function() {
         trigger: 'hover',
         template: '<div class="tooltip'+ color +'" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
       });
+
     });
 
 
