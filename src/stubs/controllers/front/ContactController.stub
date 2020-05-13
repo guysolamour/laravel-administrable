@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Notification;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Forms\{{frontNamespace}}\ContactForm;
 use {{namespace}}\Notifications\{{backNamespace}}\ContactNotification;
+use Illuminate\Support\Facades\Mail;
+use {{namespace}}\Mail\{{frontNamespace}}\SendMeContactMessageMail;
 
 class ContactController extends Controller
 {
@@ -32,11 +34,14 @@ class ContactController extends Controller
         // save the message in database and send the mail
         $mailbox = Mailbox::create( $request->all() );
 
+        if($request->get('send_copy')){
+            Mail::to($mailbox->email)->send(new SendMeContactMessageMail($mailbox));
+        }
+
         // Notify admins
         Notification::send({{singularClass}}::all(), new ContactNotification($mailbox));
 
         flashy( 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !' );
         return back();
-
     }
 }

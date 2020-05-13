@@ -34,6 +34,10 @@ class ContactForm extends Form
                 'rules' => 'required|min:3',
 			])
 
+       ->add('send_copy', 'checkbox', [
+              'label' => 'Envoyez-moi une copie du message',
+          ])
+
 			;
 	}
 }

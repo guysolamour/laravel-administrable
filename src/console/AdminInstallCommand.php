@@ -101,7 +101,7 @@ class AdminInstallCommand extends BaseCommand
                                 {name=admin : Name of the guard }
                                 {--g|generate=Mailbox,Testimonial,Post : Default models crud to generate }
                                 {--p|preset=vue : Ui preset to use }
-                                {--m|model=Models : Models folder name inside App directory }
+                                {--m|model=Models : Models folder name inside app directory }
                                 {--s|seed : Seed database with fake data }
                                 {--d|create_db : Create database with default connection }
                                 {--t|theme= : Theme to use }
@@ -231,7 +231,6 @@ class AdminInstallCommand extends BaseCommand
         // Run migrations
         $this->info(PHP_EOL . 'Migrate');
         $this->call('migrate');
-        $this->info('Migrations done');
 
 
         // Seeds
@@ -396,7 +395,7 @@ class AdminInstallCommand extends BaseCommand
     protected function loadHelpers()
     {
         // Helper
-        Artisan::call('make:helper', [
+        $this->call('make:helper', [
             'name' => 'helpers'
         ]);
 
@@ -474,7 +473,7 @@ class AdminInstallCommand extends BaseCommand
                 $this->filesystem->put(
                     $targetPath,
                     strtr($this->filesystem->get($targetPath), [
-                        'App;' => "App\\{$this->models_folder_name};",
+                        "{$this->getNamespace()};" => "{$this->getNamespace()}\\{$this->models_folder_name};",
                     ])
                 );
 
@@ -490,11 +489,11 @@ class AdminInstallCommand extends BaseCommand
      */
     protected function changeNamespaceEverywhereItUses(string $model)
     {
-        $this->info("Changing $model uses and imports from App\\$model to App\\{$this->models_folder_name}\\$model");
+        $this->info("Changing $model uses and imports from {$this->getNamespace()}\\$model to {$this->getNamespace()}\\{$this->models_folder_name}\\$model");
 
         $files = Finder::create()
             ->in(base_path())
-            ->contains("App\\$model")
+            ->contains("{$this->getNamespace()}\\$model")
             ->exclude('vendor')
             ->name('*.php');
 
@@ -502,7 +501,7 @@ class AdminInstallCommand extends BaseCommand
             $path = $file->getRealPath();
             if ($this->filesystem->exists($path)) {
                 $this->filesystem->put($path, strtr($this->filesystem->get($path), [
-                    "App\\$model" => "App\\{$this->models_folder_name}\\$model",
+                    "{$this->getNamespace()}\\$model" => "{$this->getNamespace()}\\{$this->models_folder_name}\\$model",
                 ]));
             }
         }
@@ -906,6 +905,7 @@ class AdminInstallCommand extends BaseCommand
 
         if (in_array('Mailbox', $emails_to_create)) {
             $emails_to_create[] = 'Contact';
+            $emails_to_create[] = 'Sendmessagecopy';
         }
 
         $views_stub = (array_filter(
@@ -945,6 +945,9 @@ class AdminInstallCommand extends BaseCommand
 
         $views_stub = $this->filesystem->allFiles(self::TPL_PATH . "/views/back/{$this->theme}");
         $views_to_create = [...self::DEFAULTS['views']['back'], ...$crud_models];
+
+
+
         $views_stub = array_filter($views_stub, fn($view) => in_array(ucfirst(Str::before($view->getRelativePathname(), '/')), $views_to_create));
 
         $this->compliedAndWriteFileRecursively(
@@ -961,7 +964,13 @@ class AdminInstallCommand extends BaseCommand
 
         $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/front');
         $views_to_create = [...self::DEFAULTS['views']['front'], ...$crud_models];
+
+        if (in_array('Mailboxes', $views_to_create)) {
+            $views_to_create[] = 'Contact';
+        }
+
         $views_stub = array_filter($views_stub, fn ($view) => in_array(ucfirst(Str::before($view->getRelativePathname(), '/')), $views_to_create));
+
 
         $this->compliedAndWriteFileRecursively(
             $views_stub,
@@ -1175,6 +1184,13 @@ class AdminInstallCommand extends BaseCommand
             $this->filesystem->get($env_path),
             "MAIL_PORT=2525",
             'MAIL_PORT=1030',
+            $env_path
+        );
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($env_path),
+            "MAIL_FROM_ADDRESS=null",
+            "MAIL_FROM_ADDRESS={$this->name}@administrable.com",
             $env_path
         );
 
@@ -1406,6 +1422,7 @@ class AdminInstallCommand extends BaseCommand
 
         if (in_array('Mailbox', $emails_to_create)) {
             $emails_to_create[] = 'Contact';
+            $emails_to_create[] = 'SendMeContactMessage';
         }
 
         $mail_stub = array_filter(

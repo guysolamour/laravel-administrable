@@ -1,6 +1,6 @@
 @component('mail::message')
-Bonjour, <b>{{ ${{singularSlug}}->name }}</b> un message de contact vient d'être envoyé
-sur la plateforme par {{ $mailbox->name }} chez {{ $mailbox->email }}
+Bonjour, <b>{{ ${{singularSlug}}->full_name }}</b> un message de contact vient d'être envoyé
+sur la plateforme par {{ $mailbox->full_name }} chez {{ $mailbox->email }}
 
 
 @component('mail::panel')

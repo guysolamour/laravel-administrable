@@ -15,6 +15,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">{{pluralClass}}</a></li>
               <li class="breadcrumb-item active">Profil</li>
             </ol>
           </div>
@@ -67,7 +68,6 @@
                   </li>
                 </ul>
 
-                {{-- <a  class="btn btn-primary btn-block text-white"><b>Super administrateur</b></a> --}}
               </div>
               <!-- /.card-body -->
             </div>
@@ -131,7 +131,7 @@
                                   <br>
                                   <div class="icheck-primary">
                                         {!! form_widget($edit_form->is_super_{{singularSlug}}) !!}
-                                        <label for="is_super_{{singularSlug}}">Super administrateur</label>
+                                        <label for="is_super_{{singularSlug}}">Super {{singularSlug}}</label>
                                     </div>
                               </div>
                               @endif
