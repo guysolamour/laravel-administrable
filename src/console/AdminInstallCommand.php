@@ -920,6 +920,19 @@ class AdminInstallCommand extends BaseCommand
 
     }
 
+    protected function loadErrorsViews(){
+
+        $views_path = resource_path('views/errors/');
+
+        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . "/views/errors/{$this->theme}");
+
+        $this->compliedAndWriteFileRecursively(
+            $views_stub,
+            $views_path
+        );
+
+    }
+
     protected function loadViews()
     {
         $data_map = $this->parseName();
@@ -1002,6 +1015,10 @@ class AdminInstallCommand extends BaseCommand
 
 
         $this->loadEmailsViews();
+
+
+        $this->loadErrorsViews();
+
 
         // suppression des vues générées par le package Multi Auth
         $this->filesystem->deleteDirectory(resource_path('views/') . $data_map['{{singularSlug}}']);
@@ -1357,8 +1374,8 @@ class AdminInstallCommand extends BaseCommand
     {
 
         // Telescope
-       $this->call('telescope:install');
-       $this->call('migrate');
+       $this->callSilent('telescope:install');
+       $this->callSilent('migrate');
 
         $telescope_service_provider_path = app_path('Providers/TelescopeServiceProvider.php');
         $telescope_service_provider_path_stub = $this->filesystem->get(self::TPL_PATH . '/providers/TelescopeServiceProvider.stub');

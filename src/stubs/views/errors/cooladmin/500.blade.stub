@@ -1,0 +1,28 @@
+@extends('errors.master')
+
+
+@section('title','Erreur serveur')
+
+
+@section('content')
+
+<div class="col-12">
+    <div class="card card-transparent mx-auto text-center">
+        <h1 class="text-secondary lh-1" style="font-size: 200px">500</h1>
+        <hr class="w-30px">
+        <h3 class="text-uppercase">Erreur serveur!</h3>
+
+        <p class="lead">
+            Whoops, une erreur interne s\'est produite sur nos serveurs. Ne vous inquiétez pas ... cela arrive souvent aux meilleurs
+            d'entre nous. Voici un peu astuce qui pourrait vous aider à vous remettre sur la bonne voie.
+        </p>
+
+        <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center fs-14">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Retournez à l'accueil</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@endsection
