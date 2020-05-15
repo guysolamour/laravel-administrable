@@ -176,7 +176,7 @@ class AdminInstallCommand extends BaseCommand
 
         // Passer des options pour generer les articles, mentions legales, temoignages en option
 
-        $this->call('multi-auth:install', [
+        $this->callSilent('multi-auth:install', [
             'name'    => $this->name,
         ]);
 
@@ -808,7 +808,6 @@ class AdminInstallCommand extends BaseCommand
 
         $routes_path = base_path('routes/web/');
 
-
         // Front routes;
         $route_stub = $this->filesystem->files(self::TPL_PATH . '/routes/web/front');
 
@@ -823,12 +822,10 @@ class AdminInstallCommand extends BaseCommand
         });
 
 
-
         $this->compliedAndWriteFile(
             $route_stub,
             $routes_path . $data_map["{{frontLowerNamespace}}"]
         );
-
 
         // Back routes;
         $route_stub = $this->filesystem->files(self::TPL_PATH . '/routes/web/back');
@@ -858,7 +855,7 @@ class AdminInstallCommand extends BaseCommand
         // Suppression des fichiers de routing de base
         $this->filesystem->delete([
             base_path('routes/web.php'),
-            base_path('routes/admin.php'),
+            base_path("routes/{$this->name}.php"),
         ]);
 
         $this->compliedAndWriteFile(
@@ -1104,14 +1101,12 @@ class AdminInstallCommand extends BaseCommand
 
     protected function registerRouteMiddleware()
     {
-
         $data_map = $this->parseName();
         $kernel_path = app_path('Http/Kernel.php');
         $kernel = $this->filesystem->get($kernel_path);
 
         $kernel_stub = $this->filesystem->get(self::TPL_PATH . '/middleware/Kernel.stub');
         $kernel_stub = strtr($kernel_stub, $data_map);
-
 
         $search = 'protected $routeMiddleware = [';
 
@@ -1123,7 +1118,6 @@ class AdminInstallCommand extends BaseCommand
         );
 
         return $kernel_path;
-
     }
 
 

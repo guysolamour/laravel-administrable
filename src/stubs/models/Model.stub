@@ -78,6 +78,17 @@ class {{singularClass}} extends Authenticatable
     }
 
     /**
+     * Get the {{singularSlug}}'s name.
+     *
+     * @return string
+     */
+    public function getNameAttribute(): string
+    {
+        return "{$this->first_name} " . strtoupper($this->last_name);
+    }
+
+
+    /**
      * Get the {{singularSlug}}'s role.
      *
      * @return string
