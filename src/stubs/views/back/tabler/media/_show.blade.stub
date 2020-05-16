@@ -3,14 +3,7 @@
     <div class="card-header">
         <h3 class="card-title">
             {{ !empty($front_image_label) ? $front_image_label : 'Image à la une'}}
-
         </h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                title="Réduire">
-                <i class="fas fa-minus"></i></button>
-        </div>
     </div>
     <div class="card-body">
         <div class="front-image-box image-container">
@@ -31,14 +24,7 @@
     <div class="card-header">
         <h3 class="card-title">
             {{ !empty($back_image_label) ? $back_image_label : 'Image à la une (2)'}}
-
         </h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                title="Réduire">
-                <i class="fas fa-minus"></i></button>
-        </div>
     </div>
     <div class="card-body">
         <div class="back-image-box image-container">
@@ -60,15 +46,8 @@
        <h3 class="card-title">
             {{ !empty($images_label) ? $images_label : 'Images'}}
         </h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                title="Réduire">
-                <i class="fas fa-minus"></i></button>
-        </div>
     </div>
     <div class="card-body">
-
         <div class="row images-box image-container" style="clear: both">
             @foreach ($model->images as $media)
             <div class="col-6 imagebox pb-2" data-id="{{ $media->id }}">
@@ -84,8 +63,6 @@
                 </div>
             </div>
             @endforeach
-
-
         </div>
     </div>
     <!-- /.card-body -->

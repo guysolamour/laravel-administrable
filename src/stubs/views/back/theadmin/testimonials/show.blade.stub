@@ -30,7 +30,7 @@
                                 data-placement="top" title="Editer"><i class="fas fa-edit"></i>Editer</a>
                             <a href="{{ route('{{backLowerNamespace}}.testimonial.destroy',$testimonial) }}" data-method="delete" data-toggle="tooltip"
                                 data-placement="top" title="Supprimer"
-                                data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i
+                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i
                                     class="fa fa-trash"></i> Supprimer</a>
                         </div>
                     </section>
@@ -69,7 +69,12 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-
+                     @include('back.media._show', [
+                        'model' => $testimonial,
+                      // 'front_image_label' => 'titi',
+                      // 'back_image_label' => 'tata',
+                      // 'images_label' => 'toto',
+                      ])
                 </div>
 
             </div>

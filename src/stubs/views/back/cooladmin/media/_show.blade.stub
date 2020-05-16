@@ -1,16 +1,7 @@
 @if($model->front_image)
-<div class="card card-secondary front-image-collection">
+<div class="card  front-image-collection">
     <div class="card-header">
-        <h3 class="card-title">
-            {{ !empty($front_image_label) ? $front_image_label : 'Image à la une'}}
-
-        </h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                title="Réduire">
-                <i class="fas fa-minus"></i></button>
-        </div>
+        <strong class="card-title mb-3">{{ !empty($front_image_label) ? $front_image_label : 'Image à la une'}}</strong>
     </div>
     <div class="card-body">
         <div class="front-image-box image-container">
@@ -27,18 +18,10 @@
 </div>
 @endif
 @if($model->back_image)
-<div class="card card-secondary back-image-collection">
+<div class="card back-image-collection">
     <div class="card-header">
-        <h3 class="card-title">
-            {{ !empty($back_image_label) ? $back_image_label : 'Image à la une (2)'}}
-
-        </h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                title="Réduire">
-                <i class="fas fa-minus"></i></button>
-        </div>
+        <strong
+            class="card-title mb-3">{{ !empty($back_image_label) ? $back_image_label : 'Seconde image à la une'}}</strong>
     </div>
     <div class="card-body">
         <div class="back-image-box image-container">
@@ -57,18 +40,9 @@
 @if($model->images)
 <div class="card card-secondary images-collection">
     <div class="card-header">
-       <h3 class="card-title">
-            {{ !empty($images_label) ? $images_label : 'Images'}}
-        </h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                title="Réduire">
-                <i class="fas fa-minus"></i></button>
-        </div>
+        <strong class="card-title mb-3">{{ !empty($images_label) ? $images_label : 'Images'}}</strong>
     </div>
     <div class="card-body">
-
         <div class="row images-box image-container" style="clear: both">
             @foreach ($model->images as $media)
             <div class="col-6 imagebox pb-2" data-id="{{ $media->id }}">
@@ -80,12 +54,9 @@
                         <img style="height:100px;width:100%" class="img-thumbnail" data-id="{{ $media->id }}"
                             src="{{ $media->getUrl('thumb-sm') }}" alt="{{ $media->name }}">
                     </a>
-
                 </div>
             </div>
             @endforeach
-
-
         </div>
     </div>
     <!-- /.card-body -->

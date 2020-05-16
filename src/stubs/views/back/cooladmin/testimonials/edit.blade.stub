@@ -26,7 +26,9 @@
                                 <li class="list-inline-item seprate">
                                     <span>/</span>
                                 </li>
-                                <li class="list-inline-item">{{ $testimonial->name }}</li>
+                                <li class="list-inline-item">
+                                    <a href="{{ route('{{backLowerNamespace}}.testimonial.show',$testimonial) }}">{{ $testimonial->name }}</a>
+                                </li>
                                 <li class="list-inline-item seprate">
                                     <span>/</span>
                                 </li>

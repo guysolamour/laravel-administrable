@@ -1,8 +1,8 @@
 
 <!-- Modal -->
-<div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="mediaModalLabel"
+<div class="modal fade full-window-modal" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="mediaModalLabel"
     data-backdrop="static" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+    <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title font-weight-bold" id="mediaModalLabel">Gestionnaire de média</h5>
@@ -77,7 +77,7 @@
                     </div>
                     <hr>
 
-                    <div class="col-md-12 pl-2" style="height: 450px">
+                    <div class="col-md-12 pl-2" >
 
                         <div class="row mt-4" >
                             <div class="col-12 col-md-12 col-xl-8 row order-sm-2  order-xl-1" id="modal-images-container" style="overflow:hidden scroll;height:450px">
@@ -92,7 +92,7 @@
 
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="flex-wrap: nowrap;">
                     <div class="col-12 col-lg-6 order-md-2 order-lg-1" data-modal="footer">
                     </div>
                     <div class="col-12 col-lg-6 order-md-1 order-lg-2" data-modal="alert">
@@ -126,7 +126,7 @@
 
                 </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="flex-wrap: nowrap;">
                 <button type="button" class="btn btn-success">Renommer</button>
             </div>
         </div>
@@ -185,7 +185,7 @@
             <div class="modal-body text-center">
                 <img src="" alt="" class="img-fluid img-thumbnail">
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="flex-wrap: nowrap;">
                 <button type="button" class="btn btn-secondary btn-sm"><i class="fa fa-check"></i> Sélectionner</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Fermer</button>
             </div>
