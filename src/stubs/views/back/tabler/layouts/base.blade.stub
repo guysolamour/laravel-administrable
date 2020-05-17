@@ -64,10 +64,13 @@
     <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/vendor/larails-alert.js') }}"></script>
     <script src="{{ asset('js/vendor/fontawesome.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
 
     <script>
-        document.body.style.display = "block"
+        document.body.style.display = "block";
     </script>
+
+
 
     @stack('js')
     @include('flashy::message')

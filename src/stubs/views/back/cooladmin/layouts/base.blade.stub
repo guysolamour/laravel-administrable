@@ -94,6 +94,8 @@
     <!-- Main JS-->
     <script src="{{ asset('vendor/{{theme}}/js/main.js') }}"></script>
 
+  <script src="{{ asset('js/main.js') }}"></script>
+
   @stack('js')
   @include('flashy::message')
 </body>

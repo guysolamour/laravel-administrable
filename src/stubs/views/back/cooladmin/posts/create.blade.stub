@@ -17,7 +17,7 @@
                             <span class="au-breadcrumb-span">Vous êtes ici:</span>
                             <ul class="list-unstyled list-inline au-breadcrumb__list">
                                 <li class="list-inline-item ">
-                                    <a href="{{ route('admin.dashboard') }}">Tableau de bord</a>
+                                    <a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a>
                                 </li>
                                 <li class="list-inline-item seprate">
                                     <span>/</span>

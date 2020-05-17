@@ -52,6 +52,10 @@ class PostForm extends Form
 		    ->add('content','textarea', [
 			      'label' => 'Contenu',
 			      'rules' => 'required',
+            'attr' => [
+                'data-required',
+                'data-tinymce'
+            ]
 		      ])
         ;
     }

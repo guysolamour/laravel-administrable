@@ -58,8 +58,12 @@ class {{singularClass}}Form extends Form
 			    'label' => 'Site internet',
 		    ])
 		    ->add('about', 'textarea', [
-			    'label' => 'A propos',
-		    ])
+            'label' => 'A propos',
+            'rules' => 'required',
+            'attr' => [
+                'data-tinymce'
+            ]
+        ])
         ;
     }
 }

@@ -48,6 +48,11 @@ class Create{{singularClass}}Form extends Form
         ])
         ->add('about', 'textarea', [
             'label' => 'A propos',
+            'rules' => 'required',
+            'attr' => [
+                'data-required',
+                'data-tinymce'
+            ]
         ])
         ->add('is_super_{{singularSlug}}', 'checkbox', [
           'label' => 'Super {{singularSlug}}',

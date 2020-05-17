@@ -47,6 +47,9 @@ class TestimonialForm extends Form
 		    ->add('content','textarea', [
 			      'label' => 'Contenu',
 			      'rules' => 'required',
+            'attr' => [
+                'data-tinymce'
+            ]
 		      ])
         ;
     }
