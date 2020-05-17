@@ -51,7 +51,7 @@
                 <div id="qv-user-details-{{ ${{singularSlug}}->id }}" class="quickview quickview-lg">
                     <div class="quickview-body">
 
-                        <div class="card card-inverse bg-img" style="background-image: url(/vendor/theadmin/img/gallery/thumb/2.jpg);">
+                        <div class="card card-inverse bg-img" style="background-image: url(/vendor/{{theme}}/img/gallery/thumb/2.jpg);">
                             <div class="flexbox px-20 pt-20">
                               <label class="toggler text-white">
                                 <input type="checkbox" {{ ${{singularSlug}}->isSuper{{singularClass}}() ? 'checked' : '' }}>

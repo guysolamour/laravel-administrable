@@ -22,7 +22,7 @@
             <header class="card-header bg-lightest">
                 <div class="card-title flexbox w-100 align-items-center">
                     {{-- <div>
-                        <img class="avatar" src="/vendor/theadmin/assets/img/avatar/2.jpg" alt="...">
+                        <img class="avatar" src="/vendor/{{theme}}/assets/img/avatar/2.jpg" alt="...">
                         <div>
                             <h6 class="mb-0">Hossein Shams</h6>
                             <small>Today at 11:34 AM</small>

@@ -797,6 +797,15 @@ class ImageManager {
 
   closeModal() {
 
+    if (this.config.collectiontype === 'avatar') {
+      if (this.isFrontImageCollection() && typeof window.fnAvatarCommit === 'function' && this.selectedImage){
+        fnAvatarCommit(this.selectedImage)
+      }
+      this.modal('hide')
+      return
+    }
+
+
     if (this.isEmptyModel()) {
       const input = this.form.find(`input.${this.collection}`)
       const input_attributes = this.form.find(`input.${this.collection}-attributes`)
@@ -836,6 +845,7 @@ class ImageManager {
     } else {
       this.previewImageInCollectionContainer(this.selectedImage)
     }
+
 
     this.modal('hide')
   }
@@ -1733,37 +1743,43 @@ class ImageManager {
   handleSortable() {
     const that = this
 
-    const modal_sorter = new Sortable(this.getModalContainer()[0], {
-      multiDrag: true,
-      selectedClass: 'selected',
-      animation: 150,
+    const model_container = this.getModalContainer()[0]
+    if (model_container) {
+      const modal_sorter = new Sortable(model_container, {
+        multiDrag: true,
+        selectedClass: 'selected',
+        animation: 150,
 
-      onEnd(event) {
-        that.orderSortable(modal_sorter.el.children)
-      },
+        onEnd(event) {
+          that.orderSortable(modal_sorter.el.children)
+        },
 
-      store: {
-        set(sortable) {
-          that.saveSortableOrder(sortable.el.children)
+        store: {
+          set(sortable) {
+            that.saveSortableOrder(sortable.el.children)
+          }
         }
-      }
-    })
+      })
+    }
 
-    const images_sortener = new Sortable($(this.config.images_sortable_container)[0], {
-      multiDrag: true,
-      selectedClass: 'selected',
-      animation: 150,
+    const images_container = $(this.config.images_sortable_container)[0]
+    if(images_container){
+      const images_sortener = new Sortable($(this.config.images_sortable_container)[0], {
+        multiDrag: true,
+        selectedClass: 'selected',
+        animation: 150,
 
-      onEnd(event) {
-        that.orderSortable(images_sortener.el.children)
-      },
+        onEnd(event) {
+          that.orderSortable(images_sortener.el.children)
+        },
 
-      store: {
-        set(sortable) {
-          that.saveSortableOrder(sortable.el.children)
+        store: {
+          set(sortable) {
+            that.saveSortableOrder(sortable.el.children)
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   getUrl() {

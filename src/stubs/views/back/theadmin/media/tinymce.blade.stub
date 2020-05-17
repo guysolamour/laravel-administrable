@@ -13,7 +13,8 @@
     <!-- Sweetalert -->
     <link rel="stylesheet" href="{{ asset('css/vendor/sweetalert.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
+    <link href="{{ asset('vendor/{{theme}}/css/core.min.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('vendor/{{theme}}/css/style.min.css') }}" rel="stylesheet"> --}}
     <link rel="stylesheet" href="{{ asset('vendor/imagemanager/css/ImageManager.css') }}">
 
     @stack('css')
@@ -22,7 +23,7 @@
 <body>
     <div class="wrapper">
         <div class='row'>
-            <div class='col-md-12' id="mediaModal">
+            <div class='col-md-12' id="mediaModal" stydle="background-color: white">
                 <div class="row">
                     <div class="col-12  pb-4">
                         <div class="row pt-2 p-4 ">
@@ -100,16 +101,16 @@
                     </div>
                     <hr>
 
-                    <div class="row w-100">
+                    <div class="row w-100" >
                         <div class="d-flex p-4 flex-wrap w-100" id="modal-images-container"
-                            style="overflow:hidden scroll;height:450px">
+                            style="overflow:hidden scroll;height:380px">
 
                         </div>
 
 
                     </div>
                 </div>
-                <div class="modal-footer d-flex p-4 flex-wrap justify-content-between">
+                <div class="modal-footer d-flex p-4 flex-wrap justify-content-between text-white">
                     <div class="" data-modal="footer">
                     </div>
                     <div class="" data-modal="alert">
@@ -217,19 +218,11 @@
     <!-- ./wrapper -->
 
     <!-- jQuery -->
-    <script src="/vendor/adminlte/plugins/jquery/jquery.min.js"></script>
-    <!-- jQuery UI 1.11.4 -->
-    </script>
-    <!-- Bootstrap 4 -->
-    <script src="{{ asset('vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- ChartJS -->
+    <script src="{{ asset('vendor/{{theme}}/js/core.min.js') }}"></script>
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
-
 
     <script src="{{ asset('js/vendor/fontawesome.js') }}"></script>
     <script src="{{ asset('vendor/imagemanager/js/imagemanager.tinymce.js') }}"></script>
-
-
 
     <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script>
 
@@ -245,7 +238,6 @@
             prefix                       : @json($prefix),
 
         });
-
 
     </script>
 

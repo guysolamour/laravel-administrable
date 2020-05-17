@@ -9,16 +9,16 @@
 <!-- Main container -->
 <main class="main-container">
 
-    <header class="header bg-img" style="background-image: url(/vendor/theadmin/assets/img/gallery/8.jpg)">
-        <div class="header-info h-250px mb-0">
-            <div class="media align-items-end">
-                <img class="avatar avatar-xl avatar-bordered" src="{{ ${{singularSlug}}->avatar }}" alt="{{ ${{singularSlug}}->full_name }}">
-                <div class="media-body">
-                    <p class="stext-white opacity-90"><strong>{{ ${{singularSlug}}->full_name }}</strong></p>
-                    <small class=" opacity-60">{{ ${{singularSlug}}->role }}</small>
-                </div>
-            </div>
-        </div>
+    <header class="header bg-img" style="background-image: url(/vendor/{{theme}}/img/gallery/8.jpg)">
+           @include('{{backLowerNamespace}}.{{pluralSlug}}._avatar', [
+              'model' => ${{singularSlug}},
+              'model_name' => get_class(${{singularSlug}}),
+              'front_image' => true,
+              'front_image_label' => 'avatar',
+              'back_image' => false,
+              'images' => false,
+              'form_name' => '',
+          ])
 
         <div class="header-action bg-white">
             <ul class="nav nav-tabs">
@@ -142,9 +142,9 @@
 
                 <div class="card">
                     <div class="text-dark card-body bg-img text-center py-50"
-                        style="background-image: url(/vendor/theadmin/img/gallery/2.jpg);">
+                        style="background-image: url(/vendor/{{theme}}/img/gallery/2.jpg);">
                         <a href="#">
-                            <img class="avatar avatar-xxl avatar-bordered" src="{{ ${{singularSlug}}->avatar }}" alt="{{ ${{singularSlug}}->name }}">
+                            <img data-avatar class="avatar avatar-xxl avatar-bordered" src="{{ ${{singularSlug}}->getFrontImageUrl() }}" alt="{{ ${{singularSlug}}->name }}">
                         </a>
                         <h5 class="mt-2 mb-0"><a class="hover-primary text-dark" href="#">{{ ${{singularSlug}}->full_name }}</a></h5>
                         <span>{{ ${{singularSlug}}->role }}</span>

@@ -8,7 +8,7 @@
     <div class="menu-sidebar2__content js-scrollbar1">
        <div class="account2">
             <div class="image img-cir img-120">
-                <img src="{{ get_{{singularSlug}}('avatar') }}" alt="{{ get_{{singularSlug}}('full_name') }}" />
+                <img data-avatar="{{ get_{{singularSlug}}('id') }}" src="{{ get_{{singularSlug}}()->getFrontImageUrl() }}" alt="{{ get_{{singularSlug}}('full_name') }}" />
             </div>
             <h4 class="name">
                 <a href="{{ route('back.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">{{ get_{{singularSlug}}('full_name') }}</a>

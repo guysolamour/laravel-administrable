@@ -17,10 +17,10 @@
 
             <div class="btn-group">
                 <a href="{{ route('{{backLowerNamespace}}.category.edit', $category) }}" class="btn btn-primary">
-                    <i class="fas fa-edit"></i> Editer</a>
+                    <i class="fas fa-edit"></i>&nbsp;  Editer</a>
                 <a href="{{ route('{{backLowerNamespace}}.category.destroy', $category) }}" class="btn btn-danger" data-method="delete"
                     data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
-                    <i class="fas fa-trash"></i> Supprimer</a>
+                    <i class="fas fa-trash"></i>&nbsp;  Supprimer</a>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@
             </ol>
 
             <a href="{{ route('{{backLowerNamespace}}.testimonial.create') }}" class="btn btn-success">
-                <i class="fa fa-plus"></i>Ajouter</a>
+                <i class="fa fa-plus"></i>&nbsp; Ajouter</a>
         </div>
     </div>
 </div>

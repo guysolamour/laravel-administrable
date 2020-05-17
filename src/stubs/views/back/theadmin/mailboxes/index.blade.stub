@@ -85,7 +85,7 @@
                                       <div class="quickview-body">
 
                                           <div class="card card-inverse bg-img"
-                                              style="background-image: url(/vendor/theadmin/assets/img/gallery/thumb/2.jpg);">
+                                              style="background-image: url(/vendor/{{theme}}/assets/img/gallery/thumb/2.jpg);">
                                               <div class="flexbox px-20 pt-20">
                                                   <label class="toggler text-white">
                                                       <input type="checkbox" {{ $message->read ? 'checked' : '' }}>

@@ -1,17 +1,17 @@
 @push('css')
     <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('vendor/cooladmin/vendor/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/vendor/datatables-bs4/css/dataTables.bootstrap4.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('vendor/cooladmin/vendor/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/vendor/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 
 @endpush
 
 @push('js')
     <!-- DataTables -->
-    <script src="{{ asset('vendor/cooladmin/vendor/datatables/jquery.dataTables.js') }}"></script>
-    <script src="{{ asset('vendor/cooladmin/vendor/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ asset('vendor/cooladmin/vendor/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('vendor/cooladmin/vendor/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/vendor/datatables/jquery.dataTables.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/vendor/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/vendor/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/vendor/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
     <script>
         $(function () {

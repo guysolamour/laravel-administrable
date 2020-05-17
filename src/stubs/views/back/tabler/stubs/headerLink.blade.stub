@@ -3,7 +3,7 @@
             @endphp
             <div class="nav-item dropdown d-none d-md-flex mr-3">
                 <a href="#" class="nav-link px-0" data-toggle="dropdown" tabindex="-1">
-                   <i class="fa fa-envelope icon"></i>
+                   <i class="fa fa-envelope icon"></i>&nbsp;
                    @if($unread->count())
                         <span class="badge bg-success"></span>
                     @endif
@@ -21,7 +21,7 @@
                                         <div class="lh-sm">
                                             <div class="strong">{{ $message->name }}</div>
                                             <div class="tesxt-muted">{{ Str::limit($message->content,50) }}</div>
-                                            <p class="font-italic" style="font-size: .8rem"><i class="far fa-clock mr-1"></i> {{ $message->created_at->diffForHumans() }}</p>
+                                            <p class="font-italic" style="font-size: .8rem"><i class="far fa-clock mr-1"></i>&nbsp;  {{ $message->created_at->diffForHumans() }}</p>
                                         </div>
                                     </div>
                                 </div>

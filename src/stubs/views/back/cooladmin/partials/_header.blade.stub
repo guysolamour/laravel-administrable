@@ -5,7 +5,7 @@
             <div class="header-wrap2">
                 <div class="logo d-block d-lg-none">
                     <a href="#">
-                        <img src="/vendor/cooladmin/images/icon/logo-white.png" alt="CoolAdmin" />
+                        <img src="/vendor/{{theme}}/images/icon/logo-white.png" alt="{{ config('app.name') }}" />
                     </a>
                 </div>
                 <div class="header-button2">

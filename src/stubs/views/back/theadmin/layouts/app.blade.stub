@@ -14,10 +14,10 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('vendor/theadmin/css/core.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendor/theadmin/css/app.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendor/theadmin/css/style.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendor/theadmin/css/fontawesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/{{theme}}/css/core.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/{{theme}}/css/app.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/{{theme}}/css/style.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/{{theme}}/css/fontawesome.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/vendor/sweetalert.css') }}">
 
     @stack('css')
@@ -60,10 +60,10 @@
 
 
     <!-- Scripts -->
-    <script src="{{ asset('vendor/theadmin/js/core.min.js') }}"></script>
-    <script src="{{ asset('vendor/theadmin/js/app.min.js') }}"></script>
-    <script src="{{ asset('vendor/theadmin/js/script.min.js') }}"></script>
-    {{-- <script src="{{ asset('vendor/theadmin/js/fontawesome.js') }}"></script> --}}
+    <script src="{{ asset('vendor/{{theme}}/js/core.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/js/app.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/js/script.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/{{theme}}/js/fontawesome.js') }}"></script> --}}
     <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/vendor/larails-alert.js') }}"></script>
 

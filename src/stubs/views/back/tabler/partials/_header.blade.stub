@@ -11,7 +11,7 @@
             {{-- Insert Mailbox Link --}}
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-toggle="dropdown">
-                    <span class="avatar" style="background-image: url({{ Gravatar::get($message->email) }})"></span>
+                    <span class="avatar" data-avatar="{{ get_{{singularSlug}}('id') }}" style="background-image: url({{ get_{{singularSlug}}()->getFrontImageUrl() }}"></span>
                     <div class="d-none d-xl-block pl-2">
                         <div>{{ get_{{singularSlug}}('full_name') }}</div>
                         <div class="mt-1 small text-muted">{{ get_{{singularSlug}}('role') }}</div>
@@ -19,20 +19,20 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('back.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
-                        <i class="fa fa-user icon dropdown-item-icon"></i>
+                        <i class="fa fa-user icon dropdown-item-icon"></i>&nbsp;
                         Mon profil
                     </a>
                     <a class="dropdown-item" href="{{ route('back.{{singularSlug}}.index') }}">
-                       <i class="fa fa-users icon dropdown-item-icon"></i>
+                       <i class="fa fa-users icon dropdown-item-icon"></i>&nbsp;
                         {{pluralClass}}
                     </a>
                     <a class="dropdown-item" href="{{ route('back.configuration.edit') }}">
-                        <i class="fa fa-tools icon dropdown-item-icon"></i>
+                        <i class="fa fa-tools icon dropdown-item-icon"></i>&nbsp;
                         Configuration
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('{{singularSlug}}.logout') }}" onclick="event.preventDefault();document.getElementById('{{singularSlug}}-logout-form').submit();">
-                        <i class="fa fa-sign-out icon dropdown-item-icon"></i>
+                        <i class="fa fa-sign-out icon dropdown-item-icon"></i>&nbsp;
                         Déconnexion</a>
 
                         <form id="{{singularSlug}}-logout-form" action="{{ route('{{singularSlug}}.logout') }}" method="POST"

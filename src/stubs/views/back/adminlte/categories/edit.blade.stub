@@ -46,9 +46,7 @@
                        @include('{{backLowerNamespace}}.categories._form',['edit' => true])
                     </div>
                     <div class='col-md-4'>
-                        {{-- add standalone image  here --}}
 
-                        {{-- add morphs image  here --}}
                     </div>
 
                 </div>

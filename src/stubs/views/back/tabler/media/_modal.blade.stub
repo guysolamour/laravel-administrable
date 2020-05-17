@@ -56,17 +56,17 @@
                                             Trier
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
-                                            <button class="dropdown-item" data-sort='default' type="button"><i class="fa fa-sort-amount-down"></i>
+                                            <button class="dropdown-item" data-sort='default' type="button"><i class="fa fa-sort-amount-down"></i>&nbsp;
                                                 Trier par défaut
                                             </button>
-                                            <button class="dropdown-item" data-sort="asc" type="button"><i class="fa fa-sort-alpha-up"></i>
+                                            <button class="dropdown-item" data-sort="asc" type="button"><i class="fa fa-sort-alpha-up"></i>&nbsp;
                                                 Trier de A - Z</button>
 
-                                            <button class="dropdown-item" data-sort="desc" type="button"><i class="fa fa-sort-alpha-down"></i>
+                                            <button class="dropdown-item" data-sort="desc" type="button"><i class="fa fa-sort-alpha-down"></i>&nbsp;
                                                 Trier de Z - A</button>
-                                            <button class="dropdown-item"  data-sort="dateasc" type="button"><i class="fa fa-sort-amount-down"></i> Trier par
+                                            <button class="dropdown-item"  data-sort="dateasc" type="button"><i class="fa fa-sort-amount-down"></i>&nbsp;  Trier par
                                                 date (Ancien)</button>
-                                            <button class="dropdown-item"  data-sort="datedesc" type="button"><i class="fa fa-sort-amount-down"></i> Trier par
+                                            <button class="dropdown-item"  data-sort="datedesc" type="button"><i class="fa fa-sort-amount-down"></i>&nbsp;  Trier par
                                                 date (Récent)</button>
                                         </div>
                                     </div>
@@ -92,7 +92,7 @@
 
                     </div>
                 </div>
-                <div class="modal-footer" style="flex-wrap: nowrap;">
+                <div class="modal-footer text-white" style="flex-wrap: nowrap;">
                     <div class="col-12 col-lg-6 order-md-2 order-lg-1" data-modal="footer">
                     </div>
                     <div class="col-12 col-lg-6 order-md-1 order-lg-2" data-modal="alert">
@@ -165,7 +165,7 @@
                     <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
                         aria-valuemax="100">25%</div>
                 </div> --}}
-                <button type="button" data-submit class="btn btn-success btn-sm"><i class="fa fa-location-arrow"></i> Téléverser</button>
+                <button type="button" data-submit class="btn btn-success btn-sm"><i class="fa fa-location-arrow"></i>&nbsp; Téléverser</button>
             </div>
         </div>
     </div>
@@ -186,8 +186,8 @@
                 <img src="" alt="" class="img-fluid img-thumbnail">
             </div>
             <div class="modal-footer" style="flex-wrap: nowrap;">
-                <button type="button" class="btn btn-secondary btn-sm"><i class="fa fa-check"></i> Sélectionner</button>
-                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Fermer</button>
+                <button type="button" class="btn btn-secondary btn-sm"><i class="fa fa-check"></i>&nbsp; Sélectionner</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp; Fermer</button>
             </div>
         </div>
     </div>

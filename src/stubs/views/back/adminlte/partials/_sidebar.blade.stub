@@ -11,7 +11,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img id="aside-avatar" src="{{ asset(get_{{singularSlug}}()->avatar) }}" class="img-circle elevation-2" alt="{{ get_{{singularSlug}}()->full_name }} avatar">
+          <img  data-avatar="{{ get_{{singularSlug}}('id') }}" src="{{ asset(get_{{singularSlug}}()->getFrontImageUrl()) }}" class="img-circle elevation-2" alt="{{ get_{{singularSlug}}()->full_name }} avatar">
         </div>
         <div class="info">
           <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}" class="d-block">{{ get_{{singularSlug}}()->pseudo }}</a>

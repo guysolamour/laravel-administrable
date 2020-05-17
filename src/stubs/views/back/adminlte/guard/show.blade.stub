@@ -28,50 +28,31 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-3">
+           @include('{{backLowerNamespace}}.{{pluralSlug}}._avatar', [
+                'model' => $client,
+                'model_name' => get_class($client),
+                'front_image' => true,
+                'front_image_label' => 'avatar',
+                'back_image' => false,
+                'images' => false,
+                'form_name' => '',
+            ])
 
-            <!-- Profile Image -->
             <div class="card">
-              <div class="card-body box-profile">
-                <div class="text-center">
-                  <img id="holder" class="profile-user-img img-fluid img-circle"
-                       src="{{ ${{singularSlug}}->avatar }}"
-                       alt="{{ ${{singularSlug}}->name }} profile picture" style="cursor: pointer;">
+                <div class="card-body">
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                      <b>Facebook</b> <a class="float-right" href="{{ ${{singularSlug}}->facebook }}" target='_blank'>{{ ${{singularSlug}}->facebook }}</a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Twitter</b> <a class="float-right" href="{{ ${{singularSlug}}->twitter }}" target='_blank'>{{ ${{singularSlug}}->twitter }}</a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Numéro téléphone</b> <a class="float-right" >{{ ${{singularSlug}}->phone_number }}</a>
+                    </li>
+                  </ul>
                 </div>
-
-                <h3 class="profile-username text-center">{{ ${{singularSlug}}->full_name }}</h3>
-
-                <p class="text-muted text-center">{{ ${{singularSlug}}->role }}</p>
-
-                @if (current_{{singularSlug}}_profil(${{singularSlug}}) || current_{{singularSlug}}_is_super_{{singularSlug}}())
-                <div class="text-center">
-                    {{--<img id="holder" class="img-responsive">--}}
-                    <div class="input-group" style="margin-top: 1rem;">
-                        <span class="input-group-btn">
-                          <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary text-white">
-                            <i class="fa fa-picture-o"></i> Changer d'avatar
-                          </a>
-                        </span>
-                        <input id="thumbnail" data-id="{{ ${{singularSlug}}->id }}" class="form-control" type="hidden" name="avatar" >
-                    </div>
-                </div>
-                @endif
-
-                <ul class="list-group list-group-unbordered mb-3">
-                  <li class="list-group-item">
-                    <b>Facebook</b> <a class="float-right" href="{{ ${{singularSlug}}->facebook }}" target='_blank'>{{ ${{singularSlug}}->facebook }}</a>
-                  </li>
-                  <li class="list-group-item">
-                    <b>Twitter</b> <a class="float-right" href="{{ ${{singularSlug}}->twitter }}" target='_blank'>{{ ${{singularSlug}}->twitter }}</a>
-                  </li>
-                  <li class="list-group-item">
-                    <b>Numéro téléphone</b> <a class="float-right" >{{ ${{singularSlug}}->phone_number }}</a>
-                  </li>
-                </ul>
-
-              </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
 
             <!-- About Me Box -->
             <div class="card card-primary">
@@ -210,48 +191,4 @@
   </div>
   <!-- /.content-wrapper -->
 @endsection
-
-@section('css')
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/toastr/toastr.min.css') }}">
-@stop
-
-@section('js')
-    <script src="{{ asset('vendor/adminlte/plugins/toastr/toastr.min.js') }}"></script>
-    <script>
-        $('#holder').on('click', function(){
-            $('#lfm').click();
-        });
-        $('#holder').change(function(){
-            const input = $('#thumbnail')
-            let data = new FormData();
-
-            data.append('id',input.data('id'));
-            data.append('avatar',input.val());
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '{{ route('{{backLowerNamespace}}.{{singularSlug}}.update-avatar') }}',
-                type: 'post',
-                data:data,
-                cache: false,
-                contentType: false,
-                processData: false,
-
-                success : (data, textStatus, jqXHR) => {
-
-                $('#holder').attr('src',data.avatar)
-                $('#header-avatar').attr('src',data.avatar)
-                $('#aside-avatar').attr('src',data.avatar)
-                toastr.success('La photo de profil a bien été mise à jour')
-        },
-            fail : (data, textStatus, jqXHR) => {
-
-            },
-        })
-
-        })
-    </script>
-@stop
 

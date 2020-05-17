@@ -13,7 +13,7 @@
     <!-- Sweetalert -->
     <link rel="stylesheet" href="{{ asset('css/vendor/sweetalert.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/imagemanager/css/ImageManager.css') }}">
 
     @stack('css')
@@ -217,11 +217,11 @@
     <!-- ./wrapper -->
 
     <!-- jQuery -->
-    <script src="{{ asset('vendor/themekit/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/js/jquery-3.3.1.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
     </script>
     <!-- Bootstrap 4 -->
-    <script src="{{ asset('vendor/themekit/plugins/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <!-- ChartJS -->
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
 

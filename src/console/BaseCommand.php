@@ -64,6 +64,7 @@ class BaseCommand extends Command {
             '{{backLowerNamespace}}'=> Str::lower(config('administrable.back_namespace')),
             '{{modelsFolder}}' => ucfirst($this->models_folder_name),
             '{{administrableLogo}}' => config('administrable.logo_url'),
+            '{{theme}}' => $this->theme,
         ];
     }
 

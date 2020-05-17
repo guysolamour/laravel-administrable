@@ -27,10 +27,10 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <div class="p-2 text-center">
                 <p class="user-header">
-                    <img id="header-avatar" src="{{ asset(get_{{singularSlug}}()->avatar) }}" class="img-circle img-fluid" alt="{{ get_{{singularSlug}}()->pseudo }} Image" style='width: 100px;'>
+                    <img data-avatar="{{ get_{{singularSlug}}('id') }}" src="{{ asset(get_{{singularSlug}}()->getFrontImageUrl()) }}" class="img-circle img-fluid" alt="{{ get_{{singularSlug}}()->pseudo }} Image" style='width: 100px;'>
                 </p>
                 <p class="pb-2">
-                    {{ get_{{singularSlug}}()->full_name }} <br> <small>{{ Auth::guard('{{singularSlug}}')->user()->role }}</small>
+                    {{ get_{{singularSlug}}()->full_name }} <br> <small>{{get_{{singularSlug}}()->role }}</small>
                 </p>
                 <!-- Menu Footer-->
                 <p class="d-flex justify-content-between">

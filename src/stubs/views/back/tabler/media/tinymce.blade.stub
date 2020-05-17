@@ -13,7 +13,7 @@
     <!-- Sweetalert -->
     <link rel="stylesheet" href="{{ asset('css/vendor/sweetalert.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
+    <link href="{{ asset('vendor/{{theme}}/libs/bootstrap/dist/bootstrap.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('vendor/imagemanager/css/ImageManager.css') }}">
 
     @stack('css')
@@ -205,10 +205,10 @@
                     <img src="" alt="" class="img-fluid img-thumbnail">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm"><i class="fa fa-check"></i>
+                    <button type="button" class="btn btn-secondary btn-sm"><i class="fa fa-check"></i>&nbsp;
                         Sélectionner</button>
                     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i
-                            class="fa fa-times"></i>
+                            class="fa fa-times"></i>&nbsp;
                         Fermer</button>
                 </div>
             </div>
@@ -217,11 +217,11 @@
     <!-- ./wrapper -->
 
     <!-- jQuery -->
-    <script src="/vendor/adminlte/plugins/jquery/jquery.min.js"></script>
+    <script src="{{ asset('vendor/{{theme}}/libs/jquery/dist/jquery.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
-    </script>
+
     <!-- Bootstrap 4 -->
-    <script src="{{ asset('vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <!-- ChartJS -->
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
 

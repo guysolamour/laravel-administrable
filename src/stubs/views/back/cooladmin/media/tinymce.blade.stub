@@ -13,8 +13,7 @@
     <!-- Sweetalert -->
     <link rel="stylesheet" href="{{ asset('css/vendor/sweetalert.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/imagemanager/css/ImageManager.css') }}">
+<link href="{{ asset('vendor/{{theme}}/vendor/bootstrap-4.1/bootstrap.min.css') }}" rel="stylesheet" media="all">    <link rel="stylesheet" href="{{ asset('vendor/imagemanager/css/ImageManager.css') }}">
 
     @stack('css')
 </head>
@@ -109,7 +108,7 @@
 
                     </div>
                 </div>
-                <div class="modal-footer d-flex p-4 flex-wrap justify-content-between">
+                <div class="modal-footer d-flex p-4 flex-wrap justify-content-between text-white">
                     <div class="" data-modal="footer">
                     </div>
                     <div class="" data-modal="alert">
@@ -217,11 +216,12 @@
     <!-- ./wrapper -->
 
     <!-- jQuery -->
-    <script src="/vendor/adminlte/plugins/jquery/jquery.min.js"></script>
+   <script src="{{ asset('vendor/{{theme}}/vendor/jquery-3.2.1.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
     </script>
     <!-- Bootstrap 4 -->
-    <script src="{{ asset('vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/vendor/bootstrap-4.1/popper.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/vendor/bootstrap-4.1/bootstrap.min.js') }}"></script>
     <!-- ChartJS -->
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
 

@@ -73,7 +73,7 @@
 
          <ul class="topbar-btns">
             <li class="dropdown">
-                <span class="topbar-btn" data-toggle="dropdown"><img class="avatar" src="{{ get_{{singularSlug}}('avatar') }}"
+                <span class="topbar-btn" data-toggle="dropdown"><img data-avatar="{{ get_{{singularSlug}}('id') }}" class="avatar" src="{{ get_{{singularSlug}}()->getFrontImageUrl() }}"
                         alt="{{ get_{{singularSlug}}('full_name') }}"></span>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ti-home"></i> Tableau de bord</a>

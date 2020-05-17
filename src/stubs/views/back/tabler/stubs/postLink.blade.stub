@@ -2,7 +2,7 @@
                         <a class="nav-link dropdown-toggle" href="#navbar-extra" data-toggle="dropdown" role="button"
                             aria-expanded="false">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <i class="fa fa-swatchbook icon"></i>
+                                <i class="fa fa-swatchbook icon"></i>&nbsp;
                             </span>
                             <span class="nav-link-title">
                                 Articles

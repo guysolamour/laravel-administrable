@@ -18,7 +18,7 @@
             <div class="btn-group">
                 <a href="{{ route('{{backLowerNamespace}}.mailbox.destroy', $mailbox) }}" class="btn btn-danger" data-method="delete"
                     data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
-                    <i class="fas fa-trash"></i> Supprimer</a>
+                    <i class="fas fa-trash"></i>&nbsp; Supprimer</a>
             </div>
         </div>
     </div>

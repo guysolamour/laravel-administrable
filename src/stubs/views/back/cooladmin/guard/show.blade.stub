@@ -160,40 +160,16 @@
                         </div>
 
 
+                        @include('{{backLowerNamespace}}.{{pluralSlug}}._avatar', [
+                            'model' => ${{singularSlug}},
+                            'model_name' => get_class(${{singularSlug}}),
+                            'front_image' => true,
+                            'front_image_label' => 'avatar',
+                            'back_image' => false,
+                            'images' => false,
+                            'form_name' => '',
+                        ])
 
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="mx-auto d-block">
-                                    <img class="rounded-circle mx-auto d-block" src="{{ ${{singularSlug}}->full_name }}" alt="{{ ${{singularSlug}}->full_name }}">
-                                    <h5 class="text-sm-center mt-2 mb-1">
-                                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', ${{singularSlug}}) }}" title="Profil">{{ ${{singularSlug}}->full_name }}</a>
-                                    </h5>
-                                    <div class="location text-sm-center">
-                                        {{ ${{singularSlug}}->role }}</div>
-                                </div>
-
-                                <div class="card-text text-sm-center">
-                                    @if(${{singularSlug}}->facebook)
-                                    <a href="{{ ${{singularSlug}}->facebook }}" target="_blank">
-                                        <i class="fab fa-facebook pr-1 fa-2x"></i>
-                                    </a>
-                                    @endif
-                                    @if(${{singularSlug}}->twitter)
-                                    <a href="{{ ${{singularSlug}}->twitter }}" target="_blank">
-                                        <i class="fab fa-twitter pr-1 fa-2x"></i>
-                                    </a>
-                                    @endif
-                                    @if(${{singularSlug}}->linkedin)
-                                    <a href="{{ ${{singularSlug}}->linkedin }}" target="_blank">
-                                        <i class="fab fa-linkedin pr-1 fa-2x"></i>
-                                    </a>
-                                    @endif
-
-
-                                </div>
-                            </div>
-
-                        </div>
 
                     </div>
                 </div>

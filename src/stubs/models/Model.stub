@@ -2,15 +2,17 @@
 
 namespace {{namespace}};
 
+use {{namespace}}\Traits\MediaableTrait;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Notifications\Notifiable;
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use {{namespace}}\Notifications\{{backNamespace}}\Auth\VerifyEmail;
 use {{namespace}}\Notifications\{{backNamespace}}\Auth\ResetPassword;
 
-class {{singularClass}} extends Authenticatable
+class {{singularClass}} extends Authenticatable implements HasMedia
 {
-    use Notifiable;
+    use Notifiable, MediaableTrait;
 
     /**
      * The attributes that are mass assignable.

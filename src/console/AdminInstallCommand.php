@@ -153,7 +153,7 @@ class AdminInstallCommand extends BaseCommand
         $this->preset = $preset;
 
 
-        $theme = $this->option('theme') ?: strtolower(config('administrable.theme','theadmin'));
+        $theme = $this->option('theme') ? strtolower($this->option('theme')) : strtolower(config('administrable.theme','theadmin'));
 
 
         if(! in_array($theme, $this->themes)){

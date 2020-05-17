@@ -42,13 +42,15 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5">
                                 <div class="card">
-                                    <div class="card-body">
-                                        <div class="text-center">
-                                            <img src="{{ ${{singularSlug}}->avatar }}" class="rounded-circle" width="150" alt="{{ ${{singularSlug}}->full_name }}">
-                                            <h4 class="card-title mt-10">{{ ${{singularSlug}}->full_name }}</h4>
-                                            <p class="card-subtitle">{{ ${{singularSlug}}->role }}</p>
-                                        </div>
-                                    </div>
+                                     @include('{{backLowerNamespace}}.{{pluralSlug}}._avatar', [
+                                            'model' => ${{singularSlug}},
+                                            'model_name' => get_class(${{singularSlug}}),
+                                            'front_image' => true,
+                                            'front_image_label' => 'avatar',
+                                            'back_image' => false,
+                                            'images' => false,
+                                            'form_name' => '',
+                                        ])
                                     <hr class="mb-0">
                                     <div class="card-body">
                                         <small class="text-muted d-block">Email </small>

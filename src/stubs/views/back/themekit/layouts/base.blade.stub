@@ -12,20 +12,20 @@
 
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/bootstrap/dist/css/bootstrap.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/fontawesome-free/css/all.min.css') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/icon-kit/dist/css/iconkit.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/ionicons/dist/css/ionicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/bootstrap/dist/css/bootstrap.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/fontawesome-free/css/all.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/icon-kit/dist/css/iconkit.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/ionicons/dist/css/ionicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/perfect-scrollbar/css/perfect-scrollbar.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/jvectormap/jquery-jvectormap.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/weather-icons/css/weather-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/c3/c3.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/owl.carousel/dist/assets/owl.carousel.min.css') }}"> --}}
-    {{-- <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/owl.carousel/dist/assets/owl.theme.default.min.css') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/dist/css/theme.min.css') }}">
-    <script src="{{ asset('vendor/themekit/js/modernizr-2.8.3.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/jvectormap/jquery-jvectormap.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/weather-icons/css/weather-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/c3/c3.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/owl.carousel/dist/assets/owl.carousel.min.css') }}"> --}}
+    {{-- <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/owl.carousel/dist/assets/owl.theme.default.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/dist/css/theme.min.css') }}">
+    <script src="{{ asset('vendor/{{theme}}/js/modernizr-2.8.3.min.js') }}"></script>
 
     <link href="{{ asset('css/vendor/fontawesome.css') }}" rel="stylesheet" media="all">
 
@@ -54,21 +54,21 @@
 
 
 
-    <script src="{{ asset('vendor/themekit/js/jquery-3.3.1.min.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/plugins/popper.js/dist/umd/popper.min.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/plugins/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/plugins/perfect-scrollbar/dist/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/plugins/screenfull/dist/screenfull.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/popper.js/dist/umd/popper.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/perfect-scrollbar/dist/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/screenfull/dist/screenfull.js') }}"></script>
 
-    <script src="{{ asset('vendor/themekit/plugins/jvectormap/jquery-jvectormap.min.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/plugins/moment/moment.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/plugins/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/plugins/d3/dist/d3.min.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/plugins/c3/c3.min.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/js/tables.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/js/widgets.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/js/charts.js') }}"></script>
-    <script src="{{ asset('vendor/themekit/dist/js/theme.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/jvectormap/jquery-jvectormap.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/moment/moment.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/d3/dist/d3.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/plugins/c3/c3.min.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/js/tables.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/js/widgets.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/js/charts.js') }}"></script>
+    <script src="{{ asset('vendor/{{theme}}/dist/js/theme.min.js') }}"></script>
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
     <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/vendor/larails-alert.js') }}"></script>

@@ -3,7 +3,7 @@
     <header class="sidebar-header">
         <a class="logo-icon" href="{{ route('{{singularSlug}}.dashboard') }}">{{ config('app.name') }}</a>
         {{-- <span class="logo">
-            <a href="../index.html"><img src="/vendor/theadmin/assets/img/logo-light.png" alt="logo"></a>
+            <a href="../index.html"><img src="/vendor/{{theme}}/assets/img/logo-light.png" alt="logo"></a>
         </span> --}}
         <span class="sidebar-toggle-fold"></span>
     </header>
@@ -13,8 +13,8 @@
             <div class="sidebar-profile">
                 <div class="dropdown">
                     <span class="dropdown-toggle no-caret" data-toggle="dropdown">
-                        <img class="avatar"
-                            src="{{ asset(get_{{singularSlug}}()->avatar) }}" alt="{{ get_{{singularSlug}}()->full_name }} avatar"
+                        <img class="avatar" data-avatar="{{ get_{{singularSlug}}('id') }}"
+                            src="{{ asset(get_{{singularSlug}}()->getFrontImageUrl()) }}" alt="{{ get_{{singularSlug}}()->full_name }} avatar"
                             style="width:60px; height: 60px"
                             >
                         </span>
