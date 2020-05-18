@@ -71,7 +71,6 @@
     <!-- Vendor JS       -->
     <script src="{{ asset('vendor/{{theme}}/vendor/slick/slick.min.js') }}"></script>
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
-    {{-- <script src="{{ asset('js/vendor/fontawesome.js') }}"></script> --}}
     <script src="{{ asset('vendor/{{theme}}/vendor/wow/wow.min.js') }}"></script>
     <script src="{{ asset('vendor/{{theme}}/vendor/animsition/animsition.min.js') }}"></script>
     <script src="{{ asset('vendor/{{theme}}/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>

@@ -63,7 +63,6 @@
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
     <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/vendor/larails-alert.js') }}"></script>
-    <script src="{{ asset('js/vendor/fontawesome.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 
     <script>

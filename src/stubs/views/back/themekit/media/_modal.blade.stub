@@ -51,7 +51,7 @@
 
 
                                     <div class="btn-group" role="group">
-                                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-sorter  data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
                                             Trier
                                         </button>
@@ -92,7 +92,7 @@
 
                     </div>
                 </div>
-                <div class="modal-footer bg-light">
+                <div class="modal-footer bg-light text-white">
                     <div class="col-12 col-lg-6 order-md-2 order-lg-1" data-modal="footer">
                     </div>
                     <div class="col-12 col-lg-6 order-md-1 order-lg-2" data-modal="alert">

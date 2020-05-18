@@ -91,7 +91,7 @@
     <div class="card-body">
         {{-- <div class="{{ empty($model->images) ? 'd-none' : ''  }} d-flex justify-content-end pb-2 "> --}}
         <div class="{{ empty($model->images) ? 'd-none' : ''  }} float-right pb-2">
-            <button class="btn btn-xs btn-danger" data-delete="all"><i class="fas fa-trash"></i> Tous supprimer</button>
+            <button class="btn btn-sm btn-danger" data-delete="all"><i class="fas fa-trash"></i> Tous supprimer</button>
         </div>
 
         <div class="row images-box image-container" style="clear: both">

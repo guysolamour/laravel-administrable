@@ -22,7 +22,7 @@ class ImageManager {
       checkimage: '[data-choose]', uncheckimage: '[data-unchoose]',
       dropzoneclass: '.dropzone',
       uploadmodal: '#uploadModal', uploadimage: '[data-upload]', checkall: '[data-checkall]', uncheckall: '[data-uncheckall]',
-      'refresh': '[data-refresh]', 'search': '[data-search]', 'sort': '[data-sort]'
+      'refresh': '[data-refresh]', 'search': '[data-search]', 'sort': '[data-sort]', 'sorter': '[data-sorter]'
     }
 
     this.collections = {
@@ -52,10 +52,11 @@ class ImageManager {
     this.authorized_extensions = ['png', 'jpg', 'gif', 'jpeg', 'svg']
 
 
-
     this.uploadingImages = []
     this.selectedImages = []
     this.tempImages = {}
+
+    this.images = {}
 
     this.setOptions(opts)
 
@@ -108,7 +109,6 @@ class ImageManager {
     this.getModalContainer().on('click', this.config.viewimage, this.viewImage)
     this.getModalContainer().on('click', this.config.deleteimage, this.deleteImage)
 
-
     /**
      * Ajout des champs dans le formulaire pour la création
      */
@@ -128,17 +128,27 @@ class ImageManager {
     const checkAll = this.getModal().find(this.config.checkall)
     const uncheckAll = this.getModal().find(this.config.uncheckall)
 
+    /**
+    * On cache les deux boutons si ce n'est pas une collection de type image
+    */
     if (!this.isImagesCollection()) {
       checkAll.addClass('d-none')
       uncheckAll.addClass('d-none')
-      return
+    } else {
+      if (this.images.length) {
+        checkAll.removeClass('d-none')
+        uncheckAll.removeClass('d-none')
+
+        checkAll.on('click', this.checkAll)
+        uncheckAll.on('click', this.uncheckAll)
+      } else {
+        checkAll.addClass('d-none')
+        uncheckAll.addClass('d-none')
+      }
     }
 
-    checkAll.removeClass('d-none')
-    uncheckAll.removeClass('d-none')
 
-    checkAll.on('click', this.checkAll)
-    uncheckAll.on('click', this.uncheckAll)
+
   }
 
   appendCollectionsFormFields() {
@@ -322,6 +332,16 @@ class ImageManager {
   downloadAllImage(event) {
     event.preventDefault()
 
+    if (this.isEmptyModel()) {
+      swal({
+        title: 'Téléchargement !',
+        text: 'Les images non persistées ne sont pas téléchargeable pour le moment!',
+        icon: 'warning',
+        dangerMode: true,
+      })
+      return
+    }
+
     swal({
       title: 'Téléchargement !',
       text: 'Etes vous sûr de vouloir télécharger tous les fichiers ? ',
@@ -360,7 +380,6 @@ class ImageManager {
 
 
   swal(success, failure) {
-
     swal({
       title: 'Suppression !',
       text: this.alerts.delete.swal.message,
@@ -373,11 +392,13 @@ class ImageManager {
     })
       .then((isConfirm) => {
         if (isConfirm) {
-          if (success)
+          if (success) {
             success()
+          }
         } else {
-          if (failure)
+          if (failure) {
             failure()
+          }
         }
       })
   }
@@ -426,10 +447,18 @@ class ImageManager {
 
             this.hideBoxWhenDeleteAll()
 
+            this.addCheckUncheckAll();
+
+            this.renderHeaderButtons()
+
           } else {
             axios.delete(`${this.getUrl()}/${this.collection}/all`)
               .then(({ data }) => {
                 this.hideBoxWhenDeleteAll()
+
+                this.addCheckUncheckAll();
+
+                this.renderHeaderButtons()
               })
           }
 
@@ -440,14 +469,34 @@ class ImageManager {
   renderEmptyImageboxContainer() {
     this.getModalContainer()
       .append(`
-                        <div class='d-flex justify-content-center align-items-center w-100 h4 text-secondary'>
-                            <p><i class='fa fa-empty-set'></i> La liste est vide</p>
-                        </div>
-                    `)
+                <div class='d-flex justify-content-center align-items-center w-100 h4 text-secondary'>
+                    <p><i class='fa fa-empty-set'></i> La collection est vide</p>
+                </div>
+            `)
 
     this.selectedImage = null
     this.setSelectedModalImage()
 
+  }
+
+  removeDeleteInModalImageBox(image) {
+    const imageBox = this.getImageBox(image.id)
+    imageBox.fadeOut(600, () => {
+      imageBox.remove()
+
+      // on retire l'image de la liste
+      this.images = this.images.filter(img => img.id != image.id)
+
+      this.addCheckUncheckAll();
+
+      this.renderHeaderButtons()
+
+      // remettre le message disant que la boite est vide si vide
+      if (!this.getModalContainer().children().length) {
+        this.renderEmptyImageboxContainer()
+      }
+
+    })
   }
 
   deleteImage(event) {
@@ -456,9 +505,10 @@ class ImageManager {
     const button = $(event.target)
     const image = this.getImage(button.data('delete'))
 
+
     swal({
       title: 'Suppression !',
-      text: "Etes de vous sûr de bien vouloir supprimer le média '<b>" + image.name + "'</b>. Cette action est irréversible.",
+      text: `Etes de vous sûr de bien vouloir supprimer le média ${image.name}. Cette action est irréversible.`,
       icon: 'warning',
       dangerMode: true,
       buttons: {
@@ -468,14 +518,24 @@ class ImageManager {
     })
       .then((isConfirm) => {
         if (isConfirm) {
-          axios.delete(this.getUrl(), { data: { image_id: image.id } })
-            .then((data) => {
-              const imageBox = this.getImageBox(image.id)
-              imageBox.fadeOut(600, () => {
-                imageBox.remove()
+          if (this.isEmptyModel()) {
+            // Désélectionner l'élément
+            this.getImageBox(image.id).find(this.config.uncheckimage).trigger('click')
+
+            this.removeDeleteInModalImageBox(image)
+
+
+
+          } else {
+            axios.delete(this.getUrl(), { data: { image_id: image.id } })
+              .then((data) => {
+                this.removeDeleteInModalImageBox(image)
+
+                this.alert(this.alerts.delete.success)
+
               })
-              this.alert(this.alerts.delete.success)
-            })
+
+          }
         } else {
           // swal('suppression désapprouvé')
           // $(event.target).parents('.imagebox').find('img').css('border', 'none')
@@ -672,6 +732,17 @@ class ImageManager {
   }
 
   refresh() {
+    // on ne peut pas rafraichir des éléments qui ne sont pas persistés
+    if (this.isEmptyModel()) {
+      swal({
+        title: 'Rafraichissement !',
+        text: 'on ne peut pas rafraichir des éléments qui ne sont pas persistés',
+        icon: 'warning',
+        dangerMode: true,
+      })
+      return
+    }
+
     // Récupérer les fichiers pour le modal
     this.getModalContainer().empty()
     this.images = []
@@ -697,7 +768,7 @@ class ImageManager {
     this.button = $(event.target)
 
     /**
-     * Puisque on recupere les images deja envoyes
+     * Puisque on recupere les images déjà envoyées
      * Il faudra réinitialiser le tableau si ce n'est pas la même collection
      */
     if (this.isEmptyModel()) {
@@ -706,12 +777,18 @@ class ImageManager {
       }
     }
 
+
+
+
+
     this.collection = this.button.data('image')
 
     this.generateFormFor(this.collection)
 
 
     this.addCheckUncheckAll();
+
+
 
 
     // Récupérer les fichiers pour le modal
@@ -735,8 +812,29 @@ class ImageManager {
 
     }
 
+    // On désactive les boutons de téléchargement, rafraichir, et suppression  si la collection est vide
+    this.renderHeaderButtons()
+
     this.modal('show')
 
+
+  }
+
+  /**
+   * On désactive les boutons de téléchargement, rafraichir, et suppression  si la collection est vide
+   * @memberof ImageManager
+   */
+  renderHeaderButtons() {
+    const buttons = this.getModal().find(`
+        ${this.config.downloadimage}, ${this.config.deleteallimages},
+        ${this.config.refresh},${this.config.sorter}`
+    )
+
+    if (this.images.length) {
+      buttons.removeClass('disabled').removeAttr('disabled')
+    } else {
+      buttons.addClass('disabled').attr('disabled', 'disabled')
+    }
 
   }
 
@@ -798,7 +896,7 @@ class ImageManager {
   closeModal() {
 
     if (this.config.collectiontype === 'avatar') {
-      if (this.isFrontImageCollection() && typeof window.fnAvatarCommit === 'function' && this.selectedImage){
+      if (this.isFrontImageCollection() && typeof window.fnAvatarCommit === 'function' && this.selectedImage) {
         fnAvatarCommit(this.selectedImage)
       }
       this.modal('hide')
@@ -839,6 +937,7 @@ class ImageManager {
 
       if (this.selectedImages.length) {
         this.getCollectionContainer().prev().removeClass('d-none')
+        $('[data-delete=all]').show()
       } else {
         this.getCollectionContainer().prev().addClass('d-none')
       }
@@ -885,7 +984,7 @@ class ImageManager {
 
       html = `
                  <div class='d-flex justify-content-center align-items-center w-100 h4 text-secondary h-100'>
-                    <p class='text-center'><i class='fa fa-times'></i> <br> Aucun fichier sélectionné pour cette colletion</p>
+                    <p class='text-center'><i class='fa fa-times'></i> <br> Aucun fichier sélectionné pour cette collection</p>
                 </div>
             `
     } else {
@@ -1159,6 +1258,10 @@ class ImageManager {
 
     this.images.push(image)
 
+    this.addCheckUncheckAll();
+
+    this.renderHeaderButtons()
+
     // Sélectionner l'image
     this.getImageBox(image.id).find(this.config.checkimage).trigger('click')
 
@@ -1425,45 +1528,50 @@ class ImageManager {
                             <img src="${event ? event.target.result : image.thumb_url}" alt="${this.isEmptyModel() ? image.new_name : image.name}">
                         </div>
 
-                        <a href="#" class="file-download">
-                            <i class="fa fa-tools dropdown-toggle" data-toggle="dropdown"></i>
+                        <a href="#" class="file-download dropdown" >
+                            <i class="fa fa-tools dropdown-toggle" data-toggle="dropdown" data-offset="10,30"></i>
                                 <div class="dropdown-menu ">
                                     <button class="dropdown-item" type="button" data-view='${image.id}'>
-                                        <i class="fa fa-image"></i>
+                                        <i class="fa fa-image"></i> &nbsp;
                                         Voir
                                     </button>
 
                             ${image.select ? `
                                 <button class="dropdown-item " type="button" data-unchoose >
-                                    <i class="fa fa-times"></i>
+                                    <i class="fa fa-times"></i> &nbsp;
                                     Désélectionner
                                 </button>
 
                             ` : `
                                  <button class="dropdown-item " type="button" data-choose >
-                                    <i class="fa fa-check"></i>
+                                    <i class="fa fa-check"></i> &nbsp;
                                     Sélectionner
                                 </button>
                             `}
 
                             <button class="dropdown-item" type="button"  data-rename data-toggle="modal"
                                 data-target="${ this.config.renamemodal}" data-id='${image.id}' data-name='${image.new_name}'>
-                                <i class="fa fa-edit"></i>
+                                <i class="fa fa-edit"></i> &nbsp;
                                 Renommer
                             </button>
 
 
 
                             <button class="dropdown-item" type="button" data-property='${image.id}'>
-                                <i class="fa fa-info-circle"></i>
+                                <i class="fa fa-info-circle"></i> &nbsp;
                                 Propriétés
                             </button>
 
 
-                            <div class="dropdown-divider"></div>
-                                <button class="dropdown-item text-danger  ${image.select ? 'disabled' : ''} " type="button" data-delete='${image.id}'><i class="fa fa-trash"></i>
-                                Effacer</button>
-                            </div>
+                            ${!image.select ? `
+                                <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item text-danger " type="button" data-delete='${image.id}'><i class="fa fa-trash"></i>
+                                    &nbsp; Effacer</button>
+
+                                ` : `
+
+                                `}
+                             </div>
                         </a>
                         <div class="file-man-title">
                             <h5 class="mb-0 text-overflow filename">${ this.isEmptyModel() ? image.new_name : image.name}</h5>
@@ -1493,23 +1601,23 @@ class ImageManager {
                             <img src="${event ? event.target.result : image.thumb_url}" alt="${image.name}">
                         </div>
 
-                        <a href="#" class="file-download">
-                            <i class="fa fa-tools dropdown-toggle" data-toggle="dropdown"></i>
+                        <a href="#" class="file-download dropdown">
+                            <i class="fa fa-tools dropdown-toggle" data-toggle="dropdown" data-offset="10,30"></i>
                                 <div class="dropdown-menu ">
                                     <button class="dropdown-item" type="button" data-view='${image.id}'>
-                                        <i class="fa fa-image"></i>
+                                        <i class="fa fa-image"></i> &nbsp;
                                         Voir
                                     </button>
 
                             ${image.select ? `
                                 <button class="dropdown-item " type="button" data-unchoose >
-                                    <i class="fa fa-times"></i>
+                                    <i class="fa fa-times"></i> &nbsp;
                                     Désélectionner
                                 </button>
 
                             ` : `
                                  <button class="dropdown-item " type="button" data-choose >
-                                    <i class="fa fa-check"></i>
+                                    <i class="fa fa-check"></i> &nbsp;
                                     Sélectionner
                                 </button>
                             `}
@@ -1522,22 +1630,28 @@ class ImageManager {
 
                             <button class="dropdown-item" type="button"
                                 data-download='${image.url}' data-name='${image.name}.${this.getFileExtension(image.file_name || image.name)}'>
-                                <i class="fa fa-download"></i> Télécharger
+                                <i class="fa fa-download"></i> &nbsp; Télécharger
                             </button>
 
                             <button class="dropdown-item" type="button" data-property='${image.id}'>
-                                <i class="fa fa-info-circle"></i>
+                                <i class="fa fa-info-circle"></i> &nbsp;
                                 Propriétés
                             </button>
 
                             <button class="dropdown-item" type="button" data-copyurl='${image.url}'>
-                                <i class="fa fa-copy"></i>
+                                <i class="fa fa-copy"></i> &nbsp;
                                 Copier le lien
                             </button>
-                            <div class="dropdown-divider"></div>
-                                <button class="dropdown-item text-danger  ${image.select ? 'disabled' : ''} " type="button" data-delete='${image.id}'><i class="fa fa-trash"></i>
-                                Effacer</button>
+                               ${!image.select ? `
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item text-danger " type="button" data-delete='${image.id}'><i class="fa fa-trash"></i>
+                                    &nbsp; Effacer</button>
+
+                                ` : `
+
+                                `}
                             </div>
+
                         </a>
                         <div class="file-man-title">
                             <h5 class="mb-0 text-overflow filename">${image.name}</h5>
@@ -1580,13 +1694,23 @@ class ImageManager {
 
         if (isConfirm) {
 
-          if (this.isEmptyObject()) {
+
+          if (this.isEmptyModel()) {
             imageBoxes.each((index, box) => {
               $(box).fadeOut(600 * index, () => {
                 $(box).remove()
               })
             })
             $(event.target).parent().addClass('d-none')
+
+            this.selectedImages = []
+            this.images = []
+            this.tempImages[this.collection] = this.images
+
+            this.addCheckUncheckAll();
+
+            this.renderHeaderButtons()
+
           } else {
             axios.delete(`${this.getUrl()}/${collection}/all`)
               .then((data) => {
@@ -1599,6 +1723,13 @@ class ImageManager {
                 })
 
                 $(event.target).parent().addClass('d-none')
+
+                this.selectedImages = []
+                this.images = []
+
+                this.addCheckUncheckAll();
+
+                this.renderHeaderButtons()
               })
           }
         }
@@ -1614,9 +1745,17 @@ class ImageManager {
      * sélections suivantes puissent s'afficher
      */
     if (this.isImagesCollection(collection)) {
+      let imageContainerLength = imageBox.parent().children().length
+
       imageBox.fadeOut(600, _ => {
         imageBox.remove()
+
+        if (!(imageContainerLength -= 1)) {
+          $('[data-delete=all]').hide()
+        }
+
       })
+
     } else {
       imageBox.fadeOut(600, function () {
         imageBox.children().remove()
@@ -1668,10 +1807,26 @@ class ImageManager {
             this.removeItemInSelectedImage(image_id)
 
             this.hideBoxWhenDeleteByCloseIcon(imageBox, collection)
+
+            // supprimer l'image dans la liste
+            this.images = this.images.filter(image => image.id != image_id)
+            this.tempImages[this.collection] = this.images
+
+            this.addCheckUncheckAll();
+
+            this.renderHeaderButtons()
+
+
           } else {
             axios.delete(this.getUrl(), { data: { image_id } })
               .then((data) => {
+                this.removeItemInSelectedImage(image_id)
                 this.hideBoxWhenDeleteByCloseIcon(imageBox, collection)
+                this.images = this.images.filter(image => image.id != image_id)
+
+                this.addCheckUncheckAll();
+
+                this.renderHeaderButtons()
               })
           }
         } else {
@@ -1763,7 +1918,7 @@ class ImageManager {
     }
 
     const images_container = $(this.config.images_sortable_container)[0]
-    if(images_container){
+    if (images_container) {
       const images_sortener = new Sortable($(this.config.images_sortable_container)[0], {
         multiDrag: true,
         selectedClass: 'selected',
@@ -1834,6 +1989,8 @@ class ImageManager {
               message: "L'image " + image.name + ' a bien été téléversé!',
               type: 'success'
             })
+
+
 
           })
       }

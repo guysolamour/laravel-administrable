@@ -20,7 +20,6 @@
 
 <script src="{{ asset('vendor/{{theme}}/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('vendor/{{theme}}/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('js/vendor/fontawesome.js') }}"></script>
 <script src="{{ asset('vendor/{{theme}}/dist/js/adminlte.min.js') }}"></script>
 
 

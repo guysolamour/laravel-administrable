@@ -1,10 +1,10 @@
- .images-collection .card-body  button[data-delete=all] {
+ /* .images-collection .card-body  button[data-delete=all] {
   display: none;
 }
 
 .images-collection .card-body:hover button[data-delete=all] {
   display: block;
-}
+} */
 
 /* DropZone */
 
@@ -111,7 +111,7 @@
 }
 
 .file-man-box .file-download {
-  font-size: 32px;
+  font-size: 25px;
   color: #98a6ad;
   position: absolute;
   right: 10px
@@ -175,4 +175,8 @@
 .full-window-modal .modal-dialog .modal-content .modal-footer {
   padding: 15px 24px;
   padding-top: 15px !important;
+}
+
+.dropdown-toggle::after {
+    border: none;
 }
