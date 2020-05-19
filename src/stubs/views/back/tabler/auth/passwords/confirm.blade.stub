@@ -12,6 +12,7 @@
     <form class="card card-md" action="{{ route('{{singularSlug}}.password.confirm') }}" method="post">
         <div class="card-body">
             @csrf
+            @honeypot
             <div class="form-group">
                 <label for="password" class="form-control col-md-4 col-form-label text-md-right">Mot de passe< </label> <input
                         id="password" type="password"

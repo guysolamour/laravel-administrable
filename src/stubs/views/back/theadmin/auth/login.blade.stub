@@ -14,6 +14,7 @@
 
             <form class="form-type-material" action="{{ route('{{singularSlug}}.login') }}" method="post">
                 @csrf
+                @honeypot
                 <div class="form-group">
                     <input type="text" class="form-control {{ $errors->has('login') || $errors->has('email') || $errors->has('pseudo') ? 'is-invalid' : '' }}" id="login" name="login" value="{{ old('login') }}">
                     <label for="login">Pseudo ou Email</label>

@@ -18,6 +18,7 @@
 
                 <form action="{{ route('{{singularSlug}}.login') }}" method="post">
                     @csrf
+                    @honeypot
                     <div class="input-group mb-3">
                         <input type="text" name="login" class="form-control {{ $errors->has('login') || $errors->has('email') || $errors->has('pseudo') ? 'is-invalid' : '' }}" placeholder="Pseudo ou Email" value="{{ old('login') }}">
                         <div class="input-group-append">

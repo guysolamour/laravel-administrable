@@ -17,6 +17,7 @@
           @endif
           <form class="form-type-material"  action="{{ route('{{singularSlug}}.password.email') }}" method="post">
             @csrf
+            @honeypot
             <div class="form-group">
               <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" id="email" name="email" value="{{ old('email') }}">
               <label for="email">Email</label>

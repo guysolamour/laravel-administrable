@@ -19,6 +19,7 @@
         <form class="card card-md" method="POST" action="{{ route('{{singularSlug}}.verification.resend') }}">
           <div class="card-body">
             @csrf
+            @honeypot
             <button type="submit" class="btn btn-primary btn-block">Cliquer ici pour envoyer un autre</button>
           </div>
         </form>

@@ -19,6 +19,7 @@
                 <h3>Rejoignez-nous! Cela ne vous prendra que quelques minutes</h3>
                 <form class="card card-md" action="{{ route('{{singularSlug}}.register') }}" method="post">
                     @csrf
+                    @honeypot
                     <div class="form-group">
                         <input class="form-control {{ $errors->has('pseudo') ? ' is-invalid' : '' }}" type="text" name="pseudo" id="pseudo"
                             placeholder="Pseudo" value="{{ old('pseudo') }}" required>

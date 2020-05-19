@@ -26,6 +26,7 @@
                 Si vous n'avez pas recu de mail,
                 <form action="{{ route('{{singularSlug}}.verification.resend') }}" method="post">
                     @csrf
+                    @honeypot
 
                     <div class="sign-btn text-center">
                         <button class="btn btn-theme" type="submit">Cliquer ici pour envoyer un autre</button>

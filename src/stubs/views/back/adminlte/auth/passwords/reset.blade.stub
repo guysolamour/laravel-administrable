@@ -24,6 +24,7 @@
                 <form action="{{ route('{{singularSlug}}.password.update') }}" method="post">
                         <input type="hidden" name="token" value="{{ $token }}">
                     @csrf
+                    @honeypot
                     <div class="input-group mb-3">
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email">
                         <div class="input-group-append">

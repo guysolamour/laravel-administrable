@@ -11,6 +11,7 @@
     <form class="card card-md" action="{{ route('{{singularSlug}}.login') }}" method="post">
         <div class="card-body">
             @csrf
+            @honeypot
             <h2 class="mb-5 text-center">Connexion</h2>
             <div class="form-group">
                 <label>Pseudo ou Email </label>

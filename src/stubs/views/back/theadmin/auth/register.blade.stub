@@ -12,6 +12,8 @@
           <br>
 
           <form class="form-type-material" action="{{ route('{{singularSlug}}.register') }}" method="post">
+            @csrf
+            @honeypot
             <div class="form-group">
               <input type="text" class="form-control" id="pseudo" {{ $errors->has('pseudo') ? ' is-invalid' : '' }} value="{{ old('pseudo') }}">
               <label for="pseudo">Pseudo</label>

@@ -14,6 +14,7 @@
     <div class="login-form">
         <form action="{{ route('{{singularSlug}}.register') }}" method="post">
             @csrf
+            @honeypot
             <div class="form-group">
                 <label>Pseudo </label>
 

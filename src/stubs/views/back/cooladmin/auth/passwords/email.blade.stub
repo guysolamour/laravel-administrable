@@ -19,6 +19,7 @@
         @endif
         <form action="{{ route('{{singularSlug}}.password.email') }}" method="post">
             @csrf
+            @honeypot
             <div class="form-group">
                 <label>Email </label>
 

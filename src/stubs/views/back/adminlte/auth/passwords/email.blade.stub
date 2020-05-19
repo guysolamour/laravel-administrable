@@ -23,6 +23,7 @@
 
                 <form action="{{ route('{{singularSlug}}.password.email') }}" method="post">
                     @csrf
+                    @honeypot
                     {{--<input type="hidden" name="token" value="{{ $token }}">--}}
                     <div class="input-group mb-3">
 

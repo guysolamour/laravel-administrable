@@ -15,6 +15,7 @@
     <div class="login-form">
         <form action="{{ route('{{singularSlug}}.login') }}" method="post">
             @csrf
+            @honeypot
             <div class="form-group">
                 <label>Pseudo ou Email </label>
 

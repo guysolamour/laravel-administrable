@@ -18,6 +18,7 @@
 
                 <form action="{{ route('{{singularSlug}}.register') }}" method="post" aria-label="{{ __('Register') }}">
                     @csrf
+                    @honeypot
                     <div class="input-group mb-3">
                         <input name="pseudo" type="text" class="form-control {{ $errors->has('pseudo') ? ' is-invalid' : '' }}" placeholder="Pseudo" value="{{ old('pseudo') }}">
                         <div class="input-group-append">

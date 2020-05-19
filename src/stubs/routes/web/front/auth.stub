@@ -21,7 +21,11 @@ Route::namespace('{{frontNamespace}}')->group(function () {
     // Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
     // Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
-    Auth::routes();
-    Route::get('/dashboard', 'HomeController@index')->name('home');
+
+    Route::middleware([Spatie\Honeypot\ProtectAgainstSpam::class])->group(function () {
+        Auth::routes(['verify' => true]);
+    });
+
+    Route::get('/dashboard', 'HomeController@index')->name('home')->middleware('verified');
 
 });

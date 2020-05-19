@@ -19,6 +19,7 @@
                 <h3>Heureux de vous revoir!</h3>
                 <form action="{{ route('{{singularSlug}}.login') }}" method="post">
                     @csrf
+                    @honeypot
                     <div class="form-group">
                         <input
                             class="form-control {{ $errors->has('login') || $errors->has('email') || $errors->has('pseudo') ? 'is-invalid' : '' }}"
