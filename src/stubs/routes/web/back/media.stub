@@ -17,6 +17,7 @@ Route::middleware(['{{singularSlug}}.auth'])->group(function () {
         Route::get('media/{model}/{id}/{collection}','MediaController@index')->name('{{backLowerNamespace}}.media.index');
         Route::post('media/{model}/{id}', 'MediaController@store')->name('{{backLowerNamespace}}.media.store');
         Route::delete('media/{model}/{id}', 'MediaController@destroy')->name('{{backLowerNamespace}}.media.destroy');
+        Route::delete('media/seo/{model}/{id}', 'MediaController@destroySeo')->name('{{backLowerNamespace}}.media.seodestroy');
         Route::delete('media/{model}/{id}/{collection}/all', 'MediaController@destroyAll')->name('{{backLowerNamespace}}.media.destroy.all');
 
     });

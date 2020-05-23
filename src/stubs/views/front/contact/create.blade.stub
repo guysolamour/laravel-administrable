@@ -1,8 +1,13 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@section('title','Contact')
+@section('seo')
+{!!
+  App\Models\Seo::getTags([
+      'title' => 'Contact',
+  ])
+!!}
+@stop
 
-@section('meta-description','Contact')
 
 @section('content')
 <div class='container mt-5'>

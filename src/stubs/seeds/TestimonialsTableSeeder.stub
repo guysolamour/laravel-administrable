@@ -16,7 +16,7 @@ class TestimonialsTableSeeder extends Seeder
         $faker = Faker::create();
 
         for ($i = 0; $i < 15; $i++) {
-            $category = Testimonial::create([
+            Testimonial::create([
                 'name' => $faker->firstname,
                 'email' => $faker->safeEmail(),
                 'job'   => $faker->title,

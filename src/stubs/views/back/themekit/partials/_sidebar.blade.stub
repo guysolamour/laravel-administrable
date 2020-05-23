@@ -1,6 +1,6 @@
 <div class="app-sidebar colored">
     <div class="sidebar-header">
-        <a class="header-brand" href="index.html">
+        <a class="header-brand" href="{{ route('{{singularSlug}}.dashboard') }}">
             {{-- <div class="logo-img">
                 <img src="{{ config('administrable.logo_url') }}" class="header-brand-img" alt="{{ config('app.name') }}">
             </div> --}}

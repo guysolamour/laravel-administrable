@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use {{namespace}}\{{modelsFolder}}\Configuration;
 use Illuminate\Support\Facades\Route;
 
 
@@ -15,6 +16,18 @@ if (!function_exists('get_month')) {
 
     }
 }
+
+if (!function_exists('configuration')) {
+    function configuration(?string $field = null)
+    {
+        if (is_null($field)) {
+            return Configuration::first();
+        }
+
+        return Configuration::first()->$field;
+    }
+}
+
 
 if (!function_exists('get_current_month')) {
     function get_current_month(bool $longFormat = false)

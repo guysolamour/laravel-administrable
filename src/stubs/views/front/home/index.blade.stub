@@ -1,14 +1,16 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@section('title',"Titre de la page")
-
-
-@section('meta-description',"Description de la page")
+@section('seo')
+{!!
+  {{namespace}}\{{modelsFolder}}\Seo::getTags([
+      'title' => config('app.name') ,
+      'description' => configuration('about')
+  ])
+!!}
+@stop
 
 
 @section('content')
-
-
 <div class='container mt-5 pt-5 text-center'>
   <div class="jumbotron">
     <h1 class="display-4 ">Bienvenue, {{ config('app.name') }}!</h1>

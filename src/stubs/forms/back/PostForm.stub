@@ -25,10 +25,14 @@ class PostForm extends Form
 
 	    $this
 		    ->add('title','text', [
-			    'label' => 'Titre',
-			    'rules' => 'required',
+			      'label' => 'Titre',
+			      'rules' => 'required',
             ])
-            ->add('prestation_id', 'entity', [
+             ->add('slug','text', [
+              'label' => 'Url',
+              // 'rules' => 'required',
+            ])
+            ->add('category_id', 'entity', [
                 "class" => \{{namespace}}\{{modelsFolder}}\Category::class,
                 "property" => 'name',
                 "label" => 'Catégorie',
@@ -45,6 +49,14 @@ class PostForm extends Form
                 'choices' => ['0' => 'Non', '1' => 'Oui'],
                 'rules' => 'required',
                 'label' => 'En ligne',
+                'attr'  => [
+                    'class' => 'custom-select'
+                ]
+            ])
+              ->add('allow_comment', 'select', [
+                'choices' => ['1' => 'Oui', '0' => 'Non'],
+                'label' => 'Autoriser les commentaires',
+                'rules' => 'required',
                 'attr'  => [
                     'class' => 'custom-select'
                 ]

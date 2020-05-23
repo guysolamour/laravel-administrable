@@ -1,0 +1,133 @@
+<?php
+
+namespace {{namespace}}\Traits;
+
+use {{namespace}}\Models\Seo;
+use Illuminate\Database\Eloquent\Model;
+use Artesaos\SEOTools\Facades\JsonLd;
+use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\SEOTools;
+use Artesaos\SEOTools\Facades\OpenGraph;
+use Artesaos\SEOTools\Facades\TwitterCard;
+
+trait SeoableTrait
+{
+
+    public function getShowUrlAttribute()
+    {
+        $name = strtolower(class_basename(new self));
+        return route("{{backLowerNamespace}}.{$name}.show", $this);
+    }
+
+    public function seo()
+    {
+        return $this->morphOne(Seo::class, 'seoable');
+    }
+
+
+    public function seoForm()
+    {
+        return view('{{backLowerNamespace}}.partials._seoform', [
+            'model' => $this,
+            'tags'  => $this->seo ?: new Seo
+        ]);
+    }
+
+
+    public function generateSeo(bool $request = true)
+    {
+        $tags = $this->seo ?: new Seo;
+
+        if ($request) {
+            $tags->fill(request('seo'));
+
+            $tags['og:image']      =  $this->addSeoImageAndGetUrl('seo.og:image', $tags['og:image']);
+            $tags['twitter:image'] =  $this->addSeoImageAndGetUrl('seo.twitter:image', $tags['twitter:image']);
+        }
+
+        $tags['html']          =  $this->generateTags($tags);
+
+        $this->seo()->save($tags);
+    }
+
+    public function addSeoImageAndGetUrl($key, $default) :?string
+    {
+        if (request($key)) {
+            $collection = config('media-library.collections.seo');
+            if ($collection) {
+                // delete old image if exists
+                $this->getMedia($collection, ['field' => $key])->each->delete();
+                return $this->addMediaFromRequest($key)
+                        ->withCustomProperties([
+                            'field' => $key,
+                        ])
+                        ->toMediaCollection($collection)->getFullUrl();
+            }
+        }
+        return $default;
+
+    }
+
+    public function generateTags(Model $tags)
+    {
+        // Page
+        SEOMeta::setTitle($tags['page:title'] ?? $this->title);
+        SEOMeta::setRobots('robots', "{$tags['robots:index']},{$tags['robots:follow']}");
+
+        if ($tags['page:author']) {
+            SEOMeta::addMeta('author', $tags['page:author']);
+        }
+
+        if ($tags['page:meta:keywords']) {
+            SEOMeta::setCanonical($tags['page:meta:keywords']);
+        }
+
+        if ($tags['page:meta:description']) {
+            SEOMeta::setDescription($tags['page:meta:description']);
+        }
+
+        if ($tags['page:canonical:url']) {
+            SEOMeta::setDescription($tags['page:canonical:url']);
+        }
+
+        if ($tags['page:meta:keywords']) {
+            SEOMeta::setKeywords($tags['page:meta:keywords']);
+        }
+
+        // OpenGraph
+        OpenGraph::setTitle($tags['og:title'] ?? SEOMeta::getTitle());
+
+        if ($tags['og:description'] || $tags['page:meta:description']) {
+            OpenGraph::setDescription($tags['og:description'] ??  SEOMeta::getDescription());
+        }
+
+        OpenGraph::setUrl($tags['og:url'] ?? $this->show_url);
+        OpenGraph::addProperty('type', $tags['og:type'] ?? 'article');
+        OpenGraph::addProperty('locale', $tags['og:locale'] ?? config('app.locale'));
+        if ($tags['og:image'] || $this->getFrontImageUrl()) {
+            OpenGraph::addImage($tags['og:image'] ?? $this->getFrontImageUrl());
+        }
+
+        // Twitter
+        TwitterCard::setTitle($tags['twitter:title'] ?? SEOMeta::getTitle());
+        TwitterCard::setType($tags['twitter:type'] ?? 'summary');
+        if ($tags['twitter:image'] || $this->getFrontImageUrl()) {
+            TwitterCard::setImage($tags['twitter:image'] ?? $this->getFrontImageUrl());
+        }
+
+        if ($tags['twitter:description'] || $tags['page:meta:description']) {
+            OpenGraph::setDescription($tags['twitter:description'] ??  SEOMeta::getDescription());
+        }
+
+        // JsonLd
+        JsonLd::setTitle(SEOMeta::getTitle());
+        JsonLd::setDescription(SEOMeta::getDescription());
+        JsonLd::setType('Article');
+
+        if ($this->getFrontImageUrl()) {
+            JsonLd::addImage($this->getFrontImageUrl());
+        }
+
+        return SEOTools::generate();
+    }
+}

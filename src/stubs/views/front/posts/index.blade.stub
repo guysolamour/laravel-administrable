@@ -4,6 +4,15 @@
 
 @section('meta-description','Contact')
 
+@section('seo')
+{!!
+  App\Models\Seo::getTags([
+      'title' => 'Articles',
+      'description' => 'Retrouvez un concentré de tous nos articles'
+  ])
+!!}
+@stop
+
 @section('content')
 <div class='container mt-5 pt-5'>
     <div class="row">

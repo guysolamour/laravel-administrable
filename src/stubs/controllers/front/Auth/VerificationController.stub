@@ -1,7 +1,7 @@
 <?php
 
-namespace {{namespace}}\Http\Controllers\Auth;
-
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}}\Auth;
+use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\VerifiesEmails;
@@ -38,5 +38,18 @@ class VerificationController extends Controller
         $this->middleware('auth');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
+    }
+
+     /**
+     * Show the email verification notice.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response|\Illuminate\View\View
+     */
+    public function show(Request $request)
+    {
+        return $request->user()->hasVerifiedEmail()
+            ? redirect($this->redirectPath())
+            : view('{{frontLowerNamespace}}.auth.verify');
     }
 }

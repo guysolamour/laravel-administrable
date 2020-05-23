@@ -1,8 +1,13 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@section('title','Témoignages')
-
-@section('meta-description','Témoignages')
+@section('seo')
+{!!
+  App\Models\Seo::getTags([
+      'title' => 'Témoignages',
+      'description' => 'Retrouvez un concentré de tous les avis de nos clients'
+  ])
+!!}
+@stop
 
 @section('content')
 <div class='container mt-5 pt-5'>

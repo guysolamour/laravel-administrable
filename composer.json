@@ -16,11 +16,12 @@
   ],
   "require": {
     "php": ">=7.3",
+    "artesaos/seotools": "^0.17",
     "bmatovu/multi-auth": "^9.0",
     "creativeorange/gravatar": "^1.0",
     "cviebrock/eloquent-sluggable": "^7.0",
     "genealabs/laravel-model-caching": "^0.8",
-    "guysolamour/laravel-commands": "^1.2",
+    "guysolamour/laravel-commands": "^1.2.1",
     "illuminate/support": "^7.0",
     "kris/laravel-form-builder": "^1.30",
     "laravel/telescope": "^3.2",
@@ -59,5 +60,7 @@
     "preferred-install": "dist",
     "sort-packages": true,
     "optimize-autoloader": true
-  }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }

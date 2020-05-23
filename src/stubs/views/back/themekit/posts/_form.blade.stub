@@ -3,21 +3,24 @@
 {!! form_rest($form) !!}
 
 
-@if (isset($edit) && $edit)
-<div class="form-group">
-    <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i>&nbsp; Modifier</button>
-</div>
-@else
-<div class="form-group">
-    <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i>&nbsp; Enregistrer</button>
-</div>
-@endif
-
-{!! form_end($form) !!}
-
-@include('back.partials._tinymce', [
-    'selector' => "form[name={$form->getModel()->form_name}] textarea",
+@include('{{backLowerNamespace}}.partials._tinymce', [
+    'selector' => "form[name={$form->getModel()->form_name}] textarea[data-tinymce]",
     'model' => $form->getModel(),
     'model_name' => get_class($form->getModel()),
     'prefix' => config('administrable.auth_prefix_path')
 ])
+
+{!! $form->getModel()->seoForm() !!}
+
+
+@if (isset($edit) && $edit)
+<div class="form-group">
+    <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
+</div>
+@else
+<div class="form-group">
+    <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
+</div>
+@endif
+
+{!! form_end($form) !!}

@@ -3,6 +3,16 @@
 {!! form_rest($form) !!}
 
 
+@include('{{backLowerNamespace}}.partials._tinymce', [
+    'selector' => "form[name={$form->getModel()->form_name}] textarea[data-tinymce]",
+    'model' => $form->getModel(),
+    'model_name' => get_class($form->getModel()),
+    'prefix' => config('administrable.auth_prefix_path')
+])
+
+{!! $form->getModel()->seoForm() !!}
+
+
 @if (isset($edit) && $edit)
 <div class="form-group">
     <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
@@ -14,10 +24,3 @@
 @endif
 
 {!! form_end($form) !!}
-
-@include('{{backLowerNamespace}}.partials._tinymce', [
-    'selector' => "form[name={$form->getModel()->form_name}] textarea",
-    'model' => $form->getModel(),
-    'model_name' => get_class($form->getModel()),
-    'prefix' => config('administrable.auth_prefix_path')
-])

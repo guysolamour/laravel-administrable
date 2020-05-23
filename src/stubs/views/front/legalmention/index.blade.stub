@@ -1,6 +1,13 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@section('title',"Foire aux questions")
+@section('seo')
+{!!
+  App\Models\Seo::getTags([
+      'title' => 'Foire aux questions',
+      'description' => 'Vous avez une question? Nous avons peut être déjà une réponse.'
+  ])
+!!}
+@stop
 
 
 @section('content')

@@ -29,6 +29,7 @@ class PostsTableSeeder extends Seeder
                 'title' => $faker->name(),
                 'content' => $faker->realText(1500),
                 'online' => $faker->randomElement([true,false]),
+                'allow_comment' => $faker->randomElement([true,false]),
               ]);
             }
         }

@@ -76,6 +76,7 @@
                         <form id="{{singularSlug}}-logout-form" action="{{ route('{{singularSlug}}.logout') }}" method="POST"
                             style="display: none;">
                             @csrf
+                            @honeypot
                         </form>
                     </div>
                 </div>

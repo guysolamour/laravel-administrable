@@ -16,7 +16,7 @@
 {!! form_end($form) !!}
 
 @include('{{backLowerNamespace}}.partials._tinymce', [
-    'selector' => "form[name={$form->getModel()->form_name}] textarea",
+    'selector' => "form[name={$form->getModel()->form_name}] textarea[data-tinymce]",
     'model' => $form->getModel(),
     'model_name' => get_class($form->getModel()),
     'prefix' => config('administrable.auth_prefix_path')

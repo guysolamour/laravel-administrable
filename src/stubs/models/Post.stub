@@ -2,18 +2,20 @@
 
 namespace {{namespace}}\{{modelsFolder}};
 
+use {{namespace}}\Traits\SeoableTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
 
 class Post extends BaseModel
 {
-    use Sluggable;
+    use Sluggable, SeoableTrait;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['title','content', 'category_id' ,'slug', 'online'];
+    protected $fillable = ['title','content', 'category_id' ,'slug', 'online', 'allow_comment'];
+
 
 
     /**
@@ -22,7 +24,8 @@ class Post extends BaseModel
      * @var array
      */
     protected $casts = [
-        'online' => 'boolean',
+        'online'        => 'boolean',
+        'allow_comment' => 'boolean'
     ];
 
     // Attributes

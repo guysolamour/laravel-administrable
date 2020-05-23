@@ -49,6 +49,16 @@
                                 @include('{{backLowerNamespace}}.posts._form',['edit' => true])
                             </div>
                             <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Publication</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center mb-4">
+                                            <a href="" onclick="event.preventDefault();document.querySelector('form[name={{$form->getModel()->form_name}}]').submit()" class="btn btn-success">Publier</a>
+                                        </div>
+                                    </div>
+                                </div>
                                 @include('{{backLowerNamespace}}.media._imagemanager', [
                                     'front_image_label' => 'Image à la une',
                                     'back_image_label' => 'Image à la une (2)',
@@ -57,7 +67,7 @@
                                     'model' => $post,
                                     'model_name' => get_class($post),
                                     'front_image' => true,
-                                    'back_image' => true,
+                                    'back_image' => false,
                                     'images' => true,
                                     'form_name' => $post->form_name,
                                 ])

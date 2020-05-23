@@ -28,8 +28,8 @@ class AdminInstallCommand extends BaseCommand
      * @var array
      */
     protected const DEFAULTS = [
-        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model'],
-        'migrations'      => ['User','Administrable','Media','Provider'],
+        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model','Seo'],
+        'migrations'      => ['User','Administrable','Media','Provider','Seo_meta_tag'],
         'seeds'           => ['Configuration','Seeder'],
         'controllers'     => [
             'front'       => ['ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification','Home','Page','Redirect'],

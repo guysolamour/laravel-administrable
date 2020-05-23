@@ -1,0 +1,71 @@
+<?php
+
+namespace {{namespace}}\{{modelsFolder}};
+
+use Illuminate\Database\Eloquent\Model;
+use Artesaos\SEOTools\Facades\SEOMeta;
+
+
+class Seo extends Model {
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'seo_meta_tags';
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'page:title', 'og:locale', 'og:type', 'og:title', 'og:description', 'og:url','og:image',
+        'twitter:type', 'twitter:title', 'twitter:image', 'twitter:description',
+        'robots:index', 'robots:follow', 'page:canonical:url', 'page:author', 'page:meta:description',
+        'page:meta:keywords', 'html'
+    ];
+
+
+    public function seoable()
+    {
+        return $this->morphTo();
+    }
+
+    /**
+     * Generate html tags
+     *
+     * @param Model|array $model
+     * @return string
+     */
+    public static function getTags($model) :string
+    {
+        if (is_object($model) && method_exists($model,'seo')) {
+            return optional($model->seo)->html;
+        }
+
+        if (is_array($model)) {
+            if (array_key_exists('title', $model)) {
+                SEOMeta::setTitle($model['title']);
+            }
+            if (array_key_exists('description', $model)) {
+                SEOMeta::setDescription($model['description']);
+            }
+            if (array_key_exists('keywords', $model)) {
+                SEOMeta::setKeywords(explode(',', $model['keywords']));
+            }
+
+            return SEOMeta::generate();
+        }
+    }
+
+}

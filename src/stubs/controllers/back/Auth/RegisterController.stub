@@ -2,7 +2,7 @@
 
 namespace {{namespace}}\Http\Controllers\{{backNamespace}}\Auth;
 
-use {{namespace}}\Admin;
+use {{namespace}}\{{modelsFolder}}\{{singularClass}};
 use {{namespace}}\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;

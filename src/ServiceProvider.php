@@ -2,6 +2,7 @@
 
 namespace Guysolamour\Administrable;
 
+use Illuminate\Support\Facades\Blade;
 use Guysolamour\Administrable\Console\MakeCrudCommand;
 use Guysolamour\Administrable\Console\MakeEntityCommand;
 use Guysolamour\Administrable\Console\AdminInstallCommand;
@@ -20,27 +21,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             self::CONFIG_PATH => config_path('administrable.php'),
         ], 'administrable-config');
-
-        // $this->publishes([
-        //     self::ASSETS_PATH => public_path('vendor/adminlte'),
-        // ], 'administrable-public');
-
-        // $this->publishes([
-        //     self::ASSETS_PATH => public_path('vendor/adminlte'),
-        // ], 'administrable-public');
-
-        // $this->publishes([
-        //     self::RESOURCES_PATH => public_path(),
-        // ], 'administrable-resources');
-
-        // $this->publishes([
-        //     self::IMAGEMANAGER_PATH => public_path('vendor/imagemanager'),
-        // ], 'administrable-imagemanager');
-
-        // $this->publishes([
-        //     self::TINYMCE_PATH => public_path('vendor/tinymce'),
-        // ], 'administrable-tinymce');
-
 
        // $this->loadRoutesFrom(__DIR__.'/routes/web.php');
 

@@ -33,6 +33,7 @@ return [
         'back'           => 'back-image',
         'images'         => 'images',
         'attachments'    => 'attachments',
+        'seo'            => 'seo'
     ],
     /**
      * Default disc name
