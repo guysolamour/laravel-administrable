@@ -1,0 +1,103 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title','Commentaires')
+
+
+
+@section('content')
+
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Commentaires</a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between mb-3">
+            <h3> Commentaires </h3>
+            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Comment"
+                id="delete-all"><i class="fa fa-trash"></i> &nbsp; Tous supprimer</a>
+        </div>
+
+        <table class="table table-vcenter card-table" id='list'>
+            <thead>
+                <th></th>
+                <th>
+                    <label class="form-check" for="check-all">
+                        <input class="form-check-input" type="checkbox" id="check-all">
+                        <span class="form-check-label"></span>
+                    </label>
+                </th>
+
+                <th>#</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Contenu</th>
+                <th>Approuvé</th>
+                <th>Date ajout</th>
+
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                @foreach($comments as $comment)
+                <tr class="tr-shadow">
+                    <td></td>
+                    <td>
+                        <label class="form-check" for="check-{{ $comment->id }}">
+                            <input class="form-check-input" type="checkbox" data-check data-id="{{ $comment->id }}"
+                                id="check-{{ $comment->id }}" <span class="form-check-label"></span>
+                        </label>
+                    </td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $comment->getCommenterName() }}</td>
+                    <td>{{ $comment->getCommenterEmail() }}</td>
+                     <td>{!! Str::limit(strip_tags($comment->comment),50) !!}</td>
+                      <td>
+                          @if ($comment->approved)
+                            <a data-provide="tooltip" title="Approuvé"><i class="fas fa-circle text-success"></i></a>
+                          @else
+                            <a data-provide="tooltip" title="Non approuvé"><i class="fas fa-circle text-secondary"></i></a>
+                          @endif
+                      </td>
+                    <td>{{ $comment->created_at->format('d/m/Y h:i') }}</td>
+                    <td>
+
+                        <div class="btn-group" role="group">
+                            <a target="_blank" href="{{ route('{{frontLowerNamespace}}.'. strtolower(class_basename($comment->commentable)) .'.show', $comment->commentable) . '#comment-' . $comment->getKey() }}" class="btn btn-primary"
+                                data-toggle="tooltip" data-placement="top" title="Afficher"><i
+                                    class="fas fa-eye"></i></a>
+                            @unless ($comment->approved)
+                            <a href="{{ route('{{backLowerNamespace}}.comment.approved', $comment) }}" class="btn btn-success"
+                                data-toggle="tooltip" data-placement="top" title="Approuver"><i
+                                    class="fas fa-check"></i></a>
+                            @endunless
+
+                            <a href="{{ route('{{backLowerNamespace}}.comment.edit', $comment) }}" class="btn btn-info"
+                                data-toggle="tooltip" data-placement="top" title="Editer"><i
+                                    class="fas fa-edit"></i></a>
+                            <a href="{{ route('{{backLowerNamespace}}.comment.destroy',$comment) }}" data-method="delete"
+                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                class="btn btn-danger" data-toggle="tooltip" data-placement="top"
+                                title="Supprimer"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+
+@endsection

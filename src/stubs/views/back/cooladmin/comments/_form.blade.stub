@@ -10,10 +10,6 @@
     'prefix' => config('administrable.auth_prefix_path')
 ])
 
-@seoForm([
-    'model' => $form->getModel()
-])
-
 
 @if (isset($edit) && $edit)
 <div class="form-group">

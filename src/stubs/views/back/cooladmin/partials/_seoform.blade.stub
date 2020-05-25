@@ -1,3 +1,6 @@
+@php
+    $tags = $model->seo ?: new Seo
+@endphp
 <div class="card">
     <h5 class="card-header">Référencement </h5>
     <div class="card-body">

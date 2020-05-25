@@ -13,6 +13,17 @@
                             </span>
                         </a>
                     </li>
+                    <li class="nav-item {{ set_active_link('{{backLowerNamespace}}.comment.index') }}">
+                        <a class="nav-link" href="{{ route('{{backLowerNamespace}}.comment.index') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="fa fa-comments icon"></i>&nbsp;
+                            </span>
+                            <span class="nav-link-title">
+                                Commenataires
+                            </span>
+                        </a>
+                    </li>
+
                     {{-- insert sidebar links here --}}
                 </ul>
             </div>

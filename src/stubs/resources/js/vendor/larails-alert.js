@@ -76,3 +76,35 @@ jQuery(function () {
   };
   larails.initialize();
 });
+
+(function () {
+
+  const links = Array.from(document.querySelectorAll('a[data-alert]'));
+
+  links.forEach((link) => {
+    link.addEventListener('click', function (event) {
+      event.preventDefault()
+
+      const message = this.dataset.alert
+      if (message) {
+        swal({
+          title: this.dataset.title || 'Suppression',
+          text: message,
+          icon: this.dataset.type || 'warning',
+          dangerMode: true,
+          buttons: {
+            cancel: 'Annulez',
+            confirm: 'Confirmez!'
+          }
+        })
+          .then((isConfirm) => {
+            if (isConfirm) {
+              if (this.dataset.form) {
+                document.querySelector(this.dataset.form).submit()
+              }
+            }
+          })
+      }
+    })
+  })
+}())

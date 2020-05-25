@@ -20,6 +20,11 @@
             <ul class="list-unstyled navbar__list">
 
                 {{-- insert sidebar links here --}}
+                 <li class="{{ set_active_link('{{backLowerNamespace}}.comment.index') }}">
+                    <a href="{{ route('{{backLowerNamespace}}.comment.index') }}">
+                        <i class="far  fa-comments"></i>Commentaires</a>
+                </li>
+
                 <li class="has-sub {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index','{{backLowerNamespace}}.{{singularSlug}}.profile','{{backLowerNamespace}}.{{singularSlug}}.create') }}">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-users"></i>{{pluralClass}}

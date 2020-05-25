@@ -1,0 +1,106 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{frontLowerNamespace}};
+
+use {{namespace}}\{{modelsFolder}}\Comment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
+use {{namespace}}\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
+
+class CommentController extends Controller
+{
+    public function store(Request $request)
+    {
+        // Police to create
+        if (!config('administrable.comments.guest_commenting')) {
+            $this->authorize('create', Comment::class);
+        }
+
+        // Validate
+        $request->validate([
+            'guest_name'       => 'sometimes|required|string|max:255',
+            'guest_email'      => 'sometimes|required|string|email|max:255',
+            'commentable_type' => 'required|string',
+            'commentable_id'   => 'required|string|min:1',
+            'content'          => 'required|string'
+        ]);
+
+        $model = $request->get('commentable_type')::findOrFail($request->get('commentable_id'));
+
+        $comment = new Comment;
+
+        if ($request->has('guest_name') || $request->has('guest_email')) {
+            $comment->guest_name = $request->get('guest_name');
+            $comment->guest_email = $request->get('guest_email');
+        }else {
+            $comment->commenter()->associate($request->user('{{singularSlug}}') ?? $request->user());
+        }
+
+        $comment->commentable()->associate($model);
+        $comment->comment = $request->get('content');
+
+        $comment->approved = !config('administrable.comments.approval_required');
+        $comment->save();
+
+        flashy('Votre commentaire a bien été ajouté. Ce dernier sera affiché dès lors qu\'il sera aprouvé. ');
+
+        return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
+    }
+
+
+    /**
+     * Creates a reply "comment" to a comment.
+     */
+    public function reply(Request $request, Comment $comment)
+    {
+        $this->authorize('reply', $comment);
+
+        $request->validate([
+            'content' => 'required|string'
+        ]);
+
+        $reply = new Comment;
+        $reply->commenter()->associate($request->user('{{singularSlug}}') ?? $request->user());
+        $reply->commentable()->associate($comment->commentable);
+        $reply->parent()->associate($comment);
+        $reply->comment = $request->get('content');
+        $reply->approved = !config('administrable.comments.approval_required');
+        $reply->save();
+
+        return Redirect::to(URL::previous() . '#comment-' . $reply->getKey());
+    }
+
+    /**
+     * Updates the message of the comment.
+     */
+    public function update(Request $request, Comment $comment)
+    {
+        $this->authorize('update', $comment);
+
+        $request->validate([
+            'content' => 'required|string'
+        ]);
+
+        $comment->update([
+            'comment' => $request->get('content')
+        ]);
+
+        flashy('Votre commentaire a bien été modifié !');
+
+        return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
+    }
+
+    /**
+     * Deletes a comment.
+     */
+    public function destroy(Comment $comment)
+    {
+        $this->authorize('delete', $comment);
+        $comment->delete();
+
+        flashy('Votre commentaire a bien été supprimé !');
+        return back();
+    }
+
+}

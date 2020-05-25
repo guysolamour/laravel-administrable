@@ -47,7 +47,7 @@ class Seo extends Model {
      * @param Model|array $model
      * @return string
      */
-    public static function getTags($model) :string
+    public static function getTags($model) :?string
     {
         if (is_object($model) && method_exists($model,'seo')) {
             return optional($model->seo)->html;

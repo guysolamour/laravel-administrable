@@ -20,6 +20,11 @@
                 </div>
                 {{-- insert sidebar links here --}}
 
+                <div class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.comment.index') }}">
+                        <i class="fa fa-comments"></i><span>Commentaires</span>
+                    </a>
+                </div>
                 <div class="nav-item has-sub">
                     <a href="javascript:void(0)"><i class="fa fa-users"></i><span>{{pluralClass}}</span></a>
                     <div class="submenu-content">

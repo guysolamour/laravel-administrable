@@ -28,28 +28,25 @@ class AdminInstallCommand extends BaseCommand
      * @var array
      */
     protected const DEFAULTS = [
-        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model','Seo'],
-        'migrations'      => ['User','Administrable','Media','Provider','Seo_meta_tag'],
+        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model','Seo','Comment'],
+        'migrations'      => ['User','Administrable','Media','Provider','Seo_meta_tag','Comment'],
         'seeds'           => ['Configuration','Seeder'],
         'controllers'     => [
-            'front'       => ['ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification','Home','Page','Redirect'],
-            'back'        => ['ConfirmPassword','ForgotPassword','Login','Register','ResetPassword','Verification','Configuration','Home','Media','Guard'],
+            'front'       => ['Comment','ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification','Home','Page','Redirect'],
+            'back'        => ['Comment','ConfirmPassword','ForgotPassword','Login','Register','ResetPassword','Verification','Configuration','Home','Media','Guard'],
         ],
         'forms' => [
             'front' => [],
-            'back'  => ['Configuration','Create','Guard','ResetPassword']
+            'back'  => ['Comment','Configuration','Create','Guard','ResetPassword']
         ],
         'routes' => [
-            'front' => ['Auth','Default','Social'],
-            'back'  => ['Auth','Configuration','Media','Other','Profile']
+            'front' => ['Auth','Default','Social', 'Comment'],
+            'back'  => ['Auth','Configuration','Media','Other','Profile','Comment']
         ],
-        'breadcrumbs' => [
-            'front' => [],
-            'back'  => ['Guard']
-        ],
+
         'views' => [
-            'front' => ['Auth','Dashboard','Home','Layouts','Legalmention','Partials'],
-            'back'  => ['Auth','Configuration','Dashboard','Guard','Layouts','Media','Partials']
+            'front' => ['Auth','Dashboard','Home','Layouts','Legalmention','Partials','Comments'],
+            'back'  => ['Auth','Configuration','Dashboard','Guard','Layouts','Media','Partials','Comments']
         ],
         'emails' => [
             'front' => [],
@@ -269,6 +266,12 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Traits created at ' . $traits_path);
 
 
+        // Policies
+        $this->info(PHP_EOL . 'Creating Policies...');
+        $policies_path = $this->loadPolicies();
+        $this->info('Policies created at ' . $policies_path);
+
+
         // Forms
         $this->info(PHP_EOL . 'Creating Forms...');
         $forms_path = $this->loadForms();
@@ -395,8 +398,8 @@ class AdminInstallCommand extends BaseCommand
     protected function loadHelpers()
     {
         // Helper
-        $this->call('make:helper', [
-            'name' => 'helpers'
+        $this->call('cmd:make:helper', [
+            'name' => 'helpers',
         ]);
 
         $helper_path = app_path('Helpers');
@@ -723,6 +726,21 @@ class AdminInstallCommand extends BaseCommand
 
 
         return $controllers_path;
+    }
+
+    protected function loadPolicies()
+    {
+
+        $policies_path = app_path('/Policies');
+
+        $policies_stub = $this->filesystem->files(self::TPL_PATH . '/policies');
+
+        $this->compliedAndWriteFile(
+            $policies_stub,
+            $policies_path
+        );
+
+        return $policies_path;
     }
 
     protected function loadTraits()
@@ -1193,7 +1211,7 @@ class AdminInstallCommand extends BaseCommand
 
         // Create database
         if($this->option('create_db')){
-            $this->call('commands:db:create',[
+            $this->call('cmd:db:create',[
                 '--connection' => config('database.default')
             ]);
         }
@@ -1380,6 +1398,57 @@ class AdminInstallCommand extends BaseCommand
     }
 
 
+    protected function loadProviders()
+    {
+
+        $provider_path = app_path('/Providers');
+
+        $provider_stub = $this->filesystem->files(self::TPL_PATH . '/providers');
+
+        $this->compliedAndWriteFile(
+            $provider_stub,
+            $provider_path
+        );
+
+        $blade_sp = 'BladeServiceProvider';
+        $blade_sp_path = $provider_path. '/' . $blade_sp . '.php';
+
+        $this->call('cmd:make:provider', [
+            'name'       => $blade_sp,
+            '--register' => true
+        ]);
+        $search = <<<TEXT
+            public function boot()
+            {
+        TEXT;
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($blade_sp_path),
+            $search,
+            <<<TEXT
+            $search
+                   Blade::include('{$this->parseName()['{{frontLowerNamespace}}']}.comments.comments', 'comments');
+                   Blade::include('{$this->parseName()['{{backLowerNamespace}}']}.partials._seoform', 'seoForm');
+            TEXT,
+            $blade_sp_path
+        );
+
+        $search = 'use Illuminate\Support\ServiceProvider;';
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($blade_sp_path),
+            $search,
+            <<<TEXT
+            use Illuminate\Support\Facades\Blade;
+            $search
+            TEXT,
+            $blade_sp_path
+        );
+
+        return $provider_path;
+    }
+
+
     protected function loadUtilPackage()
     {
 
@@ -1387,14 +1456,7 @@ class AdminInstallCommand extends BaseCommand
        $this->callSilent('telescope:install');
        $this->callSilent('migrate');
 
-        $telescope_service_provider_path = app_path('Providers/TelescopeServiceProvider.php');
-        $telescope_service_provider_path_stub = $this->filesystem->get(self::TPL_PATH . '/providers/TelescopeServiceProvider.stub');
-
-        // Update TelescopeServiceProvider
-        $this->compliedAndWriteFile(
-            $telescope_service_provider_path_stub,
-            $telescope_service_provider_path,
-        );
+       $this->loadProviders();
 
         // Backup
         $config_filesystems_path = config_path('filesystems.php');

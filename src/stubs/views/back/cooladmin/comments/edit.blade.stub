@@ -1,9 +1,7 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','Edition ' . $category->name)
-
-
+@section('title','Edition ' . $comment->getCommenterName())
 
 @section('content')
 
@@ -24,13 +22,13 @@
                                     <span>/</span>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a href="{{ route('{{backLowerNamespace}}.category.index') }}">Catégories</a>
+                                    <a href="{{ route('{{backLowerNamespace}}.comment.index') }}">Commentaires</a>
                                 </li>
                                 <li class="list-inline-item seprate">
                                     <span>/</span>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a href="{{ route('{{backLowerNamespace}}.category.show', $category) }}">{{ $category->name }}</a>
+                                    <a href="{{ route('{{backLowerNamespace}}.comment.show', $comment) }}">{{ $comment->getCommenterName() }}</a>
                                 </li>
                                 <li class="list-inline-item seprate">
                                     <span>/</span>
@@ -56,7 +54,7 @@
                         Edition
                     </h3>
                     <div class="card-body p-0">
-                        @include('{{backLowerNamespace}}.categories._form',['edit' => true])
+                        @include('{{backLowerNamespace}}.comments._form',['edit' => true])
                     </div>
                 </div>
             </div>

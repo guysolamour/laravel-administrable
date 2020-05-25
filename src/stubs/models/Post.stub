@@ -3,11 +3,12 @@
 namespace {{namespace}}\{{modelsFolder}};
 
 use {{namespace}}\Traits\SeoableTrait;
+use {{namespace}}\Traits\CommentableTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
 
 class Post extends BaseModel
 {
-    use Sluggable, SeoableTrait;
+    use Sluggable, SeoableTrait, CommentableTrait;
 
     /**
      * The attributes that are mass assignable.
