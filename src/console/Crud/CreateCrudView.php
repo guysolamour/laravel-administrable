@@ -53,6 +53,12 @@ class CreateCrudView
     private $theme;
 
     /**
+     *
+     * @var string
+     */
+    private $icon;
+
+    /**
      * CreateCrudView constructor.
      * @param string $model
      * @param array $fields
@@ -60,7 +66,7 @@ class CreateCrudView
      * @param null|string $slug
      * @param bool $timestamps
      */
-    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false,  $imagemanager)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon)
     {
         $this->model           = $model;
         $this->fields          = $fields;
@@ -70,6 +76,7 @@ class CreateCrudView
         $this->breadcrumb      = $breadcrumb;
         $this->imagemanager    = $imagemanager;
         $this->theme           = $theme;
+        $this->icon            = $icon;
 
         $this->filesystem      = new Filesystem;
     }
@@ -83,7 +90,7 @@ class CreateCrudView
      * @param bool $timestamps
      * @return string
      */
-    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false,  $imagemanager)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon)
     {
         return (new CreateCrudView(
             $model,
@@ -93,7 +100,8 @@ class CreateCrudView
             $theme,
             $slug,
             $timestamps,
-            $imagemanager
+            $imagemanager,
+            $icon
         ))->loadViews();
     }
 
@@ -126,6 +134,7 @@ class CreateCrudView
             '{{modelsFolder}}'         =>  $this->getCrudConfiguration('folder', 'Models'),
             '{{administrableLogo}}'    =>  asset(config('administrable.logo_url')),
             '{{theme}}'                =>  $this->theme,
+            '{{icon}}'                =>  $this->icon,
             '{{breadcrumb}}'           =>  $this->breadcrumb,
             '{{guard}}'                =>  config('administrable.guard', 'admin')
         ];

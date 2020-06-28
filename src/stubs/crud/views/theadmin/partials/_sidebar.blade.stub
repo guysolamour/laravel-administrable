@@ -1,6 +1,6 @@
                      <li class="menu-item {{backLowerNamespace}}.{{singularSlug}}.index">
                         <a class="menu-link" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
-                            <span class="icon far fa-folder"></span>
+                            <span class="icon far {{icon}}"></span>
                             <span class="title">{{pluralClass}}</span>
                         </a>
                     </li>

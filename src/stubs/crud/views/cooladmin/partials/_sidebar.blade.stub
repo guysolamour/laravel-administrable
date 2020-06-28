@@ -1,4 +1,4 @@
  <li class="{{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
                     <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
-                        <i class="far  fa-folder"></i>{{pluralClass}}</a>
+                        <i class="far  {{icon}}"></i>{{pluralClass}}</a>
                 </li>

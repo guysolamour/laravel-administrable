@@ -57,6 +57,10 @@ class MakeCrudCommand extends BaseCommand
      * @var string
      */
     protected $slug;
+    /**
+     * @var string
+     */
+    protected $icon = 'fa-folder';
 
 
     /**
@@ -141,7 +145,8 @@ class MakeCrudCommand extends BaseCommand
 
 
             $this->setConfigOption([
-                'slug', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans'
+                'slug', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans',
+                'icon'
             ]);
             $this->setDefaultTypeAndRule();
 
@@ -615,7 +620,8 @@ class MakeCrudCommand extends BaseCommand
                 $this->theme,
                 $this->slug,
                 $this->timestamps,
-                $this->imagemanager
+                $this->imagemanager,
+                $this->icon
             );
             $this->info('Views created at ' . $view_path);
             $progress->advance();

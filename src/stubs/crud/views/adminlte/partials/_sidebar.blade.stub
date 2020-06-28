@@ -1,6 +1,6 @@
                      <li class="nav-item">
                         <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
-                          <i class="nav-icon fa fa-folder icon"></i>
+                          <i class="nav-icon fa {{icon}} icon"></i>
                           <p>
                             {{pluralClass}}
                           </p>
