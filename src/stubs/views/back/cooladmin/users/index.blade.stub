@@ -1,0 +1,181 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Utilisateurs')
+
+
+
+@section('content')
+
+<section class="au-breadcrumb m-t-75">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="au-breadcrumb-content">
+                        <div class="au-breadcrumb-left">
+                            <span class="au-breadcrumb-span">Vous êtes ici:</span>
+                            <ul class="list-unstyled list-inline au-breadcrumb__list">
+                                <li class="list-inline-item">
+                                    <a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a>
+                                </li>
+                                <li class="list-inline-item seprate">
+                                    <span>/</span>
+                                </li>
+                                <li class="list-inline-item active">Utilisateurs</li>
+                            </ul>
+                        </div>
+                        <a href="{{ route('{{backLowerNamespace}}.user.create') }}" class="au-btn au-btn-icon au-btn--green">
+                            <i class="zmdi zmdi-plus"></i>Ajouter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="main-content mb-5 pt-5">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                </div>
+                <div class="col-md-12">
+                    <!-- DATA TABLE -->
+                    <h3 class="title-5 m-b-35">
+                        Utilisateurs
+                    </h3>
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left">
+
+                        </div>
+                        <div class="table-data__tool-right">
+                            <a href="#" class="au-btn au-btn-icon btn-danger au-btn--small d-none"
+                                data-model="\{{namespace}}\{{modelsFolder}}\User" id="delete-all"><i
+                                    class="fa fa-trash"></i> Tous supprimer</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive table-responsive-data2">
+                        <table class="table table-data2" id='list'>
+                            <thead>
+                                <th>
+                                    <label class="au-checkbox" for="check-all">
+                                        <input type="checkbox" id="check-all">
+                                        <span class="au-checkmark"></span>
+                                    </label>
+                                </th>
+                                <th>#</th>
+                                <th>Nom</th>
+                                <th>Pseudo</th>
+                                <th>Email</th>
+                                <th>Date ajout</th>
+
+                                <th>Actions</th>
+                            </thead>
+                            <tbody>
+                               @foreach($users as $user)
+                                <tr class="tr-shadow">
+                                    <td>
+                                        <label class="au-checkbox" for="check-{{ $user->id }}">
+                                            <input type="checkbox" data-check data-id="{{ $user->id }}"
+                                                id="check-{{ $user->id }}">
+                                            <span class="au-checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->pseudo }}</td>
+                                    <td>{{ $user->email }}</td>
+
+                                    <td>{{ $user->created_at->format('d/m/Y h:i') }}</td>
+
+                                    <td>
+                                        <div class="table-data-feature">
+                                            <a href="{{ route('{{backLowerNamespace}}.user.show', $user) }}"
+                                                class="item" data-toggle="tooltip" data-placement="top" title="Voir">
+                                                <i class="zmdi zmdi-mail-send"></i>
+                                            </a>
+                                          <a  class="chosen-single item" data-toggle="tooltip" data-placement="top" title="Changer de mot de passe" onclick="event.preventDefault();$('#changePassword{{ $user->id }}').modal('show')">
+                                                <i class="zmdi zmdi-lock"></i>
+                                            </a>
+
+                                            <a href="{{ route('{{backLowerNamespace}}.user.edit', $user) }}" class="item" data-toggle="tooltip" data-placement="top" title="Editer" data-original-title="Editer">
+                                                <i class="zmdi zmdi-edit"></i>
+                                            </a>
+
+                                            <a href="{{ route('{{backLowerNamespace}}.user.destroy', $user) }}"
+                                                class="chosen-single item " data-toggle="tooltip" data-placement="top" title="Supprimer"
+                                                data-method="delete"
+                                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
+                                                <i class="zmdi zmdi-delete"></i>
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                @endforeach
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END DATA TABLE -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@foreach($users as $user)
+<div class="modal fade" id="changePassword{{ $user->id }}" tabindex="-1" role="dialog"
+    aria-labelledby="changePassword{{ $user->id }}Title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePassword{{ $user->id }}Title">Changer le mot de passe <span
+                        class="font-weight-bold">({{ $user->name }})</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('{{backLowerNamespace}}.user.changepassword', $user) }}" method="POST">
+                <div class="modal-body">
+                    @method('put')
+                    @csrf
+                    <div class="form-group">
+                        <label for="">Utilisateur </label>
+                        <input type="text" class="form-control" value="{{ $user->name }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nouveau mot de passe <span class="text-danger">*</span> </label>
+                        <input type="password" name="password"
+                            class="form-control @error('password') is-invalid @enderror" required minlength="8">
+                        @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="">Confirmer le mot de passe <span class="text-danger">*</span> </label>
+                        <input type="password" name="password_confirmation"
+                            class="form-control @error('password_confirmation') is-invalid @enderror" required
+                            minlength="8">
+                        @error('password_confirmation')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+@endsection

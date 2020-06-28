@@ -1,0 +1,4 @@
+  <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}" class="au-btn au-btn-icon au-btn--green">
+                            <i class="zmdi zmdi-plus"></i>Ajouter</a>
+
+

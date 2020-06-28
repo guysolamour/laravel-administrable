@@ -1,0 +1,28 @@
+  /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\{{singularClass}}  ${{singularSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function edit({{singularClass}} ${{singularSlug}})
+    {
+        $form = $this->getForm(${{singularSlug}});
+        return view('{{backLowerNamespace}}.{{pluralSlug}}.edit', compact('{{singularSlug}}','form'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{namespace}}\{{modelsFolder}}\{{singularClass}}  ${{singularSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, {{singularClass}} ${{singularSlug}})
+    {
+        $form = $this->getForm(${{singularSlug}});
+        $form->redirectIfNotValid();
+        ${{singularSlug}}->update($request->all());
+
+        flashy('L\' élément a bien été modifié');
+        return redirect()->route('{{backLowerNamespace}}.{{singularSlug}}.index');
+    }

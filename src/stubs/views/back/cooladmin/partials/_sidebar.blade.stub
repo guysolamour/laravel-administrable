@@ -24,6 +24,10 @@
                     <a href="{{ route('{{backLowerNamespace}}.comment.index') }}">
                         <i class="far  fa-comments"></i>Commentaires</a>
                 </li>
+                 <li class="{{ set_active_link('{{backLowerNamespace}}.user.index') }}">
+                    <a href="{{ route('{{backLowerNamespace}}.user.index') }}">
+                        <i class="far  fa-user"></i>Utilisateurs</a>
+                </li>
 
                 <li class="has-sub {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index','{{backLowerNamespace}}.{{singularSlug}}.profile','{{backLowerNamespace}}.{{singularSlug}}.create') }}">
                     <a class="js-arrow" href="#">

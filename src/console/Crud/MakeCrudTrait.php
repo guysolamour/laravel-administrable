@@ -1,191 +1,203 @@
 <?php
 namespace Guysolamour\Administrable\Console\Crud;
 
-
-use Illuminate\Container\Container;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Guysolamour\Administrable\Console\CommandTrait;
 
 trait MakeCrudTrait
 {
 
-    public   $TPL_PATH = __DIR__ . '/../../stubs/crud';
+    use CommandTrait;
 
-    protected function parseName(string $name)
-    {
-        return $parsed = array(
-            '{{namespace}}' => $this->getNamespace(),
-            '{{pluralCamel}}' => Str::plural(Str::camel($name)),
-            '{{pluralSlug}}' => Str::plural(Str::slug($name)),
-            '{{pluralSnake}}' => Str::plural(Str::snake($name)),
-            '{{pluralClass}}' => Str::plural(Str::studly($name)),
-            '{{singularCamel}}' => Str::singular(Str::camel($name)),
-            '{{singularSlug}}' => Str::singular(Str::slug($name)),
-            '{{singularSnake}}' => Str::singular(Str::snake($name)),
-            '{{singularClass}}' => Str::singular(Str::studly($name)),
-        );
-    }
 
-    private function getRelatedModelWithoutNamespace(array $field) :string
+    /**
+     * Parse guard name
+     * Get the guard name in different cases
+     * @param string $name
+     * @return array
+     */
+    protected function parseName(?string $name = null): array
     {
-        return $this->modelNameWithoutNamespace($this->getRelatedModel($field));
-    }
+        if (!$name)
+            $name = $this->guard;
 
-    private function parseMorphsName(array $field)
-    {
         return [
-            '{{pluralMorphField}}' => Str::plural(Str::slug($this->getRelatedModelWithoutNamespace($field))),
-            '{{singularMorphField}}' => Str::singular(Str::slug($this->getRelatedModelWithoutNamespace($field))),
-            '{{singularMorphClass}}' => Str::singular(Str::studly($this->getRelatedModelWithoutNamespace($field))),
-            '{{singularMorphSlug}}' => Str::singular(Str::slug($this->getRelatedModelWithoutNamespace($field))),
+            '{{namespace}}'            =>  $this->getNamespace(),
+            '{{pluralCamel}}'          =>  Str::plural(Str::camel($name)),
+            '{{pluralSlug}}'           =>  Str::plural(Str::slug($name)),
+            '{{pluralSnake}}'          =>  Str::plural(Str::snake($name)),
+            '{{pluralClass}}'          =>  Str::plural(Str::studly($name)),
+            '{{singularCamel}}'        =>  Str::singular(Str::camel($name)),
+            '{{singularSlug}}'         =>  Str::singular(Str::slug($name)),
+            '{{singularSnake}}'        =>  Str::singular(Str::snake($name)),
+            '{{singularClass}}'        =>  Str::singular(Str::studly($name)),
+            '{{frontNamespace}}'       =>  ucfirst(config('administrable.front_namespace')),
+            '{{frontLowerNamespace}}'  =>  Str::lower(config('administrable.front_namespace')),
+            '{{backNamespace}}'        =>  ucfirst(config('administrable.back_namespace')),
+            '{{backLowerNamespace}}'   =>  Str::lower(config('administrable.back_namespace')),
+            '{{modelsFolder}}'         =>  $this->getCrudConfiguration('folder','Models'),
+            '{{administrableLogo}}'    =>  asset(config('administrable.logo_url')),
+            '{{theme}}'                =>  $this->theme,
+            '{{guard}}'                =>  config('administrable.guard','admin')
         ];
     }
 
-    /**
-     * Get project namespace
-     * Default: App
-     * @return string
-     */
-    protected function getNamespace()
+    protected function hasAction(string $key): bool
     {
-        $namespace = Container::getInstance()->getNamespace();
-        return rtrim($namespace, '\\');
+        return in_array($key, $this->actions);
     }
 
-    /**
-     * @param  string $path
-     */
-    private function createDirIfNotExists(string $path): void
+
+
+    protected function parseMorphsName(array $field)
     {
-        $dir = dirname($path);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
+        return [
+            '{{pluralMorphField}}'   =>  Str::plural(Str::slug($this->getRelatedModelWithoutNamespace($field))),
+            '{{singularMorphField}}' =>  Str::singular(Str::slug($this->getRelatedModelWithoutNamespace($field))),
+            '{{singularMorphClass}}' =>  Str::singular(Str::studly($this->getRelatedModelWithoutNamespace($field))),
+            '{{singularMorphSlug}}'  =>  Str::singular(Str::slug($this->getRelatedModelWithoutNamespace($field))),
+        ];
     }
 
-    private function getFieldType($field)
+    protected function parseRelationName(string $model_name, string $related_full_name): array
     {
+
+        // on recupere le nom du modele sans le namespace
+        $related = $this->modelNameWithoutNamespace($related_full_name);
+
+        return [
+            '{{modelPluralSlug}}'       => Str::plural(Str::slug($model_name)),
+            '{{modelPluralClass}}'      => Str::plural(Str::studly($model_name)),
+            '{{modelSingularClass}}'    => Str::studly($model_name),
+            '{{modelSingularSlug}}'     => Str::singular(Str::slug($model_name)),
+            '{{relatedSingularClass}}'  => Str::singular(Str::studly($related)),
+            '{{relatedPluralSlug}}'     => Str::plural(Str::slug($related)),
+            '{{relatedPluralClass}}'    => Str::plural(Str::studly($related)),
+            '{{relatedSingularSlug}}'   => Str::singular(Str::slug($related)),
+            // '{{relatedNamespace}}'  => $this->getRelatedNamespace($related_full_name),
+        ];
+    }
+
+    protected function getMigrationFieldType(array $field) :string
+    {
+        $type = $this->getNonRelationType($field);
         // si la valeur est un tableau c'est que nous avons un champ de type relation
         // pas la paine d'aller plus loin
-        if ($this->isRelationField($field)) return '';
+        if ($this->isRelationField($type)) return '';
 
-        if ($field === 'image') {
+        if ($type === 'image') {
             return 'string';
         }
-        return strtolower($field);
+        return Str::lower($type);
     }
 
 
-    /**
-     * @param string|array $type
-     * @return bool
-     */
-    private function isRelationField($type) :bool
-    {
-
-        return is_array($type);
-    }
 
 
-    private function getMorphFieldName ($field)
+
+    protected function getMorphFieldName($field)
     {
         return Str::plural(Str::slug($this->modelNameWithoutNamespace($this->getRelatedModel($field))));
     }
 
 
-    private function getSingularMorphFieldName ($field)
+    protected function getSingularMorphFieldName($field)
     {
         return Str::singular(Str::slug($this->modelNameWithoutNamespace($this->getRelatedModel($field))));
     }
 
 
-    private function isMorphsFIeld($field) :bool
-    {
-        return $field['name'] === 'morphs';
-    }
 
-    private function isImageFIeld($field) :bool
+    protected function isImageFIeld($field): bool
     {
         return $field['name'] === 'image';
     }
-    /**
-     * @param string $type
-     * @return string
-     */
-    private function getType($type) :string
-    {
 
-        if (
-            $type === 'string' || $type === 'decimal' || $type === 'double' ||
-            $type === 'float')
-        {
-            return 'text';
-        }elseif (
-           $type === 'image')
-        {
-          return 'file';
-        }
-        elseif (
-            $type === 'integer' || $type === 'mediumInteger')
-        {
-            return 'number';
-        } elseif ($type === 'text' || $type === 'mediumText' || $type === 'longText') {
-            return 'textarea';
-        } elseif ($type === 'email') {
-            return 'email';
-        } elseif ($type === 'boolean' || $type === 'enum') {
-            return 'checkbox';
-        } elseif ($type === 'date') {
-            return 'date';
-        } elseif ($type === 'datetime') {
-            return 'datetime';
-        }elseif ($this->isRelationField($type)){
-            return 'entity';
-        }
-        else{
-            return 'text';
-        }
+
+
+
+    protected function translate_field(array $field) :string
+    {
+        return translate_model_field($field['name'], $field['trans'] ?? null);
     }
 
 
-    private function writeFile($path,$content) :bool {
-        if (!file_exists($path)) {
-            file_put_contents($path, $content);
-            return true;
+    public function modelHasTinymceField(array $model = []) :bool
+    {
+        if (empty($model)){
+            $model = $this->fields;
+        }
+
+        foreach ($model as $key =>  $field) {
+            if (is_array($field) && Arr::exists($field, 'tinymce') && $field['tinymce'] == true){
+                return true;
+            }
         }
 
         return false;
     }
 
-    private function modelNameWithoutNamespace(string $model) :string
+
+    protected function hasCrudAction(string $key) :bool
     {
-        $parts = explode('\\', $model);
-        return end($parts);
+        return in_array($key, $this->actions);
     }
 
-    private function getRelatedModel(array $field) :string
+
+
+    protected function isSimpleRelation(array $field) :bool
     {
-        return $field['type']['relation']['model'];
+        return $this->getRelationType($field) === $this->RELATION_TYPES['simple'];
     }
 
-    private function isImagesMorphRelation($field) :bool
+    protected function isSimpleOneToOneRelation(array $field)
     {
-        return $this->getRelatedModel($field) == 'App\\Models\\Image';
+        return
+            $this->isSimpleRelation($field) &&
+            $this->getRelationName($field)   === $this->RELATION_NAMES['simple']['o2o'];
     }
 
-    private function getRelatedModelProperty(array $field) :string
+    protected function isSimpleOneToManyRelation(array $field)
     {
-        return $field['type']['relation']['property'];
+        return
+            $this->isSimpleRelation($field) &&
+            $this->getRelationName($field)   === $this->RELATION_NAMES['simple']['o2m'];
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
-    private function getRelationModelWithoutId(string $name) :string
+    protected function isSimpleManyToOneRelation(array $field)
     {
-        return Arr::first(explode('_', $name));
+        return
+            $this->isSimpleRelation($field) &&
+            $this->getRelationName($field)   === $this->RELATION_NAMES['simple']['m2o'];
     }
 
+    protected function isSimpleManyToManyRelation(array $field)
+    {
+        return
+            $this->isSimpleRelation($field) &&
+            $this->getRelationName($field)   === $this->RELATION_NAMES['simple']['m2m'];
+    }
+
+    protected function isPolymorphicOneToOneRelation(array $field)
+    {
+        return
+            $this->getRelationType($field) === $this->RELATION_TYPES['polymorphic'] &&
+            $this->getRelationName($field)   === $this->RELATION_NAMES['polymorphic']['o2o'];
+    }
+
+    protected function isPolymorphicOneToManyRelation(array $field)
+    {
+        return
+            $this->getRelationType($field) === $this->RELATION_TYPES['polymorphic'] &&
+            $this->getRelationName($field)   === $this->RELATION_NAMES['polymorphic']['o2m'];
+    }
+
+    protected function isPolymorphicManyToOneRelation(array $field)
+    {
+        return
+            $this->getRelationType($field) === $this->RELATION_TYPES['polymorphic'] &&
+            $this->getRelationName($field)   === $this->RELATION_NAMES['polymorphic']['m2o'];
+    }
 
 }

@@ -1,0 +1,7 @@
+  <td>
+                                <div class="form-check">
+                                    <input type="checkbox" data-check class="form-check-input" data-id="{{ ${{singularSlug}}->id }}"
+                                        id="check-{{ ${{singularSlug}}->id }}">
+                                    <label class="form-check-label" for="check-{{ ${{singularSlug}}->id }}"></label>
+                                </div>
+                            </td>

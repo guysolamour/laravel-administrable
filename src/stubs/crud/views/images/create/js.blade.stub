@@ -1,5 +1,0 @@
-<script>
-      $('#imagethumbnail').on('change', function () {
-         $('input#image').val($(this).val())
-      })
-  </script>

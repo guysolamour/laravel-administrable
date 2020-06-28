@@ -1,0 +1,41 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','{{singularClass}}')
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+              {{-- breadcrumb --}}
+        </nav>
+
+    </div>
+
+    <div class="card">
+        <h4 class="card-title">
+            Ajout
+        </h4>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    @include('{{backLowerNamespace}}.{{pluralSlug}}._form')
+                </div>
+                <div class="col-md-4">
+                   {{-- add imagemanager here --}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@endsection
+
+
+
+

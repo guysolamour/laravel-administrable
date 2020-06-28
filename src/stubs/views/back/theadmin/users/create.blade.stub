@@ -1,0 +1,56 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Ajout')
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+              <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                  <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.user.index') }}">Utilisateurs</a></li>
+                  <li class="breadcrumb-item active">Ajout</li>
+              </ol>
+        </nav>
+
+    </div>
+
+    <div class="card">
+        <h4 class="card-title">
+            Ajout
+        </h4>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    @include('{{backLowerNamespace}}.users._form')
+                </div>
+                <div class="col-md-4">
+                    @include('{{backLowerNamespace}}.media._imagemanager',[
+                        'front_image_label' => 'Photo de profil',
+                        // 'back_image_label' => 'Image à la une (2)',
+                        // 'images_label' => 'Gallerie',
+
+                        'model'             => new {{namespace}}\{{modelsFolder}}\User,
+                        'model_name'        => {{namespace}}\{{modelsFolder}}\User::class,
+                        'front_image'       => true,
+                        'back_image'        => false,
+                        'images'            => false,
+                        'form_name'         => get_form_name({{namespace}}\{{modelsFolder}}\User::class),
+                    ])
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@endsection
+
+
+
+

@@ -1,0 +1,5 @@
+    public function {{relatedPluralSlug}}()
+    {
+      return $this->hasMany({{relatedSingularClass}}::class);
+    }
+

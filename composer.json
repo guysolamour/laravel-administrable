@@ -30,7 +30,8 @@
     "spatie/laravel-backup": "^6.9",
     "spatie/laravel-cookie-consent": "^2.12",
     "spatie/laravel-honeypot": "^2.0",
-    "spatie/laravel-medialibrary": "^8.0.0"
+    "spatie/laravel-medialibrary": "^8.0.0",
+    "symfony/yaml": "^5.0"
   },
   "require-dev": {
     "orchestra/testbench": "^5.0",

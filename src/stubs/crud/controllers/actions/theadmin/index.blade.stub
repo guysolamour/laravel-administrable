@@ -1,0 +1,11 @@
+ /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        ${{pluralSlug}} = {{singularClass}}::last()->get();
+        $form = $this->getForm();
+        return view('{{backLowerNamespace}}.{{pluralSlug}}.index', compact('{{pluralSlug}}','form'));
+    }

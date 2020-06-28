@@ -2,17 +2,24 @@
 
 return [
 
-    'app_first_name' => config('app.first_name', 'Admin'),
-    'app_last_name' => config('app.last_name', 'Admin'),
-    'app_short_name' => config('app.short_name', 'Lvl'),
+    'app_first_name'   => config('app.first_name', 'Admin'),
+    'app_last_name'    => config('app.last_name', 'Admin'),
+    'app_short_name'   => config('app.short_name', 'Lvl'),
 
      /**
       * Thèmes disponiblent adminlte,theadmin,cooladmin,tabler,themekit
       * Le thème ne doit pas être changé une fois que l'installation a été faite
       */
-    'theme' => 'adminlte',
+    'theme' => 'themekit',
 
-    'logo_url' => asset('img/logo-administrable.png'),
+    /**
+     * Le guard utilise pour l'installation. Par défaut le valeur est admin
+     * Cette valeur est aussi utilisée pour générer le crud. Après installation cette
+     * valeur ne doit plus etre changé au risque de péter les vues du crud
+     */
+    'guard' => 'client',
+
+    'logo_url' => 'img/logo-administrable.png',
 
     'auth_prefix_path' => 'administrable',
 
@@ -54,7 +61,7 @@ return [
         ],
         'category' => [
             'name' => ['name' => 'name', 'type' => 'string', 'rules' => 'nullable', 'nullable' => true,],
-            'title' => ['name' => 'title','default' => 'salut','rules' => 'nullable'],
+            'title' => ['name' => 'title','' => 'salut','rules' => 'nullable'],
             'image' => ['name' => 'image','type' => 'image'],
             'description' =>['name' => 'description', 'type' => 'text', 'rules' => 'required'],
             'slug' => 'title',

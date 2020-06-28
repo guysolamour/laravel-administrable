@@ -1,0 +1,10 @@
+<td>
+      <div class="custom-control custom-checkbox">
+          <input type="checkbox" data-check
+              class="custom-control-input"
+              data-id="{{ ${{singularSlug}}->id }}"
+              id="check-{{ ${{singularSlug}}->id }}">
+          <label class="custom-control-label"
+              for="check-{{ ${{singularSlug}}->id }}"></label>
+      </div>
+  </td>

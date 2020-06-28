@@ -1,0 +1,2 @@
+<a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.create') }}" class="btn btn-success">
+                <i class="fa fa-plus"></i>&nbsp; Ajouter</a>

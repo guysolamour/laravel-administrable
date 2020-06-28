@@ -32,6 +32,14 @@
               </p>
             </a>
           </li>
+            <li class="nav-item">
+            <a href="{{ route('{{backLowerNamespace}}.user.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.comment.index') }}">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Utilisateurs
+              </p>
+            </a>
+          </li>
 
            <li class="nav-item has-treeview">
             <a href="#" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index','{{backLowerNamespace}}.{{singularSlug}}.profile','{{backLowerNamespace}}.{{singularSlug}}.create') }}">

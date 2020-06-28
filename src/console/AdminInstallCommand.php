@@ -4,17 +4,17 @@ namespace Guysolamour\Administrable\Console;
 
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
-use Illuminate\Support\Facades\Artisan;
 
 
 class AdminInstallCommand extends BaseCommand
 {
-    protected  const TPL_PATH = __DIR__. '/../stubs';
+
+    use CommandTrait;
 
     /**
      * @var string
      */
-    protected  $name = '';
+    protected  $guard = '';
 
 
     /**
@@ -30,23 +30,23 @@ class AdminInstallCommand extends BaseCommand
     protected const DEFAULTS = [
         'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model','Seo','Comment'],
         'migrations'      => ['User','Administrable','Media','Provider','Seo_meta_tag','Comment'],
-        'seeds'           => ['Configuration','Seeder'],
+        'seeds'           => ['Configuration','Seeder','User'],
         'controllers'     => [
             'front'       => ['Comment','ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification','Home','Page','Redirect'],
-            'back'        => ['Comment','ConfirmPassword','ForgotPassword','Login','Register','ResetPassword','Verification','Configuration','Home','Media','Guard'],
+            'back'        => ['User','Comment','ConfirmPassword','ForgotPassword','Login','Register','ResetPassword','Verification','Configuration','Home','Media','Guard'],
         ],
         'forms' => [
             'front' => [],
-            'back'  => ['Comment','Configuration','Create','Guard','ResetPassword']
+            'back'  => ['User','Comment','Configuration','Create','Guard','ResetPassword']
         ],
         'routes' => [
             'front' => ['Auth','Default','Social', 'Comment'],
-            'back'  => ['Auth','Configuration','Media','Other','Profile','Comment']
+            'back'  => ['User','Auth','Configuration','Media','Other','Profile','Comment']
         ],
 
         'views' => [
             'front' => ['Auth','Dashboard','Home','Layouts','Legalmention','Partials','Comments'],
-            'back'  => ['Auth','Configuration','Dashboard','Guard','Layouts','Media','Partials','Comments']
+            'back'  => ['Users','Auth','Configuration','Dashboard','Guard','Layouts','Media','Partials','Comments']
         ],
         'emails' => [
             'front' => [],
@@ -95,7 +95,7 @@ class AdminInstallCommand extends BaseCommand
      * @var string
      */
     protected $signature = 'administrable:install
-                                {name=admin : Name of the guard }
+                                {guard? : Name of the guard }
                                 {--g|generate=Mailbox,Testimonial,Post : Default models crud to generate }
                                 {--p|preset=vue : Ui preset to use }
                                 {--m|model=Models : Models folder name inside app directory }
@@ -106,7 +106,7 @@ class AdminInstallCommand extends BaseCommand
                             ';
 
 
-    protected $description = 'Install admin package';
+    protected $description = 'Install administrable package';
 
 
     protected function init()
@@ -116,12 +116,13 @@ class AdminInstallCommand extends BaseCommand
             throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
         }
 
-        $this->name = strtolower($this->argument('name'));
+        $this->guard = $this->getGuard();
+        // $this->guard = strtolower($this->argument('name'));
 
         $this->models_folder_name = ucfirst($this->option('model'));
 
         /**
-         * Le filter permet de retirer les élémenst vides du tableau comme des , simples
+         * Le filter permet de retirer les éléments vides du tableau comme des , simples
          */
         $models = array_filter(explode(',', $this->option('generate')));
 
@@ -153,12 +154,14 @@ class AdminInstallCommand extends BaseCommand
         $theme = $this->option('theme') ? strtolower($this->option('theme')) : strtolower(config('administrable.theme','theadmin'));
 
 
+
         if(! in_array($theme, $this->themes)){
             throw new \Exception(sprintf('Le thème {%s} n\'est pas disponible. Les thèmes disponiblent sont {%s}', $theme, join(',', $this->themes)));
         }
 
 
         $this->theme = $theme;
+
 
     }
 
@@ -174,7 +177,7 @@ class AdminInstallCommand extends BaseCommand
         // Passer des options pour generer les articles, mentions legales, temoignages en option
 
         $this->callSilent('multi-auth:install', [
-            'name'    => $this->name,
+            'name'    => $this->guard,
         ]);
 
         // Gerer l'authentification
@@ -187,13 +190,12 @@ class AdminInstallCommand extends BaseCommand
         //  Administrable yaml file
         $administrable_path = $this->info(PHP_EOL . 'Creating models administrable crud configuration yaml file');
         $this->loadCrudConfiguration();
-        $this->info('Administrable crud configuration yaml ' . $administrable_path);
+        $this->info('Administrable crud configuration yaml created at' . $administrable_path);
 
 
         // Helpers
-        $helper_path = $this->info(PHP_EOL . 'Creating Helper...');
+        $this->info(PHP_EOL . 'Creating Helper...');
         $this->loadHelpers();
-        $this->info('Helper created at ' . $helper_path);
 
 
         // Models
@@ -325,7 +327,7 @@ class AdminInstallCommand extends BaseCommand
 
 
         // Move User|Guard={admin} To Models Directory
-        $this->info("Moving User.php and ". ucfirst($this->name) . ".php to app/{$this->models_folder_name} folder");
+        $this->info("Moving User.php and ". ucfirst($this->guard) . ".php to app/{$this->models_folder_name} folder");
         $this->moveDefaultModelsToNewModelsDirectory();
 
 
@@ -345,12 +347,13 @@ class AdminInstallCommand extends BaseCommand
 
 
         // Seed Database
-        if($this->option('seed')){
+        if ($this->option('seed')) {
             $this->info(PHP_EOL . 'Seeding database...');
             $this->call('db:seed');
         }
 
     }
+
 
 
     protected function publishAssets()
@@ -379,17 +382,55 @@ class AdminInstallCommand extends BaseCommand
 
     }
 
+    protected function getGuard() :string
+    {
+        if ($this->argument('guard')) {
+            return strtolower($this->argument('guard'));
+        }
+
+        return config('administrable.guard');
+    }
+
 
     protected function loadCrudConfiguration()
     {
         $path = base_path('administrable.yaml');
 
-        $helper_stub = $this->filesystem->get(self::TPL_PATH . '/crud/configuration/administrable.stub');
+        $stub = $this->filesystem->get(self::TPL_PATH . '/crud/configuration/administrable.stub');
 
-        $this->writeFile(
-            $this->compliedFile($helper_stub, false),
+        $this->compliedAndWriteFile (
+            $stub,
             $path
         );
+
+
+        if ($this->filesystem->exists(config_path('administrable.php'))) {
+            $config_path = config_path('administrable.php');
+        } else {
+            $config_path = self::BASE_PATH . '/config/administrable.php';
+        }
+
+
+        $theme = config('administrable.theme');
+        if ($theme !== $this->theme) {
+            $this->replaceAndWriteFile(
+                $this->filesystem->get($config_path),
+                "'theme' => '{$theme}',",
+                "'theme' => '{$this->theme}',",
+                $config_path
+            );
+        }
+
+        // save guard in config file
+        $guard = config('administrable.guard');
+        if ($guard !== $this->guard) {
+            $this->replaceAndWriteFile(
+                $this->filesystem->get($config_path),
+                "'guard' => '{$guard}',",
+                "'guard' => '{$this->guard}',",
+                $config_path
+            );
+        }
 
         return $path;
     }
@@ -626,7 +667,7 @@ class AdminInstallCommand extends BaseCommand
         $migrations_to_create = array_merge(self::DEFAULTS['migrations'], $this->crud_models);
 
 
-        $migrations = array_filter($migrations, function($migration) use($migrations_to_create) {
+        $migrations = array_filter($migrations, function($migration) use ($migrations_to_create) {
             /**
              * On recupere le nom de la migration grace au model
              */
@@ -867,13 +908,13 @@ class AdminInstallCommand extends BaseCommand
 
         $this->writeFile(
             $complied,
-            app_path('Providers/RouteServiceProvider.php')
+            app_path('Providers/RouteServiceProvider.php'),
         );
 
         // Suppression des fichiers de routing de base
         $this->filesystem->delete([
             base_path('routes/web.php'),
-            base_path("routes/{$this->name}.php"),
+            base_path("routes/{$this->guard}.php"),
         ]);
 
         $this->compliedAndWriteFile(
@@ -1158,8 +1199,8 @@ class AdminInstallCommand extends BaseCommand
             $this->filesystem->get($env_path),
             $search = "APP_ENV",
             <<<TEXT
-            APP_FIRST_NAME={$this->name}
-            APP_LAST_NAME={$this->name}
+            APP_FIRST_NAME={$this->guard}
+            APP_LAST_NAME={$this->guard}
             APP_SHORT_NAME=lvl
             {$search}
             TEXT,
@@ -1202,7 +1243,7 @@ class AdminInstallCommand extends BaseCommand
         $this->replaceAndWriteFile(
             $this->filesystem->get($env_path),
             "MAIL_FROM_ADDRESS=null",
-            "MAIL_FROM_ADDRESS={$this->name}@administrable.com",
+            "MAIL_FROM_ADDRESS={$this->guard}@administrable.com",
             $env_path
         );
 
@@ -1244,7 +1285,7 @@ class AdminInstallCommand extends BaseCommand
     {
         $locales_path = self::TPL_PATH . '/locales/' . $this->option('locale');
 
-        if(!$this->filesystem->exists($locales_path)){
+        if ($this->filesystem->exists(resource_path("lang/{$this->option('locale')}"))) {
             return;
         }
 
@@ -1254,14 +1295,18 @@ class AdminInstallCommand extends BaseCommand
             resource_path("lang")
         );
 
+
         $locale_json = self::TPL_PATH . '/locales/' . '/json/' .  $this->option('locale') . '.json';
-        if($this->filesystem->exists($locale_json)){
-            $locale_json_stub = $this->filesystem->get($locale_json);
-            $this->compliedAndWriteFile(
-                $locale_json_stub,
-                resource_path("lang/") . $this->option('locale') . '.json'
-            );
+        $locale_path = resource_path("lang/") . $this->option('locale') . '.json';
+        if ($this->filesystem->exists($locale_path)) {
+            return;
         }
+
+        $locale_json_stub = $this->filesystem->get($locale_json);
+        $this->compliedAndWriteFile(
+            $locale_json_stub,
+            $locale_path
+        );
 
         // change locale configuration in config file
         $config_path = config_path('app.php');

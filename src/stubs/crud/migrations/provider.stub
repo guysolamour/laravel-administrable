@@ -13,8 +13,10 @@ class Create{{pluralClass}}Table extends Migration
      */
     public function up()
     {
-        Schema::create('{{pluralSnake}}', function (Blueprint $table) {
-            $table->bigIncrements('id');
+         Schema::create('{{pluralSnake}}', function (Blueprint $table) {
+           $table->id();
+
+
 
         });
     }

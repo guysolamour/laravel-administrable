@@ -1,4 +1,0 @@
-    public function {{modelSingularSlug}}()
-    {
-      return $this->hasOne(\App\Models\{{modelSingularClass}}::class);
-    }

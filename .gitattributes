@@ -8,6 +8,9 @@
 /.styleci.yml export-ignore
 /.sensiolabs.yml export-ignore
 /.coveralls.yml export-ignore
+*.php linguist-detectable=true
+*.html linguist-detectable=true
+*.js linguist-detectable=true
 /phpunit.xml export-ignore
 /CHANGELOG-* export-ignore
 /CONTRIBUTING.md export-ignore

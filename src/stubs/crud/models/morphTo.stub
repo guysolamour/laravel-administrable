@@ -1,0 +1,4 @@
+    public function {{morphFieldName}}able()
+    {
+        return $this->morphTo();
+    }

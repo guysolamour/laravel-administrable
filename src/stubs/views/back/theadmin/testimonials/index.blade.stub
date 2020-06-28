@@ -31,7 +31,7 @@
                     <div class="btn-group">
                         <a href="{{ route('{{backLowerNamespace}}.testimonial.create') }}" class="btn btn-sm btn-label btn-round btn-primary"><label><i
                                     class="ti-plus"></i></label> Ajouter</a>
-                        <a href="#" class="btn btn-sm btn-label btn-round btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Testimonial"
+                        <a href="#" class="btn btn-sm btn-label btn-round btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\{{singularClass}}"
                             id="delete-all"><label><i class="fa fa-trash"></i></label> Tous supprimer</a>
 
                     </div>

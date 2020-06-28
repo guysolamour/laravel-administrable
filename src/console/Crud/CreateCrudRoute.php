@@ -1,11 +1,14 @@
 <?php
 namespace Guysolamour\Administrable\Console\Crud;
 
+use Illuminate\Filesystem\Filesystem;
+
 
 class CreateCrudRoute
 {
 
     use MakeCrudTrait;
+
     /**
      * @var string
      */
@@ -14,26 +17,61 @@ class CreateCrudRoute
      * @var array
      */
     private $fields;
+    /**
+     * @var array
+     */
+    private $actions;
+    /**
+     * @var string
+     */
+    private $breadcrumb;
+    /**
+     * @var string
+     */
+    private $theme;
+    /**
+     * @var string
+     */
+    private $slug;
+    /**
+     * @var bool
+     */
+    private $timestamps;
+    /**
+     * @var bool
+     */
+    private $entity;
 
     /**
-     * CreateCrudRoute constructor.
+     * CreateCrudController constructor.
      * @param string $model
      * @param array $fields
      */
-    public function __construct(string $model, array $fields)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity)
     {
-        $this->model = $model;
-        $this->fields = $fields;
+
+        $this->model       = $model;
+        $this->fields      = $fields;
+        $this->actions     = $actions;
+        $this->slug        = $slug;
+        $this->breadcrumb  = $breadcrumb;
+        $this->theme       = $theme;
+        $this->slug        = $slug;
+        $this->timestamps  = $timestamps;
+        $this->entity      = $entity;
+
+        $this->filesystem   = new Filesystem;
     }
+
 
     /**
      * @param string $model
      * @param array $fields
      * @return string
      */
-    public static function generate(string $model, array $fields)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity)
     {
-        return (new CreateCrudRoute($model, $fields))
+        return (new CreateCrudRoute($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $entity))
             ->loadRoutes();
     }
 
@@ -42,14 +80,29 @@ class CreateCrudRoute
      */
     protected function loadRoutes() :string
     {
-        $data_map = $this->parseName($this->model);
 
-        $routes_path = base_path('/routes/admin.php');
+        $unusedActions = array_diff($this->ACTIONS, $this->actions);
+
+        if (!empty($unusedActions)) {
+            // le array_map permet d'ajouter les guillemets simple ' autour du champ
+            $excerpt = sprintf("->except(%s)", join(", ", array_map(fn ($item) => "'$item'", $unusedActions)));
+        }
+
+        $data_map = array_merge(
+            $this->parseName($this->model),
+            ['{{exceptActions}}' => !empty($excerpt) ? $excerpt : '']
+        );
+
+
+        $routes_path = base_path('/routes/web/' . $data_map['{{backLowerNamespace}}'] . "/{$data_map['{{singularSlug}}']}.php");
         $routes_stub = $this->TPL_PATH . '/routes/routes.stub';
 
-        $complied = $this->loadAndRegisterRoutes($routes_path, $routes_stub, $data_map);
+        $complied = $this->compliedFile($routes_stub, true, $data_map);
 
-        file_put_contents($routes_path, $complied);
+        $this->createDirectoryIfNotExists($routes_path, false);
+
+        $this->writeFile($complied, $routes_path, false);
+
 
         return $routes_path;
     }
@@ -62,29 +115,10 @@ class CreateCrudRoute
      */
     protected function loadAndRegisterRoutes($routes_path, $routes_stub, $data_map)
     {
-        $routes = file_get_contents($routes_path);
-        $stub = file_get_contents($routes_stub);
-        $complied = strtr($stub, $data_map);
-
-        // add others routes if morphsImageField
-        foreach ($this->fields as $field){
-            if ($this->isMorphsFIeld($field)){
-                if ($this->isImagesMorphRelation($field)){
-
-                    $map = $this->parseMorphsName($field);
-
-                    $partial_stub  = $this->TPL_PATH . '/routes/morphs/images/routes.stub';
-                    $partial_stub = file_get_contents($partial_stub);
-                    $partial = strtr($partial_stub, $data_map);
-                    $partial = strtr($partial, $map);
-
-                    $search = "// {$data_map['{{pluralClass}}']}";
-                    $complied = str_replace($search, $search . $partial, $complied);
+        // $routes = file_get_contents($routes_path);
+        $complied = $this->compliedFile($routes_stub, true, $data_map);
 
 
-                }
-            }
-        }
 
         $search = '    });';
         $complied = str_replace($search, $complied . $search, $routes);

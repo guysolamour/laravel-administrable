@@ -106,17 +106,17 @@
                                     <td>
                                         <div class="table-data-feature">
                                             <a href="{{ route('{{backLowerNamespace}}.testimonial.show', $testimonial) }}"
-                                                class="item" data-toggle="tooltip" data-placement="top" title="Send">
+                                                class="item" data-toggle="tooltip" data-placement="top" title="Voir">
                                                 <i class="zmdi zmdi-mail-send"></i>
                                             </a>
-                                            <a href="{{ route('{{backLowerNamespace}}.testimonial.edit', $testimonial) }}" class="item" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit">
+                                            <a href="{{ route('{{backLowerNamespace}}.testimonial.edit', $testimonial) }}" class="item" data-toggle="tooltip" data-placement="top" title="Editer" data-original-title="Editer">
                                                 <i class="zmdi zmdi-edit"></i>
                                             </a>
 
                                             <a href="{{ route('{{backLowerNamespace}}.testimonial.destroy', $testimonial) }}"
-                                                class="chosen-single item " data-toggle="tooltip" data-placement="top" title="Delete"
+                                                class="chosen-single item " data-toggle="tooltip" data-placement="top" title="Supprimer"
                                                 data-method="delete"
-                                                data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?">
+                                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
                                                 <i class="zmdi zmdi-delete"></i>
                                             </a>
 

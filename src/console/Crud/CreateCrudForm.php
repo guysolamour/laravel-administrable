@@ -1,74 +1,125 @@
 <?php
+
 namespace Guysolamour\Administrable\Console\Crud;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Filesystem\Filesystem;
 
 class CreateCrudForm
 {
     use MakeCrudTrait;
 
     /**
+     * @var string
+     */
+    private $model;
+    /**
      * @var array
      */
     private $fields;
+    /**
+     * @var array
+     */
+    private $actions;
+    /**
+     * @var string
+     */
+    private $breadcrumb;
+    /**
+     * @var string
+     */
+    private $theme;
     /**
      * @var string
      */
     private $slug;
     /**
-     * @var string
+     * @var bool
      */
-    private $model;
+    private $timestamps;
+    /**
+     * @var bool
+     */
+    private $entity;
+    /**
+     * @var bool
+     */
+    private $seeder;
+
 
     /**
-     * CreateCrudForm constructor.
      * @param string $model
      * @param array $fields
+     * @param array $actions
+     * @param string|null $breadcrumb
+     * @param string $theme
      * @param string|null $slug
+     * @param boolean $timestamps
+     * @param boolean $entity
+     * @param boolean $seeder
      */
-    public function __construct(string $model, array $fields, ?string $slug)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder)
     {
-        $this->model = $model;
-        $this->fields = $fields;
-        $this->slug = $slug;
+        $this->model       = $model;
+        $this->fields      = $fields;
+        $this->actions     = $actions;
+        $this->slug        = $slug;
+        $this->breadcrumb  = $breadcrumb;
+        $this->theme       = $theme;
+        $this->slug        = $slug;
+        $this->timestamps  = $timestamps;
+        $this->entity      = $entity;
+        $this->seeder      = $seeder;
+
+        $this->filesystem   = new Filesystem;
     }
 
     /**
-     * @param string $name
-     * @param array $fields
+     * @param string $model
+     * @param array  $fields
+     * @param array  $actions
+     * @param string|null $breadcrumb
+     * @param string $theme
      * @param string|null $slug
-     * @return string
+     * @param boolean $timestamps
+     * @param boolean $entity
+     * @param boolean $seeder
+     * @return void
      */
-    public static function generate(string $name, array $fields, ?string $slug) :string
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder)
     {
-        return (new CreateCrudForm($name,$fields,$slug))
+        return (new CreateCrudForm($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $entity, $seeder))
             ->loadForm();
     }
 
     /**
      * @return string
      */
-    private function loadForm() :string
+    private function loadForm(): string
     {
-        try {
-
+        if ($this->hasAction('create') || $this->hasAction('edit')) {
             $data_map = $this->parseName($this->model);
-
             $form_name = $data_map['{{singularClass}}'];
+
+            $form_path = app_path("/Forms/" . $data_map['{{modelsFolder}}']);
+            $form_stub = $this->TPL_PATH . '/forms/form.stub';
+            $form_path = $form_path . "/{$form_name}Form.php";
+
+            $complied = $this->compliedFile($form_stub, true, $data_map);
+
+            // add fields
+            $fields = $this->getFormFields();
 
             [$form_path, $complied] = $this->loadAndRegisterFormStub($form_name, $data_map);
 
-            $this->createDirIfNotExists($form_path);
-
-            // add fields
-            $fields = $this->getFields();
             $this->registerFields($fields, $complied, $form_path);
 
-            return $form_path;
 
-        } catch (\Exception $ex) {
-            throw new \RuntimeException($ex->getMessage());
+            return $form_path;
         }
+
+        return '';
     }
 
 
@@ -76,77 +127,141 @@ class CreateCrudForm
     /**
      * @return string
      */
-    private function getFields(): string
+    private function getFormFields(): string
     {
-        $fields = "\n";
+        $fields = "";
+
         foreach ($this->fields as $field) {
-            // on doit ajouter les rules si ces derniers ne sont pas vides
-            if ($this->isRelationField($field['type'])){
-                //dd(Str::plural(Str::slug($this->modelNameWithoutNamespace($this->getRelatedModel($field)))));
+            if ($this->isRelationField($this->getNonRelationType($field))) {
+                // les champs de type polymorphique sont ignorés
+                if (!$this->isPolymorphicField($field)) {
+                    $fields .= <<<TEXT
 
-                if ($this->isMorphsFIeld($field)){
-                    if ($this->isImagesMorphRelation($field)){
-                    $morph_field_name = $this->getMorphFieldName($field);
-                    $fields .= '            ->add(' . "'{$morph_field_name}'" . ', ' . "'hidden'" . ',[
-                    \'label\' => ' . "'{$morph_field_name}'"   . ',
-                    \'rules\' => ' . "'required'," . '
-                    \'attr\' => ' . "['id' => '{$morph_field_name}', 'class' => '{$morph_field_name}']" . '
-               ])' . "\n";
+                                ->add('{$this->getFieldName($field)}', '{$this->getFormType($field)}', [
+                                    'class'  => \\{$this->getRelatedModel($field)}::class,
+                                    'property' => '{$this->getRelatedModelProperty($field)}',
+                                    'label'  => '{$this->getFieldLabel($field)}',
+                                    {$this->getFormFieldRules($field)}
+                                    // 'query_builder => function(\\{$this->getRelatedModel($field)} {$this->getRelatedModelFormVariable($field)}) {
+                                        // return {$this->getRelatedModelFormVariable($field)};
+                                    // }
+                                ])
+                    TEXT;
+                }
+                # code...
+            } else {
+                // les champs de type polymorphique sont ignorés
+                if (!$this->isPolymorphicField($field)) {
+                    $fields .= <<<TEXT
+
+                                    ->add('{$this->getFieldName($field)}', '{$this->getFormType($field)}', [
+                                        'label'  => '{$this->getFieldLabel($field)}',
+                                        {$this->getFormFieldChoices($field)}
+                                        {$this->getFormFieldRules($field)}
+
+                        TEXT;
+
+
+                    if (Arr::get($field, 'tinymce')) {
+                        $fields .= <<<TEXT
+                                        'attr' => [
+                                            'data-tinymce',
+                                        ],
+                        TEXT;
                     }
-                }else {
 
-
-                    $fields .= '            ->add(' . "'{$this->getFieldName($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
-                    "class" => \\' . "{$field['type']['relation']['model']}::class," . '
-                    "property" => \'' . "{$field['type']['relation']['property']}'," . '
-                    "label" => \'' . "{$this->getRelationModelWithoutId(ucfirst($field['name']))}'," . '
-                    "rules" => ' . "'required|exists:{$field['type']['relation']['model']},id'," . '
-                    "query_builder" => ' . "function(\\".$field['type']['relation']['model']. ' $' .strtolower($this->modelNameWithoutNamespace($field['type']['relation']['model'])) . "){
-                        return $". strtolower($this->modelNameWithoutNamespace($field['type']['relation']['model'])) .";
-                    }"
-
-                        . '
-
-                ])' . "\n";
+                    $fields .= '            ])';
                 }
             }
-            else if($field['name'] === 'image') {
-                $fields .= '            ->add(' . "'{$this->getFieldName($field['name'])}'" . ', \'hidden\',[
-                \'label\' => ' . "'{$this->getFieldName($field['name'])}'"   . ',
-                '. $this->getRules($field['rules']) .'
-                \'attr\' => [\'id\' => \''. $this->getFieldName($field['name']) .'\'],
-                ])' . "\n";
-            }
-            else {
-                $fields .= '            ->add(' . "'{$this->getFieldName($field['name'])}'" . ', ' . "'{$this->getType($field['type'])}'" . ',[
-                \'label\' => '. "'{$this->getFieldName($field['name'])}'"   .',
-                '. $this->getRules($field['rules']) .'
-                ])' . "\n";
-            }
-
         }
+
+
+
         // add slug field
-        if (!is_null($this->slug)) {
-//            $fields .= '            ->add(' . "'{$this->slug}'" . ', ' . "'text'" . ',[
-//                ])' . "\n";
+        if ($this->slug) {
+            $data_map = $this->parseName($this->model);
 
-            $fields .= '            ->add(' . "'slug'" . ', ' . "'text'" . ',[
-                \'label\' => \'slug\',
-                \'rules\' => \'required\',
-                ])' . "\n";
+            $table_name = $data_map['{{pluralSnake}}'];
+
+            $fields .= <<<TEXT
+
+                        ->add('slug', 'text', [
+                            'label' => 'Slug',
+                            'rules'  => [
+                                'required',
+                                \Illuminate\Validation\Rule::unique('{$table_name}')->ignore(\$this->getModel())
+                            ],
+                        ]);
+
+            TEXT;
         }
-
-
 
         return $fields;
     }
 
-    private function getRules(string $rule) :string
+
+    protected function getFieldLabel(array $field): string
     {
-        if ($rule === 'req'){
-            $rule =  'required';
+        $trans = $this->translate_field($field);
+
+        if (Str::endsWith($trans, '_id')) {
+            $trans =  $this->getRelationModelWithoutId($trans);
         }
-        return !empty($rule) ? "'rules' => '$rule'," : $rule;
+
+        return Str::ucfirst($trans);
+    }
+
+    protected function getRelatedModelFormVariable(array $field): string
+    {
+        return '$' .  Str::lower($this->getRelatedModelWithoutNamespace($field));
+    }
+
+    protected function getFormFieldChoices(array $field)
+    {
+        $choices = Arr::get($field, 'choices', []);
+
+
+        if (empty($choices)) {
+            return '';
+        }
+
+        $choices_text = "'choices' => [";
+        foreach ($choices as $key => $choice) {
+            $choices_text .= <<<TEXT
+             $key => '$choice',
+            TEXT;
+        }
+        $choices_text .= '],';
+
+        return $choices_text;
+    }
+
+    protected function getFormFieldRules(array $field): string
+    {
+        $rule = $this->getFieldRules($field);
+
+        $rule = join(",", array_map(fn ($item) => "'$item'", explode('|', $rule)));
+
+        if (empty($rule)) {
+            return '';
+        }
+
+        if (in_array('unique', $this->getFieldConstraints($field) ?? [])) {
+            $data_map = $this->parseName($this->model);
+
+            $table_name = $data_map['{{pluralSnake}}'];
+
+
+            return <<<TEXT
+                'rules'  => [
+                    $rule,
+                    \Illuminate\Validation\Rule::unique('{$table_name}')->ignore($this->getModel())
+                ],
+
+            TEXT;
+        }
+
+        return "'rules' => [$rule,],";
     }
 
     /**
@@ -156,9 +271,12 @@ class CreateCrudForm
      */
     private function registerFields($fields, $complied, $form_path): void
     {
+
+        $this->createDirectoryIfNotExists($form_path, false);
         $search = '$this' . "\n";
         $form = str_replace($search, $search . $fields, $complied);
-        file_put_contents($form_path, $form);
+        // $this->filesystem->put($form_path, $form);
+        $this->writeFile($form, $form_path);
     }
 
     /**
@@ -168,21 +286,52 @@ class CreateCrudForm
      */
     private function loadAndRegisterFormStub($form_name, $data_map): array
     {
-        $form_path = app_path('/Forms/Admin');
+        $form_path = app_path('Forms/' . $data_map['{{backNamespace}}']);
 
         $form_stub = $this->TPL_PATH . '/forms/form.stub';
         $form_path = $form_path . "/{$form_name}Form.php";
 
-        $stub = file_get_contents($form_stub);
-        $complied = strtr($stub, $data_map);
+        // $stub = $this-($form_stub);
+        $complied = $this->compliedFile($form_stub,  true, $data_map);
+        // dd($complied);
         return array($form_path, $complied);
     }
 
-    private function getFieldName(string $field) :string
+    /**
+     * @param string $type
+     * @return string
+     */
+    protected function getFormType(array $field): string
     {
-        return strtolower($field);
+        $type = $this->getNonRelationType($field);
+
+        if (
+            $type === 'string' || $type === 'decimal' || $type === 'double' ||
+            $type === 'float'
+        ) {
+            return 'text';
+        } elseif (
+            $type === 'image' || $type === 'file'
+        ) {
+            return 'file';
+        } elseif (
+            $type === 'integer' || $type === 'mediumInteger'
+        ) {
+            return 'number';
+        } elseif ($type === 'text' || $type === 'mediumText' || $type === 'longText') {
+            return 'textarea';
+        } elseif ($type === 'email') {
+            return 'email';
+        } elseif ($type === 'boolean' || $type === 'enum') {
+            return 'select';
+        } elseif ($type === 'date') {
+            return 'date';
+        } elseif ($type === 'datetime') {
+            return 'datetime';
+        } elseif ($this->isRelationField($this->getNonRelationType($field)) || $this->isPolymorphicField($field)) {
+            return 'entity';
+        } else {
+            return 'text';
+        }
     }
-
-
-
 }

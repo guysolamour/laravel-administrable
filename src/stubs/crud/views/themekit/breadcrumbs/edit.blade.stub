@@ -1,0 +1,18 @@
+  <nav class="breadcrumb-container" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('{{guard}}.dashboard') }}"><i class="ik ik-home"></i></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">{{pluralClass}}</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.show', ${{singularSlug}}) }}">{{ ${{singularSlug}}->{{breadcrumb}} }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page"><a href="#">Edition</a></li>
+                        </ol>
+                    </nav>
+
+
+

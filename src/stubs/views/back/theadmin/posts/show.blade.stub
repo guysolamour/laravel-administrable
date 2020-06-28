@@ -62,7 +62,7 @@
             data-original-title="Editer"><i class="ti-pencil"></i> </a></li>
             <li><a class="btn btn-float btn-sm btn-danger" href="{{ route('{{backLowerNamespace}}.post.destroy',$post) }}" title="" data-provide="tooltip" data-placement="left"
                 data-method="delete"
-                data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?"
+                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
                 data-original-title="Supprimer"><i class="ti-trash"></i> </a></li>
 
     </ul>

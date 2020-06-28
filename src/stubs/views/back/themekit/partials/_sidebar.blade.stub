@@ -25,6 +25,12 @@
                         <i class="fa fa-comments"></i><span>Commentaires</span>
                     </a>
                 </div>
+
+                <div class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.user.index') }}">
+                        <i class="fa fa-user"></i><span>Utilisateurs</span>
+                    </a>
+                </div>
                 <div class="nav-item has-sub">
                     <a href="javascript:void(0)"><i class="fa fa-users"></i><span>{{pluralClass}}</span></a>
                     <div class="submenu-content">

@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\Forms\Admin;
+namespace {{namespace}}\Forms\{{backNamespace}};
 
 use Kris\LaravelFormBuilder\Form;
 
@@ -10,15 +10,16 @@ class {{singularClass}}Form extends Form
     {
         if ( $this->getModel() && $this->getModel()->id ) {
           $method = 'PUT';
-          $url    = route( 'admin.{{singularSlug}}.update', $this->getModel() );
+          $url    = route( '{{backLowerNamespace}}.{{singularSlug}}.update', $this->getModel() );
         } else {
           $method = 'POST';
-          $url    = route( 'admin.{{singularSlug}}.store' );
+          $url    = route( '{{backLowerNamespace}}.{{singularSlug}}.store' );
         }
 
         $this->formOptions = [
           'method' => $method,
           'url'    => $url,
+          'name'   => get_form_name($this->getModel()),
         ];
 
         $this

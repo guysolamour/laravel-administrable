@@ -1,0 +1,132 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','{{pluralClass}}')
+
+
+@section('content')
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    {{-- <h1>Catégories</h1> --}}
+                </div>
+                <div class="col-sm-6">
+                    <div class='float-sm-right'>
+                         {{-- breadcrumb --}}
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                        title="Réduire">
+                        <i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class='row'>
+                    <div class="col-md-12">
+                        <div class="card" style='box-shadow: 0 0 1px rgba(0,0,0,0), 0 1px 3px rgba(0,0,0,0);'>
+
+                            <!-- /.card-header -->
+                            <div class="card-body p-0">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">{{pluralSlug}}</h3>
+                                        <div class="btn-group float-right">
+                                            {{-- create link --}}
+                                            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\{{singularClass}}"
+                                                id="delete-all"> <i class="fa fa-trash"></i> Tous supprimer</a>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped" id="list">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    id="check-all">
+                                                                <label class="custom-control-label"
+                                                                    for="check-all"></label>
+                                                            </div>
+                                                        </th>
+                                                        <th>#</th>
+{{fields}}
+                                                        <th>Actions</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach(${{pluralSlug}} as ${{singularSlug}})
+                                                    <tr>
+{{values}}
+                                                        <td>
+                                                            <div class="btn-group" role="group">
+                                                                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.show', ${{singularSlug}}) }}"
+                                                                    class="btn btn-primary" data-toggle="tooltip"
+                                                                    data-placement="top" title="Afficher"><i
+                                                                        class="fas fa-eye"></i></a>
+
+                                                                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.edit', ${{singularSlug}}) }}"
+                                                                    class="btn btn-info" data-toggle="tooltip"
+                                                                    data-placement="top" title="Editer"><i
+                                                                        class="fas fa-edit"></i></a>
+                                                                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.destroy',${{singularSlug}}) }}"
+                                                                    data-method="delete"
+                                                                    data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                                                    class="btn btn-danger" data-toggle="tooltip"
+                                                                    data-placement="top" title="Supprimer"><i
+                                                                        class="fas fa-trash"></i></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.mail-box-messages -->
+                            </div>
+
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+</div>
+
+
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+@endsection
+
+
+
+

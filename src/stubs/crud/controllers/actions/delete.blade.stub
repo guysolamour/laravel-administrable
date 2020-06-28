@@ -1,0 +1,14 @@
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\{{singularClass}}  ${{singularSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy({{singularClass}} ${{singularSlug}})
+    {
+        ${{singularSlug}}->delete();
+        flashy('L\' élément a bien été supprimé');
+        return redirect()->route('{{backLowerNamespace}}.{{singularSlug}}.index');
+    }

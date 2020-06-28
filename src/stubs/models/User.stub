@@ -3,13 +3,15 @@
 namespace {{namespace}};
 
 use {{namespace}}\Traits\CommenterTrait;
+use {{namespace}}\Traits\MediaableTrait;
+use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
-    use Notifiable, CommenterTrait;
+    use Notifiable, CommenterTrait, MediaableTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -47,4 +49,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
       return static::where('email', $email)->first();
     }
+
+    // add relation methods below
 }

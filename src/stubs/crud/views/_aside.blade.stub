@@ -1,8 +1,0 @@
-<li class="nav-item">
-              <a href="{{ route('admin.{{singularSlug}}.index') }}" class="nav-link">
-                <i class="nav-icon fas fa-book"></i>
-                <p>
-                  {{pluralClass}}
-                </p>
-              </a>
-          </li>

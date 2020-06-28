@@ -1,0 +1,57 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Edition ' . ${{singularSlug}}->{{breadcrumb}})
+
+@section('content')
+
+<section class="au-breadcrumb m-t-75">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                     <div class="au-breadcrumb-content">
+                        {{-- breadcrumb --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="main-content mb-5 pt-5">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row au-card">
+                <div class="col-12">
+                </div>
+                <div class="col-md-12">
+                    <h3 class="title-5 m-b-35">
+                        Edition
+                    </h3>
+                    <div class="card-body p-0">
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                @include('{{backLowerNamespace}}.{{pluralSlug}}._form',['edit' => true])
+                            </div>
+                            <div class="col-md-4">
+                                {{-- add imagemanager here --}}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@endsection
+
+
+
+
+

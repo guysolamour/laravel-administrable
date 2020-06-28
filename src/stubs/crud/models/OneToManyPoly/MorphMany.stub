@@ -1,5 +1,0 @@
-
-    public function {{relatedPluralSlug}}()
-    {
-        return $this->morphMany({{relatedNamespace}}{{relatedSingularClass}}::class,'{{relatedSingularSlug}}able');
-    }

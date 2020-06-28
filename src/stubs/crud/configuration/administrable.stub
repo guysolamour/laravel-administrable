@@ -1,16 +1,148 @@
-models:
-  Post:
-    title:
-      name: title,
-      type: string,
-      rules: required
+# Where to store models in app folder
+folder: {{modelsFolder}}
 
-    content: longText
-    published_at: nullable timestamp
+# Models definitions
+Category:
+  name:  { name: name, type: string, rules: nullable, nullable: true }
+  title: { name: title, default: salut, rules: nullable, nullable: true }
+  image: { name: image, type: image }
+  description: { name: description, type: text, rules: required }
+  seed: true
+  slug: title
 
-  Comment:
-    content: longtext
-    # name: string
-    relation:
-      user_id: 5
-      type: hasMany
+Image:
+  url: { type: string, rules: required|string , sslug: true}
+  user_id: { type: { relation: one to one, type: simple, related: user, property: name, withdefault: 'pierre,papier,ciseaux' }, rules: required }
+
+  # entity: true
+  image: # { type: polymorphic, rules: required}
+    type: polymorphic
+    rules: required
+    # model_id: koffiable_id
+    # model_type: koffiable_type
+    # polymorphic: true
+  # timestamps: false
+  friend:
+    polymorphic: true
+
+
+
+Terrain:
+  user_id:
+    # type: { name: One To Many, related: user, property: name }
+    type:
+      relation:  one to one
+      type: simple
+      # related: app\models\user
+      onDelete: cascade
+      related: User
+      property: name
+      # local_keys: { foreign_key: kguy_id, local_key: kid }
+      # related_keys:  { foreign_key: guy_id, other_key: id }
+      # withdefault: 'pierre,papier,ciseaux'
+    # rules: nullable
+    rules: required
+  # user_id: { type: { relation: one to one, type: simple, related: user, property: name, withdefault: 'pierre,papier,ciseaux' }, rules: required }
+  # age: { type: bigInteger:6, trans: koffi }
+  name: { rules: nullable|string, trans: nom, default: assale }
+  # title: { name: title, default: salut, rules: nullable, nullable: true }
+  # name: { name: name, type: string, length: 225, rules: nullable  }
+  title: { name: title, type: string:255, rules: required|string,  slug: true  }
+  # image: {  type: string, length: 180 , rules: string|email|nullable }
+
+  # il faudra vérifier si le modèle crelated exixte déja dans notre cas image sinon on le créé rapidement
+  # image:
+  #   # type: { name: One To Many, related: user, property: name }
+  #   type:
+  #     relation:  one to many
+  #     type: polymorphic
+  #     related: image
+  #     name: 'immafedkfkkffkk'
+  #     # onDelete: cascade
+  #     property: name
+  #     # intermediate_table: terrain_caca
+  #     # foreign: {}
+  #     # local_keys: { foreign_key: terrain_id, join_key: user_id }
+  #     # related_keys: { foreign_key: user_id, join_key: terrain_id }
+  #     # related_keys:  { foreign_key: guy_id, other_key: otherid }
+  #     # withdefault: 'pierre,papier,ciseaux'
+  #   # rules: nullable
+  #   rules: required
+
+  # user_id:
+  #   # type: { name: One To Many, related: user, property: name }
+  #   type:
+  #     relation:  many to many
+  #     type: simple
+  #     # related: app\models\user
+  #     onDelete: cascade
+  #     related: user
+  #     property: name
+  #     intermediate_table: terrain_caca
+  #     # foreign: {}
+  #     # local_keys: { foreign_key: terrain_id, join_key: user_id }
+  #     # related_keys: { foreign_key: user_id, join_key: terrain_id }
+  #     # related_keys:  { foreign_key: guy_id, other_key: otherid }
+  #     withdefault: 'pierre,papier,ciseaux'
+  #   # rules: nullable
+  #   rules: required
+
+  # user_id:
+  #   # type: { name: One To Many, related: user, property: name }
+  #   type:
+  #     relation:  one to one
+  #     type: simple
+  #     # related: app\models\user
+  #     onDelete: cascade
+  #     related: User
+  #     property: name
+      # local_keys: { foreign_key: kguy_id, local_key: kid }
+      # related_keys:  { foreign_key: guy_id, other_key: id }
+  #     withdefault: 'pierre,papier,ciseaux'
+  #   # rules: nullable
+  #   rules: required
+
+
+
+  # user_id: { type: relation, related: user, property: name, rules: "nullable|exists:user,id" }
+
+
+  # image: { type: image, rules: required }
+  # image: image required slug
+  description: { name: description, type: text, rules: required, tinymce: true, gbreadcrumb: true }
+  # slug: name
+  breadcrumb: title
+  # trans: configuration # Est juste utilisé que pour de l'affichage de gestion
+  # imagemanager: { front: Image Front Yml, back: Image Back Yml, images: Images }
+  # imagemanager: true
+  # timestamps: false
+  actions: index,show,create,edit,delete,
+  # actions: index|show|create|edit|delete|
+  # actions: index,show,titi,
+  # actions:
+  #   - index
+  #   - show
+  #   - create
+  #   - edit
+  #   - delete
+  imagemanager:
+    - front
+    - back
+    - images
+  # user_id:
+  #   name: user_id
+  #   type: { name: One To Many , related: user, property: name, onDelete: cascade|set null }
+
+  # relation: { field: user_id, related: user, property: name}
+
+  #  'user_id' => [
+  #       'name' => 'user_id', 'type' => [
+  #           'relation' => [
+  #               'name' => 'Many to One',
+  #               'model' => 'App\Models\User',
+  #               'property' => 'name'
+  #           ]
+  #       ],
+  #       'trans' => 'client',
+  #       'guest' => ['name','email','phone_number']
+  #   ],

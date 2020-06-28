@@ -1,14 +1,15 @@
+<?php
 
-        // {{pluralClass}}
+Route::middleware(['{{guard}}.auth'])->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
         Route::resource('{{pluralSlug}}','{{singularClass}}Controller')->names([
-            'index'      => 'admin.{{singularSlug}}.index',
-            'create'     => 'admin.{{singularSlug}}.create',
-            'show'       => 'admin.{{singularSlug}}.show',
-            'store'      => 'admin.{{singularSlug}}.store',
-            'edit'       => 'admin.{{singularSlug}}.edit',
-            'update'     => 'admin.{{singularSlug}}.update',
-            'destroy'    => 'admin.{{singularSlug}}.destroy',
-        ]);
-
-
-
+            'index'      => '{{backLowerNamespace}}.{{singularSlug}}.index',
+            'create'     => '{{backLowerNamespace}}.{{singularSlug}}.create',
+            'show'       => '{{backLowerNamespace}}.{{singularSlug}}.show',
+            'store'      => '{{backLowerNamespace}}.{{singularSlug}}.store',
+            'edit'       => '{{backLowerNamespace}}.{{singularSlug}}.edit',
+            'update'     => '{{backLowerNamespace}}.{{singularSlug}}.update',
+            'destroy'    => '{{backLowerNamespace}}.{{singularSlug}}.destroy',
+        ]){{exceptActions}};
+    });
+});
