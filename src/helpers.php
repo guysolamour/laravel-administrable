@@ -2,9 +2,9 @@
 
 
 if (!function_exists('translate_model_field')) {
-    function translate_model_field(string $field_name, ?string $field_trans, ?string $locale = null, ?array $replace = []) : string
+    function translate_model_field(string $field_name, ?string $field_trans, ?string $locale = null, ?array $replace = []): string
     {
-        if($field_trans) return $field_trans;
+        if ($field_trans) return $field_trans;
 
 
         return trans_fb("validation.attributes.{$field_name}", $field_name, $locale, $replace);

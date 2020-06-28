@@ -135,7 +135,7 @@ class CreateCrudView
             '{{administrableLogo}}'    =>  asset(config('administrable.logo_url')),
             '{{theme}}'                =>  $this->theme,
             '{{icon}}'                =>  $this->icon,
-            '{{breadcrumb}}'           =>  $this->breadcrumb,
+            '{{breadcrumb}}'           =>  $this->guestBreadcrumbFieldNane(),
             '{{guard}}'                =>  config('administrable.guard', 'admin')
         ];
     }
@@ -213,6 +213,29 @@ class CreateCrudView
 
         $view = $this->insertFieldToViewIndex($fields, $complied, $values, $data_map);
 
+
+
+        if ($this->isThemeKitTheme()) {
+            $replace = <<<HTML
+
+                            <div class="app-item">
+                                <a href="{{ route('{$data_map['{{backLowerNamespace}}']}.{$data_map['{{singularSlug}}']}.index') }}">
+                                    <i class="fa {$data_map['{{icon}}']}"></i><span>{$data_map['{{pluralClass}}']}</span>
+                                </a>
+                            </div>
+            HTML;
+
+
+            $header_path =  $views_path  . '/partials/_header.blade.php';
+
+            $search = "{{-- add megamenu Link here --}}";
+            $this->replaceAndWriteFile(
+                $this->filesystem->get($header_path),
+                $search,
+                $search . PHP_EOL . $replace,
+                $header_path
+            );
+        }
 
         $this->writeFile($view, $path, false);
     }
@@ -734,6 +757,7 @@ class CreateCrudView
             $path
         );
     }
+
 
     /**
      * @param string|string[] $field

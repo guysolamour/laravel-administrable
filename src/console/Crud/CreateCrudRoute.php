@@ -1,4 +1,5 @@
 <?php
+
 namespace Guysolamour\Administrable\Console\Crud;
 
 use Illuminate\Filesystem\Filesystem;
@@ -78,7 +79,7 @@ class CreateCrudRoute
     /**
      * @return string
      */
-    protected function loadRoutes() :string
+    protected function loadRoutes(): string
     {
 
         $unusedActions = array_diff($this->ACTIONS, $this->actions);
@@ -105,23 +106,5 @@ class CreateCrudRoute
 
 
         return $routes_path;
-    }
-
-    /**
-     * @param $routes_path
-     * @param $routes_stub
-     * @param $data_map
-     * @return mixed|string
-     */
-    protected function loadAndRegisterRoutes($routes_path, $routes_stub, $data_map)
-    {
-        // $routes = file_get_contents($routes_path);
-        $complied = $this->compliedFile($routes_stub, true, $data_map);
-
-
-
-        $search = '    });';
-        $complied = str_replace($search, $complied . $search, $routes);
-        return $complied;
     }
 }

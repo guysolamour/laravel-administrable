@@ -240,11 +240,13 @@ class CreateCrudForm
     {
         $rule = $this->getFieldRules($field);
 
-        $rule = join(",", array_map(fn ($item) => "'$item'", explode('|', $rule)));
-
         if (empty($rule)) {
             return '';
         }
+
+        $rule = join(",", array_map(fn ($item) => "'$item'", explode('|', $rule)));
+
+
 
         if (in_array('unique', $this->getFieldConstraints($field) ?? [])) {
             $data_map = $this->parseName($this->model);
@@ -260,6 +262,7 @@ class CreateCrudForm
 
             TEXT;
         }
+
 
         return "'rules' => [$rule,],";
     }
@@ -291,9 +294,8 @@ class CreateCrudForm
         $form_stub = $this->TPL_PATH . '/forms/form.stub';
         $form_path = $form_path . "/{$form_name}Form.php";
 
-        // $stub = $this-($form_stub);
         $complied = $this->compliedFile($form_stub,  true, $data_map);
-        // dd($complied);
+
         return array($form_path, $complied);
     }
 

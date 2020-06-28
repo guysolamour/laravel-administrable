@@ -84,7 +84,7 @@ class CreateCrudMigration
      */
     public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder)
     {
-       return (new CreateCrudMigration($model,$fields, $actions, $breadcrumb, $theme, $slug,$timestamps, $entity, $seeder))
+        return (new CreateCrudMigration($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $entity, $seeder))
             ->loadMigrations();
     }
 
@@ -101,7 +101,7 @@ class CreateCrudMigration
         $migration = $this->compliedFile($migration_stub, true, $data_map);
         $migration_path = $this->generateMigrationFields($migration, $data_map);
 
-        // verifier si il y a des rekations many to many et generes la table pivot
+        // verifier si il y a des relations many to many et generes la table pivot
 
         if ($this->seeder) {
             $seeder_stub = $this->TPL_PATH . '/migrations/seed.stub';
@@ -118,7 +118,6 @@ class CreateCrudMigration
         }
 
         return [$migration_path, $seeder_path ?? ''];
-
     }
 
 
@@ -128,12 +127,12 @@ class CreateCrudMigration
         $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
 
         $database_seeder = $this->filesystem->get($database_seeder_path);
-        $route_mw_bait = "    {";
+        $search = "    {";
         $replace = ' $this->call(' .  $data_map['{{pluralClass}}'] . 'TableSeeder::class' . ");";
         $route_mw = "\n        " . $replace;
 
 
-        $database_seeder = str_replace($route_mw_bait, $route_mw_bait . $route_mw, $database_seeder);
+        $database_seeder = str_replace($search, $search . $route_mw, $database_seeder);
 
         // Overwrite config file
         $this->filesystem->put($database_seeder_path, $database_seeder);
@@ -142,11 +141,10 @@ class CreateCrudMigration
     }
 
 
-    protected function generateSeederFields(string $seeder) :string
+    protected function generateSeederFields(string $seeder): string
     {
         $seed_fields = "\n";
 
-        // dd($this->fields);
         foreach ($this->fields as $field) {
             // permettre de generer le slug dans le seed en mettant la variable $slug devant
             if ($field['type'] === "string") {
@@ -182,15 +180,14 @@ class CreateCrudMigration
     }
 
 
-    protected function generateMigrationFields(string $migration, array $data_map) :string
+    protected function generateMigrationFields(string $migration, array $data_map): string
     {
         $fields = "\n\n";
 
         foreach ($this->fields as $field) {
-            // dd($this->isSimpleManyToManyRelation($field));
             if ($this->isRelationField($this->getNonRelationType($field))) {
 
-               if ($this->isSimpleRelation($field)) {
+                if ($this->isSimpleRelation($field)) {
                     $fields .= <<<TEXT
                                \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)};
 
@@ -205,15 +202,13 @@ class CreateCrudMigration
                            \$table->morphs('{$this->getMorphRelationableName($field)}');
 
                 TEXT;
-            }
-             else {
+            } else {
 
                 $fields .= <<<TEXT
                            \$table->{$this->getMigrationFieldType($field)}('{$this->getFieldName($field)}'{$this->getMigrationFieldLength($field)}){$this->getFieldAttributes($field)};
 
                 TEXT;
             }
-
         }
 
         // add slug field and the linked field
@@ -243,26 +238,25 @@ class CreateCrudMigration
         );
 
         return $migration_path;
-
     }
 
-    protected function getModelForeignKey(array $field) :string
+    protected function getModelForeignKey(array $field): string
     {
         $key = Arr::get($this->getRelationLocalForeignKey($field), 'foreign_key');
 
-        if (!$key){
-             $key = $this->parseName($this->model)['{{singularSlug}}'] . '_id';
+        if (!$key) {
+            $key = $this->parseName($this->model)['{{singularSlug}}'] . '_id';
         }
 
         return $key;
     }
 
-    protected function getRelatedModelForeignKey(array $field) :string
+    protected function getRelatedModelForeignKey(array $field): string
     {
         $key = Arr::get($this->getRelationRelatedForeignKey($field), 'foreign_key');
 
-        if (!$key){
-             $key = $this->parseRelationName($this->model, $this->getRelatedModel($field))['{{relatedSingularSlug}}'] . '_id';
+        if (!$key) {
+            $key = $this->parseRelationName($this->model, $this->getRelatedModel($field))['{{relatedSingularSlug}}'] . '_id';
         }
 
         return $key;
@@ -270,7 +264,7 @@ class CreateCrudMigration
 
 
 
-    protected function getIntermediateClassName(array $field) :string
+    protected function getIntermediateClassName(array $field): string
     {
         $class_name = Str::singular(Str::studly($this->getRelationIntermediateTable($field, true)));
 
@@ -281,7 +275,7 @@ class CreateCrudMigration
     {
 
         foreach ($this->fields as $field) {
-           if ($this->isSimpleManyToManyRelation($field)) {
+            if ($this->isSimpleManyToManyRelation($field)) {
                 $data_map = array_merge(
                     $this->parseRelationName($this->model, $this->getRelatedModel($field)),
                     ['{{intermediateTableName}}' => $this->getRelationIntermediateTable($field, true)],
@@ -303,12 +297,12 @@ class CreateCrudMigration
                     $pivot_migration,
                     $pivot_migration_path
                 );
-           }
+            }
         }
     }
 
 
-    protected function getMigrationFieldLength(array $field) :string
+    protected function getMigrationFieldLength(array $field): string
     {
         if ($length = Arr::get($field, 'length')) {
             return ", $length";
@@ -316,7 +310,7 @@ class CreateCrudMigration
         return '';
     }
 
-    protected function getFieldAttributes(array $field) : string
+    protected function getFieldAttributes(array $field): string
     {
         $constraints = $this->getFieldConstraints($field);
 
@@ -332,13 +326,13 @@ class CreateCrudMigration
                     $value = 'true';
                 } else if ($constraint['value'] === false) {
                     $value = 'false';
-                }else if (is_string($constraint['value'])) {
+                } else if (is_string($constraint['value'])) {
                     $value = "'{$constraint['value']}'";
-                }else {
+                } else {
                     $value = $constraint['value'];
                 }
                 $attr .= sprintf("->%s(%s)", $constraint['name'], $value);
-            }else {
+            } else {
                 $attr .=  "->$constraint()";
             }
         }
@@ -347,10 +341,10 @@ class CreateCrudMigration
     }
 
 
-    protected function getModelTableName(string  $model) :string
+    protected function getModelTableName(string  $model): string
     {
         // on recupere le nom du modele sans namespace
-        $model = explode('\\',$model);
+        $model = explode('\\', $model);
 
         return  strtolower(Str::plural(Str::studly(end($model))));
     }

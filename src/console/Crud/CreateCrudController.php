@@ -135,7 +135,7 @@ class CreateCrudController
         $stub = $this->TPL_PATH . "/controllers/actions/{$action}.blade.stub";
         $method = $this->compliedFile($stub, true, $data_map);
 
-        if ('index' === $action && 'theadmin' === $this->theme) {
+        if ('index' === $action && $this->isTheadminTheme()) {
             $stub = $this->TPL_PATH . "/controllers/actions/{$this->theme}/{$action}.blade.stub";
             $method = $this->compliedFile($stub, true, $data_map);
         }

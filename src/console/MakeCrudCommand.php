@@ -5,8 +5,6 @@ namespace Guysolamour\Administrable\Console;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Symfony\Component\Yaml\Yaml;
-use Illuminate\Container\Container;
 use Guysolamour\Administrable\Console\Crud\CreateCrudForm;
 use Guysolamour\Administrable\Console\Crud\CreateCrudView;
 use Guysolamour\Administrable\Console\Crud\CreateCrudModel;
@@ -62,6 +60,8 @@ class MakeCrudCommand extends BaseCommand
      */
     protected $icon = 'fa-folder';
 
+    protected $imagemanager = '';
+
 
     /**
      * @var string
@@ -96,9 +96,7 @@ class MakeCrudCommand extends BaseCommand
 
 
         $model = ucfirst($this->model);
-        $models_config_file_path = base_path('administrable.yaml');
         $config_fields = $this->getCrudConfiguration($model);
-
 
 
         if (!empty($config_fields)) {
@@ -149,6 +147,8 @@ class MakeCrudCommand extends BaseCommand
                 'icon'
             ]);
             $this->setDefaultTypeAndRule();
+
+            $this->sanitizeFields();
 
 
             foreach ($this->fields as $key => $field) {
@@ -232,7 +232,6 @@ class MakeCrudCommand extends BaseCommand
 
 
                     $type = $this->getRelationType($field);
-                    // dd($type, $this->RELATION_TYPES);
                     if (!in_array($type, $this->RELATION_TYPES)) {
                         throw new \Exception(
                             sprintf(
@@ -342,16 +341,11 @@ class MakeCrudCommand extends BaseCommand
                             }
 
                             if ($onDelete === $this->ONDELETERULES['setnull']) {
-                                // $field = $this->addFielsCustomProperty($field, $key, true, 'nullable', true);
-                                // dd($field['rules'], empty($this->fields[$key]['rules']));
                                 if (empty($this->fields[$key]['rules'])) {
-                                    // dd(' vide', $field, $this->fields[$key]['rules'] );
-                                    // $this->fields[$key]['rules'] .= '|nullable';
                                     if (!Str::contains($this->fields[$key]['rules'], 'nullable')) {
                                         $this->fields[$key]['rules'] = 'nullable|' . $this->fields[$key]['rules'];
                                     }
                                 } else {
-                                    // dd('pas vide');
                                     // un champ required ne peut pas être nullable
                                     if (Str::contains($field['rules'], 'required')) {
                                         throw new \Exception(
@@ -362,11 +356,9 @@ class MakeCrudCommand extends BaseCommand
                                         );
                                     }
                                     // on ne peut pas faire .= parceque in redefini la variable
-                                    // dd('nullable|' . $this->fields[$key]['rules']);
                                     if (!Str::contains($this->fields[$key]['rules'], 'nullable')) {
                                         $this->fields[$key]['rules'] = 'nullable|' . $this->fields[$key]['rules'];
                                     }
-                                    // $this->fields[$key]['rules'] = $this->fields[$key]['rules'] . '|nullable';
                                 }
                             }
 
@@ -394,8 +386,6 @@ class MakeCrudCommand extends BaseCommand
                 // uniformiser les constraintes
                 if ($constraints = Arr::get($field, 'constraints')) {
                     if (is_string($constraints)) {
-                        // $items = array_map(function($item){
-                        // }, array_filter(explode(',', $constraints)));
                         $this->fields[$key]['constraints'] =  array_map(fn ($item) => Str::lower(trim($item)), array_filter(explode(',', $constraints)));
                     } else if (is_array($constraints)) {
                         $items = array_map(function ($item) {
@@ -497,13 +487,11 @@ class MakeCrudCommand extends BaseCommand
                 }
             }
         } else {
-            $this->fields = $this->getFields();
-            $this->filesystem->append($models_config_file_path, Yaml::dump([$model => $this->fields], 2));
+            throw new \Exception(
+                sprintf("The model [%s] is not defined in the [%s] file.", $this->model, base_path('administrable.yaml'))
+            );
         }
 
-        // if (!Arr::exists($this->fields, 'timestamps')) {
-        //    $this->timestamps = true;
-        // }
 
         // tester pour voir si le parent_id existe et que le forein existe ne rien faire
         // par contre si parent defini et nom foreign prendre la clé du champ pour setter
@@ -637,127 +625,12 @@ class MakeCrudCommand extends BaseCommand
 
 
 
-    /**
-     * @return array
-     */
-    private function getFields(): array
-    {
-        $field = $this->ask('Field');
-        $type = $this->anticipate('Type', $this->TYPES);
-
-        if ($type === 'relation') {
-            $relation_type = $this->choice('Which type of relation is it ?', self::RELATION_TYPES, 1);
-            $relation_property = $this->ask('What property will be used to access relation ?');
-            $relation_model = $this->anticipate('Which model is associated to ?', $this->getAllAppModels());
-
-
-
-            $relation_model_with_namespace = $this->getAllAppModels(true)[$relation_model];
-            $rules = '';
-            $this->tempFields[$field] = [
-                'name' => $field,
-                'type' =>
-                [$type => ['name' => $relation_type, 'model' => $relation_model_with_namespace, 'property' => $relation_property]],
-                'rules' => $rules,
-                //'nullable' => $nullable,
-
-            ];
-
-            if ($this->confirm('This relation is guest ?')) {
-                $guest = $this->ask('Guest fields');
-
-                while (empty($guest)) {
-                    $guest = $this->ask('Guest fields can not be empty');
-                }
-                $this->tempFields[$field]['guest'] = explode(',', $guest);
-            }
-        } else {
-            $headers = ['Name', 'Name', 'Name', 'Name'];
-
-            $rules = [
-                ['boolean', 'between:min,max', 'confirmed', 'date'],
-                ['dimensions:mwidth,mheight', 'email', 'exists:table,column', 'image'],
-                ['integer', 'ip', 'max:value', 'min:value', 'nullable'],
-                ['required', 'unique:table,column', 'string', 'size:value'],
-            ];
-
-            $this->table($headers, $rules);
-            $rules = $this->ask('Rules');
-
-            $this->tempFields[$field] = [
-                'name' => $field, 'type' => $type, 'rules' => $rules,
-            ];
-        }
-
-        if ($this->confirm('This field is nulable ?')) {
-            $this->tempFields[$field]['nullable'] = true;
-        }
-
-        if ($this->confirm('This field has a default value ?')) {
-            $default = $this->ask('Default value');
-
-            while (empty($default)) {
-                $default = $this->ask('default value can not be empty');
-            }
-            $this->tempFields[$field]['default'] = $default;
-        }
-
-        if ($this->confirm('This field will be translated ?')) {
-            $trans = $this->ask('Give the translated value');
-
-            while (empty($trans)) {
-                $trans = $this->ask('Translated value can not be empty');
-            }
-            $this->tempFields[$field]['trans'] = $trans;
-        }
-
-
-        if ($this->confirm('Add another field ?')) {
-            $this->getFields();
-        }
-
-        return $this->tempFields;
-    }
 
     private function removeFileExtension(string $file): string
     {
         return pathinfo($file, PATHINFO_FILENAME);
     }
 
-    private function getAllAppModels(bool $withNamespace = false): array
-    {
-        // get all models in app folder
-        $results = glob(app_path() . '/*.php');
-
-        $out = [];
-        foreach ($results as $file) {
-            $parts = explode('/', $file);
-
-            if ($withNamespace) {
-                $model = Container::getInstance()->getNamespace() . end($parts);
-            } else {
-                $model = end($parts);
-            }
-            $out[$this->removeFileExtension(end($parts))] = $this->removeFileExtension($model);
-        }
-
-        // get all models in app/models folder
-        $path = app_path() . "/Models";
-        $results = scandir($path);
-
-        foreach ($results as $result) {
-            if ($result === '.' || $result === '..' || $result === 'BaseModel.php') continue;
-
-            if ($withNamespace) {
-                $model = Container::getInstance()->getNamespace() . 'Models\\' . $result;
-            } else {
-                $model = $result;
-            }
-            $out[$this->removeFileExtension($result)] = $this->removeFileExtension($model);
-        }
-
-        return $out;
-    }
 
 
     private function displayResult(bool $result, string $path): void
@@ -793,6 +666,15 @@ class MakeCrudCommand extends BaseCommand
         }
     }
 
+    private function sanitizeFields()
+    {
+        foreach ($this->fields as $key =>  $field) {
+            if (!is_array($field)) {
+                $this->fields = Arr::except($this->fields, $key);
+            }
+        }
+    }
+
     private function setDefaultTypeAndRule()
     {
         foreach ($this->fields as $key => $field) {
@@ -801,14 +683,16 @@ class MakeCrudCommand extends BaseCommand
                 continue;
             }
 
-            if (!Arr::exists($field ?? [], 'type')) {
-                $field['type'] = 'string';
-                $this->fields[$key] = $field;
-            }
+            if (is_array($field)) {
+                if (!Arr::exists($field ?? [], 'type')) {
+                    $field['type'] = 'string';
+                    $this->fields[$key] = $field;
+                }
 
-            if (!Arr::exists($field ?? [], 'rules')) {
-                $field['rules'] = '';
-                $this->fields[$key] = $field;
+                if (!Arr::exists($field ?? [], 'rules')) {
+                    $field['rules'] = '';
+                    $this->fields[$key] = $field;
+                }
             }
         }
     }

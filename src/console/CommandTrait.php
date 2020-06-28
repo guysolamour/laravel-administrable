@@ -540,6 +540,11 @@ trait CommandTrait
         return $this->isTheme('theadmin');
     }
 
+    protected function isThemeKitTheme(): bool
+    {
+        return $this->isTheme('themekit');
+    }
+
     protected function isTheme(string $theme): bool
     {
         return $this->theme === $theme;

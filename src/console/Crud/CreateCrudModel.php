@@ -62,8 +62,7 @@ class CreateCrudModel
     public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false)
     {
 
-        return
-            (new CreateCrudModel($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps))
+        return (new CreateCrudModel($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps))
             ->createModel();
     }
 
@@ -71,7 +70,7 @@ class CreateCrudModel
     /**
      * @return array
      */
-    private function createModel() :array
+    private function createModel(): array
     {
 
         $stub = $this->filesystem->get($this->TPL_PATH . '/models/model.stub');
@@ -90,15 +89,20 @@ class CreateCrudModel
         $model = $this->loadSluggableTrait($model, $data_map);
 
 
-
         $this->createDirectoryIfNotExists($model_path, false);
 
 
         $this->addRelations($model, $model_path);
 
+        if (!$this->filesystem->exists($model_path)) {
+            $this->writeFile(
+                $model,
+                $model_path
+            );
+        }
 
-        return [$model,$model_path];
 
+        return [$model, $model_path];
     }
 
     /**
@@ -137,10 +141,11 @@ class CreateCrudModel
 
     protected function addRelations(string $model, string $model_path)
     {
-        $related_model = '';  $default_model = '';
+        $related_model = '';
+        $default_model = '';
 
-         foreach ($this->fields as $field){
-             if ($this->isRelationField($field['type'])) {
+        foreach ($this->fields as $field) {
+            if ($this->isRelationField($field['type'])) {
                 // on recupere le modele
                 [$model_stub, $related_stub] = $this->getModelAndRelatedModelStubs($field);
 
@@ -193,7 +198,6 @@ class CreateCrudModel
                             $default_model = str_replace($search,   $search . $replace, $default_model);
                         }
                     }
-
                 } else if ($this->isSimpleManyToManyRelation($field)) {
                     $related_path = app_path($data_map['{{modelsFolder}}'] . '/' . $this->modelNameWithoutNamespace($this->getRelatedModel($field)) . '.php');
 
@@ -266,48 +270,36 @@ class CreateCrudModel
                         $default_model = str_replace($search,   $search . ", '{$intermediate_table}'", $default_model);
 
                         $search =  $data_map['{{modelSingularClass}}'] . '::class';;
-                        $related_model = str_replace($search,
+                        $related_model = str_replace(
+                            $search,
                             $search . ", '{$intermediate_table}'",
                             $related_model
                         );
                     }
                 } else if ($this->isPolymorphicOneToOneRelation($field) || $this->isPolymorphicOneToManyRelation($field)) {
-                    // dd($this->isPolymorphicOneToOneRelation($field), $model, $default_model);
                 }
                 // else if ($this->isPolymorphicOneToManyRelation($field)){
 
                 // }
 
-             }
-             else if ($this->isPolymorphicField($field)) {
+            } else if ($this->isPolymorphicField($field)) {
                 // related model
-                // $stub = $this->filesystem->get($this->TPL_PATH . '/models/morphTo.stub');
 
                 $data_map = array_merge($this->parseName(), ['{{morphFieldName}}' => $this->getFieldName($field)]);
                 $stub = $this->compliedFile($this->TPL_PATH . '/models/morphTo.stub', true, $data_map);
 
                 $search = '// add relation methods below';
 
-                // if ($this->filesystem->exists($model_path)) {
-                //     // $model = $this->filesystem->get($model_path);
-                // }
 
                 $default_model = str_replace($search,   $search . "\n\n" . $stub, $model);
-
-                // $this->writeFile(
-                //     $complied,
-                //     $model_path
-                // );
             }
-
-         }
+        }
 
 
 
 
         if (!empty($related_model) && !empty($related_path)) {
             // related model
-            // $related_path = app_path($data_map['{{modelsFolder}}'] . '/' . $this->modelNameWithoutNamespace($this->getRelatedModel($field)) . '.php');
             $search = '// add relation methods below';
             $this->replaceAndWriteFile(
                 $this->filesystem->get($related_path),
@@ -319,7 +311,7 @@ class CreateCrudModel
 
 
         // default model
-        if (!empty($default_model)){
+        if (!empty($default_model)) {
             $search = '// add relation methods below';
             $complied = str_replace($search,   $search . "\n\n" . $default_model . "\n\n", $model);
             $this->writeFile(
@@ -334,7 +326,7 @@ class CreateCrudModel
      * Get the different field
      * @return string
      */
-    private function getFillables() :string
+    private function getFillables(): string
     {
         $fillable = '';
         foreach ($this->fields as $field) {
@@ -345,12 +337,10 @@ class CreateCrudModel
             if (
                 ($field['name'] !== 'morphs' || $field['name'] !== 'guest') &&
                 !$this->isPolymorphicField($field)
-                ){
+            ) {
 
                 $fillable .= "'{$field['name']}'" . ',';
-            }
-
-            else if ($this->isPolymorphicField($field)) {
+            } else if ($this->isPolymorphicField($field)) {
                 $fillable .= "'" . $this->getPolymorphicModelType($field) . "',";
                 $fillable .= "'" . $this->getPolymorphicModelId($field) . "',";
             }
@@ -361,7 +351,7 @@ class CreateCrudModel
             $fillable .= "'slug'";
         }
         // remove the comma at the end of the string
-        $fillable = rtrim($fillable,',');
+        $fillable = rtrim($fillable, ',');
 
         return $fillable;
     }
@@ -397,8 +387,6 @@ class CreateCrudModel
         $search = '// add sluggable methods below' . "\n\n";
 
         return str_replace($search, $search . $sluggable, $model);
-
-
     }
 
 
@@ -411,9 +399,7 @@ class CreateCrudModel
         if ($this->isSimpleOneToOneRelation($field)) {
             $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/onetoone/belongsTo.stub');
             $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/onetoone/hasOne.stub');
-        }
-
-        else if ($this->isSimpleOneToManyRelation($field)) {
+        } else if ($this->isSimpleOneToManyRelation($field)) {
             $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/onetomany/belongsTo.stub');
             $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/onetomany/hasMany.stub');
         }
@@ -427,9 +413,7 @@ class CreateCrudModel
 
             $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/manytomany/belongsToMany.stub');
             $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/manytomany/relatedBelongsToMany.stub');
-        }
-
-        else if ($this->isPolymorphicOneToOneRelation($field)) {
+        } else if ($this->isPolymorphicOneToOneRelation($field)) {
 
             $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/polymorphic/onetoone/morphOne.stub');
             $related_stub = '';
@@ -454,7 +438,7 @@ class CreateCrudModel
      * @param string $model
      * @return string
      */
-    private function addTimestampProperty(string $model) :string
+    private function addTimestampProperty(string $model): string
     {
         if (!$this->timestamps) {
             $search = 'public $fillable';
@@ -467,7 +451,4 @@ class CreateCrudModel
 
         return $model;
     }
-
-
-
 }
