@@ -1,0 +1,97 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
+
+use {{namespace}}\{{modelsFolder}}\Comment;
+use Illuminate\Http\Request;
+use {{namespace}}\Traits\FormBuilderTrait;
+use {{namespace}}\Http\Controllers\Controller;
+
+class CommentController extends Controller
+{
+    use FormBuilderTrait;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $comments = Comment::last()->get();
+
+        return view('{{backLowerNamespace}}.comments.index', compact('comments'));
+    }
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\Comment  $comment
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Comment $comment)
+    {
+        return view('{{backLowerNamespace}}.comments.show', compact('comment'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\Comment  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Comment $comment)
+    {
+        $form = $this->getForm($comment);
+        return view('{{backLowerNamespace}}.comments.edit', compact('comment', 'form'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{namespace}}\{{modelsFolder}}\Comment  $comment
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Comment $comment)
+    {
+        $form = $this->getForm($comment);
+        $form->redirectIfNotValid();
+
+        $comment->update($request->all());
+
+        flashy('Le commentaire a bien été modifié');
+        return redirect()->route('{{backLowerNamespace}}.comment.index');
+    }
+
+    /**
+     * Approved the comments.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{namespace}}\{{modelsFolder}}\Comment  $comment
+     * @return \Illuminate\Http\Response
+     */
+    public function approved(Request $request, Comment $comment)
+    {
+        $comment->approved();
+
+        flashy('Le commentaire a bien été approuvé.');
+        return redirect()->route('{{backLowerNamespace}}.comment.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\Comment  $comment
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Comment $comment)
+    {
+        $comment->delete();
+
+        flashy('Le commentaire a bien été supprimé');
+        return redirect()->route('{{backLowerNamespace}}.comment.index');
+    }
+
+}

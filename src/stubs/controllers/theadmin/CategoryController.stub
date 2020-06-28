@@ -3,11 +3,11 @@
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
 use Illuminate\Http\Request;
-use {{namespace}}\{{modelsFolder}}\Post;
 use {{namespace}}\Traits\FormBuilderTrait;
+use {{namespace}}\{{modelsFolder}}\Category;
 use {{namespace}}\Http\Controllers\Controller;
 
-class PostController extends Controller
+class CategoryController extends Controller
 {
     use FormBuilderTrait;
 
@@ -18,9 +18,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('category')->last()->get();
+        $categories = Category::last()->get();
+        $form = $this->getForm();
 
-        return view('{{backLowerNamespace}}.posts.index', compact('posts'));
+        return view('{{backLowerNamespace}}.categories.index', compact('categories','form'));
     }
 
     /**
@@ -31,7 +32,7 @@ class PostController extends Controller
     public function create()
     {
         $form = $this->getForm();
-        return view('{{backLowerNamespace}}.posts.create', compact('form'));
+        return view('{{backLowerNamespace}}.categories.create', compact('form'));
     }
 
     /**
@@ -46,67 +47,64 @@ class PostController extends Controller
 
         $form->redirectIfNotValid();
 
-        $post = Post::create($request->all());
-        $post->generateSeo();
+        Category::create($request->all());
 
         flashy('L\' élément a bien été ajouté');
-        return redirect()->route('{{backLowerNamespace}}.post.index');
+        return redirect()->route('{{backLowerNamespace}}.category.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \{{namespace}}\{{modelsFolder}}\Post  $post
+     * @param  \{{namespace}}\{{modelsFolder}}\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(Category $category)
     {
-        return view('{{backLowerNamespace}}.posts.show', compact('post'));
+        return view('{{backLowerNamespace}}.categories.show', compact('category'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \{{namespace}}\{{modelsFolder}}\Post  $post
+     * @param  \{{namespace}}\{{modelsFolder}}\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit(Category $category)
     {
-        $form = $this->getForm($post);
-        return view('{{backLowerNamespace}}.posts.edit', compact('post', 'form'));
+        $form = $this->getForm($category);
+        return view('{{backLowerNamespace}}.categories.edit', compact('category', 'form'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \{{namespace}}\{{modelsFolder}}\Post  $post
+     * @param  \{{namespace}}\{{modelsFolder}}\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Category $category)
     {
-        $form = $this->getForm($post);
+        $form = $this->getForm($category);
         $form->redirectIfNotValid();
-
-        $post->update($request->all());
-        $post->generateSeo();
+        $category->update($request->all());
 
         flashy('L\' élément a bien été modifié');
-        return redirect()->route('{{backLowerNamespace}}.post.index');
+        return redirect()->route('{{backLowerNamespace}}.category.index');
     }
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \{{namespace}}\{{modelsFolder}}\Post  $post
+     * @param  \{{namespace}}\{{modelsFolder}}\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(Category $category)
     {
-        $post->delete();
+        $category->delete();
         flashy('L\' élément a bien été supprimé');
-        return back();
+        return redirect()->route('{{backLowerNamespace}}.category.index');
     }
 
 }

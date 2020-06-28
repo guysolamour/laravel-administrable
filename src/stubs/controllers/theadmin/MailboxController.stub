@@ -1,0 +1,59 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
+
+use Illuminate\Http\Request;
+use MercurySeries\Flashy\Flashy;
+use {{namespace}}\{{modelsFolder}}\Mailbox;
+use {{namespace}}\{{singularClass}};
+use {{namespace}}\Http\Controllers\Controller;
+
+class MailboxController extends Controller
+{
+
+      /**
+       * Display a listing of the resource.
+       *
+       * @return \Illuminate\Http\Response
+       */
+      public function index()
+      {
+          $mailboxes = Mailbox::last()->get();
+
+          $unread = Mailbox::unRead()->count();
+
+          return view('{{backLowerNamespace}}.mailboxes.index', compact('mailboxes','unread'));
+      }
+
+
+
+      /**
+       * Display the specified resource.
+       *
+       * @param  \{{namespace}}\{{modelsFolder}}\Mailbox  $mailbox
+       * @return \Illuminate\Http\Response
+       */
+      public function show(Mailbox $mailbox)
+      {
+          // mark the message as read if unread
+          $mailbox->markAsRead();
+
+          return view('{{backLowerNamespace}}.mailboxes.show', compact('mailbox'));
+      }
+
+
+
+
+      /**
+       * Remove the specified resource from storage.
+       *
+       * @param  \{{namespace}}\{{modelsFolder}}\Mailbox  $mailbox
+       * @return \Illuminate\Http\Response
+       */
+      public function destroy(Mailbox $mailbox)
+      {
+          $mailbox->delete();
+          flashy('L\' élément a bien été supprimé');
+          return redirect()->route('{{backLowerNamespace}}.mailbox.index');
+      }
+}

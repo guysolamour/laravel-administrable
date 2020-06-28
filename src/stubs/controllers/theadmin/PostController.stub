@@ -19,8 +19,9 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('category')->last()->get();
+        $form = $this->getForm();
 
-        return view('{{backLowerNamespace}}.posts.index', compact('posts'));
+        return view('{{backLowerNamespace}}.posts.index', compact('posts','form'));
     }
 
     /**

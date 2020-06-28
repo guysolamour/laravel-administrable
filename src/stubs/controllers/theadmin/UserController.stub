@@ -22,8 +22,9 @@ class UserController extends Controller
     public function index()
     {
         $users = User::latest()->get();
+        $form = $this->getForm();
 
-        return view('{{backLowerNamespace}}.users.index', compact('users'));
+        return view('{{backLowerNamespace}}.users.index', compact('users','form'));
     }
 
     /**

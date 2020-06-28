@@ -3,11 +3,11 @@
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
 use Illuminate\Http\Request;
-use {{namespace}}\{{modelsFolder}}\Post;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\{{modelsFolder}}\Testimonial;
 
-class PostController extends Controller
+class TestimonialController extends Controller
 {
     use FormBuilderTrait;
 
@@ -18,9 +18,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('category')->last()->get();
+        $testimonials = Testimonial::last()->get();
+        $form = $this->getForm();
 
-        return view('{{backLowerNamespace}}.posts.index', compact('posts'));
+        return view('{{backLowerNamespace}}.testimonials.index', compact('testimonials','form'));
     }
 
     /**
@@ -31,7 +32,7 @@ class PostController extends Controller
     public function create()
     {
         $form = $this->getForm();
-        return view('{{backLowerNamespace}}.posts.create', compact('form'));
+        return view('{{backLowerNamespace}}.testimonials.create', compact('form'));
     }
 
     /**
@@ -46,67 +47,65 @@ class PostController extends Controller
 
         $form->redirectIfNotValid();
 
-        $post = Post::create($request->all());
-        $post->generateSeo();
+        Testimonial::create($request->all());
 
         flashy('L\' élément a bien été ajouté');
-        return redirect()->route('{{backLowerNamespace}}.post.index');
+        return redirect()->route('{{backLowerNamespace}}.testimonial.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \{{namespace}}\{{modelsFolder}}\Post  $post
+     * @param  \{{namespace}}\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(Testimonial $testimonial)
     {
-        return view('{{backLowerNamespace}}.posts.show', compact('post'));
+        return view('{{backLowerNamespace}}.testimonials.show', compact('testimonial'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \{{namespace}}\{{modelsFolder}}\Post  $post
+     * @param  \{{namespace}}\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit(Testimonial $testimonial)
     {
-        $form = $this->getForm($post);
-        return view('{{backLowerNamespace}}.posts.edit', compact('post', 'form'));
+        $form = $this->getForm($testimonial);
+        return view('{{backLowerNamespace}}.testimonials.edit', compact('testimonial', 'form'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \{{namespace}}\{{modelsFolder}}\Post  $post
+     * @param  \{{namespace}}\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Testimonial $testimonial)
     {
-        $form = $this->getForm($post);
+        $form = $this->getForm($testimonial);
         $form->redirectIfNotValid();
-
-        $post->update($request->all());
-        $post->generateSeo();
+        $testimonial->update($request->all());
 
         flashy('L\' élément a bien été modifié');
-        return redirect()->route('{{backLowerNamespace}}.post.index');
+        return redirect()->route('{{backLowerNamespace}}.testimonial.index');
     }
 
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \{{namespace}}\{{modelsFolder}}\Post  $post
+     * @param  \{{namespace}}\{{modelsFolder}}\Testimonial  $testimonial
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(Testimonial $testimonial)
     {
-        $post->delete();
+        $testimonial->delete();
         flashy('L\' élément a bien été supprimé');
-        return back();
+
+        return redirect()->route('{{backLowerNamespace}}.testimonial.index');
     }
 
 }

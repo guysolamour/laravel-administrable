@@ -19,9 +19,8 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::last()->get();
-        $form = $this->getForm();
 
-        return view('{{backLowerNamespace}}.categories.index', compact('categories','form'));
+        return view('{{backLowerNamespace}}.categories.index', compact('categories'));
     }
 
     /**

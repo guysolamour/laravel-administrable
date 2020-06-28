@@ -20,7 +20,7 @@ class AdminInstallCommand extends BaseCommand
     /**
      * @var array
      */
-    protected $crud_models = ['Post','Testimonial','Mailbox'];
+    protected $crud_models = ['Post', 'Testimonial', 'Mailbox'];
 
 
     /**
@@ -28,25 +28,25 @@ class AdminInstallCommand extends BaseCommand
      * @var array
      */
     protected const DEFAULTS = [
-        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model','Seo','Comment'],
-        'migrations'      => ['User','Administrable','Media','Provider','Seo_meta_tag','Comment'],
-        'seeds'           => ['Configuration','Seeder','User'],
+        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model', 'Seo', 'Comment'],
+        'migrations'      => ['User', 'Administrable', 'Media', 'Provider', 'Seo_meta_tag', 'Comment'],
+        'seeds'           => ['Configuration', 'Seeder', 'User'],
         'controllers'     => [
-            'front'       => ['Comment','ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification','Home','Page','Redirect'],
-            'back'        => ['User','Comment','ConfirmPassword','ForgotPassword','Login','Register','ResetPassword','Verification','Configuration','Home','Media','Guard'],
+            'front'       => ['Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Home', 'Page', 'Redirect'],
+            'back'        => ['User', 'Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Configuration', 'Home', 'Media', 'Guard'],
         ],
         'forms' => [
             'front' => [],
-            'back'  => ['User','Comment','Configuration','Create','Guard','ResetPassword']
+            'back'  => ['User', 'Comment', 'Configuration', 'Create', 'Guard', 'ResetPassword']
         ],
         'routes' => [
-            'front' => ['Auth','Default','Social', 'Comment'],
-            'back'  => ['User','Auth','Configuration','Media','Other','Profile','Comment']
+            'front' => ['Auth', 'Default', 'Social', 'Comment'],
+            'back'  => ['User', 'Auth', 'Configuration', 'Media', 'Other', 'Profile', 'Comment']
         ],
 
         'views' => [
-            'front' => ['Auth','Dashboard','Home','Layouts','Legalmention','Partials','Comments'],
-            'back'  => ['Users','Auth','Configuration','Dashboard','Guard','Layouts','Media','Partials','Comments']
+            'front' => ['Auth', 'Dashboard', 'Home', 'Layouts', 'Legalmention', 'Partials', 'Comments'],
+            'back'  => ['Users', 'Auth', 'Configuration', 'Dashboard', 'Guard', 'Layouts', 'Media', 'Partials', 'Comments']
         ],
         'emails' => [
             'front' => [],
@@ -66,7 +66,7 @@ class AdminInstallCommand extends BaseCommand
     /**
      * @var array
      */
-    protected  $presets = ['vue','react', 'bootstrap'];
+    protected  $presets = ['vue', 'react', 'bootstrap'];
 
     /**
      * @var string
@@ -76,7 +76,7 @@ class AdminInstallCommand extends BaseCommand
     /**
      * @var array
      */
-    protected  $themes = ['adminlte', 'theadmin', 'cooladmin','tabler', 'themekit'];
+    protected  $themes = ['adminlte', 'theadmin', 'cooladmin', 'tabler', 'themekit'];
 
     /**
      * @var string
@@ -127,7 +127,7 @@ class AdminInstallCommand extends BaseCommand
         $models = array_filter(explode(',', $this->option('generate')));
 
         // Sanitize data
-        $models = array_map(fn($model) => ucfirst(trim($model)),$models);
+        $models = array_map(fn ($model) => ucfirst(trim($model)), $models);
 
         /**
          * Validation
@@ -151,18 +151,16 @@ class AdminInstallCommand extends BaseCommand
         $this->preset = $preset;
 
 
-        $theme = $this->option('theme') ? strtolower($this->option('theme')) : strtolower(config('administrable.theme','theadmin'));
+        $theme = $this->option('theme') ? strtolower($this->option('theme')) : strtolower(config('administrable.theme', 'theadmin'));
 
 
 
-        if(! in_array($theme, $this->themes)){
+        if (!in_array($theme, $this->themes)) {
             throw new \Exception(sprintf('Le thème {%s} n\'est pas disponible. Les thèmes disponiblent sont {%s}', $theme, join(',', $this->themes)));
         }
 
 
         $this->theme = $theme;
-
-
     }
 
     /**
@@ -327,7 +325,7 @@ class AdminInstallCommand extends BaseCommand
 
 
         // Move User|Guard={admin} To Models Directory
-        $this->info("Moving User.php and ". ucfirst($this->guard) . ".php to app/{$this->models_folder_name} folder");
+        $this->info("Moving User.php and " . ucfirst($this->guard) . ".php to app/{$this->models_folder_name} folder");
         $this->moveDefaultModelsToNewModelsDirectory();
 
 
@@ -351,7 +349,6 @@ class AdminInstallCommand extends BaseCommand
             $this->info(PHP_EOL . 'Seeding database...');
             $this->call('db:seed');
         }
-
     }
 
 
@@ -378,11 +375,9 @@ class AdminInstallCommand extends BaseCommand
             self::TPL_PATH . "/tinymce",
             public_path('vendor/tinymce'),
         );
-
-
     }
 
-    protected function getGuard() :string
+    protected function getGuard(): string
     {
         if ($this->argument('guard')) {
             return strtolower($this->argument('guard'));
@@ -398,7 +393,7 @@ class AdminInstallCommand extends BaseCommand
 
         $stub = $this->filesystem->get(self::TPL_PATH . '/crud/configuration/administrable.stub');
 
-        $this->compliedAndWriteFile (
+        $this->compliedAndWriteFile(
             $stub,
             $path
         );
@@ -456,7 +451,7 @@ class AdminInstallCommand extends BaseCommand
     }
 
 
-    protected function loadModel() :string
+    protected function loadModel(): string
     {
         // On ajoute le modele Category si le Post est dans la liste
         if (in_array('Post', $this->crud_models)) {
@@ -475,7 +470,7 @@ class AdminInstallCommand extends BaseCommand
          * Remove uncreate models in the list
          */
 
-        $models = array_filter($models,fn($model) => in_array($model->getFilenameWithoutExtension(), $models_to_create));
+        $models = array_filter($models, fn ($model) => in_array($model->getFilenameWithoutExtension(), $models_to_create));
 
 
         $model_path =  app_path($this->models_folder_name);
@@ -489,7 +484,7 @@ class AdminInstallCommand extends BaseCommand
         // Renommer du model et le déplacer à la racine du dossier app
         $this->filesystem->move(
             $model_path . '/Model.php',
-            app_path($guard.'.php')
+            app_path($guard . '.php')
         );
 
 
@@ -511,7 +506,7 @@ class AdminInstallCommand extends BaseCommand
         $data_map = $this->parseName();
         $guard = $data_map['{{singularClass}}'];
 
-        foreach (['User', $guard] as $model ) {
+        foreach (['User', $guard] as $model) {
             if ($this->filesystem->exists($userPath = app_path("$model.php"))) {
                 $this->filesystem->move($userPath, $targetPath = app_path("{$this->models_folder_name}/$model.php"));
                 $this->filesystem->put(
@@ -580,7 +575,7 @@ class AdminInstallCommand extends BaseCommand
         return $seed_path;
     }
 
-    private function filterSeeds($seeds) :array
+    private function filterSeeds($seeds): array
     {
         $seeds_to_create = array_merge(
             $this->crud_models,
@@ -595,7 +590,6 @@ class AdminInstallCommand extends BaseCommand
 
             return in_array($name, $seeds_to_create);
         });
-
     }
 
     protected function registerSeed()
@@ -613,7 +607,7 @@ class AdminInstallCommand extends BaseCommand
             $name = $seed->getFileNameWithoutExtension();
 
             // ajout du guard
-            if($name === 'Seeders'){
+            if ($name === 'Seeders') {
                 $name = $data_map['{{pluralClass}}'] . 'TableSeeder';
             }
             $this->replaceAndWriteFile(
@@ -628,7 +622,7 @@ class AdminInstallCommand extends BaseCommand
     }
 
 
-    protected function loadFactory() :string
+    protected function loadFactory(): string
     {
         $data_map = $this->parseName();
         $guard = $data_map['{{singularClass}}'];
@@ -667,7 +661,7 @@ class AdminInstallCommand extends BaseCommand
         $migrations_to_create = array_merge(self::DEFAULTS['migrations'], $this->crud_models);
 
 
-        $migrations = array_filter($migrations, function($migration) use ($migrations_to_create) {
+        $migrations = array_filter($migrations, function ($migration) use ($migrations_to_create) {
             /**
              * On recupere le nom de la migration grace au model
              */
@@ -675,12 +669,11 @@ class AdminInstallCommand extends BaseCommand
                 ->after('create_')
                 ->before('_table')
                 ->singular()
-                ->ucfirst()
-                ;
+                ->ucfirst();
 
-                if ($name == 'Medium') {
-                    $name = Str::plural($name);
-                }
+            if ($name == 'Medium') {
+                $name = Str::plural($name);
+            }
             return in_array($name, $migrations_to_create);
         });
 
@@ -720,7 +713,7 @@ class AdminInstallCommand extends BaseCommand
 
         $controllers_to_create = array_merge(self::DEFAULTS['controllers']['front'], $this->crud_models);
         // remplacer Mailbox par contact
-        if(in_array('Mailbox', $this->crud_models)) {
+        if (in_array('Mailbox', $this->crud_models)) {
             $controllers_to_create[] = 'Contact';
         }
         // Front controllers
@@ -738,8 +731,13 @@ class AdminInstallCommand extends BaseCommand
         );
 
         $controllers_to_create = [...self::DEFAULTS['controllers']['back'], ...$this->crud_models];
+
         // Back controllers
-        $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/back');
+        if ($this->isTheAdminTheme()) {
+            $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/' . $this->theme);
+        } else {
+            $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/back');
+        }
         $controllers_stub = array_filter($controllers_stub, function ($controller) use ($controllers_to_create) {
             $name = (string) Str::of($controller->getFilenameWithoutExtension())->before('Controller');
             return in_array($name, $controllers_to_create);
@@ -754,7 +752,7 @@ class AdminInstallCommand extends BaseCommand
         // Renommage du controller par défaut et ajouter le guard pour ne pas le fixer sur admin
         $this->filesystem->move(
             $controllers_path . $data_map["{{backNamespace}}"] . '/GuardController.php',
-            $controllers_path . $data_map["{{backNamespace}}"] . '/' .$guard . 'Controller.php',
+            $controllers_path . $data_map["{{backNamespace}}"] . '/' . $guard . 'Controller.php',
         );
 
         // Delete default HomeController
@@ -845,15 +843,15 @@ class AdminInstallCommand extends BaseCommand
         // Renommer certains form afin d'ajouter le guard
         $this->filesystem->move(
             $form_path . $data_map["{{backNamespace}}"] . '/CreateForm.php',
-            $form_path . $data_map["{{backNamespace}}"] . '/Create'. $guard .'Form.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/Create' . $guard . 'Form.php',
         );
         $this->filesystem->move(
             $form_path . $data_map["{{backNamespace}}"] . '/GuardForm.php',
-            $form_path . $data_map["{{backNamespace}}"] . '/'. $guard .'Form.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/' . $guard . 'Form.php',
         );
         $this->filesystem->move(
             $form_path . $data_map["{{backNamespace}}"] . '/ResetPasswordForm.php',
-            $form_path . $data_map["{{backNamespace}}"] . '/Reset'. $guard . 'PasswordForm.php',
+            $form_path . $data_map["{{backNamespace}}"] . '/Reset' . $guard . 'PasswordForm.php',
         );
 
         return $form_path;
@@ -932,16 +930,17 @@ class AdminInstallCommand extends BaseCommand
 
 
 
-    protected function loadEmailsViews(){
+    protected function loadEmailsViews()
+    {
         $data_map = $this->parseName();
 
         $views_path = resource_path('views/emails/');
 
         $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/emails/back');
-        $emails_to_create = [...self::DEFAULTS['emails']['back'],...$this->crud_models];
+        $emails_to_create = [...self::DEFAULTS['emails']['back'], ...$this->crud_models];
 
 
-        if(in_array('Mailbox', $emails_to_create)){
+        if (in_array('Mailbox', $emails_to_create)) {
             $emails_to_create[] = 'Contact';
         }
 
@@ -973,10 +972,10 @@ class AdminInstallCommand extends BaseCommand
             $views_stub,
             $views_path . $data_map["{{frontLowerNamespace}}"]
         );
-
     }
 
-    protected function loadErrorsViews(){
+    protected function loadErrorsViews()
+    {
 
         $views_path = resource_path('views/errors/');
 
@@ -986,7 +985,6 @@ class AdminInstallCommand extends BaseCommand
             $views_stub,
             $views_path
         );
-
     }
 
     protected function loadViews()
@@ -996,7 +994,7 @@ class AdminInstallCommand extends BaseCommand
         $views_path = resource_path('views/');
 
         // Mettre les models au pluriel pour les Views
-        $crud_models = array_map(fn($item) => Str::plural($item),$this->crud_models);
+        $crud_models = array_map(fn ($item) => Str::plural($item), $this->crud_models);
 
 
         $views_stub = $this->filesystem->allFiles(self::TPL_PATH . "/views/back/{$this->theme}");
@@ -1004,7 +1002,7 @@ class AdminInstallCommand extends BaseCommand
 
 
 
-        $views_stub = array_filter($views_stub, fn($view) => in_array(ucfirst(Str::before($view->getRelativePathname(), '/')), $views_to_create));
+        $views_stub = array_filter($views_stub, fn ($view) => in_array(ucfirst(Str::before($view->getRelativePathname(), '/')), $views_to_create));
 
         $this->compliedAndWriteFileRecursively(
             $views_stub,
@@ -1013,7 +1011,7 @@ class AdminInstallCommand extends BaseCommand
 
         // renommage du dossier avec le guard
         $this->filesystem->moveDirectory(
-            $views_path . '/' . $data_map["{{backLowerNamespace}}"] .'/guard',
+            $views_path . '/' . $data_map["{{backLowerNamespace}}"] . '/guard',
             $views_path . '/' . $data_map["{{backLowerNamespace}}"] . '/' .  $data_map['{{pluralSlug}}']
         );
 
@@ -1155,7 +1153,6 @@ class AdminInstallCommand extends BaseCommand
         );
 
         return $middleware_path;
-
     }
 
     protected function registerRouteMiddleware()
@@ -1251,8 +1248,8 @@ class AdminInstallCommand extends BaseCommand
         $this->call('key:generate');
 
         // Create database
-        if($this->option('create_db')){
-            $this->call('cmd:db:create',[
+        if ($this->option('create_db')) {
+            $this->call('cmd:db:create', [
                 '--connection' => config('database.default')
             ]);
         }
@@ -1277,7 +1274,6 @@ class AdminInstallCommand extends BaseCommand
         );
 
         return $app_path;
-
     }
 
 
@@ -1322,7 +1318,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
         $search = "'faker_locale' => 'en_US'";
-        $replace = "'faker_locale' => '". $this->option('locale') . '_' . strtoupper($this->option('locale'))."'";
+        $replace = "'faker_locale' => '" . $this->option('locale') . '_' . strtoupper($this->option('locale')) . "'";
         $this->replaceAndWriteFile(
             $this->filesystem->get($config_path),
             $search,
@@ -1357,7 +1353,6 @@ class AdminInstallCommand extends BaseCommand
         }
 
         return app_path('seeds');
-
     }
 
 
@@ -1384,7 +1379,6 @@ class AdminInstallCommand extends BaseCommand
         });
 
         return $notification_stub;
-
     }
 
     protected function loadNotifications()
@@ -1395,13 +1389,13 @@ class AdminInstallCommand extends BaseCommand
         $notification_path = app_path('Notifications/');
 
         // front
-        $this->compliedAndWriteFile (
+        $this->compliedAndWriteFile(
             $this->getNotificationsStubs($data_map["{{frontLowerNamespace}}"]),
             $notification_path . $data_map["{{frontNamespace}}"]
         );
 
         // back
-        $this->compliedAndWriteFileRecursively (
+        $this->compliedAndWriteFileRecursively(
             $this->getNotificationsStubs($data_map["{{backLowerNamespace}}"]),
             $notification_path . $data_map["{{backNamespace}}"]
         );
@@ -1413,7 +1407,8 @@ class AdminInstallCommand extends BaseCommand
     }
 
 
-    protected function loadCommands(){
+    protected function loadCommands()
+    {
         $kernel_path = app_path('Console/Kernel.php');
         $kernel = $this->filesystem->get($kernel_path);
         $commands_stub = $this->filesystem->get(self::TPL_PATH . '/commands/kernel.stub');
@@ -1429,7 +1424,8 @@ class AdminInstallCommand extends BaseCommand
         return $kernel_path;
     }
 
-    protected function loadConfigs(){
+    protected function loadConfigs()
+    {
 
         $config_path = config_path();
         $config_stub = $this->filesystem->files(self::TPL_PATH . '/config');
@@ -1456,7 +1452,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
         $blade_sp = 'BladeServiceProvider';
-        $blade_sp_path = $provider_path. '/' . $blade_sp . '.php';
+        $blade_sp_path = $provider_path . '/' . $blade_sp . '.php';
 
         $this->call('cmd:make:provider', [
             'name'       => $blade_sp,
@@ -1498,10 +1494,10 @@ class AdminInstallCommand extends BaseCommand
     {
 
         // Telescope
-       $this->callSilent('telescope:install');
-       $this->callSilent('migrate');
+        $this->callSilent('telescope:install');
+        $this->callSilent('migrate');
 
-       $this->loadProviders();
+        $this->loadProviders();
 
         // Backup
         $config_filesystems_path = config_path('filesystems.php');
@@ -1513,7 +1509,6 @@ class AdminInstallCommand extends BaseCommand
             $search . PHP_EOL . $this->filesystem->get(self::TPL_PATH . '/config/partials/filesystem.stub'),
             $config_filesystems_path
         );
-
     }
 
     private function filterEmails(string $type)
@@ -1535,7 +1530,7 @@ class AdminInstallCommand extends BaseCommand
     }
 
 
-    public function loadEmails() :string
+    public function loadEmails(): string
     {
         $data_map = $this->parseName();
         $mail_path = app_path('Mail/');
@@ -1591,7 +1586,5 @@ class AdminInstallCommand extends BaseCommand
 
         // composer install
         $this->runProcess("composer update");
-
     }
-
 }

@@ -1,0 +1,52 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
+
+use Illuminate\Http\Request;
+use {{namespace}}\Http\Controllers\Controller;
+
+class HomeController extends Controller
+{
+
+
+    public function redirectTo()
+    {
+        return config('administrable.auth_prefix_path');
+    }
+
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('{{singularSlug}}.auth:{{singularSlug}}');
+    }
+
+    /**
+     * Show the Admin dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index() {
+
+        return view('{{backLowerNamespace}}.dashboard.index');
+    }
+
+
+    /**
+     * Delete selected items
+     *
+     */
+    public function destroyModels(Request $request)
+    {
+        $request->get('model')::destroy($request->get('ids'));
+
+        flashy('Les élements sélectionnés ont été supprimés');
+
+        return response()->json([]);
+    }
+
+}

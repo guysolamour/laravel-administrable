@@ -19,9 +19,8 @@ class TestimonialController extends Controller
     public function index()
     {
         $testimonials = Testimonial::last()->get();
-        $form = $this->getForm();
 
-        return view('{{backLowerNamespace}}.testimonials.index', compact('testimonials','form'));
+        return view('{{backLowerNamespace}}.testimonials.index', compact('testimonials'));
     }
 
     /**
