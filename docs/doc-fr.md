@@ -146,19 +146,16 @@ Pour changer le thème à utiliser pour l'administration. Les thèmes disponible
 
 **NB:** La thème par défaut est ***adminlte***.
 
-
 **adminlte**
-
 ![adminlte](docs/img/adminlte.png?raw=true)
+
 **cooladmin**
-
 ![cooladmin](docs/img/cooladmin.png?raw=true)
-**tabler**
 
+**tabler**
 ![tabler](docs/img/tabler.png?raw=true)
 
 **theadmin**
-
 ![theadmin](docs/img/theadmin.png?raw=true)
 
 **themekit**
@@ -172,6 +169,20 @@ ou avec la version courte
 
 ```php
 php artisan administrable:install {guard=admin} -t "adminlte"
+```
+
+Vous pouvez maintenant vous connecter au back office ***domain/administrable***
+
+Exemple: *http::localhost:8000/administrable*
+
+L'url peut être changé dans le fichier de configuration administrable disponible dans le dossier config.
+Vous devez au préalable publier le service provider (expliquer à l'étape 2) et créer le guard (expliquer à l'étape 5).
+
+```php
+/**
+ * Administration routes prefix.
+ */
+'auth_prefix_path' => 'administrable',
 ```
 
 ### 2. Publication de la config et des assets (css et js)
@@ -188,13 +199,34 @@ php artisan vendor:publish --provider="Guysolamour\Administrable\ServiceProvider
 php artisan route:clear && php artisan config:clear
 ```
 
-### 3. Créer le lien symbolique pour les médias
+### 4. Créer le lien symbolique pour les médias
 
 ```php
 php artisan storage:link
 ```
 
-### 4. Seed de la base de donnée
+### 5. Créer le guard
+
+Vous devez créer un guard en base de donné avant de se connecter.
+
+Exemple:
+
+```php
+php artisan administrable:create --username=johndoe --email=john@doe.fr --password=12345678
+```
+
+or avec la version courte
+
+```php
+php artisan administrable:create -u johndoe -e john@doe.fr -p 12345678
+```
+
+**NB:**
+
+- Si une option n'est pas passé, elle vous sera demandé interactivement.
+- Les options disponible sont: *username*, *email* et *password*
+
+### 6. Seed de la base de donnée
 
 ```php
 php artisan db:seed --class ConfigurationsTableSeeder

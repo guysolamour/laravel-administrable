@@ -81,7 +81,7 @@ class MakeCrudCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Create, model, migration and all views';
+    protected $description = 'Create, model, migration and all views (crud)';
 
     /**
      *

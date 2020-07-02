@@ -112,7 +112,8 @@ class AdminInstallCommand extends BaseCommand
     protected function init()
     {
 
-        if ($this->filesystem->exists(base_path('administrable.yaml'))) {
+
+        if ($this->checkIfPackageHasBeenInstalled()) {
             throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
         }
 

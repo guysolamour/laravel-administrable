@@ -10,7 +10,8 @@ use Illuminate\Filesystem\Filesystem;
 
 
 
-class BaseCommand extends Command {
+class BaseCommand extends Command
+{
 
     protected  const TPL_PATH = __DIR__ . '/../stubs';
 
@@ -28,10 +29,10 @@ class BaseCommand extends Command {
     }
 
     /**
-    * Get project namespace
-    * Default: App
-    * @return string
-    */
+     * Get project namespace
+     * Default: App
+     * @return string
+     */
     protected function getNamespace()
     {
         $namespace = Container::getInstance()->getNamespace();
@@ -40,12 +41,12 @@ class BaseCommand extends Command {
 
 
     /**
-    * Parse guard name
-    * Get the guard name in different cases
-    * @param string $name
-    * @return array
-    */
-    protected function parseName(?string $name = null) :array
+     * Parse guard name
+     * Get the guard name in different cases
+     * @param string $name
+     * @return array
+     */
+    protected function parseName(?string $name = null): array
     {
         if (!$name)
             $name = $this->guard;
@@ -85,7 +86,6 @@ class BaseCommand extends Command {
             $this->filesystem->get($files),
             $path . '/' . $files->getRelativePath() .  '/' . $files->getFilenameWithoutExtension() . '.php'
         );
-
     }
 
 
@@ -101,8 +101,4 @@ class BaseCommand extends Command {
         }
         return rmdir($dir);
     }
-
-
-
-
 }

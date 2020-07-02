@@ -522,6 +522,9 @@ trait CommandTrait
         }
     }
 
+    /**
+     * @return string
+     */
     protected function guestBreadcrumbFieldNane(): string
     {
         if ($this->breadcrumb) {
@@ -535,18 +538,45 @@ trait CommandTrait
         }
     }
 
+    /**
+     * @return boolean
+     */
     protected function isTheadminTheme(): bool
     {
         return $this->isTheme('theadmin');
     }
 
+    /**
+     * @return boolean
+     */
     protected function isThemeKitTheme(): bool
     {
         return $this->isTheme('themekit');
     }
 
+    /**
+     * @param string $theme
+     * @return boolean
+     */
     protected function isTheme(string $theme): bool
     {
         return $this->theme === $theme;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getGuard(): string
+    {
+        return config('administrable.guard', 'admin');
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    protected function checkIfPackageHasBeenInstalled(): bool
+    {
+        return $this->filesystem->exists(base_path('administrable.yaml'));
     }
 }

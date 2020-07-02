@@ -143,17 +143,15 @@ To change the administration theme (template). The available themes are: **admin
 **NB:** The default theme is ***adminlte***.
 
 **adminlte**
-
 ![adminlte](docs/img/adminlte.png?raw=true)
+
 **cooladmin**
-
 ![cooladmin](docs/img/cooladmin.png?raw=true)
-**tabler**
 
+**tabler**
 ![tabler](docs/img/tabler.png?raw=true)
 
 **theadmin**
-
 ![theadmin](docs/img/theadmin.png?raw=true)
 
 **themekit**
@@ -163,10 +161,24 @@ To change the administration theme (template). The available themes are: **admin
 php artisan administrable:install {guard=admin} --theme="adminlte"
 ```
 
-or with the short version
+ou avec la version courte
 
 ```php
 php artisan administrable:install {guard=admin} -t "adminlte"
+```
+
+You can now log in to the back office  ***domain/administrable***
+
+Example: *http::localhost:8000/administrable*
+
+The url can be changed in the administrable config file located in config folder.
+You need to publish the service provider first (explain in step 2) and create guard (explain in step 5).
+
+```php
+/**
+ * Administration routes prefix.
+ */
+'auth_prefix_path' => 'administrable',
 ```
 
 ### 2. Publication of config and assets (css and js)
@@ -183,13 +195,34 @@ php artisan vendor:publish --provider="Guysolamour\Administrable\ServiceProvider
 php artisan route:clear && php artisan config:clear
 ```
 
-### 3. Create the symbolic link for the media
+### 4. Create the symbolic link for the media
 
 ```php
 php artisan storage:link
 ```
 
-### 4. Seed  the database
+### 5. Create guard
+
+You need to create a guard entry in database before log in.
+
+Example:
+
+```php
+php artisan administrable:create --username=johndoe --email=john@doe.fr --password=12345678
+```
+
+or with the short version
+
+```php
+php artisan administrable:create -u johndoe -e john@doe.fr -p 12345678
+```
+
+**NB:**
+
+- You will be prompt if a option is not passed.
+- available options are: *username*, *email* and *password*
+
+### 6. Seed  the database
 
 ```php
 php artisan db:seed --class ConfigurationsTableSeeder
@@ -213,6 +246,7 @@ If the **Mailbox** crud was generated
 php artisan db:seed --class MailboxesTableSeeder
 
 ```
+
 The guard
 
 ```php
