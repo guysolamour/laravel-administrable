@@ -115,7 +115,7 @@ class CreateCrudController
             }
         }
 
-        // Retirer les tags des actions non utilisées
+        // Remove tags from unused actions
         $complied = $this->removeActionTags($complied);
 
 

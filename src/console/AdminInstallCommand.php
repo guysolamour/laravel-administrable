@@ -122,7 +122,7 @@ class AdminInstallCommand extends BaseCommand
         $this->models_folder_name = ucfirst($this->option('model'));
 
         /**
-         * Le filter permet de retirer les éléments vides du tableau comme des , simples
+         * The filter allows you to remove empty elements from the array like , simple
          */
         $models = array_filter(explode(',', $this->option('generate')));
 
@@ -172,13 +172,13 @@ class AdminInstallCommand extends BaseCommand
 
         $this->init();
 
-        // Passer des options pour generer les articles, mentions legales, temoignages en option
+        // Skip options to generate articles, legal notices, optional testimonials
 
         $this->callSilent('multi-auth:install', [
             'name'    => $this->guard,
         ]);
 
-        // Gerer l'authentification
+        // Manage authentication
         $this->call("ui", [
             'type'   => $this->preset,
             '--auth' => true,
@@ -355,7 +355,7 @@ class AdminInstallCommand extends BaseCommand
 
     protected function publishAssets()
     {
-        // Faire les copies
+        // Make copies
         $this->filesystem->copyDirectory(
             self::TPL_PATH . "/assets/{$this->theme}",
             public_path("vendor/{$this->theme}"),
@@ -453,7 +453,7 @@ class AdminInstallCommand extends BaseCommand
 
     protected function loadModel(): string
     {
-        // On ajoute le modele Category si le Post est dans la liste
+        // We add the Category model if the Post is in the list
         if (in_array('Post', $this->crud_models)) {
             $this->crud_models[] = 'Category';
         }
@@ -481,14 +481,14 @@ class AdminInstallCommand extends BaseCommand
             $model_path
         );
 
-        // Renommer du model et le déplacer à la racine du dossier app
+        // Rename the model and move it to the root of the app folder
         $this->filesystem->move(
             $model_path . '/Model.php',
             app_path($guard . '.php')
         );
 
 
-        // Renommer du model user et le déplacer à la racine du dossier app
+        // Rename the model user and move it to the root of the app folder
         $this->filesystem->move(
             $model_path . '/User.php',
             app_path('User.php')
@@ -602,11 +602,11 @@ class AdminInstallCommand extends BaseCommand
         $seeds = $this->filterSeeds($seeds);
 
 
-        // La fonction array_reverse permet de seeder la categorie avant les
+        // The array_reverse function allows to seeder the category before the
         foreach ($seeds as $seed) {
             $name = $seed->getFileNameWithoutExtension();
 
-            // ajout du guard
+            // added guard
             if ($name === 'Seeders') {
                 $name = $data_map['{{pluralClass}}'] . 'TableSeeder';
             }
@@ -663,7 +663,7 @@ class AdminInstallCommand extends BaseCommand
 
         $migrations = array_filter($migrations, function ($migration) use ($migrations_to_create) {
             /**
-             * On recupere le nom de la migration grace au model
+             * We recover the name of the migration thanks to the model
              */
             $name = (string) Str::of($migration->getFilenameWithoutExtension())
                 ->after('create_')
@@ -679,7 +679,7 @@ class AdminInstallCommand extends BaseCommand
 
         $migrations_path =  database_path('migrations');
 
-        // suppression de la migration user par défaut
+        // removing default user migration
         $this->filesystem->delete([
             $this->filesystem->glob($migrations_path . '/*_create_users_table.php')[0]
         ]);
@@ -690,13 +690,13 @@ class AdminInstallCommand extends BaseCommand
             $migrations_path
         );
 
-        // Remplacer la migration existante
+        // Replace existing migration
         $this->filesystem->move(
             $migrations_path . '/provider.php',
             $this->filesystem->glob($migrations_path . '/*_create_' . $guard . '_table.php')[0]
         );
 
-        // Remplacer la migration des users
+        // Replace user migration
 
         return $migrations_path;
     }
@@ -712,7 +712,7 @@ class AdminInstallCommand extends BaseCommand
         $controllers_path =  app_path('/Http/Controllers/');
 
         $controllers_to_create = array_merge(self::DEFAULTS['controllers']['front'], $this->crud_models);
-        // remplacer Mailbox par contact
+        // replace Mailbox by contact
         if (in_array('Mailbox', $this->crud_models)) {
             $controllers_to_create[] = 'Contact';
         }
@@ -749,7 +749,7 @@ class AdminInstallCommand extends BaseCommand
             $controllers_path . $data_map["{{backNamespace}}"]
         );
 
-        // Renommage du controller par défaut et ajouter le guard pour ne pas le fixer sur admin
+        // Rename the default controller and add the guard so as not to fix it on admin
         $this->filesystem->move(
             $controllers_path . $data_map["{{backNamespace}}"] . '/GuardController.php',
             $controllers_path . $data_map["{{backNamespace}}"] . '/' . $guard . 'Controller.php',
@@ -809,7 +809,7 @@ class AdminInstallCommand extends BaseCommand
         $forms_stub = $this->filesystem->files(self::TPL_PATH . '/forms/front');
 
         $forms_to_create = array_merge(self::DEFAULTS['forms']['front'], $this->crud_models);
-        // remplacer Mailbox par contact
+        // replace Mailbox by contact
         if (in_array('Mailbox', $this->crud_models)) {
             $forms_to_create[] = 'Contact';
         }
@@ -840,7 +840,7 @@ class AdminInstallCommand extends BaseCommand
             $form_path . $data_map["{{backNamespace}}"]
         );
 
-        // Renommer certains form afin d'ajouter le guard
+        // Rename some form to add the guard
         $this->filesystem->move(
             $form_path . $data_map["{{backNamespace}}"] . '/CreateForm.php',
             $form_path . $data_map["{{backNamespace}}"] . '/Create' . $guard . 'Form.php',
@@ -869,7 +869,7 @@ class AdminInstallCommand extends BaseCommand
         $route_stub = $this->filesystem->files(self::TPL_PATH . '/routes/web/front');
 
         $routes_to_create = array_merge(self::DEFAULTS['routes']['front'], $this->crud_models);
-        // remplacer Mailbox par contact
+        // replace Mailbox by contact
         if (in_array('Mailbox', $this->crud_models)) {
             $routes_to_create[] = 'Contact';
         }
@@ -909,7 +909,7 @@ class AdminInstallCommand extends BaseCommand
             app_path('Providers/RouteServiceProvider.php'),
         );
 
-        // Suppression des fichiers de routing de base
+        // Delete basic routing files
         $this->filesystem->delete([
             base_path('routes/web.php'),
             base_path("routes/{$this->guard}.php"),
@@ -993,7 +993,7 @@ class AdminInstallCommand extends BaseCommand
 
         $views_path = resource_path('views/');
 
-        // Mettre les models au pluriel pour les Views
+        // Put models in the plural for Views
         $crud_models = array_map(fn ($item) => Str::plural($item), $this->crud_models);
 
 
@@ -1009,7 +1009,7 @@ class AdminInstallCommand extends BaseCommand
             $views_path . $data_map["{{backLowerNamespace}}"]
         );
 
-        // renommage du dossier avec le guard
+        // renaming of the file with the guard
         $this->filesystem->moveDirectory(
             $views_path . '/' . $data_map["{{backLowerNamespace}}"] . '/guard',
             $views_path . '/' . $data_map["{{backLowerNamespace}}"] . '/' .  $data_map['{{pluralSlug}}']
@@ -1038,7 +1038,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
 
-        // Gestion des liens (aside) en administration
+        // Management of links (aside) in administration
         $aside_path = resource_path("views/{$data_map["{{backLowerNamespace}}"]}/partials/_sidebar.blade.php");
 
 
@@ -1060,7 +1060,7 @@ class AdminInstallCommand extends BaseCommand
         }
 
 
-        // Gestion du lien dans le header
+        // Management of the link in the header
         if (in_array('Mailbox', $this->crud_models)) {
             $header_path = resource_path("views/{$data_map["{{backLowerNamespace}}"]}/partials/_header.blade.php");
             $stub = $this->filesystem->get(self::TPL_PATH . "/views/back/{$this->theme}/stubs/headerLink.blade.stub");
@@ -1083,7 +1083,7 @@ class AdminInstallCommand extends BaseCommand
         $this->loadErrorsViews();
 
 
-        // suppression des vues générées par le package Multi Auth
+        // deletion of views generated by the Multi Auth package
         $this->filesystem->deleteDirectory(resource_path('views/') . $data_map['{{singularSlug}}']);
 
         // Layouts
@@ -1107,7 +1107,7 @@ class AdminInstallCommand extends BaseCommand
 
         $middleware_path = app_path('Http/Middleware');
 
-        // Ajout de middleware RedirectIfNotSuper
+        // Addition of RedirectIfNotSuper middleware
         $redirect_middleware_stub = self::TPL_PATH . '/middleware/RedirectIfNotSuper.stub';
         $redirect_middleware = $this->filesystem->get($redirect_middleware_stub);
 
@@ -1116,7 +1116,7 @@ class AdminInstallCommand extends BaseCommand
             $middleware_path . '/RedirectIfNotSuper' . $data_map['{{singularClass}}'] . '.php'
         );
 
-        // Ajout de middleware RedirectIfNotSuper
+        // Addition of RedirectIfNotSuper middleware
         $redirect_authenticated_middleware_stub = self::TPL_PATH . '/middleware/RedirectIfAuthenticated.stub';
         $redirect_authenticated_middleware = $this->filesystem->get($redirect_authenticated_middleware_stub);
 
@@ -1342,7 +1342,7 @@ class AdminInstallCommand extends BaseCommand
         foreach ($seeds as $seed) {
             $name = $seed->getFileNameWithoutExtension();
 
-            // ajout du guard
+            // added guard
             if ($name === 'Seeder') {
                 $name = $data_map['{{pluralClass}}'] . 'TableSeeder';
             }
@@ -1384,7 +1384,7 @@ class AdminInstallCommand extends BaseCommand
     protected function loadNotifications()
     {
 
-        // deplacer les notifs auth dans le dossier back
+        // move the auth notifications to the back folder
         $data_map = $this->parseName();
         $notification_path = app_path('Notifications/');
 
@@ -1400,7 +1400,7 @@ class AdminInstallCommand extends BaseCommand
             $notification_path . $data_map["{{backNamespace}}"]
         );
 
-        // suppression des notifs par défaut
+        // deletion of default notifications
         $this->filesystem->deleteDirectory($notification_path . $data_map['{{singularClass}}']);
 
         return $notification_path;

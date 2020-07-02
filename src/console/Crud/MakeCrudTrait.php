@@ -1,4 +1,5 @@
 <?php
+
 namespace Guysolamour\Administrable\Console\Crud;
 
 use Illuminate\Support\Arr;
@@ -36,10 +37,10 @@ trait MakeCrudTrait
             '{{frontLowerNamespace}}'  =>  Str::lower(config('administrable.front_namespace')),
             '{{backNamespace}}'        =>  ucfirst(config('administrable.back_namespace')),
             '{{backLowerNamespace}}'   =>  Str::lower(config('administrable.back_namespace')),
-            '{{modelsFolder}}'         =>  $this->getCrudConfiguration('folder','Models'),
+            '{{modelsFolder}}'         =>  $this->getCrudConfiguration('folder', 'Models'),
             '{{administrableLogo}}'    =>  asset(config('administrable.logo_url')),
             '{{theme}}'                =>  $this->theme,
-            '{{guard}}'                =>  config('administrable.guard','admin')
+            '{{guard}}'                =>  config('administrable.guard', 'admin')
         ];
     }
 
@@ -63,7 +64,7 @@ trait MakeCrudTrait
     protected function parseRelationName(string $model_name, string $related_full_name): array
     {
 
-        // on recupere le nom du modele sans le namespace
+        // we recover the name of the model without the namespace
         $related = $this->modelNameWithoutNamespace($related_full_name);
 
         return [
@@ -79,11 +80,11 @@ trait MakeCrudTrait
         ];
     }
 
-    protected function getMigrationFieldType(array $field) :string
+    protected function getMigrationFieldType(array $field): string
     {
         $type = $this->getNonRelationType($field);
-        // si la valeur est un tableau c'est que nous avons un champ de type relation
-        // pas la paine d'aller plus loin
+        // if the value is an array it is that we have a relation type field
+        // no need to go further
         if ($this->isRelationField($type)) return '';
 
         if ($type === 'image') {
@@ -117,20 +118,20 @@ trait MakeCrudTrait
 
 
 
-    protected function translate_field(array $field) :string
+    protected function translate_field(array $field): string
     {
         return translate_model_field($field['name'], $field['trans'] ?? null);
     }
 
 
-    public function modelHasTinymceField(array $model = []) :bool
+    public function modelHasTinymceField(array $model = []): bool
     {
-        if (empty($model)){
+        if (empty($model)) {
             $model = $this->fields;
         }
 
         foreach ($model as $key =>  $field) {
-            if (is_array($field) && Arr::exists($field, 'tinymce') && $field['tinymce'] == true){
+            if (is_array($field) && Arr::exists($field, 'tinymce') && $field['tinymce'] == true) {
                 return true;
             }
         }
@@ -139,14 +140,14 @@ trait MakeCrudTrait
     }
 
 
-    protected function hasCrudAction(string $key) :bool
+    protected function hasCrudAction(string $key): bool
     {
         return in_array($key, $this->actions);
     }
 
 
 
-    protected function isSimpleRelation(array $field) :bool
+    protected function isSimpleRelation(array $field): bool
     {
         return $this->getRelationType($field) === $this->RELATION_TYPES['simple'];
     }
@@ -199,5 +200,4 @@ trait MakeCrudTrait
             $this->getRelationType($field) === $this->RELATION_TYPES['polymorphic'] &&
             $this->getRelationName($field)   === $this->RELATION_NAMES['polymorphic']['m2o'];
     }
-
 }

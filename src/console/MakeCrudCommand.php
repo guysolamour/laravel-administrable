@@ -135,7 +135,7 @@ class MakeCrudCommand extends BaseCommand
                     return trim($action);
                 }, array_filter($actions));
 
-                // On retire les actions dans la liste car déjà dans l'instance
+                // We remove the actions from the list because already in the instance
                 $this->fields  =  Arr::except($this->fields, 'actions');
             } else {
                 $this->actions = $this->ACTIONS;
@@ -155,19 +155,19 @@ class MakeCrudCommand extends BaseCommand
                 if (!is_array($field)) {
                     continue;
                 }
-                // Ajout de la clé name en utilisant la clé si pas fourni
+                // Adding the name key using the key if not provided
                 $field = $this->addFielsCustomProperty($field, $key, $key, 'name');
 
 
-                // permettre l 'utilisation de req pour la règle required
-                // pouvoir tester si deux regles sont utilisés dans la meme rule et thwow une exception
-                // Si le champ est juste req car il peut aussi se trouver dans required dou le && de la condition
+                // allow req to be used for the required rule
+                // be able to test if two rules are used in the same rule and thwow an exception
+                // If the field is just req because it can also be in required dou the && of the condition
                 $field_rule = $this->getFieldRules($field);
                 if (!Str::contains($field_rule, 'required') && Str::contains($field_rule, 'req')) {
                     $this->fields[$key]['rules'] = Str::replaceFirst('req', 'required', $field_rule);
                 }
 
-                // Ajouter la longueur si passé dans le type
+                // Add length if passed in type
                 $type = $field['type'];
                 $delimiter = ':';
 
@@ -198,7 +198,7 @@ class MakeCrudCommand extends BaseCommand
                     $poly_model_id = $this->getPolymorphicModelId($field);
                     $poly_model_type = $this->getPolymorphicModelType($field);
 
-                    // ajout des champs ---able_id et ....able_type
+                    // add ---able_id et ....able_type fields
                     if (
                         !empty($poly_model_id) && !empty($poly_model_type)
                     ) {
@@ -274,9 +274,9 @@ class MakeCrudCommand extends BaseCommand
 
                         $this->fields[$key]['type']['related'] = $related;
                     } else {
-                        // Ajouter le namespace complet au related model
+                        // Add the full namespace to the related model
                         if (Str::contains($related, '\\')) {
-                            // Mettre la premiere lettre en Majuscule de chaque mot après un \ et les combiner plus tard
+                            // Put the first letter in uppercase of each word after a \ and combine them later
                             $related = join('\\', array_map(fn ($item) => ucfirst($item), explode('\\', $related)));
                         } else {
                             $related = sprintf("%s\%s\%s", $this->getNamespace(), $this->getModelsFolder(), ucfirst($related));
@@ -285,7 +285,7 @@ class MakeCrudCommand extends BaseCommand
                         $this->fields[$key]['type']['related'] = $related;
                     }
 
-                    // retirer le | de fin au cas ou le user l'a oublié
+                    // remove the | end in case the user forgot it
                     $this->fields[$key]['rules'] = rtrim($this->fields[$key]['rules'], '|');
 
 
@@ -327,9 +327,9 @@ class MakeCrudCommand extends BaseCommand
                             }
                         }
 
-                        // Ajouter le onDelete si fournis dans le fichier yaml par défaut ce sera cascade
+                        // Add the onDelete if provided in the default yaml file it will be cascade
                         if ($onDelete = $this->getFieldOnDelete($field)) {
-                            // validation du champ onDelete
+                            // validation of the onDelete field
                             if (!in_array($onDelete, $this->ONDELETERULES)) {
                                 throw new \Exception(
                                     sprintf(
@@ -346,7 +346,7 @@ class MakeCrudCommand extends BaseCommand
                                         $this->fields[$key]['rules'] = 'nullable|' . $this->fields[$key]['rules'];
                                     }
                                 } else {
-                                    // un champ required ne peut pas être nullable
+                                    // a required field cannot be nullable
                                     if (Str::contains($field['rules'], 'required')) {
                                         throw new \Exception(
                                             sprintf(
@@ -355,14 +355,14 @@ class MakeCrudCommand extends BaseCommand
                                             )
                                         );
                                     }
-                                    // on ne peut pas faire .= parceque in redefini la variable
+                                    // we cannot do. = because in redefining the variable
                                     if (!Str::contains($this->fields[$key]['rules'], 'nullable')) {
                                         $this->fields[$key]['rules'] = 'nullable|' . $this->fields[$key]['rules'];
                                     }
                                 }
                             }
 
-                            // si la valeur est set null est que le champ n'est pas nullable alors on l'ajoute
+                            // if the value is set null is that the field is not nullable then we add it
                         } else {
                             $this->fields[$key]['type']['onDelete'] = 'cascade';
                         }
@@ -382,8 +382,8 @@ class MakeCrudCommand extends BaseCommand
 
 
 
-                // appliquer les constraintes sur le champ
-                // uniformiser les constraintes
+                // apply the constraints on the spot
+                // standardize the constraints
                 if ($constraints = Arr::get($field, 'constraints')) {
                     if (is_string($constraints)) {
                         $this->fields[$key]['constraints'] =  array_map(fn ($item) => Str::lower(trim($item)), array_filter(explode(',', $constraints)));
@@ -393,11 +393,11 @@ class MakeCrudCommand extends BaseCommand
                                 $item =  Str::lower(trim($item));
                             }
 
-                            // Le unique sera traité plus tard pas ici
+                            // The unique will be treated later not here
                             if (Str::contains($item, ':') && !Str::contains($item, 'unique')) {
                                 [$constraint_name, $constraint_value] = array_filter(explode(':', $item));
 
-                                // convertir les élements
+                                // convert elements
                                 if ('true' === $constraint_value) {
                                     $constraint_value = true;
                                 } else if ('false' === $constraint_value) {
@@ -406,7 +406,7 @@ class MakeCrudCommand extends BaseCommand
                                     $constraint_value = intval($constraint_value); // permet de le convertie en chiffre
                                 }
 
-                                // gerer le cas du unique
+                                // handle the case of the unique
                                 $item = ['name' => $constraint_name, 'value' => $constraint_value];
                             }
 
@@ -418,7 +418,7 @@ class MakeCrudCommand extends BaseCommand
                 }
 
 
-                // le nullable doit etre defini qu'une seule fois soit dans le nullable:true | rule:nullable
+                // the nullable must be defined only once in the nullable: true | rule: nullable
                 if (
                     (Arr::get($field, 'nullable') &&  Str::contains($field['rules'], 'nullable')) ||
                     (Arr::get($field, 'nullable') && in_array('nullable', Arr::get($this->fields[$key], 'constraints', []))) ||
@@ -433,7 +433,7 @@ class MakeCrudCommand extends BaseCommand
                 }
 
                 /**
-                 * Ajout de la contrainte nullable
+                 * Addition of nullable constraint
                  */
                 if (in_array('nullable', Arr::get($this->fields[$key], 'constraints', []))) {
                     if (!Arr::exists($field, 'nullable')) {
@@ -493,9 +493,9 @@ class MakeCrudCommand extends BaseCommand
         }
 
 
-        // tester pour voir si le parent_id existe et que le forein existe ne rien faire
-        // par contre si parent defini et nom foreign prendre la clé du champ pour setter
-        // et apres le mettre dans le modele la bas
+        // test to see if the parent_id exists and the forein exists do nothing
+        // on the other hand if defined parent and foreign name take the field key to setter
+        // and after putting it in the model over there
 
         $this->theme = config('administrable.theme');
 
@@ -678,7 +678,7 @@ class MakeCrudCommand extends BaseCommand
     private function setDefaultTypeAndRule()
     {
         foreach ($this->fields as $key => $field) {
-            // On saute les actions pour les traiter plus tard
+            // We skip the actions to process them later
             if ($key === 'actions') {
                 continue;
             }

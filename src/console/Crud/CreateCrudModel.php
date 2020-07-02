@@ -146,7 +146,7 @@ class CreateCrudModel
 
         foreach ($this->fields as $field) {
             if ($this->isRelationField($field['type'])) {
-                // on recupere le modele
+                // we recover the model
                 [$model_stub, $related_stub] = $this->getModelAndRelatedModelStubs($field);
 
                 $data_map = array_merge(
@@ -205,8 +205,8 @@ class CreateCrudModel
 
                         $replace = '';
                         /**
-                         * Si la table intermédiaire n'est pas défini, on la devine car pour passer les clés étrangères
-                         * il faut le nom de la table
+                         * If the intermediate table is not defined, we guess it because to pass the foreign keys
+                         * you need the name of the table
                          */
                         if (!$intermediate_table = $this->getRelationIntermediateTable($field)) {
                             $intermediate_table = $this->guestIntermediataTableName($field);

@@ -395,7 +395,7 @@ class CreateCrudView
 
         foreach ($this->fields as $key =>  $field) {
             /**
-             * Si le champ est de type imagemanager on le saute
+             * If the field is of type imagemanager we skip it
              */
             if ($this->isImageableField($key)) {
                 continue;
@@ -452,7 +452,7 @@ class CreateCrudView
             // $show_views .= '                <p class="pb-2"><b>Date ajout:</b> {{ $' . $field_name . '->created_at->format(\'d/m/Y h:i\') }}</p>' . "\n";
         }
 
-        // si on doit afficher le media show
+        // if we have to display the media show
 
         return $show_views;
     }
@@ -495,7 +495,7 @@ class CreateCrudView
         $complied =  $this->compliedFile($stub);
 
 
-        // ajout du checkbox de suppression multiple
+        // added multiple deletion checkbox
         $values = <<<TEXT
         $complied
         TEXT;
@@ -513,7 +513,7 @@ class CreateCrudView
                 continue;
             }
 
-            // si le champ est de type image on le saute parcequ'on ne souhaite pas l'afficher sur la page d´index
+            // if the field is of type image we skip it because we do not want to display it on the index page
             if ($field['type'] == 'image') {
                 continue;
             };
@@ -627,7 +627,7 @@ class CreateCrudView
 
 
 
-        // ajout du checkbox de suppression multiple
+        // added multiple deletion checkbox
 
         foreach ($this->fields as $key => $field) {
 
@@ -636,7 +636,7 @@ class CreateCrudView
                 continue;
             }
 
-            // si le champ est de type image on le saute parcequ'on ne souhaite pas l'afficher sur la page d´index
+            // if the field is of type image we skip it because we do not want to display it on the index page
             if ($field['type'] == 'image') {
                 continue;
             };
@@ -649,7 +649,6 @@ class CreateCrudView
                     $values
                                 <{$tag}>{{ Str::limit(\${$var_name}->{$this->getFieldName($field)},50) }}</{$tag}>
                 TEXT;
-                // $values .= '                                        <td>{{ Str::limit($' . $var_name . '->' . $field['name'] . ') }}</td>' . "\n";
             } else if ($this->isRelationField($field['type'])) {
 
                 if ($this->isSimpleRelation($field)) {
@@ -701,7 +700,6 @@ class CreateCrudView
                 $values
                             <{$tag}>{{ \${$var_name}->created_at->format('d/m/Y h:i') }}</{$tag}>
             TEXT;
-            // $values .= '                                        <td>{{ $' . $var_name . '->created_at->format(\'d/m/Y h:i\') }}</td>' . "\n";
         }
 
 

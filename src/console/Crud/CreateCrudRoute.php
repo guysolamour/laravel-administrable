@@ -85,7 +85,7 @@ class CreateCrudRoute
         $unusedActions = array_diff($this->ACTIONS, $this->actions);
 
         if (!empty($unusedActions)) {
-            // le array_map permet d'ajouter les guillemets simple ' autour du champ
+            // the array_map allows you to add the single quotes around the field
             $excerpt = sprintf("->except(%s)", join(", ", array_map(fn ($item) => "'$item'", $unusedActions)));
         }
 

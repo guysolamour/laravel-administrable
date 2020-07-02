@@ -101,7 +101,7 @@ class CreateCrudMigration
         $migration = $this->compliedFile($migration_stub, true, $data_map);
         $migration_path = $this->generateMigrationFields($migration, $data_map);
 
-        // verifier si il y a des relations many to many et generes la table pivot
+        // check if there are many to many relationships and generate the pivot table
 
         if ($this->seeder) {
             $seeder_stub = $this->TPL_PATH . '/migrations/seed.stub';
@@ -146,7 +146,7 @@ class CreateCrudMigration
         $seed_fields = "\n";
 
         foreach ($this->fields as $field) {
-            // permettre de generer le slug dans le seed en mettant la variable $slug devant
+            // allow to generate the slug in the seed by putting the variable $ slug in front
             if ($field['type'] === "string") {
                 $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->text(),';
             }
@@ -222,7 +222,7 @@ class CreateCrudMigration
             $fields .= "\n" . '           $table->timestamps();';
         }
 
-        // Les tables pivot doivent etre créées avant la migration à cause des clients étrangères
+        // Pivot tables must be created before migration due to foreign customers
         $this->createManyToManyRelationPivotTable();
 
 
@@ -289,7 +289,7 @@ class CreateCrudMigration
 
                 $pivot_migration = $this->compliedFile($pivot_migration_stub, true, $data_map);
 
-                // Le plus 5 permet de générer la table pivot à cause des  clés étrangères
+                // Plus 5 generates the pivot table because of foreign keys
                 $signature  = date('Y_m_d_') . (date('His') + 5);
                 $pivot_migration_path = database_path('migrations/' . $signature . '_' . Str::snake($this->getIntermediateClassName($field)) . '.php');
 
@@ -343,7 +343,7 @@ class CreateCrudMigration
 
     protected function getModelTableName(string  $model): string
     {
-        // on recupere le nom du modele sans namespace
+        // we recover the name of the model without namespace
         $model = explode('\\', $model);
 
         return  strtolower(Str::plural(Str::studly(end($model))));

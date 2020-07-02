@@ -179,9 +179,9 @@ trait CommandTrait
 
 
     /**
-     * Permet de créer un dossier
+     * Create a folder
      * @param string $path
-     * @param boolean $folder Permet de savoir si le chemin passé est un dossier ou fichier
+     * @param boolean $folder Used to find out if the path passed is a folder or file
      * @return void
      */
     protected function createDirectoryIfNotExists(string $path, bool $folder = true): void

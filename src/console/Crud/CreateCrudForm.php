@@ -133,7 +133,7 @@ class CreateCrudForm
 
         foreach ($this->fields as $field) {
             if ($this->isRelationField($this->getNonRelationType($field))) {
-                // les champs de type polymorphique sont ignorés
+                // polymorphic fields are ignored
                 if (!$this->isPolymorphicField($field)) {
                     $fields .= <<<TEXT
 
@@ -150,7 +150,7 @@ class CreateCrudForm
                 }
                 # code...
             } else {
-                // les champs de type polymorphique sont ignorés
+                // polymorphic fields are ignored
                 if (!$this->isPolymorphicField($field)) {
                     $fields .= <<<TEXT
 
