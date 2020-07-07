@@ -36,7 +36,7 @@ class CreateAdministrableCommand extends BaseCommand
         parent::__construct();
 
         // Check if package was installed
-        if (!$this->checkIfPackageHasBeenInstalled()) {
+        if ($this->checkIfPackageHasBeenInstalled()) {
             throw new \Exception("The installation must be done before using this command. Please run [administrable:install] command.");
         }
 
