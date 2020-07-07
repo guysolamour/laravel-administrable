@@ -3,27 +3,27 @@
 return [
 
     /**
-             * Utilisés dans le back office
-                   */
+     * Used in the back office
+    */
     'app_first_name'   => config('app.first_name', 'Admin'),
     'app_last_name'    => config('app.last_name', 'Admin'),
     'app_short_name'   => config('app.short_name', 'Lvl'),
 
     /**
-         * Thèmes disponiblent adminlte,theadmin,cooladmin,tabler,themekit
-         * Le thème ne doit pas être changé une fois que l'installation a été faite
-         */
-    'theme' => 'theadmin',
-
-    /**
-         * Le guard utilise pour l'installation. Par défaut le valeur est admin
-         * Cette valeur est aussi utilisée pour générer le crud. Après installation cette
-     * valeur ne doit plus etre changé au risque de péter les vues du crud
+     * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
+     * The theme should not be changed once the installation has been done
      */
-    'guard' => 'client',
+    'theme' => 'adminlte',
 
     /**
-     * Le lien du logo à utiliser pour l'administration
+     * The guard used for the installation. By default the value is admin.
+     * This value is also used to generate the crud.
+     * After installation, this value should no longer be changed at the risk of farting the views of the crud
+     */
+    'guard' => 'admin',
+
+    /**
+     * The logo link to use for administration
      */
     'logo_url' => 'img/logo-administrable.png',
 
@@ -33,11 +33,12 @@ return [
     'auth_prefix_path' => 'administrable',
 
     /**
-     * Le nom du dossier ou sera stocké les controllers du front office dans le dossier controller
+     * The name of the folder where the front office controllers will be stored in App/Http/Controller folder
      */
     'front_namespace' => 'Front',
-    /**
-     * Le nom du dossier ou sera stocké les controllers du back office dans le dossier controller
+    
+     /**
+     * The name of the folder where the back office controllers will be stored in App/Http/Controller folder
      */
     'back_namespace' => 'Back',
 

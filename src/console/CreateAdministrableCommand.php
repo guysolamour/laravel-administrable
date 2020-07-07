@@ -35,10 +35,7 @@ class CreateAdministrableCommand extends BaseCommand
     {
         parent::__construct();
 
-        // Check if package was installed
-        if ($this->checkIfPackageHasBeenInstalled()) {
-            throw new \Exception("The installation must be done before using this command. Please run [administrable:install] command.");
-        }
+        
 
         $this->guard = $this->getGuard();
     }
@@ -50,6 +47,11 @@ class CreateAdministrableCommand extends BaseCommand
 
     public function handle()
     {
+        // Check if package was installed
+        if ($this->checkIfPackageHasBeenInstalled()) {
+            throw new \Exception("The installation must be done before using this command. Please run [administrable:install] command.");
+        }
+        
 
         $username = $this->option('username');
         if (!$username) {
