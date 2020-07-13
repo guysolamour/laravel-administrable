@@ -62,7 +62,7 @@ class Create{{singularClass}}Form extends Form
           'rules'  => 'required|min:8|confirmed',
         ])
         ->add('password_confirmation', 'password', [
-          'label' => 'Confirmation du mot de passe *',
+          'label' => 'Confirmation du mot de passe',
           'rules'  => 'required|min:8',
         ])
       ;

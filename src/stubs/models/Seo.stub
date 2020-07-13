@@ -68,4 +68,6 @@ class Seo extends Model {
         }
     }
 
+     // add relation methods below
+
 }

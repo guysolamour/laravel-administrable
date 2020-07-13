@@ -12,6 +12,6 @@ class Configuration extends BaseModel
 
     public $timestamps = false;
 
-
+    // add relation methods below
 
 }

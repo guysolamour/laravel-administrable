@@ -21,6 +21,10 @@ return [
      * After installation, this value should no longer be changed at the risk of farting the views of the crud
      */
     'guard' => 'admin',
+    /**
+     * The color useed by for the emails header background.
+     */
+    'notificatio_email_header_color' => '#33cabb',
 
     /**
      * The logo link to use for administration
@@ -36,7 +40,7 @@ return [
      * The name of the folder where the front office controllers will be stored in App/Http/Controller folder
      */
     'front_namespace' => 'Front',
-    
+
      /**
      * The name of the folder where the back office controllers will be stored in App/Http/Controller folder
      */

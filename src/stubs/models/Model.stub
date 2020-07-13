@@ -133,4 +133,6 @@ class {{singularClass}} extends Authenticatable implements HasMedia
       return 'pseudo';
     }
 
+     // add relation methods below
+
 }

@@ -19,7 +19,7 @@ Looks like you tried signing in a few too many times. Let's see if we can get yo
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <!-- LOGO -->
 <tr>
-<td bgcolor="#33cabb" align="center">
+<td bgcolor="{{ config('administrable.notificatio_email_header_color', '#33cabb') }}" align="center">
 <!--[if (gte mso 9)|(IE)]>
 <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
 <tr>
@@ -38,7 +38,7 @@ Looks like you tried signing in a few too many times. Let's see if we can get yo
 </tr>
 <!-- HERO -->
 <tr>
-<td bgcolor="#33cabb" align="center" style="padding: 0px 10px 0px 10px;">
+<td bgcolor="{{ config('administrable.notificatio_email_header_color', '#33cabb') }}" align="center" style="padding: 0px 10px 0px 10px;">
 <!--[if (gte mso 9)|(IE)]>
 <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
 <tr>
@@ -100,8 +100,9 @@ style="padding: 20px 30px 40px 30px; color: #666666; font-family: &apos;Lato&apo
 style="padding: 30px 30px 30px 30px; border-radius: 4px 4px 4px 4px; color: #666666; font-family: &apos;Lato&apos;, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px;">
 <h2 style="font-size: 16px; font-weight: 400; color: #111111; margin: 0;">Besoin d'aide?
 </h2>
-<p style="margin: 0; font-size: 14px;"><a href="{{ route('front.contact.create') }}" target="_blank"
-    style="color: #33cabb;">Nous sommes disponibles pour vous aider</a></p>
+<p style="margin: 0; font-size: 14px;">
+{{ configuration('about') }}
+</p>
 </td>
 </tr>
 </table>

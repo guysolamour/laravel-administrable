@@ -30,7 +30,7 @@
 
                     <div class="collapse no-collapsing cursor-text" id="email-info-2">
                         <small class="d-inline-block w-40px mt-1">De:</small>
-                        <small>{{ $mailbox->name }}</small>
+                        <small>{{ $mailbox->email }}</small>
 
                     </div>
                 </div>
@@ -40,11 +40,7 @@
 
         <div class="collapse show" id="email-2">
             <div class="card-body">
-                <p>Uniquely restore granular schemas with enterprise services. Competently maximize team driven networks and
-                    cross-platform users. Completely recaptiualize cross-platform networks functionalized services.
-                    Holisticly matrix extensible models via corporate value. Continually revolutionize open-source markets
-                    through high-quality functionalities.
-                </p>
+                <p>{{ $mailbox->content }}</p>
             </div>
         </div>
     </div>

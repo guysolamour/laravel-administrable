@@ -64,4 +64,6 @@ class Media extends BaseMedia
     {
         $this->select(false);
     }
+
+     // add relation methods below
 }

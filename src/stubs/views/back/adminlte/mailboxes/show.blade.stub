@@ -41,19 +41,11 @@
             <div class="card-body p-0">
               <div class="mailbox-read-info">
 
-                <h6>De: {{ $mailbox->email }}
+               <h6>Nom: {{ $mailbox->name }}</h6>
+                <h6>Email: {{ $mailbox->email }}
                   <span class="mailbox-read-time float-right">{{ $mailbox->created_at->format('d/m/Y h:i') }}</span></h6>
               </div>
-              <!-- /.mailbox-read-info -->
-              <div class="mailbox-controls with-border text-center">
-                <div class="btn-group">
-                  <a href="{{ route('{{backLowerNamespace}}.mailbox.destroy', $mailbox) }}" class="btn btn-danger"
-                         data-method="delete" data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
-                            <i class="fas fa-trash"></i> Supprimer</a>
-                </div>
-                <!-- /.btn-group -->
-              </div>
-              <!-- /.mailbox-controls -->
+
               <div class="mailbox-read-message">
                   <p>
                       {{ $mailbox->content }}
