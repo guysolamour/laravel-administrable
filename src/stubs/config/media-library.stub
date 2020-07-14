@@ -29,11 +29,18 @@ return [
      * Default app collections
      */
     'collections' => [
-        'front'          => 'front-image',
-        'back'           => 'back-image',
-        'images'         => 'images',
-        'attachments'    => 'attachments',
-        'seo'            => 'seo'
+        'front'          => ['label' => 'front-image', 'conversion' => true, 'multiple' => false],
+        'back'           => ['label' => 'back-image', 'conversion'  => true, 'multiple' => false],
+        'images'         => ['label' => 'images', 'conversion' => true, 'multiple' => true],
+        'attachments'    => ['label' => 'attachments', 'conversion' => true],
+        'seo'            => ['label' => 'seo', 'conversion' => false],
+    ],
+    'conversions' => [
+        'avatar'    => ['label' => 'avatar', 'height' => 100, 'width' =>  100],
+        'avatar-sm' => ['label' => 'avatar-sm', 'height' => 50,  'width' =>  50],
+        'avatar-xs' => ['label' => 'avatar-xs', 'height' => 30,  'width' =>  30],
+        'thumb'     => ['label' => 'thumb', 'height' => 100],
+        'thumb-sm'  => ['label' => 'thumb-sm', 'height' => 250],
     ],
     /**
      * Default disc name

@@ -2,6 +2,7 @@
 
 namespace {{namespace}}\Traits;
 
+use Illuminate\Support\Arr;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -14,7 +15,7 @@ trait MediaableTrait
 
     public function getFrontImageAttribute()
     {
-        return $this->getMedia(config('media-library.collections.front'),['select' => true])->first();
+        return $this->getMedia(config('media-library.collections.front.label'), ['select' => true])->first();
     }
 
     public function getFrontImageUrl() :?string
@@ -28,64 +29,57 @@ trait MediaableTrait
         return $media ? $media->getUrl() : null;
     }
 
-
     public function getBackImageAttribute()
     {
-        return $this->getMedia(config('media-library.collections.back'), ['select' => true])->first();
+        return $this->getMedia(config('media-library.collections.back.label'), ['select' => true])->first();
     }
 
 
     public function getImagesAttribute()
     {
-        $medias = $this->getMedia(config('media-library.collections.images'), ['select' => true]);
+        $medias = $this->getMedia(config('media-library.collections.images.label'), ['select' => true]);
 
         return $this->sortImages($medias);
     }
 
-    public function registerMediaCollections(Media $media = null) :void
+
+    public function registerMediaCollections(Media $media = null): void
     {
 
-        foreach (config('media-library.collections')  as $collection) {
-            $media = $this->addMediaCollection($collection)
-                  ->useDisk(
-                      config('media-library.collections_disc')
-                  );
+        $collections = $this->getMediaCollections();
 
-                  if ($collection != config('media-library.collections.seo')) {
-                      $media->withResponsiveImages();
-                  }
+        foreach ($collections  as $collection) {
+            $media = $this->addMediaCollection($collection['label'])
+                ->useDisk(
+                    config('media-library.collections_disc')
+                );
+
+            if ($collection['conversion']) {
+                $media->withResponsiveImages();
+            }
         }
-
     }
 
-    /**
+  /**
      * @param Media $media
      * @return void
      */
-    public function registerMediaConversions(Media $media = null) :void
-    {
-         $this->addMediaConversion('avatar')
-            ->height(100)
-            ->width(100)
-            ;
+  public function registerMediaConversions(Media $media = null): void
+  {
 
-        $this->addMediaConversion('avatar-sm')
-            ->height(50)
-            ->width(50)
-            ;
+      $conversions = $this->getMediaConversions();
 
-        $this->addMediaConversion('avatar-xs')
-            ->height(30)
-            ->width(30)
-            ;
+      foreach ($conversions as $key =>  $conversion) {
+          $media_conversion = $this->addMediaConversion($key);
 
-        $this->addMediaConversion('thumb')
-            ->height(100)
-            ;
+          if (Arr::exists($conversion, 'height')  && Arr::get($conversion, 'height')){
+              $media_conversion->height($conversion['height']);
+          }
 
-        $this->addMediaConversion('thumb-sm')
-            ->height(250)
-            ;
+          if (Arr::exists($conversion, 'width')  && Arr::get($conversion, 'width')){
+              $media_conversion->width($conversion['width']);
+          }
+      }
     }
 
     /**
@@ -102,23 +96,31 @@ trait MediaableTrait
     }
 
 
-    public static function booted()
+    public static function boot()
     {
-        parent::booted();
+        parent::boot();
 
         /**
          * @param \{{namespace}}\{{modelsFolder}}\BaseModel $model
          */
         static::created(function ($model) {
-           if(config('media-library.collections')){
-              foreach (config('media-library.collections')  as $collection) {
-                  if ($collection !== config('media-library.collections.seo')) {
-                    if (request($collection)) {
-                        self::saveImages($model, request($collection), $collection);
+
+            $collections = $model->getMediaCollections();
+
+            if ($collections) {
+                foreach ($collections  as $collection) {
+
+                    if (
+                        'front-image' === $collection['label'] ||
+                        'back-image'  === $collection['label'] ||
+                        'images'      === $collection['label']
+                    ) {
+                        if (request($collection)) {
+                            self::saveImages($model, request($collection['label']), $collection['label']);
+                        }
                     }
-                  }
-              }
-           }
+                }
+            }
         });
     }
 

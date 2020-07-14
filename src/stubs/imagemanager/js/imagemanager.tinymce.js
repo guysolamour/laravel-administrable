@@ -25,21 +25,24 @@ class TinymceImageManager {
       deleteallimages: '[data-deleteall]',
     }
 
+
     this.alerts = {
       rename: {
-        success: { message: 'Le fichier a bien été renommé', type: 'success' },
-        error: { message: 'Le nom du fichier ne peut pas être vide', type: 'danger' },
+        success: { message: `L'image a bien été renommée`, type: 'success' },
+        error: { message: `Le nom de l'image ne peut pas être vide`, type: 'danger' },
       },
       upload: {
-        success: { message: 'Le fichier a bien été renommé', type: 'success' },
-        error: { message: 'Le nom du fichier ne peut pas être vide', type: 'danger' },
+        success: { message: `L'image a bien été renommée`, type: 'success' },
+        error: { message: `Le nom de l'image ne peut pas être vide`, type: 'danger' },
       },
       delete: {
-        success: { message: 'Le fichier a bien été supprimé', type: 'success' },
-        error: { message: 'Erreur lors de la suppression du fichier', type: 'danger' },
-        swal: { message: 'Etes de vous sûr de bien vouloir supprimer le fichier ? Cette action est irréversible.', type: 'warning' },
+        success: { message: `L'image a bien été supprimée`, type: 'success' },
+        error: { message: `Erreur lors de la suppression de l'image`, type: 'danger' },
+        swal: { message: `Etes de vous sûr de bien vouloir supprimer l'image ? Cette action est irréversible.`, type: 'warning' },
       },
     }
+
+
 
     this.authorized_extensions = ['png', 'jpg', 'gif', 'jpeg', 'svg']
 
@@ -225,7 +228,7 @@ class TinymceImageManager {
         this.getModalContainer()
           .append(`
                     <div class='d-flex justify-content-center align-items-center w-100 h4 text-secondary'>
-                        <p><i class='fa fa-empty-set'></i> Aucun média pour la recherche '${value}'</p>
+                        <p><i class='fa fa-empty-set'></i> Aucune image pour cette recherche '${value}'</p>
                     </div>
                 `)
         return
@@ -282,7 +285,7 @@ class TinymceImageManager {
 
         if (!--count) {
           this.alert({
-            message: 'Les ' + total + ' fichier(s) ont bien été supprimés',
+            message: 'Les ' + total + ' images ont bien été supprimées',
             type: 'success'
           })
           this.renderEmptyImageboxContainer()
@@ -296,7 +299,7 @@ class TinymceImageManager {
 
     swal({
       title: 'Suppression !',
-      text: "Etes de vous sûr de bien vouloir supprimer tous les fichiers. Cette action est irréversible.",
+      text: "Etes de vous sûr de bien vouloir supprimer toutes les images. Cette action est irréversible.",
       icon: 'warning',
       dangerMode: true,
       buttons: {
@@ -365,7 +368,7 @@ class TinymceImageManager {
 
     swal({
       title: 'Téléchargement !',
-      text: 'Etes vous sûr de vouloir télécharger tous les fichiers ? ',
+      text: 'Etes vous sûr de vouloir télécharger tous les images ? ',
       icon: 'warning',
       dangerMode: true,
       buttons: {
@@ -1099,7 +1102,7 @@ class TinymceImageManager {
 
     this.getModalFooter().append(`
                 <div class="col-12 border p-2 bg-secondary text-center" >
-                <i class='fas fa-clock'></i> Dossiers: Fichiers liés | Fichiers: ${this.images.length} | Taille fichiers: ${size}
+                <i class='fas fa-clock'></i> Dossiers: Images liées | Images: ${this.images.length} | Taille images: ${size}
                 </div>
                 `)
   }
@@ -1275,7 +1278,7 @@ class TinymceImageManager {
             )
 
             this.alert({
-              message: "L'image " + image.name + ' a bien été téléversé!',
+              message: "L'image " + image.name + ' a bien été téléversée!',
               type: 'success'
             })
 

@@ -1,8 +1,6 @@
-
-class ImageManager {
-
+class MediaManager {
   static init(opts) {
-    new ImageManager(opts)
+    new MediaManager(opts)
   }
 
   constructor(opts) {
@@ -22,13 +20,8 @@ class ImageManager {
       checkimage: '[data-choose]', uncheckimage: '[data-unchoose]',
       dropzoneclass: '.dropzone',
       uploadmodal: '#uploadModal', uploadimage: '[data-upload]', checkall: '[data-checkall]', uncheckall: '[data-uncheckall]',
-      'refresh': '[data-refresh]', 'search': '[data-search]', 'sort': '[data-sort]', 'sorter': '[data-sorter]'
-    }
-
-    this.collections = {
-      front: 'front-image',
-      back: 'back-image',
-      images: 'images',
+      'refresh': '[data-refresh]', 'search': '[data-search]', 'sort': '[data-sort]', 'sorter': '[data-sorter]',
+      multiple: true
     }
 
 
@@ -49,21 +42,23 @@ class ImageManager {
     }
 
 
-    this.authorized_extensions = ['png', 'jpg', 'gif', 'jpeg', 'svg']
+    this.images_extensions = ['jpg', 'gif', 'jpeg', 'png', 'svg', 'gif']
+    this.doc_extensions = ['doc', 'pdf', 'xlsx', 'docx', 'ppt', 'pptx']
+    this.authorized_extensions = [...this.images_extensions, ...this.doc_extensions, 'zip']
 
 
     this.uploadingImages = []
     this.selectedImages = []
-    this.tempImages = {}
+    // this.tempImages = {}
 
     this.images = {}
 
     this.setOptions(opts)
 
-
+    console.log(this.config);
     this.init()
 
-    this.addImagesEvents()
+    // this.addImagesEvents()
 
     this.handleSortable()
   }
@@ -72,16 +67,24 @@ class ImageManager {
     // Superbe technique pour binder this aux différentes méthodes
     const methods = [
       'setOptions', 'handleClick', 'closeModal', 'deleteAllSelectedImage',
-      'handleCloseIconClick', 'handleSortable', 'chooseImage', 'unChooseImage', 'sort',
+      'handleSortable', 'chooseImage', 'unChooseImage', 'sort',
       'handleChange', 'renameImage', 'downloadImage', 'getImageProperties', 'refresh', 'search', 'resetSearch',
       'viewImage', 'deleteImage', 'deleteAllImages', 'handleDrop', 'uploadModal', 'downloadAllImage', 'uncheckAll',
-      'checkAll'
+      'checkAll', 'isMultipleCollection'
     ]
 
-    methods.forEach((fn) => this[fn] = this[fn].bind(this))
+
+    methods.forEach(fn => {
+      if (this[fn]) {
+        this[fn] = this[fn].bind(this)
+      }
+    })
+
+    // methods.forEach((fn) => this[fn] = this[fn].bind(this))
   }
 
   init() {
+
     $(this.config.selector).on('click', this.handleClick)
 
     this.getModal().find(this.config.closemodal).on('click', this.closeModal)
@@ -109,13 +112,6 @@ class ImageManager {
     this.getModalContainer().on('click', this.config.viewimage, this.viewImage)
     this.getModalContainer().on('click', this.config.deleteimage, this.deleteImage)
 
-    /**
-     * Ajout des champs dans le formulaire pour la création
-     */
-    if (this.isEmptyModel()) {
-      this.form = $(`form[name=${this.config.form_name}]`)
-      this.appendCollectionsFormFields()
-    }
 
 
     this.getRenameModal().on('show.bs.modal', this.renameImage)
@@ -131,7 +127,7 @@ class ImageManager {
     /**
     * On cache les deux boutons si ce n'est pas une collection de type image
     */
-    if (!this.isImagesCollection()) {
+    if (!this.isMultipleCollection()) {
       checkAll.addClass('d-none')
       uncheckAll.addClass('d-none')
     } else {
@@ -150,39 +146,6 @@ class ImageManager {
 
 
   }
-
-  appendCollectionsFormFields() {
-
-    this.form.attr('enctype', 'multipart/form-data')
-
-    this.form.prepend(
-      this.generateCollectionsFormFields()
-    )
-
-  }
-
-
-  generateCollectionsFormFields() {
-
-    let html = ``
-
-    for (const collection in this.collections) {
-      const name = this.collections[collection]
-
-      if (this.config[name]) {
-        html += `
-                <div class='d-none'>
-                    <input type='file' id='${name}' class='${name}' name='${name}[]' accept="image/*" multiple>
-                    <input type='text' id="${name}-attributes" class='${name}-attributes' name='${name}-attributes' >
-                </div>
-                `
-      }
-
-    }
-    return html;
-
-  }
-
 
   setDropZone() {
     const dropArea = $(this.config.dropzoneclass);
@@ -228,7 +191,13 @@ class ImageManager {
                             <a href="#" class="file-close">
                                 <i class="fa fa-times"></i>
                             </a>
-                            <img src="${ e.target.result}" class="card-img-top" alt="${image.name}">
+
+                                ${this.isImageFile(image) ? `
+                                    <img src="${ e.target.result}" class="card-img-top" alt="${image.name}">
+
+                                ` : `
+                                    <i class='fa ${this.getFileIcon(image)} fileicon selectedimage' ></i>
+                                `}
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Nom:
@@ -247,6 +216,7 @@ class ImageManager {
       };
     }
   }
+
 
   renderUploadModalFooter() {
     const footer = this.getUploadModal().find('.modal-footer')
@@ -273,7 +243,6 @@ class ImageManager {
 
     this.renderUploadModalFooter()
   }
-
 
   previewDropOrSelectImages(images) {
 
@@ -332,19 +301,10 @@ class ImageManager {
   downloadAllImage(event) {
     event.preventDefault()
 
-    if (this.isEmptyModel()) {
-      swal({
-        title: 'Téléchargement !',
-        text: 'Les images non persistées ne sont pas téléchargeable pour le moment!',
-        icon: 'warning',
-        dangerMode: true,
-      })
-      return
-    }
 
     swal({
       title: 'Téléchargement !',
-      text: 'Etes vous sûr de vouloir télécharger toutes les images ? ',
+      text: 'Etes vous sûr de vouloir télécharger tous ces fichiers ? ',
       icon: 'warning',
       dangerMode: true,
       buttons: {
@@ -403,7 +363,6 @@ class ImageManager {
       })
   }
 
-
   hideBoxWhenDeleteAll() {
     let imageBoxes = this.getModalContainer().children(),
       count = imageBoxes.length,
@@ -415,7 +374,7 @@ class ImageManager {
 
         if (!--count) {
           this.alert({
-            message: 'Les ' + total + ' images ont bien été supprimées',
+            message: 'Le(s) ' + total + ' fichier(s) ont bien été supprimé(s)',
             type: 'success'
           })
           this.renderEmptyImageboxContainer()
@@ -440,27 +399,14 @@ class ImageManager {
       .then((isConfirm) => {
         if (isConfirm) {
 
-          if (this.isEmptyModel()) {
+          axios.delete(`${this.getUrl()}/${this.collection}/all`)
+            .then(({ data }) => {
+              this.hideBoxWhenDeleteAll()
 
-            this.selectedImages = []
-            this.images = []
+              this.addCheckUncheckAll();
 
-            this.hideBoxWhenDeleteAll()
-
-            this.addCheckUncheckAll();
-
-            this.renderHeaderButtons()
-
-          } else {
-            axios.delete(`${this.getUrl()}/${this.collection}/all`)
-              .then(({ data }) => {
-                this.hideBoxWhenDeleteAll()
-
-                this.addCheckUncheckAll();
-
-                this.renderHeaderButtons()
-              })
-          }
+              this.renderHeaderButtons()
+            })
 
         }
       })
@@ -518,24 +464,14 @@ class ImageManager {
     })
       .then((isConfirm) => {
         if (isConfirm) {
-          if (this.isEmptyModel()) {
-            // Désélectionner l'élément
-            this.getImageBox(image.id).find(this.config.uncheckimage).trigger('click')
+          axios.delete(this.getUrl(), { data: { image_id: image.id } })
+            .then((data) => {
+              this.removeDeleteInModalImageBox(image)
 
-            this.removeDeleteInModalImageBox(image)
+              this.alert(this.alerts.delete.success)
 
+            })
 
-
-          } else {
-            axios.delete(this.getUrl(), { data: { image_id: image.id } })
-              .then((data) => {
-                this.removeDeleteInModalImageBox(image)
-
-                this.alert(this.alerts.delete.success)
-
-              })
-
-          }
         } else {
           // swal('suppression désapprouvé')
           // $(event.target).parents('.imagebox').find('img').css('border', 'none')
@@ -631,7 +567,6 @@ class ImageManager {
     this.getModal().modal(action)
   }
 
-
   sort(event) {
     event.preventDefault()
 
@@ -715,7 +650,7 @@ class ImageManager {
         this.getModalContainer()
           .append(`
                     <div class='d-flex justify-content-center align-items-center w-100 h4 text-secondary'>
-                        <p><i class='fa fa-empty-set'></i> Aucune image pour cette recherche '${value}'</p>
+                        <p><i class='fa fa-empty-set'></i> Aucun fichier pour cette recherche '${value}'</p>
                     </div>
                 `)
         return
@@ -732,16 +667,6 @@ class ImageManager {
   }
 
   refresh() {
-    // on ne peut pas rafraichir des éléments qui ne sont pas persistés
-    if (this.isEmptyModel()) {
-      swal({
-        title: 'Rafraichissement !',
-        text: 'Le rafraichissement est impossible tant que les images ne sont pas encore persistées',
-        icon: 'warning',
-        dangerMode: true,
-      })
-      return
-    }
 
     // Récupérer les fichiers pour le modal
     this.getModalContainer().empty()
@@ -758,65 +683,27 @@ class ImageManager {
       })
   }
 
-  isEmptyModel() {
-    return $.isEmptyObject(this.config.model)
-  }
-
   handleClick(event) {
     event.preventDefault()
 
     this.button = $(event.target)
 
-    /**
-     * Puisque on recupere les images déjà envoyées
-     * Il faudra réinitialiser le tableau si ce n'est pas la même collection
-     */
-    if (this.isEmptyModel()) {
-      if (this.collection && this.collection != this.button.data('image')) {
-        this.images = []
-      }
-    }
 
-
-
-
-
-    this.collection = this.button.data('image')
+    this.collection = this.config.collection
 
     this.generateFormFor(this.collection)
 
 
-    this.addCheckUncheckAll();
+    axios.get(`${this.getUrl()}/${this.collection}`)
+      .then(({ data }) => {
+        this.addImages(data)
 
+        this.addCheckUncheckAll();
 
+        // On désactive les boutons de téléchargement, rafraichir, et suppression  si la collection est vide
+        this.renderHeaderButtons()
+      })
 
-
-    // Récupérer les fichiers pour le modal
-    if (!this.isEmptyModel()) {
-      axios.get(`${this.getUrl()}/${this.collection}`)
-        .then(({ data }) => {
-          this.addImages(data)
-
-          // On désactive les boutons de téléchargement, rafraichir, et suppression  si la collection est vide
-          this.renderHeaderButtons()
-        })
-    } else {
-      /**
-       * Récupérer les images déjà envoyés s'ils existent
-       */
-      // this.images ? this.addImages(this.images, false) : this.addImages([])
-
-      if (this.tempImages[this.collection]) {
-        this.images = this.tempImages[this.collection]
-        this.addImages(this.images, false)
-      } else {
-        this.addImages([])
-      }
-
-    }
-
-    // On désactive les boutons de téléchargement, rafraichir, et suppression  si la collection est vide
-    this.renderHeaderButtons()
 
     this.modal('show')
 
@@ -832,6 +719,7 @@ class ImageManager {
         ${this.config.downloadimage}, ${this.config.deleteallimages},
         ${this.config.refresh},${this.config.sorter}`
     )
+
 
     if (this.images.length) {
       buttons.removeClass('disabled').removeAttr('disabled')
@@ -892,64 +780,18 @@ class ImageManager {
     return $(this.config.modalimagescontainer)
   }
 
-  getCollectionContainer() {
-    return $(this.button.data('container'))
-  }
+
 
   closeModal() {
 
-    if (this.config.collectiontype === 'avatar') {
-      if (this.isFrontImageCollection() && typeof window.fnAvatarCommit === 'function' && this.selectedImage) {
-        fnAvatarCommit(this.selectedImage)
-      }
-      this.modal('hide')
-      return
+    const selectedImage = this.config.multiple ? this.selectedImages : this.selectedImage
+
+
+    if (typeof window.fnMediaManagerCommit === 'function' && selectedImage) {
+      fnMediaManagerCommit(selectedImage)
     }
-
-
-    if (this.isEmptyModel()) {
-      const input = this.form.find(`input.${this.collection}`)
-      const input_attributes = this.form.find(`input.${this.collection}-attributes`)
-
-
-      const dT = new DataTransfer()
-      const attr = []
-
-      this.images.forEach(image => {
-        attr.push({
-          [image.name]: { order: image.order, select: image.select, name: image.new_name }
-        })
-        dT.items.add(image)
-      })
-
-      input.prop('files', dT.files)
-      input_attributes.val(JSON.stringify(attr))
-
-
-      this.tempImages[this.collection] = this.images
-
-    }
-
-    if (this.isImagesCollection(this.collection)) {
-
-      this.getCollectionContainer().empty()
-
-      this.selectedImages.forEach(image => {
-        this.getCollectionContainer().append(this.getPreviewedImageTemplate(image))
-      })
-
-      if (this.selectedImages.length) {
-        this.getCollectionContainer().prev().removeClass('d-none')
-        $('[data-delete=all]').show()
-      } else {
-        this.getCollectionContainer().prev().addClass('d-none')
-      }
-    } else {
-      this.previewImageInCollectionContainer(this.selectedImage)
-    }
-
-
     this.modal('hide')
+
   }
 
   uploadModal(event) {
@@ -987,34 +829,38 @@ class ImageManager {
 
       html = `
                  <div class='d-flex justify-content-center align-items-center w-100 h4 text-secondary h-100'>
-                    <p class='text-center'><i class='fa fa-times'></i> <br> Aucune image sélectionnée pour cette collection</p>
+                    <p class='text-center'><i class='fa fa-times'></i> <br> Aucun fichier sélectionné pour cette collection</p>
                 </div>
             `
     } else {
       html = `
                 <div class="card">
-                    <img src="${image.url}" class="card-img-top" alt="${this.isEmptyModel() ? image.new_name : image.name}">
+
+
+                      ${this.isImageFile(image) ? `
+                                <img src="${image.url}" class="card-img-top" alt="${image.name}">
+
+                            ` : `
+                                 <i class='fa ${this.getFileIcon(image)} fileicon selectedimage' ></i>
+                            `}
 
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             Nom:
-                            <span>${ this.isEmptyModel() ? image.new_name : image.name}</span>
+                            <span>${image.name}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             Taille:
                             <span>${this.getFileSize(image.size)}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Téléversée le:
+                            Téléversé le:
                             <span>${image.date_for_humans}</span>
                         </li>
                     </ul>
-                    ${!this.isEmptyModel() ? `
                     <div class="card-body text-center">
                         <button class='btn btn-success btn-sm'  data-copyurl='${image.url}'><i class='fas fa-copy'></i> Copier le lien</button>
                     </div>
-
-                    ` : ''}
 
                 </div>
         `
@@ -1025,16 +871,10 @@ class ImageManager {
 
   setSelectedModalImage(name = null, image = null, push = true) {
 
-    /**
-     * Passer manuellement le select à true puisque rien n'est persisté
-     */
-    if (image && this.isEmptyModel()) {
-      image.select = true
-    }
 
     this.getSelectedModalImage().empty()
 
-    if (this.isImagesCollection(this.collection)) {
+    if (this.isMultipleCollection()) {
       /**
        * On push l'élément si ce dernier n'est pas déjà dans la liste
        */
@@ -1049,9 +889,8 @@ class ImageManager {
       }
 
       if (name) {
-        if (!this.isEmptyModel()) {
-          this.selectedImage.name = name
-        }
+
+        this.selectedImage.name = name
       }
 
       this.getSelectedModalImage().append(this.getSelectedImageTemplate(this.selectedImage))
@@ -1062,10 +901,11 @@ class ImageManager {
     /**
      * Faire la copie si seulement on a un model
      */
-    if (!this.isEmptyModel()) {
-      this.getModal().find(this.config.copyurl).on('click', this.copyurl)
-    }
+    // if (!this.isEmptyModel()) {
+    this.getModal().find(this.config.copyurl).on('click', this.copyurl)
+    // }
   }
+
 
   copyurl(event) {
     const button = $(event.target)
@@ -1113,14 +953,24 @@ class ImageManager {
   setModalFooter() {
     this.getModalFooter().empty()
 
+    let collection = this.collection.charAt(0).toUpperCase() + this.collection.slice(1)
+
+    // console.log(this.config.collection_label,'la collection')
+
+    if (this.config.collection_label.length) {
+      collection = this.config.collection_label.charAt(0).toUpperCase() + this.config.collection_label.slice(1)
+    }
+
+
     const size = this.images.length ? this.getFileSize(this.getImagesSize(this.images)) : 0
 
     this.getModalFooter().append(`
                 <div class="col-12 border p-2 bg-secondary text-center" >
-                <i class='fas fa-clock'></i> Collection: ${this.config[this.collection + '-label']} | Images: ${this.images.length} | Taille images: ${size}
+                <i class='fas fa-clock'></i> Collection: ${collection} | Fichiers: ${this.images.length} | Taille fichiers: ${size}
                 </div>
                 `)
   }
+
 
   addImages(images, push = true) {
 
@@ -1150,6 +1000,7 @@ class ImageManager {
     this.setModalFooter()
   }
 
+
   getSelectedImage(multiple = false) {
 
     /**
@@ -1177,7 +1028,7 @@ class ImageManager {
 
   setSelectedImage() {
 
-    if (this.isImagesCollection(this.collection)) {
+    if (this.isMultipleCollection()) {
       const selectedImages = this.getSelectedImage(true)
 
       selectedImages.forEach(image => this.getImageBox(image.id).addClass(this.config.chooseimage))
@@ -1186,6 +1037,14 @@ class ImageManager {
 
       this.getImageBox(this.getSelectedImage().id).addClass(this.config.chooseimage)
     }
+  }
+
+  /**
+   * @returns bool
+   * @memberof MediaManager
+   */
+  isMultipleCollection() {
+    return this.config.multiple
   }
 
   addButtonsClickHandle(button, input) {
@@ -1197,7 +1056,7 @@ class ImageManager {
 
   insertFormTemplate(name, target) {
     $(`<form name='${name}'  enctype="multipart/form-data" class='d-none'>
-                <input type="file" name='${name}' accept="image/*" multiple>
+                <input type="file" name='${name}' multiple>
                 </form>
                 `).insertBefore(target)
   }
@@ -1214,8 +1073,8 @@ class ImageManager {
       return true
     } else {
       swal({
-        title: 'Ajout de média !',
-        text: "Erreur lors du traitement de l'image `" + image.name + '`. Veuillez choisir une image de type (jpg, jpeg, png, svg).',
+        title: 'Ajout de fichier !',
+        text: "Erreur lors du traitement du fichier `" + image.name + '`. Veuillez choisir une image de type (jpg, jpeg, png, svg).',
         icon: 'error'
       })
       return false
@@ -1235,23 +1094,12 @@ class ImageManager {
     return `${day}/${month}/${year} ${hour}:${minute}`
   }
 
-  generateImageId() {
-    return Math.round(Math.random() * Math.random() * 10000000)
-  }
+  // generateImageId() {
+  //     return Math.round(Math.random() * Math.random() * 10000000)
+  // }
 
   previewImage(image, event = false) {
 
-    // ajouter manuellement les attributs si nous sommes en phase de création
-    if (this.isEmptyModel()) {
-      image.id = this.generateImageId()
-      image.order = this.images.length + 1
-      image.new_name = image.name
-      image.url = event.target.result
-      image.select = false
-      image.created_at = new Date()
-      image.date_for_humans = this.getCreatedDate()
-      image.thumb_url = event.target.result
-    }
 
     // Prévisualisation des différentes images
 
@@ -1271,328 +1119,73 @@ class ImageManager {
     this.setModalFooter()
   }
 
-  isFrontImageCollection(collection = null) {
-    return (collection || this.collection) === this.collections.front
-  }
 
-  isBackImageCollection(collection = null) {
-    return (collection || this.collection) === this.collections.back
-  }
+  getFileIcon(file) {
 
-  isImagesCollection(collection = null) {
-    return (collection || this.collection) === this.collections.images
-  }
+    const extension = file.extension || this.getFileExtension(file.name)
 
-  getOrderedImageBox(element) {
-    return this.getImageBox($(element).parents('.imagebox').data('id'))
-    // return this.getModalContainer().find('[data-id=' + $(element).parents('.imagebox').data('id') + ']')
-  }
-
-  removeChooseClass(box = null) {
-    if (box) {
-      box.removeClass(this.config.chooseimage)
-    } else {
-      this.getModalContainer().find('.' + this.config.chooseimage).removeClass(this.config.chooseimage)
+    switch (extension) {
+      case 'pdf':
+        return 'fa-file-pdf'
+        break;
+      case 'doc':
+        return 'fa-file-word'
+        break;
+      case 'docx':
+        return 'fa-file-word'
+        break;
+      case 'xls':
+        return 'fa-file-excel'
+        break;
+      case 'xlsx':
+        return 'fa-file-excel'
+        break;
+      case 'zip':
+        return 'fa-file-archive'
+        break;
+      case 'gif':
+        return 'fa-file-image'
+        break;
+      case 'jpg':
+        return 'fa-file-image'
+        break;
+      case 'jpeg':
+        return 'fa-file-image'
+        break;
+      case 'png':
+        return 'fa-file-image'
+        break;
+      case 'ppt':
+        return 'fa-file-powerpoint'
+        break;
+      case 'pptx':
+        return 'fa-file-powerpoint'
+        break;
+      default:
+        return 'fa-file-alt'
+        break;
     }
   }
 
-  renameImage(event) {
-    const button = $(event.relatedTarget)
-    const id = button.data('id')
+  getFileType(file) {
+    const extension = file.extension || this.getFileExtension(file.name)
 
-    const image = this.getImage(id)
-
-    const input = this.getRenameModal().find('.modal-body input')
-    // input.trigger('focus')
-    input.val(button.data('name'))
-
-    this.getRenameModal().find('.modal-footer button').unbind('click').bind('click', (event) => {
-      event.preventDefault()
-
-      const value = input.val()
-
-      if (!value) {
-        this.alert(this.alerts.rename.error)
-        return
-      }
-
-      if (this.isEmptyModel()) {
-        image.new_name = value
-      } else {
-        axios.post(`/${this.config.prefix}/media/${id}/rename`, { name: value })
-      }
-
-      button.parents('.imagebox').find('.filename').text(value)
-      button.data('name', value)
-
-
-      this.setSelectedModalImage(value, image)
-
-      this.alert(this.alerts.rename.success)
-
-      this.getRenameModal().modal('hide')
-
-
-
-    })
+    return this.images_extensions.includes(extension) ? 'image' : 'doc'
   }
 
-  chooseImage(event) {
-    event.preventDefault()
+  isImageFile(file) {
 
-    /**
-     * On retire la classe de sélection à l'élément actuel et de le mettre au box qui vient d'être sélectionné
-     * si ce n'est pas une collection de type images (qui autorise la sélection de plusieurs images)
-     */
-    if (!this.isImagesCollection(this.collection)) {
-      this.removeChooseClass()
-    }
-
-
-    const imageBox = this.getOrderedImageBox(event.target)
-
-    imageBox.addClass(this.config.chooseimage)
-    const image = this.getImage(imageBox.data('id'))
-
-    imageBox.addClass(this.config.chooseimage)
-
-
-    if (this.isEmptyModel()) {
-      if (!this.isImagesCollection(this.collection)) {
-        // trouver l'ancienne box selectionne et retirer le deselectionner
-        this.renderOldImage()
-      }
-
-      /**
-       * On séletionne le nouveau modal
-       */
-      this.setSelectedModalImage(null, image)
-
-      /**
-       * remplacer le contenu de la box pour que les liens soient mis à jour (
-       * sélectionner en désélectionner
-       * )
-       */
-      imageBox.replaceWith(this.getPreviewedModalImageTemplate(image))
-
-      return
-    } else {
-      // const imageBox = this.getOrderedImageBox(event.target)
-
-      // imageBox.addClass(this.config.chooseimage)
-      // const image = this.getImage(imageBox.data('id'))
-
-      // imageBox.addClass(this.config.chooseimage)
-
-      axios.post(`/${this.config.prefix}/media/${image.id}/select`)
-        .then(({ data }) => {
-
-
-          if (!this.isImagesCollection(this.collection)) {
-            // trouver l'ancienne box selectionne et retirer le deselectionner
-            this.renderOldImage()
-          }
-
-          /**
-           * On séletionne le nouveau modal
-           */
-          this.setSelectedModalImage(null, data.media)
-
-          /**
-           * remplacer le contenu de la box pour que les liens soient mis à jour (
-           * sélectionner en désélectionner
-           * )
-           */
-          imageBox.replaceWith(this.getPreviewedModalImageTemplate(data.media))
-        })
-
-    }
-
+    return this.getFileType(file) === 'image'
   }
-
-
-  unChooseImage(event) {
-    event.preventDefault()
-
-    const imageBox = this.getOrderedImageBox(event.target)
-
-    if (this.isImagesCollection(this.collection)) {
-      // retirer l'image désélectionner de la collection
-      // const selectedImages = this.selectedImages.filter(image => image.id != imageBox.data('id'))
-      const selectedImages = this.removeItemInSelectedImage(imageBox.data('id'), false)
-
-      this.selectedImages = [...selectedImages]
-
-      this.setSelectedModalImage(null, this.getImagesCollectionSelectedImage(), false)
-    } else {
-      this.selectedImage = null
-      this.setSelectedModalImage()
-    }
-
-
-    this.removeChooseClass(imageBox)
-
-    if (this.isEmptyModel()) {
-      // Désélectionner manuellement
-      const image = this.getImage(imageBox.data('id'))
-      image.select = false
-
-      imageBox.replaceWith(this.getPreviewedModalImageTemplate(image))
-    } else {
-      axios.post(`/${this.config.prefix}/media/${imageBox.data('id')}/unselect`)
-        .then(({ data }) => {
-          imageBox
-            .replaceWith(this.getPreviewedModalImageTemplate(data.media))
-        })
-    }
-
-
-  }
-
-  renderOldImage() {
-    const old_image = this.selectedImage
-
-    if (!old_image) return
-
-    old_image.select = false
-
-    this.getImageBox(old_image.id).replaceWith(
-      this.getPreviewedModalImageTemplate(old_image)
-    )
-  }
-
-
-
-  previewImageInCollectionContainer(image) {
-
-    /**
-     * Si aucune image n'a été sélectionné alors on ne fait rien
-     */
-    const imageBox = this.getCollectionContainer().children('.imagebox')
-    imageBox.empty()
-
-    if (image) {
-      imageBox.append(
-        this.getPreviewedImageTemplate(image)
-      )
-      this.selectedImage = image
-    }
-  }
-
-  getPreviewedImageTemplate(image) {
-
-
-    const height = this.isImagesCollection(this.collection) ? 100 : 250
-
-    const html = `
-            <i class="close-icon fa fa-times" aria-hidden="true"
-                title="Supprimer l'image" style="font-size: 1.5rem; display: none;cursor: pointer;color: red">
-            </i>
-            <a href="${image.url}" title='${this.isEmptyModel() ? image.new_name : image.name}' data-fancybox="gallery"
-                            data-caption="${ this.isEmptyModel() ? image.new_name : image.name}">
-                <img style="height:${height}px;" class="img-thumbnail" src='${this.isEmptyModel() ? image.url : image.url}'
-                data-id="${image.id}"
-                alt="${ this.isEmptyModel() ? image.new_name : image.name}">
-            </a>
-            `
-
-
-    if (this.isImagesCollection(this.collection)) {
-      return `
-                <div class="col-4 imagebox pb-2" data-id='${image.id}'>
-                    <div class="lightbox imagethumbnail">
-                        ${html}
-                    </div>
-                </div>
-                `
-    }
-
-    return html
-
-
-  }
-
-  getFileSize(aSize) {
-    aSize = Math.abs(parseInt(aSize, 10))
-    var def = [[1, 'octets'], [1024, 'ko'], [1024 * 1024, 'Mo'], [1024 * 1024 * 1024, 'Go'], [1024 * 1024 * 1024 * 1024, 'To']]
-    for (var i = 0; i < def.length; i++) {
-      if (aSize < def[i][0]) return (aSize / def[i - 1][0]).toFixed(2) + ' ' + def[i - 1][1]
-    }
-  }
-
-  getPreviewedImageTemplateForEmptyModel(image, event = false) {
-    return `
-                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${ (image.select) ? this.config.chooseimage : ''}" data-id="${image.id}">
-                    <div class="file-man-box">
-                        <a href="#" class="file-close">
-                            <i class="fa fa-check"></i>
-                        </a>
-                        <div class="file-img-box">
-                            <img src="${event ? event.target.result : image.url}" alt="${this.isEmptyModel() ? image.new_name : image.name}">
-                        </div>
-
-                        <a href="#" class="file-download dropdown" >
-                            <i class="fa fa-tools dropdown-toggle" data-toggle="dropdown" data-offset="10,30"></i>
-                                <div class="dropdown-menu ">
-                                    <button class="dropdown-item" type="button" data-view='${image.id}'>
-                                        <i class="fa fa-image"></i> &nbsp;
-                                        Voir
-                                    </button>
-
-                            ${image.select ? `
-                                <button class="dropdown-item " type="button" data-unchoose >
-                                    <i class="fa fa-times"></i> &nbsp;
-                                    Désélectionner
-                                </button>
-
-                            ` : `
-                                 <button class="dropdown-item " type="button" data-choose >
-                                    <i class="fa fa-check"></i> &nbsp;
-                                    Sélectionner
-                                </button>
-                            `}
-
-                            <button class="dropdown-item" type="button"  data-rename data-toggle="modal"
-                                data-target="${ this.config.renamemodal}" data-id='${image.id}' data-name='${image.new_name}'>
-                                <i class="fa fa-edit"></i> &nbsp;
-                                Renommer
-                            </button>
-
-
-
-                            <button class="dropdown-item" type="button" data-property='${image.id}'>
-                                <i class="fa fa-info-circle"></i> &nbsp;
-                                Propriétés
-                            </button>
-
-
-                            ${!image.select ? `
-                                <div class="dropdown-divider"></div>
-                                    <button class="dropdown-item text-danger " type="button" data-delete='${image.id}'><i class="fa fa-trash"></i>
-                                    &nbsp; Effacer</button>
-
-                                ` : `
-
-                                `}
-                             </div>
-                        </a>
-                        <div class="file-man-title">
-                            <h5 class="mb-0 text-overflow filename">${ this.isEmptyModel() ? image.new_name : image.name}</h5>
-                            <p class="mb-0"><small>${this.getFileSize(image.size)}</small></p>
-                        </div>
-
-                    </div>
-                </div>
-
-
-            `
+  isDocFile() {
+    return this.getFileType(file) === 'doc'
   }
 
   getPreviewedModalImageTemplate(image, event = false) {
 
-    if (this.isEmptyModel()) {
-      return this.getPreviewedImageTemplateForEmptyModel(image, event)
-    }
+    // if (this.isEmptyModel()) {
+    //     return this.getPreviewedImageTemplateForEmptyModel(image, event)
+    // }
 
     return `
                 <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${ (image.select) ? this.config.chooseimage : ''}" ${event ? '' : `data-id="${image.id}"`}>
@@ -1601,16 +1194,28 @@ class ImageManager {
                             <i class="fa fa-check"></i>
                         </a>
                         <div class="file-img-box">
-                            <img src="${event ? event.target.result : image.url}" alt="${image.name}">
+                             ${this.isImageFile(image) ? `
+                                <img src="${event ? event.target.result : image.url}" alt="${image.name}" height="100">
+
+                            ` : `
+                                 <i class='fa ${this.getFileIcon(image)} fileicon' ></i>
+                            `}
                         </div>
 
                         <a href="#" class="file-download dropdown">
                             <i class="fa fa-tools dropdown-toggle" data-toggle="dropdown" data-offset="10,30"></i>
                                 <div class="dropdown-menu ">
-                                    <button class="dropdown-item" type="button" data-view='${image.id}'>
-                                        <i class="fa fa-image"></i> &nbsp;
-                                        Voir
-                                    </button>
+
+
+                                    ${this.isImageFile(image) ? `
+                                        <button class="dropdown-item" type="button" data-view='${image.id}'>
+                                            <i class="fa fa-image"></i> &nbsp;
+                                            Voir
+                                        </button>
+
+                                    ` : `
+
+                                    `}
 
                             ${image.select ? `
                                 <button class="dropdown-item " type="button" data-unchoose >
@@ -1632,7 +1237,7 @@ class ImageManager {
                             </button>
 
                             <button class="dropdown-item" type="button"
-                                data-download='${image.url}' data-name='${image.name}.${this.getFileExtension(image.file_name || image.name)}'>
+                                data-download='${image.url}' data-name='${image.name}.${image.extension || this.getFileExtension(image.name)}'>
                                 <i class="fa fa-download"></i> &nbsp; Télécharger
                             </button>
 
@@ -1666,26 +1271,166 @@ class ImageManager {
                             `
   }
 
-  addImagesEvents() {
-    const container = $(this.config.images_container)
 
-    container.on('mouseenter', '.imagebox', this.handleMouseEnter)
-    container.on('mouseleave', '.imagebox', this.handleMouseLeave)
-    container.on('click', '.close-icon', this.handleCloseIconClick)
+  getOrderedImageBox(element) {
+    return this.getImageBox($(element).parents('.imagebox').data('id'))
+    // return this.getModalContainer().find('[data-id=' + $(element).parents('.imagebox').data('id') + ']')
+  }
 
-    container.prev().on('click', '[data-delete=all]', this.deleteAllSelectedImage)
+  removeChooseClass(box = null) {
+    if (box) {
+      box.removeClass(this.config.chooseimage)
+    } else {
+      this.getModalContainer().find('.' + this.config.chooseimage).removeClass(this.config.chooseimage)
+    }
+  }
+
+
+  renameImage(event) {
+    const button = $(event.relatedTarget)
+    const id = button.data('id')
+
+    const image = this.getImage(id)
+
+    const input = this.getRenameModal().find('.modal-body input')
+    // input.trigger('focus')
+    input.val(button.data('name'))
+
+    this.getRenameModal().find('.modal-footer button').unbind('click').bind('click', (event) => {
+      event.preventDefault()
+
+      const value = input.val()
+
+      if (!value) {
+        this.alert(this.alerts.rename.error)
+        return
+      }
+
+
+      axios.post(`/${this.config.prefix}/media/${id}/rename`, { name: value })
+
+      button.parents('.imagebox').find('.filename').text(value)
+      button.data('name', value)
+
+
+      this.setSelectedModalImage(value, image)
+
+      this.alert(this.alerts.rename.success)
+
+      this.getRenameModal().modal('hide')
+
+
+
+    })
+  }
+
+  chooseImage(event) {
+    event.preventDefault()
+
+    /**
+     * On retire la classe de sélection à l'élément actuel et de le mettre au box qui vient d'être sélectionné
+     * si ce n'est pas une collection de type images (qui autorise la sélection de plusieurs images)
+     */
+    if (!this.isMultipleCollection()) {
+      this.removeChooseClass()
+    }
+
+
+    const imageBox = this.getOrderedImageBox(event.target)
+
+    imageBox.addClass(this.config.chooseimage)
+    const image = this.getImage(imageBox.data('id'))
+
+    imageBox.addClass(this.config.chooseimage)
+
+    axios.post(`/${this.config.prefix}/media/${image.id}/select`)
+      .then(({ data }) => {
+
+
+        if (!this.isMultipleCollection()) {
+          // trouver l'ancienne box selectionne et retirer le deselectionner
+          this.renderOldImage()
+        }
+
+        /**
+         * On séletionne le nouveau modal
+         */
+        this.setSelectedModalImage(null, data.media)
+
+        /**
+         * remplacer le contenu de la box pour que les liens soient mis à jour (
+         * sélectionner en désélectionner
+         * )
+         */
+        imageBox.replaceWith(this.getPreviewedModalImageTemplate(data.media))
+      })
+
+  }
+
+  unChooseImage(event) {
+    event.preventDefault()
+
+    const imageBox = this.getOrderedImageBox(event.target)
+
+    if (this.isMultipleCollection()) {
+      // retirer l'image désélectionner de la collection
+      // const selectedImages = this.selectedImages.filter(image => image.id != imageBox.data('id'))
+      const selectedImages = this.removeItemInSelectedImage(imageBox.data('id'), false)
+
+      this.selectedImages = [...selectedImages]
+
+      this.setSelectedModalImage(null, this.getImagesCollectionSelectedImage(), false)
+    } else {
+      this.selectedImage = null
+      this.setSelectedModalImage()
+    }
+
+
+    this.removeChooseClass(imageBox)
+
+    axios.post(`/${this.config.prefix}/media/${imageBox.data('id')}/unselect`)
+      .then(({ data }) => {
+        imageBox
+          .replaceWith(this.getPreviewedModalImageTemplate(data.media))
+      })
+
+
+
+  }
+
+  renderOldImage() {
+    const old_image = this.selectedImage
+
+    if (!old_image) return
+
+    old_image.select = false
+
+    this.getImageBox(old_image.id).replaceWith(
+      this.getPreviewedModalImageTemplate(old_image)
+    )
+  }
+
+  getFileSize(aSize) {
+    aSize = Math.abs(parseInt(aSize, 10))
+    var def = [[1, 'octets'], [1024, 'ko'], [1024 * 1024, 'Mo'], [1024 * 1024 * 1024, 'Go'], [1024 * 1024 * 1024 * 1024, 'To']]
+    for (var i = 0; i < def.length; i++) {
+      if (aSize < def[i][0]) return (aSize / def[i - 1][0]).toFixed(2) + ' ' + def[i - 1][1]
+    }
   }
 
   deleteAllSelectedImage(event) {
     event.preventDefault()
 
 
-    const collection = $(event.target).parent().parent().find('[data-image]').data('image')
+    // const collection = $(event.target).parent().parent().find('[data-image]').data('image')
+    const collection = this.collection
+
+
     const imageBoxes = $(event.target).parent().next().children()
 
     swal({
       title: 'Suppression !',
-      text: 'Etes de vous sûr de bien vouloir supprimer toutes les images sélectionnées. Cette action est irréversible.',
+      text: 'Etes de vous sûr de bien vouloir supprimer tous les fichiers sélectionnés. Cette action est irréversible.',
       icon: 'warning',
       dangerMode: true,
       buttons: {
@@ -1697,57 +1442,37 @@ class ImageManager {
 
         if (isConfirm) {
 
-
-          if (this.isEmptyModel()) {
-            imageBoxes.each((index, box) => {
-              $(box).fadeOut(600 * index, () => {
-                $(box).remove()
-              })
-            })
-            $(event.target).parent().addClass('d-none')
-
-            this.selectedImages = []
-            this.images = []
-            this.tempImages[this.collection] = this.images
-
-            this.addCheckUncheckAll();
-
-            this.renderHeaderButtons()
-
-          } else {
-            axios.delete(`${this.getUrl()}/${collection}/all`)
-              .then((data) => {
+          axios.delete(`${this.getUrl()}/${collection}/all`)
+            .then((data) => {
 
 
-                imageBoxes.each((index, box) => {
-                  $(box).fadeOut(600 * index, () => {
-                    $(box).remove()
-                  })
+              imageBoxes.each((index, box) => {
+                $(box).fadeOut(600 * index, () => {
+                  $(box).remove()
                 })
-
-                $(event.target).parent().addClass('d-none')
-
-                this.selectedImages = []
-                this.images = []
-
-                this.addCheckUncheckAll();
-
-                this.renderHeaderButtons()
               })
-          }
+
+              $(event.target).parent().addClass('d-none')
+
+              this.selectedImages = []
+              this.images = []
+
+              this.addCheckUncheckAll();
+
+              this.renderHeaderButtons()
+            })
         }
       })
 
 
   }
 
-
   hideBoxWhenDeleteByCloseIcon(imageBox, collection) {
     /**
      * On masque la box, on supprime les enfants et après on l'affiche pour que les
      * sélections suivantes puissent s'afficher
      */
-    if (this.isImagesCollection(collection)) {
+    if (this.isMultipleCollection()) {
       let imageContainerLength = imageBox.parent().children().length
 
       imageBox.fadeOut(600, _ => {
@@ -1770,10 +1495,10 @@ class ImageManager {
   }
 
   /**
-   * Permet de retirer une image dans la liste des tableaux ou retourner la nouvelle liste une fois filtré
-   * @param {int} image_id
-   * @param {bool} remove
-   */
+ * Permet de retirer une image dans la liste des tableaux ou retourner la nouvelle liste une fois filtré
+ * @param {int} image_id
+ * @param {bool} remove
+ */
   removeItemInSelectedImage(image_id, remove = true) {
     // Retirer l'image sélectionné de la liste des images
     if (!remove) {
@@ -1782,83 +1507,8 @@ class ImageManager {
     this.selectedImages = [...this.selectedImages.filter(image => image.id != image_id)]
   }
 
-  handleCloseIconClick(event) {
-    event.stopPropagation()
-
-    const imageBox = $(event.target).parents('.imagebox'),
-      collection = imageBox.parent().next().find('[data-image]').data('image'),
-      image_id = imageBox.find('[data-id]').data('id')
-
-
-    swal({
-      title: 'Suppression !',
-      text: 'Etes de vous sûr de bien vouloir supprimer cette image. Cette action est irréversible.',
-      icon: 'warning',
-      dangerMode: true,
-      buttons: {
-        cancel: 'Annulez',
-        confirm: 'Confirmez!'
-      }
-    })
-      .then((isConfirm) => {
-        if (isConfirm) {
-          if (this.isEmptyModel()) {
-
-            // Désélectionner l'élément
-            this.getImageBox(image_id).find(this.config.uncheckimage).trigger('click')
-
-            this.removeItemInSelectedImage(image_id)
-
-            this.hideBoxWhenDeleteByCloseIcon(imageBox, collection)
-
-            // supprimer l'image dans la liste
-            this.images = this.images.filter(image => image.id != image_id)
-            this.tempImages[this.collection] = this.images
-
-            this.addCheckUncheckAll();
-
-            this.renderHeaderButtons()
-
-
-          } else {
-            axios.delete(this.getUrl(), { data: { image_id } })
-              .then((data) => {
-                this.removeItemInSelectedImage(image_id)
-                this.hideBoxWhenDeleteByCloseIcon(imageBox, collection)
-                this.images = this.images.filter(image => image.id != image_id)
-
-                this.addCheckUncheckAll();
-
-                this.renderHeaderButtons()
-              })
-          }
-        } else {
-          $(event.target).parents('.imagebox').find('img').css('border', 'none')
-        }
-      })
-  }
-
-  handleMouseEnter(event) {
-    if ($(this).hasClass('selected')) {
-      $(this).find('.close-icon').hide()
-      return
-    }
-    $(this).find('.close-icon').show()
-    $(this).find('img').css('border', '3px solid red')
-  }
-
-  handleMouseLeave(event) {
-    if ($(this).hasClass('selected')) {
-      $(this).find('.close-icon').hide()
-      return
-    }
-    $(this).find('.close-icon').hide()
-    $(this).find('img').css('border', 'none')
-  }
-
-
   orderSortable(elements) {
-    if (!this.isImagesCollection(this.collection)) {
+    if (!this.isMultipleCollection()) {
       return
     }
 
@@ -1876,27 +1526,17 @@ class ImageManager {
   }
 
   saveSortableOrder(items) {
-
-    if (this.isEmptyModel()) {
-      for (let i = 0; i < items.length; i++) {
-
-        const id = parseInt(items[i].dataset.id, 10)
-        this.getImage(id).order = i + 1
-      }
-    } else {
-      const ids = []
-      for (let i = 0; i < items.length; i++) {
-        ids.push(
-          {
-            id: parseInt(items[i].dataset.id, 10),
-            order: i + 1
-          }
-        )
-      }
-      axios.post(`/${this.config.prefix}/media/order`, { ids })
+    const ids = []
+    for (let i = 0; i < items.length; i++) {
+      ids.push(
+        {
+          id: parseInt(items[i].dataset.id, 10),
+          order: i + 1
+        }
+      )
     }
+    axios.post(`/${this.config.prefix}/media/order`, { ids })
   }
-
 
   handleSortable() {
     const that = this
@@ -1948,55 +1588,33 @@ class ImageManager {
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
 
-      if (this.isEmptyModel()) {
-        const reader = new FileReader()
+      const formData = new FormData()
+      formData.append('image', image)
+      formData.append('collection', collection)
+      formData.append('order', this.getModalContainer().children().length + 1)
 
-        /**
-         * Le continue permet de passer à l'élément suivant tandis que le return aurait stopper la fonction
-         * et les autres images ne seront pas envoyés au serveur
-         */
-        if (!this.validateFile(image)) {
-          continue
+      axios.post(this.getUrl(), formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
-
-        reader.readAsDataURL(image)
-
-        reader.onload = (e) => {
-
+      })
+        .then(({ data }) => {
           this.removeEmptyMesage()
 
           this.previewImage(
-            image, e
+            data.media
           )
-        };
 
-      } else {
-        const formData = new FormData()
-        formData.append('image', image)
-        formData.append('collection', collection)
-        formData.append('order', this.getModalContainer().children().length + 1)
-
-        axios.post(this.getUrl(), formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-          .then(({ data }) => {
-            this.removeEmptyMesage()
-
-            this.previewImage(
-              data.media
-            )
-
-            this.alert({
-              message: "L'image " + image.name + ' a bien été téléversée!',
-              type: 'success'
-            })
-
-
-
+          this.alert({
+            message: "Le fichier " + image.name + ' a bien été téléversé!',
+            type: 'success'
           })
-      }
+
+
+
+        })
+
+
 
     }
   }

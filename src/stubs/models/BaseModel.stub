@@ -42,6 +42,19 @@ abstract class BaseModel extends Model implements HasMedia
     }
 
 
+
+    public function getMediaCollections() :array
+    {
+        return config('media-library.collections', []);
+    }
+
+
+    public function getMediaConversions() :array
+    {
+        return config('media-library.conversions', []);
+    }
+
+
     /**
      * Get elements by slug
      *

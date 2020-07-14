@@ -133,6 +133,18 @@ class {{singularClass}} extends Authenticatable implements HasMedia
       return 'pseudo';
     }
 
+    public function getMediaCollections(): array
+    {
+        return config('media-library.collections', []);
+    }
+
+
+    public function getMediaConversions(): array
+    {
+        return config('media-library.conversions', []);
+    }
+
+
      // add relation methods below
 
 }

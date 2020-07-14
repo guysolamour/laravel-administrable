@@ -33,6 +33,16 @@
   display: none;
 }
 
+.modal .fileicon {
+    font-size: 74px;
+}
+
+.modal .fileicon.selectedimage {
+    font-size: 100px;
+    padding: 15px;
+    text-align: center;
+}
+
 .imagebox.selected .close-icon {
   display: none;
 }

@@ -1,0 +1,35 @@
+
+@include('{{backLowerNamespace}}.media._modal')
+
+@push('css')
+<link rel="stylesheet" href="{{ asset('vendor/imagemanager/css/ImageManager.css') }}">
+@endpush
+
+@push('js')
+<script src="{{ asset('vendor/imagemanager/js/MediaManager.js') }}"></script>
+<script src="{{ asset('js/vendor/Sortable.js') }}"></script>
+<script src="{{ asset('js/vendor/jquery.zoom.min.js') }}"></script>
+<script src="{{ asset('js/vendor/jquery.fancybox.min.js') }}"></script>
+
+
+<script>
+    MediaManager.init({
+        collection                   : @json($collection),
+        model                        : @json($model),
+        model_name                   : @json(get_class($model)),
+        prefix                       : '{{ config('administrable.auth_prefix_path') }}',
+        @if(isset($collection_label))
+        'collection_label'           : @json($collection_label),
+        @endif
+        modal                        : '#mediaModal',
+        renamemodal                  : '#renameModal',
+        uploadmodal                  : '#uploadModal',
+        images_sortable_container    : '.images-box',
+        selector                     : '[data-mediamanager=button]',
+    });
+
+
+</script>
+
+@endpush
+

@@ -1,5 +1,5 @@
 @php
-    $tags = $model->seo ?: new Seo
+    $tags = $model->seo ?:  new \{{namespace}}\{{modelsFolder}}\Seo
 @endphp
 <div class="card">
     <h5 class="card-header">Référencement </h5>
@@ -177,7 +177,7 @@
     <div class="row">
         <div class="form-group col-sm-12">
             <label for="page:author">Auteur de cet article / page web</label> <br>
-            <input type="text" class="form-control" id="page:author" name="seo[page:author]" value="{{ $tags['page:author'] ?? get_client('full_name') }}">
+            <input type="text" class="form-control" id="page:author" name="seo[page:author]" value="{{ $tags['page:author'] ?? get_{{singularSlug}}('full_name') }}">
             <!-- <span class="text-muted form-text">Author of this article/webpage</span> -->
         </div>
         <div class="form-group col-sm-12">

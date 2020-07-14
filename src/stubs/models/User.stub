@@ -50,5 +50,15 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
       return static::where('email', $email)->first();
     }
 
+    public function getMediaCollections(): array
+    {
+        return config('media-library.collections', []);
+    }
+
+
+    public function getMediaConversions(): array
+    {
+        return config('media-library.conversions', []);
+    }
     // add relation methods below
 }
