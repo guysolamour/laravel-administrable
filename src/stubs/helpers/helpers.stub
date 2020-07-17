@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Support\Str;
+use {{namespace}}\{{modelsFolder}}\Page;
+use {{namespace}}\{{modelsFolder}}\Admin;
 use {{namespace}}\{{modelsFolder}}\Configuration;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,6 +28,22 @@ if (!function_exists('configuration')) {
 
         return Configuration::first()->$field;
     }
+}
+
+if (!function_exists('get_meta_page')) {
+    function get_meta_page(string $name)
+    {
+        return Page::where('name', $name)->firstOrFail();;
+    }
+}
+
+
+if (!function_exists('isConceptor{{singularClass}}')) {
+    function isConceptor{{singularClass}}({{singularClass}} ${{singularSlug}}) :bool
+    {
+        return ${{singularSlug}}->isConceptor{{singularClass}}();
+    }
+
 }
 
 

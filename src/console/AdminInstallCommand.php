@@ -28,12 +28,12 @@ class AdminInstallCommand extends BaseCommand
      * @var array
      */
     protected const DEFAULTS = [
-        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model', 'Seo', 'Comment'],
-        'migrations'      => ['User', 'Administrable', 'Media', 'Provider', 'Seo_meta_tag', 'Comment'],
-        'seeds'           => ['Configuration', 'Seeder', 'User'],
+        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model', 'Seo', 'Comment', 'Page', 'PageMeta'],
+        'migrations'      => ['User', 'Administrable', 'Media', 'Provider', 'Seo_meta_tag', 'Comment','Page', 'Page_meta'],
+        'seeds'           => ['Configuration', 'Seeder', 'User', 'Page'],
         'controllers'     => [
             'front'       => ['Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Home', 'Page', 'Redirect'],
-            'back'        => ['User', 'Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Configuration', 'Home', 'Media', 'Guard'],
+            'back'        => ['User', 'Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Configuration', 'Home', 'Media', 'Guard','Page'],
         ],
         'forms' => [
             'front' => [],
@@ -41,12 +41,12 @@ class AdminInstallCommand extends BaseCommand
         ],
         'routes' => [
             'front' => ['Auth', 'Default', 'Social', 'Comment'],
-            'back'  => ['User', 'Auth', 'Configuration', 'Media', 'Other', 'Profile', 'Comment']
+            'back'  => ['User', 'Auth', 'Configuration', 'Media', 'Other', 'Profile', 'Comment', 'Page']
         ],
 
         'views' => [
             'front' => ['Auth', 'Dashboard', 'Home', 'Layouts', 'Legalmention', 'Partials', 'Comments'],
-            'back'  => ['Users', 'Auth', 'Configuration', 'Dashboard', 'Guard', 'Layouts', 'Media', 'Partials', 'Comments']
+            'back'  => ['Users', 'Auth', 'Configuration', 'Dashboard', 'Guard', 'Layouts', 'Media', 'Partials', 'Comments', 'Pages']
         ],
         'emails' => [
             'front' => [],
@@ -554,6 +554,7 @@ class AdminInstallCommand extends BaseCommand
         $data_map = $this->parseName();
 
         $seeds = $this->filesystem->files(self::TPL_PATH . '/seeds');
+
         $seed_path = database_path('seeds');
 
 
@@ -582,6 +583,7 @@ class AdminInstallCommand extends BaseCommand
             $this->crud_models,
             self::DEFAULTS['seeds']
         );
+
         return array_filter($seeds, function ($seed) use ($seeds_to_create) {
 
             $name = (string) Str::of($seed->getFilenameWithoutExtension())
@@ -733,7 +735,6 @@ class AdminInstallCommand extends BaseCommand
 
         $controllers_to_create = [...self::DEFAULTS['controllers']['back'], ...$this->crud_models];
 
-        // Back controllers
         if ($this->isTheAdminTheme()) {
             $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/' . $this->theme);
         } else {

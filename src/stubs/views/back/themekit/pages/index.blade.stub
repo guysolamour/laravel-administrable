@@ -1,15 +1,14 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
-@section('title','Catégories')
 
+@section('title','Pages')
 
 
 @section('content')
 
-
 <div class="main-content">
     <div class="container-fluid">
-        <div class="page-header">
+       <div class="page-header">
             <div class="row align-items-end">
                 <div class="col-lg-8">
                 </div>
@@ -19,7 +18,8 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page"><a href="#">Catégories</a></li>
+
+                            <li class="breadcrumb-item active" aria-current="page">Pages</li>
                         </ol>
                     </nav>
                 </div>
@@ -30,18 +30,21 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h3 class="card-title">Articles</h3>
+                        <h3 class="card-title">Pages</h3>
                         <div class="btn-group float-right">
-                            <a href="{{ route('{{singularSlug}}.category.create') }}" class="btn btn-success">
-                                <i class="fa fa-plus"></i>Ajouter</a>
-                            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Category" id="delete-all">
+                            <a href="{{ route('{{backLowerNamespace}}.page.create') }}" class="btn  btn-primary"> <i
+                                    class="fa fa-plus"></i> Ajouter</a>
+                            @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Page" id="delete-all">
                                 <i class="fa fa-trash"></i> Tous supprimer</a>
+                            @endif
                         </div>
                     </div>
 
                     <div class="card-body">
                         <table class="table table-vcenter card-table" id='list'>
                             <thead>
+                                @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
                                 <th>
                                     <div class="checkbox-fade fade-in-success ">
                                         <label for="check-all">
@@ -49,24 +52,26 @@
                                             <span class="cr">
                                                 <i class="cr-icon ik ik-check txt-success"></i>
                                             </span>
-                                            {{-- <span>Default</span> --}}
                                         </label>
                                     </div>
                                 </th>
-                                <th>#</>
-                                <th>Nom</th>
-                                <th>Date ajout</th>
+                                @endif
+                                <th>#</th>
 
+                                <th>Nom</th>
+                                <th>Route</th>
+                                <th>Url</th>
                                 <th>Actions</th>
                             </thead>
                             <tbody>
-                                @foreach($categories as $category)
-                                <tr>
+                                @foreach($pages as $page)
+                                <tr class="tr-shadow">
+                                    @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
                                     <td>
                                         <div class="checkbox-fade fade-in-success ">
-                                            <label for="check-{{ $category->id }}">
-                                                <input type="checkbox" data-check data-id="{{ $category->id }}"
-                                                    id="check-{{ $category->id }}">
+                                            <label for="check-{{ $page->id }}">
+                                                <input type="checkbox" data-check data-id="{{ $page->id }}"
+                                                    id="check-{{ $page->id }}">
                                                 <span class="cr">
                                                     <i class="cr-icon ik ik-check txt-success"></i>
                                                 </span>
@@ -74,22 +79,25 @@
                                             </label>
                                         </div>
                                     </td>
+                                    @endif
+
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $category->name }}</td>
-                                    <td>{{ $category->created_at->format('d/m/Y h:i') }}</td>
+                                    <td>{{ $page->name }}</td>
+                                    <td>{{ $page->route }}</td>
+                                    <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
                                     <td>
-
                                         <div class="btn-group" role="group">
-                                            <a href="{{ route('{{singularSlug}}.category.show', $category) }}" class="btn btn-primary" data-toggle="tooltip"
-                                                data-placement="top" title="Afficher"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ route('{{backLowerNamespace}}.page.show', $page) }}" class="btn btn-primary"
+                                                data-toggle="tooltip" data-placement="top" title="Afficher"><i
+                                                    class="fas fa-eye"></i></a>
 
-                                            <a href="{{ route('{{singularSlug}}.category.edit', $category) }}" class="btn btn-info" data-toggle="tooltip"
-                                                data-placement="top" title="Editer"><i class="fas fa-edit"></i></a>
-                                            <a href="{{ route('{{singularSlug}}.category.destroy',$category) }}" data-method="delete"
-                                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?" class="btn btn-danger"
-                                                data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fas fa-trash"></i></a>
+                                            @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                                            <a href="{{ route('{{backLowerNamespace}}.page.destroy',$page) }}" data-method="delete"
+                                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                                class="btn btn-danger" data-toggle="tooltip" data-placement="top"
+                                                title="Supprimer"><i class="fas fa-trash"></i></a>
+                                            @endif
                                         </div>
-                                    </td>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -99,12 +107,13 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
-
-@include('{{singularSlug}}.partials._datatable')
-@include('{{singularSlug}}.partials._deleteAll')
-
+@include('{{backLowerNamespace}}.partials._datatable')
+@if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+@include('{{backLowerNamespace}}.partials._deleteAll')
+@endif
 @endsection

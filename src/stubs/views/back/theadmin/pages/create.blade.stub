@@ -1,0 +1,59 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Ajout')
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+             <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                  <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.index') }}">Pages</a></li>
+                  <li class="breadcrumb-item active">Ajout</li>
+              </ol>
+        </nav>
+
+
+    </div>
+
+    <div class="card">
+        <h4 class="card-title">
+            Ajout
+        </h4>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form action="{{ route('{{backLowerNamespace}}.page.store') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label for="">Nom <span class="text-danger">*</span> </label>
+                            <input type="text" class="form-control" value="{{ old('name') }}" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Route <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" value="{{ old('route') }}" name="route">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Titre</label>
+                            <input type="text" class="form-control" value="{{ old('title') }}" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Description</label>
+                            <textarea name="description" id="" class="form-control">{{ old('description') }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection

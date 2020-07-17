@@ -23,6 +23,17 @@
                             </span>
                         </a>
                     </li>
+                     <li class="nav-item {{ set_active_link('{{backLowerNamespace}}.page.index') }}">
+                        <a class="nav-link" href="{{ route('{{backLowerNamespace}}.page.index') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="fa fa-folder icon"></i>&nbsp;
+                            </span>
+                            <span class="nav-link-title">
+                                Pages
+                            </span>
+                        </a>
+                    </li>
+
                     <li class="nav-item {{ set_active_link('{{backLowerNamespace}}.user.index') }}">
                         <a class="nav-link" href="{{ route('{{backLowerNamespace}}.user.index') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -33,6 +44,7 @@
                             </span>
                         </a>
                     </li>
+
 
                     {{-- insert sidebar links here --}}
                 </ul>

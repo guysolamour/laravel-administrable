@@ -1,0 +1,79 @@
+<?php
+
+namespace {{namespace}}\{{modelsFolder}};
+
+use Illuminate\Support\Str;
+
+
+class PageMeta extends BaseModel
+{
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'page_metas';
+
+
+
+
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'image' => 'boolean',
+     ];
+
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name','title','image','content', 'page_id'];
+
+
+    // Attributes
+
+     public function getImageUrlAttribute()
+     {
+        if (!$this->isImage()) return '';
+
+        return (string) Str::of($this->content)
+                            ->after('src="')
+                            ->before('" />')
+                            ->before('?v');
+     }
+
+
+
+
+    public function isImage() :bool
+    {
+       return $this->image;
+    }
+
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        /**
+         * @param self $model
+         */
+        static::creating(function ($model) {
+            if (!$model->title) {
+                $model->title = $model->name;
+            }
+        });
+    }
+
+    // add relation methods below
+
+
+}

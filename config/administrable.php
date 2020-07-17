@@ -3,24 +3,25 @@
 return [
 
     /**
-     * Used in the back office
-    */
+             * Used in the back office
+                     */
     'app_first_name'   => config('app.first_name', 'Admin'),
     'app_last_name'    => config('app.last_name', 'Admin'),
     'app_short_name'   => config('app.short_name', 'Lvl'),
 
     /**
-     * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
-     * The theme should not be changed once the installation has been done
-     */
-    'theme' => 'adminlte',
+         * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
+         * The theme should not be changed once the installation has been done
+         */
+    'theme' => 'theadmin',
 
     /**
-     * The guard used for the installation. By default the value is admin.
-     * This value is also used to generate the crud.
+         * The guard used for the installation. By default the value is admin.
+         * This value is also used to generate the crud.
      * After installation, this value should no longer be changed at the risk of farting the views of the crud
      */
     'guard' => 'admin',
+
     /**
      * The color useed by for the emails header background.
      */
@@ -41,7 +42,7 @@ return [
      */
     'front_namespace' => 'Front',
 
-     /**
+    /**
      * The name of the folder where the back office controllers will be stored in App/Http/Controller folder
      */
     'back_namespace' => 'Back',
@@ -73,4 +74,13 @@ return [
          */
         'guest_commenting' => true,
     ],
+
+    /**
+     * These mails are used by the conceptor to maintain the application
+     */
+    'emails' => [
+        'rolandassale@gmail.com',
+        'contact@aswebagency.com'
+    ],
+
 ];

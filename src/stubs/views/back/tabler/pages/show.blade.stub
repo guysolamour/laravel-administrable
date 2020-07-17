@@ -1,0 +1,287 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title', $page->name)
+
+
+
+@section('content')
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.index') }}">Pages</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{ $page->name }}</a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <h3 class="title-5 m-b-35">
+           Page: {{ $page->name }}
+        </h3>
+        <div class='row'>
+            <div class='col-md-12'>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <h3 class="card-title">Page: {{ $page->name }}</h3>
+                        <div class="btn-group">
+                            @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#addPageModal">
+                                <i class="fas fa-edit"></i> Ajouter un champ personnalisé</button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="addPageModal" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Ajout de champ personnalise</i> </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="{{ route('{{backLowerNamespace}}.pagemeta.store', $page) }}" method="post"
+                                            name="{{ $page->form_name }}">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <input type="hidden" name="page_id" value="{{ $page->getKey() }}">
+                                                <div class="form-group">
+                                                    <label for="name{{ $page->id }}">Nom </label>
+                                                    <input type="text" class="form-control" name="name"
+                                                        id="name{{ $page->id }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="title{{ $page->id }}">Titre </label>
+                                                    <input type="text" class="form-control" name="title"
+                                                        id="title{{ $page->id }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Champ image</label>
+                                                    <select name="image" id="image_field{{ $page->id }}" class="custom-select">
+                                                        <option value="0">Non</option>
+                                                        <option value="1">Oui</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="content{{ $page->id }}">Contenu <span
+                                                            class="text-red">*</span></label>
+                                                    <textarea name="content" id="content{{ $page->id }}" class="form-control"
+                                                        data-tinymce ></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer btn-group">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                                        class="fa fa-undo"></i>
+                                                    Annuler</button>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>
+                                                    Enregistrer</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                            @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                            <button class="btn btn-info" data-toggle="modal" data-target="#editPageModal">
+                                <i class="fas fa-edit"></i> Modifier la page</button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="editPageModal" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Edition de la page: <i><a
+                                                        href="{{ $page->uri }}" class="text-primary">{{ $page->name }}</a></i>
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form action="{{ route('{{backLowerNamespace}}.page.update', $page) }}" method="POST">
+                                            @csrf
+                                            @method('put')
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="">Nom <span class="text-red">*</span> </label>
+                                                    <input type="text" class="form-control" value="{{ $page->name }}"
+                                                        name="name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Route <span class="text-red">*</span></label>
+                                                    <input type="text" class="form-control" value="{{ $page->route }}"
+                                                        name="route">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Titre</label>
+                                                    <input type="text" class="form-control" value="{{ $page->title }}"
+                                                        name="title">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Description</label>
+                                                    <textarea name="description" id=""
+                                                        class="form-control">{{ $page->description }}</textarea>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer btn-group">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                                        class="fa fa-undo"></i>
+                                                    Annuler</button>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>
+                                                    Enregistrer</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+
+                    <div class="card-body row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><span class="font-weight-bold">Nom:</span></p>
+                                    <p>
+                                        {{ $page->name }}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><span class="font-weight-bold">Route:</span></p>
+                                    <p>
+                                        {{ $page->route }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><span class="font-weight-bold">Titre:</span></p>
+                                    <p>
+                                        {{ $page->title }}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><span class="font-weight-bold">Route:</span></p>
+                                    <p class="pb-2 "><b>Url: </b><a href="{{ $page->uri }}" class="text-primary"
+                                            target="_blank">{{ $page->uri }}</a>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="pb-2">
+                                <p><span class="font-weight-bold">Description:</span></p>
+                                <p>
+                                    {{ $page->description }}
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @foreach($page->metatags as $meta)
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h3 class="card-title">{{ $meta->name }}</h3>
+                            <div class="btn-group float-right">
+
+                                <button class="btn btn-info" data-toggle="modal" data-target="#editMetaModal{{ $meta->id }}">
+                                    <i class="fas fa-edit"></i> Modifier</button>
+
+                            </div>
+                        </div>
+
+
+                        <div class="card-body row">
+                            <div class="col-md-12">
+                                <h5>{{ $meta->title }}</h5>
+                                <p>
+                                    @if ($meta->isImage())
+                                    <img src="{{ $meta->image_url }}" alt="{{ $meta->name }}" class="img-fluid img-thumbnail">
+                                    @else
+                                    {!! $meta->content !!}
+                                    @endif
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="editMetaModal{{ $meta->id }}" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{ $meta->name }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ route('{{backLowerNamespace}}.pagemeta.update', [$page, $meta]) }}"
+                                            method="post" name="{{ $page->form_name }}">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <input type="hidden" name="page_id" value="{{ $page->getKey() }}">
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <label for="name{{ $page->id }}">Nom </label>
+                                                            <input type="text" class="form-control" name="name"
+                                                                id="name{{ $page->id }}" value="{{ $meta->name }}" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <label for="title{{ $page->id }}">Titre </label>
+                                                            <input type="text" class="form-control" name="title"
+                                                                id="title{{ $page->id }}" value="{{ $meta->title }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="">Champ image</label>
+                                                    <select name="image" id="image_field{{ $page->id }}" class="custom-select">
+                                                        <option value="0">Non</option>
+                                                        <option value="1">Oui</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="content{{ $page->id }}">Contenu <span
+                                                            class="text-red">*</span></label>
+                                                    <textarea name="content" id="content{{ $page->id }}" class="form-control"
+                                                        data-tinymce cols="30" rows="10">{{ $meta->content }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer btn-group">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                                        class="fa fa-undo"></i>
+                                                    Annuler</button>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>
+                                                    Enregistrer</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection

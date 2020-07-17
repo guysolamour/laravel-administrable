@@ -43,6 +43,12 @@
                 </div>
 
                 <div class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.page.index') }}">
+                        <i class="fa fa-folder"></i><span>Pages</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
                     <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}">
                         <i class="fa fa-tools"></i><span>Configuration</span>
                     </a>

@@ -14,6 +14,14 @@ class CreateCrudView
 {
 
     use MakeCrudTrait;
+
+    private const DEFAULT_MEDIA_COLLECTION_LABEL = [
+        'front'       =>  'Image à la une',
+        'back'        =>  'Seconde image à la une',
+        'images'      =>  'Gallerie',
+    ];
+
+
     /**
      * @var string
      */
@@ -789,17 +797,13 @@ class CreateCrudView
         $field = $this->imagemanager;
 
 
-        $default_label = [
-            'front'       =>  'Image à la une',
-            'back'        =>  'Seconde image à la une',
-            'images'      =>  'Gallerie',
-        ];
+        $default_label = self::DEFAULT_MEDIA_COLLECTION_LABEL;
 
         if (true === $field) {
             $labels = <<<LABEL
-            'front_image_label' =>  {$default_label['front']},
-            'back_image_label'  =>  {$default_label['back']},
-            'images_label'      =>  {$default_label['images']},
+            'front_image_label' =>  '{$default_label['front']}',
+            'back_image_label'  =>  '{$default_label['back']}',
+            'images_label'      =>  '{$default_label['images']}',
             LABEL;
 
             if ('show' !== $action) {

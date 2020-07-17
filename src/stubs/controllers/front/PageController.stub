@@ -9,7 +9,9 @@ class PageController extends Controller
 {
     public function home()
     {
-      return view('{{frontLowerNamespace}}.home.index');
+      $page = get_meta_page('home');
+
+      return view('{{frontLowerNamespace}}.home.index', compact('page'));
     }
 
     public function destroyAll(Request $request)

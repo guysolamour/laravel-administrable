@@ -96,9 +96,8 @@ trait MediaableTrait
     }
 
 
-    public static function boot()
+    public static function bootMediaableTrait()
     {
-        parent::boot();
 
         /**
          * @param \{{namespace}}\{{modelsFolder}}\BaseModel $model

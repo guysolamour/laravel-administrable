@@ -25,6 +25,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // $this->loadRoutesFrom(__DIR__.'/routes/web.php');
 
         $this->loadHelperFile();
+
+
     }
 
     public function register()

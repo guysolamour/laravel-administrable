@@ -1,0 +1,134 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
+
+use {{namespace}}\{{modelsFolder}}\Page;
+use {{namespace}}\{{modelsFolder}}\PageMeta;
+use Illuminate\Http\Request;
+use {{namespace}}\Http\Controllers\Controller;
+
+class PageController extends Controller
+{
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $pages = Page::last()->get();
+
+        return view('{{backLowerNamespace}}.pages.index', compact('pages'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('{{backLowerNamespace}}.pages.create');
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'route' => 'required',
+        ]);
+
+        Page::create($request->all());
+
+        flashy('L\' élément a bien été ajouté');
+        return redirect()->route('{{backLowerNamespace}}.page.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param \{{namespace}}\{{modelsFolder}}\Page  $page
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Page $page)
+    {
+        $page->load('metatags');
+
+        return view('{{backLowerNamespace}}.pages.show', compact('page'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{namespace}}\{{modelsFolder}}\Page  $page
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Page $page)
+    {
+        $request->validate([
+            'name' => 'required',
+            'route' => 'required',
+        ]);
+
+        $page->update($request->all());
+
+        flashy('L\' élément a bien été modifié');
+        return back();
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\Page  $page
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Page $page)
+    {
+        $page->delete();
+        flashy('L\' élément a bien été supprimé');
+        return redirect()->route('{{backLowerNamespace}}.page.index');
+    }
+
+
+    public function storeMetaTag(Page $page, Request $request)
+    {
+        $request->validate($this->getValidationRules());
+        $page->metatags()->create($request->all());
+
+        flashy('Le meta tag a bien été inseré');
+        return back();
+
+    }
+
+
+    public function updateMetaTag(Page $page, PageMeta $pagemeta ,Request $request)
+    {
+        $request->validate($this->getValidationRules());
+        $pagemeta->update($request->all());
+
+        flashy('Le meta tag a bien été modifié');
+        return back();
+    }
+
+    private function getValidationRules() :array
+    {
+      return [
+          'name'     => 'required',
+          'title'    => 'nullable',
+          'content'  => 'nullable',
+          'image'    => 'required|in:0,1',
+          'page_id'  => 'required|exists:\{{namespace}}\{{modelsFolder}}\Page,id',
+      ];
+    }
+
+}

@@ -64,10 +64,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
 
         Gate::define('viewTelescope', function (${{singularSlug}} = null) {
-            return in_array(auth()->guard('{{singularSlug}}')->user()->email, [
-                'rolandassale@gmail.com',
-                'contact@aswebagency.com'
-            ]);
+            return in_array(auth()->guard('{{singularSlug}}')->user()->email,  config('administrable.emails', []));
         });
     }
 }

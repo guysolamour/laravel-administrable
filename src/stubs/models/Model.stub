@@ -69,6 +69,12 @@ class {{singularClass}} extends Authenticatable implements HasMedia
         return  $this->is_super_{{singularSlug}};
     }
 
+    public function isConceptor{{singularClass}}() :bool
+    {
+        return in_array($this->email, config('administrable.emails'));
+    }
+
+
     /**
      * Get the {{singularSlug}}'s full name.
      *

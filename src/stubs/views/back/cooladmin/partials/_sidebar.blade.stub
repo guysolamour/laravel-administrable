@@ -54,10 +54,17 @@
                     </ul>
                 </li>
 
+                <li class="{{ set_active_link('{{backLowerNamespace}}.page.index') }}">
+                    <a href="{{ route('{{backLowerNamespace}}.page.index') }}">
+                        <i class="far  fa-folder"></i>Pages</a>
+                </li>
+
                 <li class="{{ set_active_link('{{backLowerNamespace}}.configuration.edit') }}">
                     <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}">
                         <i class="far  fa-tools"></i>Configuration</a>
                 </li>
+
+
 
 
             </ul>

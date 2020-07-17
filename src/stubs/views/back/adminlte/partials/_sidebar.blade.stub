@@ -33,7 +33,7 @@
             </a>
           </li>
             <li class="nav-item">
-            <a href="{{ route('{{backLowerNamespace}}.user.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.comment.index') }}">
+            <a href="{{ route('{{backLowerNamespace}}.user.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.user.index') }}">
               <i class="nav-icon fas fa-user"></i>
               <p>
                 Utilisateurs
@@ -71,6 +71,14 @@
                     </li>
                 @endif
             </ul>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('{{backLowerNamespace}}.page.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.page.index') }}">
+              <i class="nav-icon fas fa-folder"></i>
+              <p>
+                Pages
+              </p>
+            </a>
           </li>
           <li class="nav-item">
             <a href="{{ route('{{backLowerNamespace}}.configuration.edit') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.configuration.edit') }}">

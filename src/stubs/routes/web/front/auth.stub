@@ -26,6 +26,6 @@ Route::namespace('{{frontNamespace}}')->group(function () {
         Auth::routes(['verify' => true]);
     });
 
-    Route::get('/dashboard', 'HomeController@index')->name('home')->middleware('verified');
+    Route::get('/dashboard', 'HomeController@index')->name('dashboard')->middleware('verified');
 
 });

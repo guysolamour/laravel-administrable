@@ -22,7 +22,9 @@ class ContactController extends Controller
     {
         $form = $this->getForm(Mailbox::class,ContactForm::class,false);
 
-        return view('{{frontLowerNamespace}}.contact.create', compact('form'));
+        $page = get_meta_page('contact');
+
+        return view('{{frontLowerNamespace}}.contact.create', compact('form', 'page'));
     }
 
     public function store(Request $request)

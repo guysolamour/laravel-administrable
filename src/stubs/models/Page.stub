@@ -1,0 +1,67 @@
+<?php
+
+namespace {{namespace}}\{{modelsFolder}};
+
+use Cviebrock\EloquentSluggable\Sluggable;
+
+class Page extends BaseModel
+{
+    use Sluggable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name','route','title','description'];
+
+
+
+    protected $with = ['metatags'];
+
+
+    // Attributes
+    public function getUriAttribute()
+    {
+        return route($this->attributes['route']);
+    }
+
+
+    public function getTag(string $name, ?string $key = null)
+    {
+
+        $tag = $this->metatags->filter(fn ($tag)=> $tag->name == $name)->first();
+
+        if ($tag) {
+            return $key ? $tag->$key : $tag;
+        }
+
+        return '';
+    }
+
+    // add relation methods below
+
+    public function metatags()
+    {
+       return $this->hasMany(PageMeta::class,'page_id');
+    }
+
+    // add sluggable methods below
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
+    {
+        return [
+            'slug' => ['source' => 'name']
+        ];
+    }
+}
