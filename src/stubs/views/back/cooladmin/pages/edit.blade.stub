@@ -1,7 +1,7 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','Ajout')
+@section('title','Edition ' . $page->name)
 
 
 
@@ -29,7 +29,13 @@
                                 <li class="list-inline-item seprate">
                                     <span>/</span>
                                 </li>
-                                <li class="list-inline-item active">Ajout</li>
+                                <li class="list-inline-item">
+                                    <a href="{{ route('{{backLowerNamespace}}.page.show', $page) }}">{{ $page->name }}</a>
+                                </li>
+                                <li class="list-inline-item seprate">
+                                    <span>/</span>
+                                </li>
+                                <li class="list-inline-item active">Edition</li>
                             </ul>
                         </div>
 
@@ -47,18 +53,19 @@
             <div class="row au-card">
                 <div class="col-md-12">
                     <h3 class="title-5 m-b-35">
-                        Ajout
+                        Edition
                     </h3>
                     <div class="card-body p-0">
-                      {!! form_start($form) !!}
-                      {!! form_rest($form) !!}
+                        {!! form_start($form) !!}
+                        {!! form_rest($form) !!}
                     </div>
                 </div>
-                 @seoForm([
-                   'model' => $form->getModel()
-                 ])
-                 <div class="form-group">
-                    <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
+                @seoForm([
+                    'model' => $form->getModel()
+                ])
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
                 </div>
                 {!! form_end($form) !!}
             </div>
@@ -68,3 +75,4 @@
 
 
 @endsection
+

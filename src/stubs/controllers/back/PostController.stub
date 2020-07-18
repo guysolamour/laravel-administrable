@@ -46,8 +46,7 @@ class PostController extends Controller
 
         $form->redirectIfNotValid();
 
-        $post = Post::create($request->all());
-        $post->generateSeo();
+        Post::create($request->all());
 
         flashy('L\' élément a bien été ajouté');
         return redirect()->route('{{backLowerNamespace}}.post.index');
@@ -89,7 +88,6 @@ class PostController extends Controller
         $form->redirectIfNotValid();
 
         $post->update($request->all());
-        $post->generateSeo();
 
         flashy('L\' élément a bien été modifié');
         return redirect()->route('{{backLowerNamespace}}.post.index');

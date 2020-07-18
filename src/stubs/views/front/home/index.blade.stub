@@ -1,14 +1,8 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@section('seo')
-{!!
-  {{namespace}}\{{modelsFolder}}\Seo::getTags([
-      'title' => config('app.name') ,
-      'description' => configuration('about')
-  ])
-!!}
-@stop
-
+@seoTags([
+    'model' => $page,
+])
 
 @section('content')
 <div class='container mt-5 pt-5 text-center'>

@@ -72,6 +72,10 @@
                                 data-toggle="tooltip" data-placement="top" title="Afficher"><i
                                     class="fas fa-eye"></i></a>
 
+                            <a href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}" class="btn btn-info"
+                              data-toggle="tooltip" data-placement="top" title="Editer"><i
+                                  class="fas fa-edit"></i></a>
+
                             @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
                             <a href="{{ route('{{backLowerNamespace}}.page.destroy',$page) }}" data-method="delete"
                                 data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"

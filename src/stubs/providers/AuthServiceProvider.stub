@@ -4,6 +4,8 @@ namespace {{namespace}}\Providers;
 
 use {{namespace}}\{{modelsFolder}}\Comment;
 use {{namespace}}\Policies\CommentPolicy;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -27,6 +29,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Validator::extend('route_exists', function ($attribute, $value, $parameters, $validator) {
+            return Route::has($value);
+        });
+
+        Validator::replacer('route_exists', function ($message, $attribute, $rule, $parameters) {
+            return str_replace('Route', 'route', $message);
+        });
     }
 }

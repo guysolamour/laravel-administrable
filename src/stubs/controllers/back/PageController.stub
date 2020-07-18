@@ -5,10 +5,12 @@ namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 use {{namespace}}\{{modelsFolder}}\Page;
 use {{namespace}}\{{modelsFolder}}\PageMeta;
 use Illuminate\Http\Request;
+use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
 
 class PageController extends Controller
 {
+    use FormBuilderTrait;
 
     /**
      * Display a listing of the resource.
@@ -30,7 +32,10 @@ class PageController extends Controller
     public function create()
     {
         abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
-        return view('{{backLowerNamespace}}.pages.create');
+
+        $form = $this->getForm();
+
+        return view('{{backLowerNamespace}}.pages.create', compact('form'));
     }
 
 
@@ -44,10 +49,8 @@ class PageController extends Controller
     {
         abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
 
-        $request->validate([
-            'name' => 'required',
-            'route' => 'required',
-        ]);
+        $form = $this->getForm();
+        $form->redirectIfNotValid();
 
         Page::create($request->all());
 
@@ -68,6 +71,19 @@ class PageController extends Controller
         return view('{{backLowerNamespace}}.pages.show', compact('page'));
     }
 
+     /**
+     * Show the form for editing a new resource.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\Page  $page
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Page $page)
+    {
+        $form = $this->getForm($page);
+
+        return view('{{backLowerNamespace}}.pages.edit', compact('page', 'form'));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -77,15 +93,14 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $request->validate([
-            'name' => 'required',
-            'route' => 'required',
-        ]);
+        $form = $this->getForm($page);
+        $form->redirectIfNotValid();
 
         $page->update($request->all());
 
+
         flashy('L\' élément a bien été modifié');
-        return back();
+        return redirect()->route('{{backLowerNamespace}}.page.show', $page);
     }
 
 

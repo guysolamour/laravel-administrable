@@ -19,8 +19,6 @@ class PagesTableSeeder extends Seeder
         $page = Page::create([
             'name'   => 'home',
             'route'  => 'home',
-            'title'  => 'Home page',
-            'description' => $faker->realText(150),
         ]);
 
         $page->metatags()->create([
@@ -41,8 +39,6 @@ class PagesTableSeeder extends Seeder
         $page = Page::create([
             'name'   => 'contact',
             'route'  => 'front.contact.create',
-            'title'  => 'Contact page',
-            'description' => $faker->realText(150),
         ]);
 
 
@@ -64,8 +60,6 @@ class PagesTableSeeder extends Seeder
         $page = Page::create([
             'name'   => 'legal-mention',
             'route'  => 'front.legal-mention.index',
-            'title'  => 'Legal mentions page',
-            'description' => $faker->realText(150),
         ]);
     }
 }

@@ -1,9 +1,9 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
+@seoTags([
+    'model' => $post,
+])
 
-@section('seo')
-{!! App\Models\Seo::getTags($post) !!}
-@stop
 
 @section('content')
 <div class='container mt-5 pt-5'>

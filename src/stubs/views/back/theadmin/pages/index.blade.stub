@@ -82,6 +82,9 @@
                                         href="{{ route('{{backLowerNamespace}}.page.show', $page) }}" data-provide="tooltip"
                                         title="Afficher"><i class="ti-eye"></i></a>
 
+                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}" data-provide="tooltip"
+                                            title="Editer"><i class="ti-pencil"></i></a>
+
                                     @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
                                     <a class="nav-link hover-danger"
                                         href="{{ route('{{backLowerNamespace}}.page.destroy',$page) }}" data-provide="tooltip"
@@ -184,14 +187,6 @@
                 <div class="form-group">
                     <label for="">Route <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" value="{{ old('route') }}" name="route">
-                </div>
-                <div class="form-group">
-                    <label for="">Titre</label>
-                    <input type="text" class="form-control" value="{{ old('title') }}" name="title">
-                </div>
-                <div class="form-group">
-                    <label for="">Description</label>
-                    <textarea name="description" id="" class="form-control">{{ old('description') }}</textarea>
                 </div>
             </form>
         </div>

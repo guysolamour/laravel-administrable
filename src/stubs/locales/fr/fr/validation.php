@@ -87,6 +87,7 @@ return [
     'unique' => 'La valeur du champ :attribute est déjà utilisée.',
     'uploaded' => "Le fichier du champ :attribute n'a pu être téléversé.",
     'url' => "Le format de l'URL de :attribute n'est pas valide.",
+    'route_exists' => "Le champ :attribute n'est pas valide ou n'existe pas.",
 
     /*
     |--------------------------------------------------------------------------

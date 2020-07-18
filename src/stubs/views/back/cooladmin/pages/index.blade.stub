@@ -102,6 +102,11 @@
                                                 <i class="zmdi zmdi-eye"></i>
                                             </a>
 
+                                            <a href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}" class="item"
+                                                data-toggle="tooltip" data-placement="top" title="Editer">
+                                                <i class="zmdi zmdi-edit"></i>
+                                            </a>
+
                                             @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
                                             <a href="{{ route('{{backLowerNamespace}}.page.destroy', $page) }}"
                                                 class="chosen-single item" data-toggle="tooltip" data-placement="top"

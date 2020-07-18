@@ -1,7 +1,7 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','Ajout')
+@section('title','Edition ' . $page->name)
 
 
 
@@ -9,11 +9,13 @@
 <div class="main-content">
     <div class="card ">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
-             <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
-                  <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.index') }}">Pages</a></li>
-                  <li class="breadcrumb-item active">Ajout</li>
-              </ol>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.index') }}">Pages</a></li>
+                <li class="breadcrumb-item"><a
+                        href="{{ route('{{backLowerNamespace}}.page.show', $page) }}">{{ $page->name }}</a></li>
+                <li class="breadcrumb-item active">Edition</li>
+            </ol>
         </nav>
 
 
@@ -21,7 +23,7 @@
 
     <div class="card">
         <h4 class="card-title">
-            Ajout
+            Edition
         </h4>
 
         <div class="card-body">
@@ -35,14 +37,16 @@
         </div>
     </div>
 
-     @seoForm([
+    @seoForm([
         'model' => $form->getModel()
     ])
 
     <div class="form-group">
-        <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
+        <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
     </div>
     {!! form_end($form) !!}
 </div>
+
+
 
 @endsection

@@ -37,7 +37,7 @@ class AdminInstallCommand extends BaseCommand
         ],
         'forms' => [
             'front' => [],
-            'back'  => ['User', 'Comment', 'Configuration', 'Create', 'Guard', 'ResetPassword']
+            'back'  => ['User', 'Comment', 'Configuration', 'Create', 'Guard', 'ResetPassword', 'Page']
         ],
         'routes' => [
             'front' => ['Auth', 'Default', 'Social', 'Comment'],
@@ -1472,6 +1472,7 @@ class AdminInstallCommand extends BaseCommand
             $search
                    Blade::include('{$this->parseName()['{{frontLowerNamespace}}']}.comments.comments', 'comments');
                    Blade::include('{$this->parseName()['{{backLowerNamespace}}']}.partials._seoform', 'seoForm');
+                   Blade::include('{$this->parseName()['{{frontLowerNamespace}}']}.partials._seotags', 'seoTags');
             TEXT,
             $blade_sp_path
         );

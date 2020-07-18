@@ -1,11 +1,11 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','Ajout')
+@section('title','Edition ' . $page->name)
+
 
 
 @section('content')
-
 
 <div class="main-content">
     <div class="container-fluid">
@@ -19,8 +19,9 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
-                            <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.index') }}">Pages</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a href="#">Ajout</a></li>
+                           <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.index') }}">Pages</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.show', $page) }}">{{ $page->name }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a href="#">Edition</a></li>
                         </ol>
                     </nav>
                 </div>
@@ -30,23 +31,24 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h3 class="card-title">Ajout</h3>
+                        <h3 class="card-title">Edition</h3>
                     </div>
+
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                              {!! form_start($form) !!}
+                               {!! form_start($form) !!}
                               {!! form_rest($form) !!}
                             </div>
                         </div>
                     </div>
                 </div>
                 @seoForm([
-                  'model' => $form->getModel()
+                    'model' => $form->getModel()
                 ])
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
+                    <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
                 </div>
                 {!! form_end($form) !!}
             </div>
@@ -55,3 +57,4 @@
     </div>
 </div>
 @endsection
+

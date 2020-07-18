@@ -130,4 +130,16 @@ trait SeoableTrait
 
         return SEOTools::generate();
     }
+
+    public static function bootSeoableTrait()
+    {
+        /**
+         * @param \{{namespace}}\{{modelsFolder}}\BaseModel $model
+         */
+        static::saved(function ($model) {
+            if (request('seo')) {
+                $model->generateSeo();
+            }
+        });
+    }
 }

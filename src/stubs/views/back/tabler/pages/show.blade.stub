@@ -84,61 +84,9 @@
                                     </div>
                                 </div>
                             </div>
-                            @endif
-                            @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-                            <button class="btn btn-info" data-toggle="modal" data-target="#editPageModal">
-                                <i class="fas fa-edit"></i> Modifier la page</button>
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="editPageModal" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Edition de la page: <i><a
-                                                        href="{{ $page->uri }}" class="text-primary">{{ $page->name }}</a></i>
-                                            </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form action="{{ route('{{backLowerNamespace}}.page.update', $page) }}" method="POST">
-                                            @csrf
-                                            @method('put')
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="">Nom <span class="text-red">*</span> </label>
-                                                    <input type="text" class="form-control" value="{{ $page->name }}"
-                                                        name="name">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="">Route <span class="text-red">*</span></label>
-                                                    <input type="text" class="form-control" value="{{ $page->route }}"
-                                                        name="route">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="">Titre</label>
-                                                    <input type="text" class="form-control" value="{{ $page->title }}"
-                                                        name="title">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="">Description</label>
-                                                    <textarea name="description" id=""
-                                                        class="form-control">{{ $page->description }}</textarea>
-                                                </div>
-
-                                            </div>
-                                            <div class="modal-footer btn-group">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                                        class="fa fa-undo"></i>
-                                                    Annuler</button>
-                                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>
-                                                    Enregistrer</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                            <a class="btn btn-info" href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}">
+                                            <i class="fas fa-edit"></i> Modifier la page</a>
                             @endif
                         </div>
                     </div>
@@ -161,27 +109,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <p><span class="font-weight-bold">Titre:</span></p>
-                                    <p>
-                                        {{ $page->title }}
-                                    </p>
-                                </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <p><span class="font-weight-bold">Route:</span></p>
                                     <p class="pb-2 "><b>Url: </b><a href="{{ $page->uri }}" class="text-primary"
                                             target="_blank">{{ $page->uri }}</a>
                                     </p>
                                 </div>
                             </div>
-
-                            <div class="pb-2">
-                                <p><span class="font-weight-bold">Description:</span></p>
-                                <p>
-                                    {{ $page->description }}
-                                </p>
-                            </div>
-
                         </div>
 
                     </div>

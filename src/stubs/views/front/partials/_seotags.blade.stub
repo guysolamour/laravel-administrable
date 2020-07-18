@@ -1,0 +1,15 @@
+@section('seo')
+@php
+    $seo_data = [];
+
+    foreach(['model','title', 'description','keywords'] as $var){
+        if (isset($$var)){
+            $seo_data[$var] = $$var;
+        }
+    }
+@endphp
+{!!
+    App\Models\Seo::getTags($seo_data)
+!!}
+
+@stop

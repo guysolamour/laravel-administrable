@@ -1,13 +1,8 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@section('seo')
-{!!
-  App\Models\Seo::getTags([
-      'title' => 'Tableau de bord',
-  ])
-!!}
-@stop
-
+@seoTags([
+    'title' => 'Tableau de bord',
+])
 
 @section('content')
 <div class="container mt-5">
