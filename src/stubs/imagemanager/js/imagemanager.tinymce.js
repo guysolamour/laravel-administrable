@@ -40,11 +40,15 @@ class TinymceImageManager {
         error: { message: `Erreur lors de la suppression de l'image`, type: 'danger' },
         swal: { message: `Etes de vous sûr de bien vouloir supprimer l'image ? Cette action est irréversible.`, type: 'warning' },
       },
+      size: {
+        error: { message: `Image trop grande, la taille ne peut dépasser 1024 Ko.`, type: 'danger' }
+      }
     }
 
 
 
     this.authorized_extensions = ['png', 'jpg', 'gif', 'jpeg', 'svg']
+    this.limit_size = 1024000;
 
     this.collection = 'attachments'
     this.uploadingImages = []
@@ -1237,6 +1241,11 @@ class TinymceImageManager {
   upload(images) {
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
+
+      if (image.size > this.limit_size) {
+        this.alert(this.alerts.size.error)
+        return
+      }
 
       if (this.isEmptyModel()) {
         const reader = new FileReader()

@@ -221,8 +221,6 @@
                 return
             }
 
-            console.log(this.options);
-
 
             this.init()
 

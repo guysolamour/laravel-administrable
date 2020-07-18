@@ -41,7 +41,7 @@
 </div>
 
 @section('modal')
-    @include('back.media._modal')
+    @include('{{backLowerNamespace}}.media._modal')
 @stop
 
 @push('css')

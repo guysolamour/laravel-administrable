@@ -39,12 +39,16 @@ class MediaManager {
         error: { message: `Erreur lors de la suppression de l'image`, type: 'danger' },
         swal: { message: `Etes de vous sûr de bien vouloir supprimer l'image ? Cette action est irréversible.`, type: 'warning' },
       },
+      size: {
+        error: { message: `Image trop grande, la taille ne peut dépasser 1024 Ko.`, type: 'danger' }
+      }
     }
 
 
     this.images_extensions = ['jpg', 'gif', 'jpeg', 'png', 'svg', 'gif']
     this.doc_extensions = ['doc', 'pdf', 'xlsx', 'docx', 'ppt', 'pptx']
     this.authorized_extensions = [...this.images_extensions, ...this.doc_extensions, 'zip']
+    this.limit_size = 1024000;
 
 
     this.uploadingImages = []
@@ -1587,6 +1591,11 @@ class MediaManager {
   upload(images, collection) {
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
+
+      if (image.size > this.limit_size) {
+        this.alert(this.alerts.size.error)
+        return
+      }
 
       const formData = new FormData()
       formData.append('image', image)

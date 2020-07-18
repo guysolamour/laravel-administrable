@@ -9,7 +9,7 @@
 <!-- Main container -->
 <main class="main-container">
 
-    <header class="header bg-img" style="background-image: url(/vendor/{{theme}}/img/gallery/8.jpg)">
+    <header class="header bg-img">
            @include('{{backLowerNamespace}}.{{pluralSlug}}._avatar', [
               'model' => ${{singularSlug}},
               'model_name' => get_class(${{singularSlug}}),

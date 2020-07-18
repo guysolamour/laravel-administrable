@@ -18,7 +18,7 @@
             <div class="btn-group">
                 @if (current_{{singularSlug}}_is_super_{{singularSlug}}() && !get_{{singularSlug}}()->is(${{singularSlug}}))
                 <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.delete', ${{singularSlug}}) }}" class="btn btn-danger" data-method="delete"
-                    data-confirm="Etes vous sur de bien vouloir supprimer cet {{singularSlug}} ? Tous ses articles seront  supprimés par la même occasion.">
+                    data-confirm="Etes vous sûr de bien vouloir supprimer cet {{singularSlug}} ? Tous ses articles seront  supprimés par la même occasion.">
                     <i class="fas fa-trash"></i>&nbsp; Supprimer</a>
                 @endif
             </div>

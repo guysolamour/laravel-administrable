@@ -1,11 +1,11 @@
-<div class="header-info h-250px mb-0">
+<div class="header-info mb-0">
     <div class="media align-items-end">
         <img data-avatar="{{ $model->id }}" class="avatar avatar-xl avatar-bordered" src="{{ $model->getFrontImageUrl() }}" alt="{{ $model->full_name }}">
         <div class="media-body">
             <p class="stext-white opacity-90"><strong>{{ $model->full_name }}</strong></p>
             <small class=" opacity-60">{{ $model->role }}</small>
         </div>
-        @if (current_client_profil($model) || current_client_is_super_client())
+        @if (current_{{singularSlug}}_profil($model) || current_{{singularSlug}}_is_super_{{singularSlug}}())
         <button type="button" class="btn btn-primary text-white btn-sm" data-image='front-image'
             data-container='.front-image-box'>
             <i class="fa fa-image"></i> Changer d'avatar
@@ -15,7 +15,7 @@
 </div>
 
 @section('modal')
-    @include('back.media._modal')
+    @include('{{backLowerNamespace}}.media._modal')
 @stop
 
 @push('css')

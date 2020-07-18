@@ -16,7 +16,7 @@
 
 
 
-@include('back.media._modal')
+@include('{{backLowerNamespace}}.media._modal')
 
 @push('css')
 <link rel="stylesheet" href="{{ asset('vendor/imagemanager/css/ImageManager.css') }}">

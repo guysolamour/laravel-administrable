@@ -105,15 +105,13 @@
                             style="overflow:hidden scroll;height:450px">
 
                         </div>
-
-
                     </div>
                 </div>
                 <div class="modal-footer d-flex p-4 flex-wrap justify-content-between">
-                    <div class="" data-modal="footer">
-                    </div>
                     <div class="" data-modal="alert">
 
+                    </div>
+                    <div class="" data-modal="footer">
                     </div>
                 </div>
             </div>

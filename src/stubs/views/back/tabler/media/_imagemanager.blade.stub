@@ -13,7 +13,7 @@
                         title="Supprimer l'image" style="font-size: 1.5rem;display: none;cursor: pointer;color: red"></i>
                         <a href="{{ $model->front_image->getUrl() }}" id="front-image" data-fancybox="gallery"
                             data-caption="{{ $model->front_image->name }}">
-                        <img style="height:250px;width:100%" class="img-thumbnail " src="{{ $model->front_image->getUrl('thumb-sm') }}"
+                        <img style="height:250px;" class="img-thumbnail " src="{{ $model->front_image->getUrl('thumb-sm') }}"
                             data-id="{{ $model->front_image->id }}"
                             alt="{{ $model->front_image->name }}">
                     </a>
@@ -44,7 +44,7 @@
                     <i class="close-icon fa fa-times" aria-hidden="true"
                         title="Supprimer l'image" style="font-size: 1.5rem;display: none;cursor: pointer;color: red"></i>
                     <a href="{{ $model->back_image->getUrl() }}" id="back-image" data-fancybox="gallery" data-caption="{{ $model->back_image->name }}">
-                        <img style="height:250px;width:100%" class="img-thumbnail " src="{{ $model->back_image->getUrl() }}"
+                        <img style="height:250px" class="img-thumbnail " src="{{ $model->back_image->getUrl('thumb-sm') }}"
                             data-id="{{ $model->back_image->id }}"
                             alt="{{ $model->back_image->name }}">
                     </a>
@@ -79,14 +79,14 @@
 
         <div class="row images-box image-container" style="clear: both">
             @foreach ($model->images as $media)
-            <div class="col-6 imagebox pb-2" data-id="{{ $media->id }}">
+            <div class="col-4 imagebox pb-2" data-id="{{ $media->id }}">
                 <div class="lightbox imagethumbnail">
                     <i class="close-icon fa fa-times" aria-hidden="true" data-toggle="tooltip" data-placement="top"
                         title="Supprimer l'image" style="font-size: 1.5rem;display: none;cursor: pointer;color: red"></i>
                     <a href="{{ $media->getUrl() }}" data-fancybox="gallery" data-caption="{{ $media->name }}">
-                        <img style="height:100px;width:100%" class="img-thumbnail"
+                        <img style="height:100px;" class="img-thumbnail"
                             data-id="{{ $media->id }}"
-                            src="{{ $media->getUrl() }}" alt="{{ $media->name }}">
+                            src="{{ $media->getUrl('thumb') }}" alt="{{ $media->name }}">
                     </a>
                 </div>
             </div>
@@ -107,7 +107,7 @@
 
 
 
-@include('back.media._modal')
+@include('{{backLowerNamespace}}.media._modal')
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/imagemanager/css/ImageManager.css') }}">
