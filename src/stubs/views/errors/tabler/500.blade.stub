@@ -15,7 +15,7 @@
         <p class="empty-title h3">Erreur serveur!</p>
         <p class="empty-subtitle text-muted">
             Whoops, une erreur interne s\'est produite sur nos serveurs. Ne vous inquiétez pas ... cela arrive souvent aux meilleurs
-            d'entre nous. Voici un peu astuce qui pourrait vous aider à vous remettre sur la bonne voie.
+            d'entre nous. Voici une petite astuce qui pourrait vous aider à vous remettre sur la bonne voie.
         </p>
         <div class="empty-action">
             <a href="/" class="btn btn-primary">

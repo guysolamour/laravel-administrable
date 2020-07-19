@@ -3,8 +3,8 @@
 return [
 
     /**
-             * Used in the back office
-                     */
+         * Used in the back office
+         */
     'app_first_name'   => config('app.first_name', 'Admin'),
     'app_last_name'    => config('app.last_name', 'Admin'),
     'app_short_name'   => config('app.short_name', 'Lvl'),
@@ -47,6 +47,25 @@ return [
      */
     'back_namespace' => 'Back',
 
+    /**
+     * Redirect when attempting to access some routes or files
+     */
+    'rickroll' => [
+        /**
+         * Url to redirect
+         */
+        'url' => 'http:://youtube.com',
+        /**
+         * Be sure that auth_prefix_path is not in the list
+         */
+        'routes' => [
+            'wp-admin',
+            'admin',
+            'composer.json',
+            'wp-login',
+            '.htaccess',
+        ],
+    ],
     'comments' => [
         /**
          * By default comments posted are marked as approved. If you want

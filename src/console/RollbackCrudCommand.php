@@ -31,7 +31,7 @@ class RollbackCrudCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'administrable:crud:rollback
+    protected $signature = 'administrable:rollback:crud
                              {model : Model name }
                              {--r|rollback : Don\'t run artisan rollback command }
                              ';
@@ -40,7 +40,7 @@ class RollbackCrudCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Rollback crud generation';
+    protected $description = 'Rollback crud ';
 
 
 
@@ -87,6 +87,8 @@ class RollbackCrudCommand extends BaseCommand
 
         // remove views
         $this->removeViews();
+
+        $this->runProcess("composer dumpautoload");
     }
 
     protected function removeModel()

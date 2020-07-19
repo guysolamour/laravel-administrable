@@ -90,9 +90,6 @@ class BaseCommand extends Command
 
 
 
-
-
-
     protected function recurseRmdir($dir)
     {
         $files = array_diff(scandir($dir), array('.', '..'));

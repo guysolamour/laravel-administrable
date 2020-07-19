@@ -913,7 +913,39 @@ Post:
 
 The ***many to many*** polymorphic relationship is not yet established. I haven't had to use it in my various projects yet.
 
-## Sécurity
+## Rollback Crud
+
+Rollback a crud
+
+```php
+php artisan administrable:rollback:crud {model}
+```
+
+**NB:**
+
+- The model must have been defined in *administrable.yaml* file.
+- You have to manually remove the link in sidebar file at *partials/_sidebar.blade.php*
+- You have to manually remove the relations methods in others models to which this model are related
+
+Example:
+
+```php
+php artisan administrable:rollback:crud Post
+```
+
+By default the rollback artisan command will be run, if you want to change it.
+
+```php
+php artisan administrable:rollback:crud Post --rollback
+```
+
+or with the short versioning
+
+```php
+php artisan administrable:rollback:crud Post -r
+```
+
+## Security
 
 If you discover security issues, please send an email instead of using the issue system. The email is available in the file *composer.json*
 
