@@ -6,6 +6,7 @@ namespace Guysolamour\Administrable;
 use Guysolamour\Administrable\Console\MakeCrudCommand;
 use Guysolamour\Administrable\Console\AdminInstallCommand;
 use Guysolamour\Administrable\Console\CreateAdministrableCommand;
+use Guysolamour\Administrable\Console\RollbackCrudCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -40,6 +41,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->commands([
                 AdminInstallCommand::class,
                 MakeCrudCommand::class,
+                RollbackCrudCommand::class,
                 CreateAdministrableCommand::class,
             ]);
         }
