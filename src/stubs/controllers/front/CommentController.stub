@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\Http\Controllers\{{frontLowerNamespace}};
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
 use {{namespace}}\{{modelsFolder}}\Comment;
 use Illuminate\Http\Request;
