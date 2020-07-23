@@ -579,4 +579,20 @@ trait CommandTrait
     {
         return $this->filesystem->exists(base_path('administrable.yaml'));
     }
+
+    /**
+     * Get an array of all files in a directory.
+     *
+     * @param string $path
+     * @param boolean $all
+     * @return array
+     */
+    protected function getFilesFromDirectory(string $path, bool $all = true)
+    {
+        if (!$this->filesystem->exists($path)){
+            return [];
+        }
+
+        return $all ? $this->filesystem->allFiles($path) : $this->filesystem->files($path);
+    }
 }

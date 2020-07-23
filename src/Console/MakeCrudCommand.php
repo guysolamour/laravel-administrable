@@ -467,7 +467,7 @@ class MakeCrudCommand extends BaseCommand
                 // Slug
                 if ($this->slug && Arr::exists($field, 'slug')) {
                     throw new \Exception(
-                        sprintf('Le slug ne peut être utilisé que sur un champ et peut etre utilisé qu\'une seule fois. \ocuured sur le champ [%s] ou retirer celui uitlisé globalemet avec la value [%s]', $this->getFieldName($field), $this->slug)
+                        sprintf('The slug must be used on only one field and once. Ocurred on field [%s]. You have to remove the global slug with the [%s] value', $this->getFieldName($field), $this->slug)
                     );
                 }
 
@@ -478,7 +478,7 @@ class MakeCrudCommand extends BaseCommand
                 // Breadcrumb
                 if ($this->breadcrumb && Arr::exists($field, 'breadcrumb')) {
                     throw new \Exception(
-                        sprintf('Le breadcrumb ne peut être utilisé que sur un champ et peut etre utilisé qu\'une seule fois. \ocuured sur le champ [%s] ou retirer celui uitlisé globalemet avec la value [%s]', $this->getFieldName($field), $this->breadcrumb)
+                        sprintf('The breadcrumb must be used on only one field and once. Ocurred on field [%s]. You have to remove the global breadcrumb with the [%s] value', $this->getFieldName($field), $this->breadcrumb)
                     );
                 }
 
@@ -617,7 +617,7 @@ class MakeCrudCommand extends BaseCommand
 
 
         // update composer autoload for seeding
-        $this->runProcess("composer dump-autoload -o");
+        $this->runProcess("composer dump-autoload");
 
         $progress->finish();
     }

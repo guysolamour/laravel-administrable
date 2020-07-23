@@ -118,7 +118,6 @@ class AdminInstallCommand extends BaseCommand
         }
 
         $this->guard = $this->getGuard();
-        // $this->guard = strtolower($this->argument('name'));
 
         $this->models_folder_name = ucfirst($this->option('model'));
 
@@ -442,7 +441,7 @@ class AdminInstallCommand extends BaseCommand
         $helper_path = app_path('Helpers');
 
         // Front
-        $helper_stub = $this->filesystem->allFiles(self::TPL_PATH . '/helpers');
+        $helper_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/helpers');
         $this->compliedAndWriteFileRecursively(
             $helper_stub,
             $helper_path
@@ -465,7 +464,7 @@ class AdminInstallCommand extends BaseCommand
 
         $guard = $data_map['{{singularClass}}'];
 
-        $models = $this->filesystem->files(self::TPL_PATH . '/models');
+        $models = $this->getFilesFromDirectory(self::TPL_PATH . '/models', false);
 
         /**
          * Remove uncreate models in the list
@@ -553,7 +552,7 @@ class AdminInstallCommand extends BaseCommand
     {
         $data_map = $this->parseName();
 
-        $seeds = $this->filesystem->files(self::TPL_PATH . '/seeds');
+        $seeds = $this->getFilesFromDirectory(self::TPL_PATH . '/seeds', false);
 
         $seed_path = database_path('seeds');
 
@@ -600,7 +599,7 @@ class AdminInstallCommand extends BaseCommand
 
         $data_map = $this->parseName();
         $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
-        $seeds = $this->filesystem->files(self::TPL_PATH . '/seeds');
+        $seeds = $this->getFilesFromDirectory(self::TPL_PATH . '/seeds', false);
 
         $seeds = $this->filterSeeds($seeds);
 
@@ -659,7 +658,7 @@ class AdminInstallCommand extends BaseCommand
         $data_map = $this->parseName();
         $guard = $data_map['{{pluralSlug}}'];
 
-        $migrations = $this->filesystem->files(self::TPL_PATH . '/migrations');
+        $migrations = $this->getFilesFromDirectory(self::TPL_PATH . '/migrations', false);
 
         $migrations_to_create = array_merge(self::DEFAULTS['migrations'], $this->crud_models);
 
@@ -720,7 +719,8 @@ class AdminInstallCommand extends BaseCommand
             $controllers_to_create[] = 'Contact';
         }
         // Front controllers
-        $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/front');
+        // $this->filesystem->exists(self::TPL_PATH . '/controllers/front')
+        $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/front');
 
         $controllers_stub = array_filter($controllers_stub, function ($controller) use ($controllers_to_create) {
             $name = (string) Str::of($controller->getFilenameWithoutExtension())->before('Controller');
@@ -736,9 +736,9 @@ class AdminInstallCommand extends BaseCommand
         $controllers_to_create = [...self::DEFAULTS['controllers']['back'], ...$this->crud_models];
 
         if ($this->isTheAdminTheme()) {
-            $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/' . $this->theme);
+            $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/' . $this->theme);
         } else {
-            $controllers_stub = $this->filesystem->allFiles(self::TPL_PATH . '/controllers/back');
+            $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/back');
         }
         $controllers_stub = array_filter($controllers_stub, function ($controller) use ($controllers_to_create) {
             $name = (string) Str::of($controller->getFilenameWithoutExtension())->before('Controller');
@@ -774,7 +774,7 @@ class AdminInstallCommand extends BaseCommand
 
         $policies_path = app_path('/Policies');
 
-        $policies_stub = $this->filesystem->files(self::TPL_PATH . '/policies');
+        $policies_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/policies', false);
 
         $this->compliedAndWriteFile(
             $policies_stub,
@@ -789,7 +789,7 @@ class AdminInstallCommand extends BaseCommand
 
         $traits_path = app_path('/Traits');
 
-        $traits_stub = $this->filesystem->files(self::TPL_PATH . '/traits');
+        $traits_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/traits', false);
 
         $this->compliedAndWriteFile(
             $traits_stub,
@@ -808,7 +808,7 @@ class AdminInstallCommand extends BaseCommand
         $form_path = app_path('Forms/');
 
         // Front forms;
-        $forms_stub = $this->filesystem->files(self::TPL_PATH . '/forms/front');
+        $forms_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/forms/front', false);
 
         $forms_to_create = array_merge(self::DEFAULTS['forms']['front'], $this->crud_models);
         // replace Mailbox by contact
@@ -828,7 +828,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
         // Back forms;
-        $forms_stub = $this->filesystem->files(self::TPL_PATH . '/forms/back');
+        $forms_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/forms/back', false);
 
         $forms_to_create = array_merge(self::DEFAULTS['forms']['back'], $this->crud_models);
 
@@ -868,7 +868,7 @@ class AdminInstallCommand extends BaseCommand
         $routes_path = base_path('routes/web/');
 
         // Front routes;
-        $route_stub = $this->filesystem->files(self::TPL_PATH . '/routes/web/front');
+        $route_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/routes/web/front', false);
 
         $routes_to_create = array_merge(self::DEFAULTS['routes']['front'], $this->crud_models);
         // replace Mailbox by contact
@@ -887,7 +887,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
         // Back routes;
-        $route_stub = $this->filesystem->files(self::TPL_PATH . '/routes/web/back');
+        $route_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/routes/web/back', false);
 
         $routes_to_create = array_merge(self::DEFAULTS['routes']['back'], $this->crud_models);
 
@@ -938,7 +938,7 @@ class AdminInstallCommand extends BaseCommand
 
         $views_path = resource_path('views/emails/');
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/emails/back');
+        $views_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/views/emails/back');
         $emails_to_create = [...self::DEFAULTS['emails']['back'], ...$this->crud_models];
 
 
@@ -957,7 +957,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/emails/front');
+        $views_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/views/emails/front');
         $emails_to_create = [...self::DEFAULTS['emails']['front'], ...$this->crud_models];
 
         if (in_array('Mailbox', $emails_to_create)) {
@@ -981,7 +981,7 @@ class AdminInstallCommand extends BaseCommand
 
         $views_path = resource_path('views/errors/');
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . "/views/errors/{$this->theme}");
+        $views_stub = $this->getFilesFromDirectory(self::TPL_PATH . "/views/errors/{$this->theme}");
 
         $this->compliedAndWriteFileRecursively(
             $views_stub,
@@ -999,7 +999,7 @@ class AdminInstallCommand extends BaseCommand
         $crud_models = array_map(fn ($item) => Str::plural($item), $this->crud_models);
 
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . "/views/back/{$this->theme}");
+        $views_stub = $this->getFilesFromDirectory(self::TPL_PATH . "/views/back/{$this->theme}");
         $views_to_create = [...self::DEFAULTS['views']['back'], ...$crud_models];
 
 
@@ -1018,7 +1018,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/front');
+        $views_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/views/front');
         $views_to_create = [...self::DEFAULTS['views']['front'], ...$crud_models];
 
         if (in_array('Mailboxes', $views_to_create)) {
@@ -1033,7 +1033,7 @@ class AdminInstallCommand extends BaseCommand
             $views_path . $data_map["{{frontLowerNamespace}}"]
         );
 
-        $views_stub = $this->filesystem->allFiles(self::TPL_PATH . '/views/vendor');
+        $views_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/views/vendor');
         $this->compliedAndWriteFileRecursively(
             $views_stub,
             $views_path . '/vendor'
@@ -1044,7 +1044,7 @@ class AdminInstallCommand extends BaseCommand
         $aside_path = resource_path("views/{$data_map["{{backLowerNamespace}}"]}/partials/_sidebar.blade.php");
 
 
-        $links_stub = $this->filesystem->files(self::TPL_PATH . "/views/back/{$this->theme}/stubs");
+        $links_stub = $this->getFilesFromDirectory(self::TPL_PATH . "/views/back/{$this->theme}/stubs");
 
         $links_stub = array_filter($links_stub, function ($link) {
             $name = ucfirst(Str::before($link->getFileNameWithoutExtension(), 'Link'));
@@ -1287,7 +1287,7 @@ class AdminInstallCommand extends BaseCommand
             return;
         }
 
-        $locales_stub = $this->filesystem->allFiles($locales_path);
+        $locales_stub = $this->getFilesFromDirectory($locales_path, false);
         $this->compliedAndWriteFileRecursively(
             $locales_stub,
             resource_path("lang")
@@ -1333,13 +1333,9 @@ class AdminInstallCommand extends BaseCommand
 
     public function seedDatabase()
     {
-        // update Composer autoload for seeding
-        // $this->info("Running composer dump-autoload");
-        // $this->runProcess("composer dump-autoload -o");
-
         // Seed
         $data_map = $this->parseName();
-        $seeds = $this->filesystem->files(self::TPL_PATH . '/seeds');
+        $seeds = $this->getFilesFromDirectory(self::TPL_PATH . '/seeds', false);
 
         foreach ($seeds as $seed) {
             $name = $seed->getFileNameWithoutExtension();
@@ -1360,7 +1356,7 @@ class AdminInstallCommand extends BaseCommand
 
     protected function getNotificationsStubs(string $type)
     {
-        $notification_stub = $this->filesystem->allFiles(self::TPL_PATH . "/notifications/$type");
+        $notification_stub = $this->getFilesFromDirectory(self::TPL_PATH . "/notifications/$type");
 
         $notifications_to_create = [...self::DEFAULTS['notifications'][$type], ...$this->crud_models];
 
@@ -1430,7 +1426,7 @@ class AdminInstallCommand extends BaseCommand
     {
 
         $config_path = config_path();
-        $config_stub = $this->filesystem->files(self::TPL_PATH . '/config');
+        $config_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/config', false);
 
         $this->compliedAndWriteFile(
             $config_stub,
@@ -1446,7 +1442,7 @@ class AdminInstallCommand extends BaseCommand
 
         $provider_path = app_path('/Providers');
 
-        $provider_stub = $this->filesystem->files(self::TPL_PATH . '/providers');
+        $provider_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/providers', false);
 
         $this->compliedAndWriteFile(
             $provider_stub,
@@ -1516,7 +1512,7 @@ class AdminInstallCommand extends BaseCommand
 
     private function filterEmails(string $type)
     {
-        $mail_stub = $this->filesystem->allFiles(self::TPL_PATH . "/mail/$type");
+        $mail_stub = $this->getFilesFromDirectory(self::TPL_PATH . "/mail/$type");
         $emails_to_create = [...self::DEFAULTS['mails'][$type], ...$this->crud_models];
 
         if (in_array('Mailbox', $emails_to_create)) {

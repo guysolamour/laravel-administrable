@@ -14,6 +14,11 @@ class CreateAdministrableCommand extends BaseCommand
      */
     protected $guard = null;
 
+    /**
+     * @var int
+     */
+    protected const PASSWORD_MIN_LENGTH = 8;
+
 
 
     /**
@@ -35,7 +40,6 @@ class CreateAdministrableCommand extends BaseCommand
     {
         parent::__construct();
 
-        
 
         $this->guard = $this->getGuard();
     }
@@ -51,7 +55,7 @@ class CreateAdministrableCommand extends BaseCommand
         if ($this->checkIfPackageHasBeenInstalled()) {
             throw new \Exception("The installation must be done before using this command. Please run [administrable:install] command.");
         }
-        
+
 
         $username = $this->option('username');
         if (!$username) {
@@ -88,8 +92,8 @@ class CreateAdministrableCommand extends BaseCommand
         if (empty($password)) {
             $this->error("The password can not be empty");
             return;
-        } else if (Str::length($password) <= 7) {
-            $this->error("The password must be more than 7 characters");
+        } else if (Str::length($password) < self::PASSWORD_MIN_LENGTH) {
+            $this->error("The password must be more or equal to " . self::PASSWORD_MIN_LENGTH ." characters");
             return;
         }
 
