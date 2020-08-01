@@ -14,6 +14,47 @@
             </div>
             <div class="top-menu d-flex align-items-center">
                 {{-- Insert Mailbox Link --}}
+
+                @php
+                    $unreadNotifications = get_{{singularSlug}}()->unreadNotifications;
+                @endphp
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="notiDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"><i class="fa fa-bell text-secondary" ></i>
+                        @if($unreadNotifications->count())
+                        <span class="badge bg-success">{{ $unreadNotifications->count() }}</span></a>
+                        @endif
+                    <div class="dropdown-menu dropdown-menu-right notification-dropdown" aria-labelledby="notiDropdown">
+                        <h4 class="header">Notifications</h4>
+                        @forelse($unreadNotifications as $notification)
+                            @if($notification->type === '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')
+                            <div class="notifications-wrap">
+                                <a href="{{ route('{{backLowerNamespace}}.comment.show', $notification->data['comment']['id']) }}" class="media">
+                                    <span class="media-body">
+                                        <span class="media-content">
+                                            Un commentaire vient d'être déposé sur le site,
+                                            par <b>{{ $notification->data['commenter_name'] }}</b>
+                                            joignable à l'adresse <b>{{ $notification->data['commenter_email'] }}</b>.
+                                        </span>
+                                    </span>
+                                </a>
+                            </div>
+                            @endif
+                        <div class="footer" ><a style="font-size: 14px;" href="{{ route('{{backLowerNamespace}}.notification.markasread') }}"><i class="fa fa-check-double"></i> Tous marquer comme lues</a></div>
+                        @empty
+                        <div class="notifications-wrap">
+                            <a href="#" class="media">
+                                <span class="media-body">
+                                    {{--  <span class="heading-font-family media-heading">{{ $message->name }}</span> --}}
+                                <span class="media-content">
+                                    Pas de notifications pour l'instant
+                                </span>
+                                </span>
+                            </a>
+                        </div>
+                        @endforelse
+                    </div>
+                </div>
                 <div class="dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false"><i class="ik ik-plus"></i></a>
@@ -62,10 +103,11 @@
                                 Administrateurs</a>
                         <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.configuration.edit') }}"><i class="ik ik-settings dropdown-icon"></i>
                             Configuration</a>
+
                         <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
-                            @if($unread->count())
+                            @if($unreadMailboxes->count())
                             <span class="float-right">
-                                <span class="badge badge-primary">{{ $unread->count() }}</span>
+                                <span class="badge badge-primary">{{ $unreadMailboxes->count() }}</span>
                             </span>
                             @endif
                             <i class="ik ik-mail dropdown-icon"></i>

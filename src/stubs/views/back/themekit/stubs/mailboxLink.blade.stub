@@ -2,10 +2,10 @@
                     <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
                         <i class="fa fa-envelope"></i><span>Messagerie</span>
                         @php
-                            $new = \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->count()
+                            $new_mailboxes = \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->count()
                         @endphp
-                        @if($new)
-                        <span class="badge badge-success">New {{ $new }}</span>
+                        @if($new_mailboxes)
+                        <span class="badge badge-success">New {{ $new_mailboxes }}</span>
                         @endif
                     </a>
                 </div>

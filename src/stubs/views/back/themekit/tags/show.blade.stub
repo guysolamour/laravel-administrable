@@ -1,6 +1,6 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
-@section('title', $category->name)
+@section('title', $tag->name)
 
 
 
@@ -18,8 +18,8 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
-                           <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.category.index') }}">Catégories</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a href="#">{{ $category->name }}</a></li>
+                           <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.tag.index') }}">Etiquettes</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a href="#">{{ $tag->name }}</a></li>
                         </ol>
                     </nav>
                 </div>
@@ -31,9 +31,9 @@
                     <div class="card-header d-flex justify-content-between">
                         <h3 class="card-title">Catégories</h3>
                         <div class="btn-group float-right">
-                           <a href="{{ route('{{backLowerNamespace}}.category.edit', $category) }}" class="btn btn-primary">
+                           <a href="{{ route('{{backLowerNamespace}}.tag.edit', $tag) }}" class="btn btn-primary">
                             <i class="fas fa-edit"></i> Editer</a>
-                        <a href="{{ route('{{backLowerNamespace}}.category.destroy', $category) }}" class="btn btn-danger" data-method="delete"
+                        <a href="{{ route('{{backLowerNamespace}}.tag.destroy', $tag) }}" class="btn btn-danger" data-method="delete"
                             data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
                             <i class="fas fa-trash"></i> Supprimer</a>
                         </div>
@@ -44,20 +44,20 @@
                             <div class="pb-2">
                                 <p><span class="font-weight-bold">Nom:</span></p>
                                 <p>
-                                    {{ $category->name }}
+                                    {{ $tag->name }}
                                 </p>
                             </div>
 
                             <div class="pb-2">
                                 <p><span class="font-weight-bold">Date ajout:</span></p>
                                 <p>
-                                    {{ $category->created_at->format('d/m/Y h:i') }}
+                                    {{ $tag->created_at->format('d/m/Y h:i') }}
                                 </p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             @include('{{backLowerNamespace}}.media._show', [
-                              'model' => $category,
+                              'model' => $tag,
                             ])
                         </div>
                     </div>

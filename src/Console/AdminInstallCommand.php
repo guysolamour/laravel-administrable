@@ -34,7 +34,7 @@ class AdminInstallCommand extends BaseCommand
         'seeds'           => ['Configuration', 'Seeder', 'User', 'Page'],
         'controllers'     => [
             'front'       => ['Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Home', 'Page', 'Redirect'],
-            'back'        => ['User', 'Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Configuration', 'Home', 'Media', 'Guard','Page'],
+            'back'        => ['User', 'Comment','Notification', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Configuration', 'Home', 'Media', 'Guard','Page'],
         ],
         'forms' => [
             'front' => [],
@@ -51,15 +51,15 @@ class AdminInstallCommand extends BaseCommand
         ],
         'emails' => [
             'front' => [],
-            'back'  => []
+            'back'  => ['Comment']
         ],
         'mails' => [
             'front' => [],
-            'back'  => []
+            'back'  => ['Comment']
         ],
         'notifications' => [
             'front' => [],
-            'back'  => ['ResetPassword', 'VerifyEmail']
+            'back'  => ['ResetPassword', 'VerifyEmail', 'Comment']
         ],
 
     ];
@@ -114,9 +114,9 @@ class AdminInstallCommand extends BaseCommand
     {
 
 
-        // if ($this->checkIfPackageHasBeenInstalled()) {
-        //     throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
-        // }
+        if ($this->checkIfPackageHasBeenInstalled()) {
+            throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
+        }
 
         $this->guard = $this->getGuard();
 
@@ -199,14 +199,6 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Creating Helper...');
         $this->loadHelpers();
 
-
-
-        // Migrations
-        $this->info(PHP_EOL . 'Creating Migrations...');
-        $migrations_path = $this->loadMigrations();
-        $this->info('Migrations created at ' . $migrations_path);
-
-        die('salut');
 
         // Models
         $model_path = $this->info(PHP_EOL . 'Creating Model...');
@@ -468,6 +460,7 @@ class AdminInstallCommand extends BaseCommand
         // We add the Category model if the Post is in the list
         if (in_array('Post', $this->crud_models)) {
             $this->crud_models[] = 'Category';
+            $this->crud_models[] = 'Tag';
         }
 
         $models_to_create = [...$this->crud_models, ...self::DEFAULTS['models']];
@@ -481,7 +474,6 @@ class AdminInstallCommand extends BaseCommand
         /**
          * Remove uncreate models in the list
          */
-
         $models = array_filter($models, fn ($model) => in_array($model->getFilenameWithoutExtension(), $models_to_create));
 
 
@@ -492,6 +484,28 @@ class AdminInstallCommand extends BaseCommand
             $models,
             $model_path
         );
+
+
+        // Add author relation if Post model exists
+        if (in_array('Post', $this->crud_models)) {
+            $search = "// add relation methods below";
+            $relation = <<<TEXT
+            $search
+
+                public function posts()
+                {
+                    return \$this->hasMany(Post::class, 'author_id');
+                }
+            TEXT;
+
+            $this->replaceAndWriteFile(
+                $this->filesystem->get($model_path . '/Model.php'),
+                $search,
+                $relation,
+                $model_path . '/Model.php'
+            );
+        }
+
 
         // Rename the model and move it to the root of the app folder
         $this->filesystem->move(
@@ -729,6 +743,9 @@ class AdminInstallCommand extends BaseCommand
             $guard_reset_password_migration,
             $migrations_path . '/2014_07_25_092010_create_'. $data_map['{{singularSlug}}'] . '_password_resets_table.php',
         );
+
+        // add notifications table migration
+        $this->callSilent('notifications:table');
 
 
         return $migrations_path;

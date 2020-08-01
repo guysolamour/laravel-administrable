@@ -16,6 +16,15 @@
              <p>
                  {!! $post->content !!}
              </p>
+             <hr>
+            <div class="media">
+                <img src="{{ $post->author->avatar }}" class="mr-3" alt="{{ $post->author->name }}">
+                <div class="media-body">
+                    <h5 class="mt-0">{{ $post->author->name }}</h5>
+                    {{ $post->author->about }}
+                </div>
+            </div>
+            <hr>
              <div class="row mt-5">
                  @if(!is_null($post->previous))
                  <div class="col-md-6 d-flex justify-content-start">
@@ -44,17 +53,7 @@
             ])
         </div>
         <div class="col-md-4">
-
-            <div class="card" style="width: 18rem;">
-                <div class="card-header">
-                    Liste des categories
-                </div>
-                <ul class="list-group list-group-flush">
-                    @foreach ($categories as $category)
-                    <li class="list-group-item">{{ $category->name }} ({{ $category->posts_count }})</li>
-                    @endforeach
-                </ul>
-            </div>
+            @include('{{frontLowerNamespace}}.posts.partials._sidebar')
         </div>
 
     </div>

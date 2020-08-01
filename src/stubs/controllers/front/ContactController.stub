@@ -41,7 +41,13 @@ class ContactController extends Controller
         }
 
         // Notify admins
-        Notification::send({{singularClass}}::all(), new ContactNotification($mailbox));
+        Notification::send({{singularClass}}::getNotifiables()->get(), new ContactNotification($mailbox));
+
+        if ($request->ajax()) {
+            return response()->json(['sucess' => 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !']);
+        }
+
+
 
         flashy( 'Nous avons réussi votre message et nous vous répondrons dans les plus brefs délais !' );
         return back();

@@ -1,17 +1,17 @@
             @php
-                $unread = \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->get()
+                $unreadMailboxes = \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->get()
             @endphp
             <div class="nav-item dropdown d-none d-md-flex mr-3">
                 <a href="#" class="nav-link px-0" data-toggle="dropdown" tabindex="-1">
                    <i class="fa fa-envelope icon"></i>&nbsp;
-                   @if($unread->count())
+                   @if($unreadMailboxes->count())
                         <span class="badge bg-success"></span>
                     @endif
                 </a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-card" style="min-width: 22rem">
                     <div class="card" >
                         <div class="card-body">
-                            @foreach($unread->take(3) as $message)
+                            @foreach($unreadMailboxes->take(3) as $message)
                             <a class="card" href="#">
                                 <div class="card-body">
                                     <div>

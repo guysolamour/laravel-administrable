@@ -5,24 +5,52 @@ namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 use Illuminate\Http\Request;
 use {{namespace}}\{{modelsFolder}}\Post;
 use {{namespace}}\{{modelsFolder}}\Category;
+use {{namespace}}\{{modelsFolder}}\Tag;
 use {{namespace}}\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
     public function index()
     {
-      $posts = Post::online()->with('category')->last()->paginate(9);
+        $posts = Post::online()->with('category')->last()->paginate(9);
 
-      $categories = Category::withCount('posts')->last()->get();
+        $categories = Category::withCount('posts')->last()->get();
 
-      return view('{{frontLowerNamespace}}.posts.index', compact('posts','categories'));
+        return view('{{frontLowerNamespace}}.posts.index', compact('posts','categories'));
     }
 
     public function show(Post $post)
     {
-      $categories = Category::withCount('posts')->last()->get();
+        return view('{{frontLowerNamespace}}.posts.show', compact('post'));
+    }
 
-      return view('{{frontLowerNamespace}}.posts.show', compact('post','categories'));
+    public function category(Category $category)
+    {
+        $posts = $category->posts()->online()->with('category', 'approvedComments')->last()->paginate(5);
+
+        return view('{{frontLowerNamespace}}.posts.category', compact('category', 'posts'));
+    }
+
+    public function tag(Tag $tag)
+    {
+        $posts = $tag->posts()->online()->with('tag', 'approvedComments')->last()->paginate(5);
+
+        return view('{{frontLowerNamespace}}.posts.tag', compact('tag', 'posts'));
+    }
+
+    public function search(Request $request)
+    {
+        $q = strtolower($request->get('q'));
+
+        $posts = Post::online()->with('category', 'approvedComments')
+        ->where('title', 'LIKE', '%' . $q . '%')
+            ->orWhere('content', 'LIKE', '%' . $q . '%')
+            ->paginate(9);
+
+        $posts->withPath(route('{{frontLowerNamespace}}.post.search', compact('q')));
+        $page = 2;//get_meta_page('search');
+
+        return view('{{frontLowerNamespace}}.posts.search', compact('posts', 'page'));
     }
 
 

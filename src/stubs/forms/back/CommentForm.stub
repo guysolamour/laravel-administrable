@@ -9,7 +9,7 @@ class CommentForm extends Form
     public function buildForm()
     {
 
-        if ($this->getModel() && $this->getModel()->id) {
+        if ($this->getModel() && $this->getModel()->getKey()) {
             $method = 'PUT';
             $url    = route('{{backLowerNamespace}}.comment.update', $this->getModel());
         } else {

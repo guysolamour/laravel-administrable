@@ -9,7 +9,7 @@ class CategoryForm extends Form
     public function buildForm()
     {
 
-        if ($this->getModel() && $this->getModel()->id) {
+        if ($this->getModel() && $this->getModel()->getKey()) {
             $method = 'PUT';
             $url    = route('{{backLowerNamespace}}.category.update', $this->getModel());
         } else {

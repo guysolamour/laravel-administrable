@@ -38,7 +38,7 @@ class PagesTableSeeder extends Seeder
 
         $page = Page::create([
             'name'   => 'contact',
-            'route'  => 'front.contact.create',
+            'route'  => '{{frontLowerNamespace}}.contact.create',
         ]);
 
 
@@ -59,7 +59,19 @@ class PagesTableSeeder extends Seeder
 
         $page = Page::create([
             'name'   => 'legal-mention',
-            'route'  => 'front.legal-mention.index',
+            'route'  => '{{frontLowerNamespace}}.legal-mention.index',
+        ]);
+
+        $blog_page = Page::create([
+            // 'code'   => 'blog',
+            'name'   => 'Blog',
+            'route'  => '{{frontLowerNamespace}}.post.index',
+        ]);
+
+        $search_page = Page::create([
+           //  'code'   => 'search',
+            'name'   => 'Recherche',
+            'route'  => '{{frontLowerNamespace}}.post.search',
         ]);
     }
 }

@@ -61,10 +61,11 @@
             <div class="form-group">
               <label for="content">Enter votre commentaire ici:</label>
                 <textarea class="form-control @if($errors->has('content')) is-invalid @endif" name="content" rows="3"></textarea>
+                @error('content')
                 <div class="invalid-feedback">
                     Votre commentaire ne doit pas être vide.
                 </div>
-
+                @enderror
             </div>
             <button type="submit" class="btn btn-sm btn-outline-success text-uppercase">Envoyer</button>
         </form>

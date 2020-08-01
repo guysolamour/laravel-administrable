@@ -4,10 +4,10 @@
                  Messagerie
                <p>
                    @php
-                       $new =  \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->count()
+                       $new_mailboxes =  \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->count()
                    @endphp
-                   @if($new)
-                      <span class="badge badge-success right">{{ 'new ' .$new  }}</span>
+                   @if($new_mailboxes)
+                      <span class="badge badge-success right">{{ 'new ' .$new_mailboxes  }}</span>
                    @endif
                </p>
              </a>

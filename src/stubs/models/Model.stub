@@ -106,6 +106,17 @@ class {{singularClass}} extends Authenticatable implements HasMedia
         return $this->is_super_{{singularSlug}} ? 'Super {{singularSlug}}' : '{{pluralClass}}';
     }
 
+    /**
+     * Get the admin's avatar.
+     *
+     * @return string
+     */
+    public function getAvatarAttribute() :string
+    {
+        return $this->getFrontImageUrl();
+    }
+
+
 
     /**
      * Set the avatar with gravatar service before saving and updating
@@ -123,6 +134,18 @@ class {{singularClass}} extends Authenticatable implements HasMedia
     {
         $this->attributes['password'] = bcrypt($value);
     }
+
+    /**
+     * Scope a query to only include
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeGetNotifiables($query)
+    {
+        return $query->whereNotIn('email',config('administrable.emails', []));
+    }
+
 
     /**
     * @param string $email
@@ -151,6 +174,9 @@ class {{singularClass}} extends Authenticatable implements HasMedia
     }
 
 
-     // add relation methods below
+    // add relation methods below
+
+
+    // ajouter la relation post dynamiquement
 
 }

@@ -13,7 +13,7 @@ class CommentPolicy
 
     public function before(?User $user = null, $ability)
     {
-        if (get_client()) {
+        if (get_{{singularSlug}}()) {
             return true;
         }
     }

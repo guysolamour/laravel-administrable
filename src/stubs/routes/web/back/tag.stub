@@ -1,0 +1,15 @@
+<?php
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
+        Route::resource('tags','TagController')->names([
+                'index'      => '{{backLowerNamespace}}.tag.index',
+                'show'       => '{{backLowerNamespace}}.tag.show',
+                'create'     => '{{backLowerNamespace}}.tag.create',
+                'store'      => '{{backLowerNamespace}}.tag.store',
+                'edit'       => '{{backLowerNamespace}}.tag.edit',
+                'update'     => '{{backLowerNamespace}}.tag.update',
+                'destroy'    => '{{backLowerNamespace}}.tag.destroy',
+        ]);
+    });
+});

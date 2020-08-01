@@ -2,11 +2,14 @@
 
 namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
+use {{namespace}}\{{modelsFolder}}\Admin;
 use {{namespace}}\{{modelsFolder}}\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use {{namespace}}\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Notification;
+use {{namespace}}\Notifications\{{backNamespace}}\CommentNotification;
 
 class CommentController extends Controller
 {
@@ -40,10 +43,16 @@ class CommentController extends Controller
         $comment->commentable()->associate($model);
         $comment->comment = $request->get('content');
 
-        $comment->approved = !config('administrable.comments.approval_required');
+        $comment->approved = get_{{singularSlug}}() ? true : !config('administrable.comments.approval_required');
         $comment->save();
 
-        flashy('Votre commentaire a bien été ajouté. Ce dernier sera affiché dès lors qu\'il sera aprouvé. ');
+        // send notification to {{plualSlug}}
+        if (!get_{{singularSlug}}()) {
+            Notification::send({{singularClass}}::getNotifiables()->get(), new CommentNotification($comment));
+            flashy('Votre commentaire a bien été ajouté.');
+        }else {
+            flashy('Votre commentaire a bien été ajouté. Ce dernier sera affiché dès lors qu\'il sera aprouvé. ');
+        }
 
         return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
     }
@@ -65,7 +74,7 @@ class CommentController extends Controller
         $reply->commentable()->associate($comment->commentable);
         $reply->parent()->associate($comment);
         $reply->comment = $request->get('content');
-        $reply->approved = !config('administrable.comments.approval_required');
+        $reply->approved = get_{{singularSlug}}() ? true : !config('administrable.comments.approval_required');
         $reply->save();
 
         return Redirect::to(URL::previous() . '#comment-' . $reply->getKey());

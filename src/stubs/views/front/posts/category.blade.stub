@@ -2,14 +2,16 @@
 
 
 @seoTags([
-    'title' => 'Articles',
-    'description' => 'Retrouvez un concentré de tous nos articles'
+    'title' => $category->name,
+    'description' => "Retrouvez un concentré de tous les articles de la categorie {$category->name}"
 ])
 
 @section('content')
 <div class='container mt-5 pt-5'>
     <div class="row">
         <div class="col-md-8">
+            <h4 class="mb-4">Tous les articles de la catégorie: <span
+                    class="font-italic font-weight-bold">`{{ $category->name }}`</span></h4>
             @include('{{frontLowerNamespace}}.posts.partials._post')
         </div>
         <div class="col-md-4">

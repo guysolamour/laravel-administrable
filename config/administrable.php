@@ -13,7 +13,7 @@ return [
          * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
          * The theme should not be changed once the installation has been done
          */
-    'theme' => 'theadmin',
+    'theme' => 'themekit',
 
     /**
          * The guard used for the installation. By default the value is admin.
@@ -30,7 +30,7 @@ return [
     /**
      * The logo link to use for administration
      */
-    'logo_url' => 'img/logo-administrable.png',
+    'logo_url' => '/img/logo-administrable.png',
 
     /**
      * Administration routes prefix.

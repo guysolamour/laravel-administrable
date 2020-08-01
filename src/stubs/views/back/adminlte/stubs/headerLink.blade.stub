@@ -1,15 +1,15 @@
          <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
             @php
-                $unread = \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->get()
+                $unreadMailboxes = \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->get()
             @endphp
           <i class="far fa-envelope"></i>
-          @if($unread->count())
-            <span class="badge badge-danger navbar-badge">{{ $unread->count() }}</span>
+          @if($unreadMailboxes->count())
+            <span class="badge badge-danger navbar-badge">{{ $unreadMailboxes->count() }}</span>
           @endif
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            @foreach($unread->take(4) as $message)
+            @foreach($unreadMailboxes->take(4) as $message)
                 <a href="#" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">

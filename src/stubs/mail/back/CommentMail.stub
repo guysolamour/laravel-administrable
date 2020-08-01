@@ -1,0 +1,43 @@
+<?php
+
+namespace {{namespace}}\Mail\{{backNamespace}};
+
+use {{namespace}}\{{modelsFolder}}\{{singularClass}};
+use {{namespace}}\{{modelsFolder}}\Comment;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class CommentMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public ${{singularSlug}};
+
+    public $comment;
+
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct({{singularClass}} ${{singularSlug}},Comment $comment)
+    {
+        $this->{{singularSlug}} = ${{singularSlug}};
+        $this->comment = $comment;
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this
+            ->from(config('mail.from.address'))
+            ->subject('Nouveau commentaire ' . $this->comment->getCommenterName())
+            ->markdown('emails.{{backLowerNamespace}}.comment');
+    }
+}

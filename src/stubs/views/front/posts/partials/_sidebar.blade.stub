@@ -1,0 +1,54 @@
+
+@php
+    $recent_posts = \{{namespace}}\{{modelsFolder}}\Post::online()->last(5)->get();
+    $categories = \{{namespace}}\{{modelsFolder}}\Category::withCount(['posts' => fn($query) => $query->where('online', true)])->last()->get();
+    $tags = \{{namespace}}\{{modelsFolder}}\Tag::withCount(['posts' => fn($query) => $query->where('online', true)])->last()->get();
+@endphp
+
+<div class="card mb-4" style="width: 18rem;">
+    <div class="card-header">
+        Recherche
+    </div>
+    <form action="{{ route('{{frontLowerNamespace}}.post.search') }}" method="get" class="p-2">
+        <div class="form-group">
+            <input type="search" name="q" id="q" class="form-control" required>
+        </div>
+        <button type="submit" class="btn  btn-secondary btn-sm btn-block"><i class="fas fa-search"></i> Recherche</button>
+    </form>
+</div>
+
+
+<div class="card mb-4" style="width: 18rem;">
+    <div class="card-header">
+        Liste des categories
+    </div>
+    <ul class="list-group list-group-flush">
+        @foreach ($categories as $category)
+        <li class="list-group-item"><a href="{{ route('{{frontLowerNamespace}}.post.category', $category) }}">{{ $category->name }} ({{ $category->posts_count }})</a></li>
+        @endforeach
+    </ul>
+</div>
+
+
+
+<div class="card mb-4" style="width: 18rem;">
+    <div class="card-header">
+        Liste des étiquttes
+    </div>
+    <ul class="list-group list-group-flush">
+        @foreach ($tags as $tag)
+        <li class="list-group-item"><a href="{{ route('{{frontLowerNamespace}}.post.tag', $tag) }}">{{ $tag->name }} ({{ $tag->posts_count }})</a></li>
+        @endforeach
+    </ul>
+</div>
+
+<div class="card mb-4" style="width: 18rem;">
+    <div class="card-header">
+        Articles récents
+    </div>
+    <ul class="list-group list-group-flush">
+        @foreach ($recent_posts as $post)
+        <li class="list-group-item"><a href="{{ route('{{frontLowerNamespace}}.post.show', $post) }}">{{ $post->title }}</a></li>
+        @endforeach
+    </ul>
+</div>

@@ -1,10 +1,10 @@
 <?php
 
-namespace {{namespace}}\Notifications\Back;
+namespace {{namespace}}\Notifications\{{backNamespace}};
 
 use {{namespace}}\{{modelsFolder}}\Mailbox;
 use Illuminate\Bus\Queueable;
-use {{namespace}}\Mail\{{frontNamespace}}\ContactMail;
+use {{namespace}}\Mail\{{backNamespace}}\ContactMail;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

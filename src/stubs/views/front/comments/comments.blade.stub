@@ -61,9 +61,9 @@
 </div>
 @endisset
 
-@auth('client')
+@auth('{{singularSlug}}')
     @include('{{frontLowerNamespace}}.comments._form', [
-        'client' => get_client()
+        '{{singularSlug}}' => get_{{singularSlug}}()
     ])
 @else
     @auth

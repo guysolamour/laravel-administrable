@@ -1,5 +1,5 @@
 @component('mail::message')
-### Bonjour, {{ $client->full_name }},
+### Bonjour, {{ ${{singularSlug}}->full_name }},
 un message de contact vient d'être envoyé
 sur la plateforme par {{ $mailbox->name }} chez {{ $mailbox->email }}
 

@@ -15,8 +15,7 @@ class Post extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['title','content', 'category_id' ,'slug', 'online', 'allow_comment'];
-
+    protected $fillable = ['title','content', 'category_id', 'tag_id', 'author_id', 'slug', 'online', 'allow_comment'];
 
 
     /**
@@ -33,12 +32,12 @@ class Post extends BaseModel
 
     public function getPreviousAttribute()
     {
-        return self::where('id', '<', $this->id)->orderByDesc('id')->first();
+        return self::where('id', '<', $this->getKey())->orderByDesc('id')->first();
     }
 
     public function getNextAttribute()
     {
-        return self::where('id', '>', $this->id)->orderBy('id')->first();
+        return self::where('id', '>', $this->getKey())->orderBy('id')->first();
     }
 
 
@@ -49,7 +48,19 @@ class Post extends BaseModel
         return $this->belongsTo(Category::class);
     }
 
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class);
+    }
 
+    public function author()
+    {
+        return $this->belongsTo({{singularClass}}::class, 'author_id');
+    }
+
+
+
+    // relation a mettre si post doit etre creer
 
 
     // add sluggable methods below

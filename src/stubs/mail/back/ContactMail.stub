@@ -1,8 +1,8 @@
 <?php
 
-namespace {{namespace}}\Mail\{{frontNamespace}};
+namespace {{namespace}}\Mail\{{backNamespace}};
 
-use {{namespace}}\{{singularClass}};
+use {{namespace}}\{{modelsFolder}}\{{singularClass}};
 use {{namespace}}\{{modelsFolder}}\Mailbox;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
