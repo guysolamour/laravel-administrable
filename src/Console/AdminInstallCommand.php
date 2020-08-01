@@ -2,6 +2,7 @@
 
 namespace Guysolamour\Administrable\Console;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 
@@ -113,9 +114,9 @@ class AdminInstallCommand extends BaseCommand
     {
 
 
-        if ($this->checkIfPackageHasBeenInstalled()) {
-            throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
-        }
+        // if ($this->checkIfPackageHasBeenInstalled()) {
+        //     throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
+        // }
 
         $this->guard = $this->getGuard();
 
@@ -172,6 +173,9 @@ class AdminInstallCommand extends BaseCommand
 
         $this->init();
 
+
+
+
         // Skip options to generate articles, legal notices, optional testimonials
 
         $this->callSilent('multi-auth:install', [
@@ -195,6 +199,14 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Creating Helper...');
         $this->loadHelpers();
 
+
+
+        // Migrations
+        $this->info(PHP_EOL . 'Creating Migrations...');
+        $migrations_path = $this->loadMigrations();
+        $this->info('Migrations created at ' . $migrations_path);
+
+        die('salut');
 
         // Models
         $model_path = $this->info(PHP_EOL . 'Creating Model...');
@@ -660,6 +672,8 @@ class AdminInstallCommand extends BaseCommand
 
         $migrations = $this->getFilesFromDirectory(self::TPL_PATH . '/migrations', false);
 
+
+
         $migrations_to_create = array_merge(self::DEFAULTS['migrations'], $this->crud_models);
 
 
@@ -673,17 +687,20 @@ class AdminInstallCommand extends BaseCommand
                 ->singular()
                 ->ucfirst();
 
+            // vue ques les migrations sont au pluriel nous faisons de meme pour le modele Medium
             if ($name == 'Medium') {
                 $name = Str::plural($name);
             }
             return in_array($name, $migrations_to_create);
         });
 
+
+
         $migrations_path =  database_path('migrations');
 
         // removing default user migration
         $this->filesystem->delete([
-            $this->filesystem->glob($migrations_path . '/*_create_users_table.php')[0]
+            Arr::first($this->filesystem->glob($migrations_path . '/*_create_users_table.php'))
         ]);
 
 
@@ -692,13 +709,27 @@ class AdminInstallCommand extends BaseCommand
             $migrations_path
         );
 
-        // Replace existing migration
+        // Remove existing guard migrations
+        $guard_migration = Arr::first($this->filesystem->glob($migrations_path . '/*_create_' . $guard . '_table.php'));
+
+        $this->filesystem->delete([
+            $guard_migration,
+        ]);
+
+        // add guard migrations
         $this->filesystem->move(
             $migrations_path . '/provider.php',
-            $this->filesystem->glob($migrations_path . '/*_create_' . $guard . '_table.php')[0]
+            $migrations_path . '/2014_07_24_092010_create_'. $guard .'_table.php',
         );
 
-        // Replace user migration
+
+        $guard_reset_password_migration = Arr::first($this->filesystem->glob($migrations_path . '/*_create_' . $data_map['{{singularSlug}}'] . '_password_resets_table.php'));
+
+        $this->filesystem->move(
+            $guard_reset_password_migration,
+            $migrations_path . '/2014_07_25_092010_create_'. $data_map['{{singularSlug}}'] . '_password_resets_table.php',
+        );
+
 
         return $migrations_path;
     }

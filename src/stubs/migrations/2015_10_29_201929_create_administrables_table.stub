@@ -14,7 +14,8 @@ class CreateAdministrablesTable extends Migration
     public function up()
     {
         Schema::create('administrables', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
+
             $table->text('about')->nullable();
             $table->string('email')->nullable();
             $table->string('postal')->nullable();
