@@ -15,7 +15,7 @@
         <div class="col-xl-4 col-lg-6 col-md-7 my-auto p-0">
             <div class="authentication-form mx-auto">
                <div class="logo-centered text-center" style="width: auto">
-                <a href="#"><img src="{{ config('administrable.logo_url') }}" alt="{{ config('app.name') }}"></a>
+                <a href="#"><img src="{{ config('administrable.logo_url') }}" alt="{{ config('app.name') }}" width='200'></a>
                 </div>
                 <h3>Mot de passe oublié</h3>
                 <p>Nous vous enverons un lien pour le réinitialiser.</p>

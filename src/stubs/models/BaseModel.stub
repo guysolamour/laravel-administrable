@@ -77,4 +77,14 @@ abstract class BaseModel extends Model implements HasMedia
         return get_form_name($this);
     }
 
+     /**
+     * Get formated date
+     *
+     * @return string
+     */
+    public function getFormatedDateAttribute() :string
+    {
+        return $this->created_at->format('d/m/Y h:i');
+    }
+
 }

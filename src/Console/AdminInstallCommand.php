@@ -211,6 +211,11 @@ class AdminInstallCommand extends BaseCommand
         $factory_path = $this->loadFactory();
         $this->info('Factory created at ' . $factory_path);
 
+        // Traits
+        $this->info(PHP_EOL . 'Creating Traits...');
+        $traits_path = $this->loadTraits();
+        $this->info('Traits created at ' . $traits_path);
+
 
         // Migrations
         $this->info(PHP_EOL . 'Creating Migrations...');
@@ -264,10 +269,7 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Route middleware registered in ' . $kernel_path);
 
 
-        // Traits
-        $this->info(PHP_EOL . 'Creating Traits...');
-        $traits_path = $this->loadTraits();
-        $this->info('Traits created at ' . $traits_path);
+
 
 
         // Policies

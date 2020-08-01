@@ -143,6 +143,57 @@
                 </div>
             </li>
             <!-- END Messages -->
+              <!-- Notifications -->
+            @php
+                $unreadNotifications = get_{{singularSlug}}()->unreadNotifications;
+            @endphp
+            <li class="dropdown d-none d-md-block">
+                <span class="topbar-btn" data-toggle="dropdown"><i class="ti-bell"></i></span>
+                <div class="dropdown-menu dropdown-menu-right">
+
+                    <div class="media-list media-list-divided media-list-hover media-list-xs scrollable"
+                        style="height: 290px">
+
+                        @forelse($unreadNotifications as $notification)
+                            @if($notification->type === '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')
+                            <a class="media media-new1" href="{{ route('{{backLowerNamespace}}.comment.show', $notification->data['comment']['id']) }}">
+                                <div class="media-body">
+                                    <p><time class="float-right" datetime="{{ $message->created_at }}">{{ $message->created_at->diffForHumans() }}</time></p>
+                                    <p >
+                                        Un commentaire vient d'être déposé sur le site,
+                                        par <b>{{ $notification->data['commenter_name'] }}</b>
+                                        joignable à l'adresse <b>{{ $notification->data['commenter_email'] }}</b>.
+                                    </p>
+                                </div>
+                            </a>
+                            @endif
+
+                        @empty
+                        <a class="media media-new1" href="#">
+                            <div class="media-body">
+                                <p>
+                                    Pas de notifications pour l'instant
+                                </p>
+                            </div>
+
+                        </a>
+                        @endforelse
+                    </div>
+                    @empty(!$unreadNotifications)
+                        <div class="dropdown-footer">
+                            <div class="left">
+                                {{-- <a href="#">Tous marquer comme lues</a> --}}
+                            </div>
+
+                            <div class="right">
+                                <a href="{{ route('{{backLowerNamespace}}.notification.markasread') }}">Tous marquer comme lues</a>
+                            </div>
+                        </div>
+                    @endempty
+
+                </div>
+            </li>
+            <!-- END Notifications -->
 
         </ul>
 

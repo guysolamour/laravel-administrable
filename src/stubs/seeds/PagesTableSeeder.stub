@@ -1,6 +1,7 @@
 <?php
 
 use {{namespace}}\{{modelsFolder}}\Page;
+use {{namespace}}\{{modelsFolder}}\PageMeta;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
@@ -16,62 +17,50 @@ class PagesTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        $page = Page::create([
-            'name'   => 'home',
+        $home_page = Page::create([
+            'code'   => 'home',
+            'name'   => 'Accueil',
             'route'  => 'home',
         ]);
 
-        $page->metatags()->create([
-            'name'    => 'Nos prestations',
-            'title'   => null,
-            'content' => "ECOFOG propose 6 types de prestations : prestations d'étude, prestations de construction, prestations de vente,prestation de location et la prestation d'installation. Ces prestations sont toutes assurées par les équipes. Elles portent sur les seuls matériels qu'utilisent déjà ces équipes. Ainsi, ECOFOG propose de faire bénéficier à ses clients d'un savoir-faire éprouvé et de solides compétences pour leur permettre d'optimiser l'exploitation et la maintenance, voire le développement de leurs installations des fosse septique et de gagner ainsi en performance et en sécurité. Pour bénéficier de ces prestations, adressez nous une demande par mail et un Ingénieur Commercial prendra contact avec vous dans les meilleurs délais. L'ensemble de ces formations est personnalisable sur demande avec un délai de prévenance de quelques semaines.",
-            'image'   => '0',
+        /* $home_page->metatags()->create([
+            'code'    => 'contact',
+            'name'    => 'Appel à l\'action contact',
+            'title'   => 'Appel à l\'action contact',
+            'content' => "Parlons de votre projet et réalisons le maintenant",
+            'type'   => PageMeta::TYPES['simpletext']['value'],
+        ]); */
+
+        $contact_page = Page::create([
+            'code'   => 'contact',
+            'name'   => 'Contact',
+            'route'  => 'front.contact.create',
         ]);
 
-        $page->metatags()->create([
-            'name'    => 'Nos dernières réalisations',
-            'title'   => null,
-            'content' => "Installation de la centrale d’épuration ORI-FRATERNITE située à Angré. Installation de la centrale d’épuration ORI-SAPHIR sise à ABATTA. Installation de la centrale d’épuration de la cité ANAN sise à Bingerville pour le compte de KIMEX FINANCE. Installation de la centrale d’épuration pour le compte de l'entreprise 3 MP sise à Bingerville. Installation des fosses septiques écologique de l'entreprise IMMOBILIARE sise à Bessikoi. Installation des fosses septiques écologique de l'entreprise MAB-GAZINIER sise à Bassam. Installation des fosses septiques ",
-            'image'   => '0',
-        ]);
-
-
-        $page = Page::create([
-            'name'   => 'contact',
-            'route'  => '{{frontLowerNamespace}}.contact.create',
-        ]);
-
-
-        $page->metatags()->create([
-            'name'    => 'contact',
-            'title'   => "Entrons en contact",
-            'content' => "veuillez nous laisser votre message. On vous contactera dans un bref délai.",
-            'image'   => '0',
-        ]);
-
-        $page->metatags()->create([
-            'name'    => 'contact',
-            'title'   => "Entrons en contact",
-            'content'   => '<p><img src="/storage/media/2/guyso.jpg" /></p>',
-            'image'   => '1',
-        ]);
-
-
-        $page = Page::create([
-            'name'   => 'legal-mention',
+        $mention_page = Page::create([
+            'code'   => 'legal-mention',
+            'name'   => 'Mentions légales',
             'route'  => '{{frontLowerNamespace}}.legal-mention.index',
         ]);
 
+       /* $about_page = Page::create([
+            'code'   => 'about',
+            'name'   => 'A propos',
+            'route'  => '{{frontLowerNamespace}}.about.index',
+        ]);*/
+
         $blog_page = Page::create([
-            // 'code'   => 'blog',
+            'code'   => 'blog',
             'name'   => 'Blog',
             'route'  => '{{frontLowerNamespace}}.post.index',
         ]);
 
         $search_page = Page::create([
-           //  'code'   => 'search',
+            'code'   => 'search',
             'name'   => 'Recherche',
             'route'  => '{{frontLowerNamespace}}.post.search',
         ]);
+
+
     }
 }

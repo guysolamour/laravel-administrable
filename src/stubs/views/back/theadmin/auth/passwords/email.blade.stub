@@ -36,7 +36,7 @@
 
 
       <footer class="col-12 align-self-end text-center fs-13">
-          <p class="mb-0"><small>Copyright © 2019 <a href="https://aswebagency.com">AswebAgency</a>. Tous droits
+          <p class="mb-0"><small>Copyright © {{ date('Y') }} <a href="https://aswebagency.com">AswebAgency</a>. Tous droits
                   reservés.</small></p>
       </footer>
     </div>

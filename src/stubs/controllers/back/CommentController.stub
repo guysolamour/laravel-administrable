@@ -77,7 +77,7 @@ class CommentController extends Controller
         $comment->approved();
 
         flashy('Le commentaire a bien été approuvé.');
-        return redirect()->route('{{backLowerNamespace}}.comment.index');
+        return back();
     }
 
     /**

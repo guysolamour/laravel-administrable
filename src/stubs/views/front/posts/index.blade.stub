@@ -1,9 +1,7 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-
 @seoTags([
-    'title' => 'Articles',
-    'description' => 'Retrouvez un concentré de tous nos articles'
+    'model' => $page,
 ])
 
 @section('content')

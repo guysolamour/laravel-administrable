@@ -71,6 +71,7 @@
                                 @endif
 
                                 <th>#</th>
+                                <th>Code</th>
                                 <th>Nom</th>
                                 <th>Date ajout</th>
 
@@ -89,10 +90,10 @@
                                     </td>
                                     @endif
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $page->code }}</td>
                                     <td>{{ $page->name }}</td>
                                     <td>{{ $page->route }}</td>
                                     <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
-
 
                                     <td>
 

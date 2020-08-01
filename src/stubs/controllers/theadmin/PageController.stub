@@ -5,10 +5,12 @@ namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 use {{namespace}}\{{modelsFolder}}\Page;
 use {{namespace}}\{{modelsFolder}}\PageMeta;
 use Illuminate\Http\Request;
+use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
 
 class PageController extends Controller
 {
+    use FormBuilderTrait;
 
     /**
      * Display a listing of the resource.
@@ -29,7 +31,11 @@ class PageController extends Controller
      */
     public function create()
     {
-        return view('{{backLowerNamespace}}.pages.create');
+        abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
+
+        $form = $this->getForm();
+
+        return view('{{backLowerNamespace}}.pages.create', compact('form'));
     }
 
 
@@ -41,10 +47,10 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'route' => 'required',
-        ]);
+        abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
+
+        $form = $this->getForm();
+        $form->redirectIfNotValid();
 
         Page::create($request->all());
 
@@ -66,6 +72,19 @@ class PageController extends Controller
     }
 
     /**
+     * Show the form for editing a new resource.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\Page  $page
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Page $page)
+    {
+        $form = $this->getForm($page);
+
+        return view('{{backLowerNamespace}}.pages.edit', compact('page', 'form'));
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -74,15 +93,14 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $request->validate([
-            'name' => 'required',
-            'route' => 'required',
-        ]);
+        $form = $this->getForm($page);
+        $form->redirectIfNotValid();
 
         $page->update($request->all());
 
+
         flashy('L\' élément a bien été modifié');
-        return back();
+        return redirect()->route('{{backLowerNamespace}}.page.show', $page);
     }
 
 
@@ -94,6 +112,8 @@ class PageController extends Controller
      */
     public function destroy(Page $page)
     {
+        abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
+
         $page->delete();
         flashy('L\' élément a bien été supprimé');
         return redirect()->route('{{backLowerNamespace}}.page.index');
@@ -102,33 +122,93 @@ class PageController extends Controller
 
     public function storeMetaTag(Page $page, Request $request)
     {
+
         $request->validate($this->getValidationRules());
-        $page->metatags()->create($request->all());
+
+        $pagemeta = $page->metatags()->create([
+            'code'    => $request->get('code'),
+            'name'    => $request->get('name'),
+            'title'   => $request->get('title'),
+            'type'    => $request->get('type'),
+            'content' => $this->getContentFieldValue($request)
+        ]);
+
+        $this->saveImage($pagemeta, $request);
+
 
         flashy('Le meta tag a bien été inseré');
         return back();
+    }
 
+    /**
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return string|null
+     */
+    private function getContentFieldValue($request): ?string
+    {
+        $types = \{{namespace}}\{{modelsFolder}}\PageMeta::TYPES;
+
+        foreach ($types as $key => $type) {
+            if ($request->get('type') == $type['value']) {
+                return $request->get("{$key}content");
+            }
+        }
+        return null;
     }
 
 
-    public function updateMetaTag(Page $page, PageMeta $pagemeta ,Request $request)
+    public function updateMetaTag(Page $page, PageMeta $pagemeta, Request $request)
     {
+
         $request->validate($this->getValidationRules());
-        $pagemeta->update($request->all());
+
+        $pagemeta->update([
+            'name'    => $request->get('name'),
+            'title'   => $request->get('title'),
+            'content' => $request->get('textcontent') ?? $request->get('videocontent')
+        ]);
+        $this->saveImage($pagemeta, $request);
+
 
         flashy('Le meta tag a bien été modifié');
         return back();
     }
 
-    private function getValidationRules() :array
+    public function deleteMetaTag(Page $page, PageMeta $pagemeta, Request $request)
     {
-      return [
-          'name'     => 'required',
-          'title'    => 'nullable',
-          'content'  => 'nullable',
-          'image'    => 'required|in:0,1',
-          'page_id'  => 'required|exists:\{{namespace}}\{{modelsFolder}}\Page,id',
-      ];
+
+        abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
+
+        $pagemeta->delete();
+
+        flashy('Le meta tag a bien été supprimé');
+        return back();
     }
 
+    private function getValidationRules(): array
+    {
+        $rules =  [
+            'code'     => 'required',
+            'name'     => 'required',
+            'title'    => 'nullable',
+            'content'  => 'nullable',
+            'type'     => 'required',
+            'page_id'  => 'required|exists:\{{namespace}}\{{modelsFolder}}\Page,id',
+        ];
+
+        if ('image' === get_meta_type(request('type'))) {
+            $rules['imagecontent'] = 'required|image';
+        }
+
+        return $rules;
+    }
+
+    private function saveImage($pagemeta, $request)
+    {
+        if ($request->file('imagecontent') && $pagemeta->isImage()) {
+            $media = $pagemeta->addMediaFromRequest('imagecontent')->toMediaCollection(config('media-library.collections.front.label'));
+            $pagemeta->update(['content' => $media->getUrl()]);
+        }
+    }
 }

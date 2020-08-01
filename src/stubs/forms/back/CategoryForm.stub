@@ -4,7 +4,7 @@ namespace {{namespace}}\Forms\{{backNamespace}};
 
 use Kris\LaravelFormBuilder\Form;
 
-class PageForm extends Form
+class CategoryForm extends Form
 {
     public function buildForm()
     {

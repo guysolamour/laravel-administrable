@@ -71,9 +71,10 @@
                     <td>
 
                         <div class="btn-group" role="group">
-                            <a target="_blank" href="{{ route('{{frontLowerNamespace}}.'. strtolower(class_basename($comment->commentable)) .'.show', $comment->commentable) . '#comment-' . $comment->getKey() }}" class="btn btn-primary"
+                            <a  href="{{ route('{{backLowerNamespace}}.comment.show', $comment) }}" class="btn btn-primary"
                                 data-toggle="tooltip" data-placement="top" title="Afficher"><i
                                     class="fas fa-eye"></i></a>
+
                             @unless ($comment->approved)
                             <a href="{{ route('{{backLowerNamespace}}.comment.approved', $comment) }}" class="btn btn-success"
                                 data-toggle="tooltip" data-placement="top" title="Approuver"><i

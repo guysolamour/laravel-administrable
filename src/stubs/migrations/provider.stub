@@ -14,7 +14,8 @@ class Create{{pluralClass}}Table extends Migration
     public function up()
     {
         Schema::create('{{pluralSnake}}', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
+
             $table->string('pseudo')->unique();
             $table->string('first_name');
             $table->string('last_name');
@@ -30,6 +31,7 @@ class Create{{pluralClass}}Table extends Migration
             $table->string('website')->nullable();
             $table->string('about')->nullable();
             $table->rememberToken();
+
             $table->timestamps();
         });
     }

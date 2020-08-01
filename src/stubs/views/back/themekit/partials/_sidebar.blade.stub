@@ -1,3 +1,4 @@
+
 <div class="app-sidebar colored">
     <div class="sidebar-header">
         <a class="header-brand" href="{{ route('{{singularSlug}}.dashboard') }}">
@@ -20,9 +21,19 @@
                 </div>
                 {{-- insert sidebar links here --}}
 
+
+                @php
+                $countCommentNotifications = get_{{singularSlug}}()->unreadNotifications->filter(fn($item) => $item->type === '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')->count();
+                @endphp
                 <div class="nav-item">
                     <a href="{{ route('{{backLowerNamespace}}.comment.index') }}">
-                        <i class="fa fa-comments"></i><span>Commentaires</span>
+                        <i class="fa fa-comments"></i>
+                        <span>
+                            Commentaires
+                            @if($countCommentNotifications)
+                            <span class="badge badge-success">{{ $countCommentNotifications }}</span>
+                            @endif
+                        </span>
                     </a>
                 </div>
 

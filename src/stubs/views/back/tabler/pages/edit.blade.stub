@@ -23,12 +23,19 @@
 <div class="row">
     <div class="col-12">
         <h3 class="title-5 m-b-35">
-            Edition
+            Edition: {{ $page->name }}
         </h3>
         <div class="row">
            <div class="col-md-12">
               {!! form_start($form) !!}
-              {!! form_rest($form) !!}
+              {!! form_row($form->code, ['attr' => ['readonly']]) !!}
+                @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                {!! form_row($form->name) !!}
+                {!! form_row($form->route) !!}
+                @else
+                {!! form_row($form->name, ['attr' => ['readonly']]) !!}
+                {!! form_row($form->route, ['attr' => ['readonly']]) !!}
+                @endif
 
               @seoForm([
                 'model' => $form->getModel()

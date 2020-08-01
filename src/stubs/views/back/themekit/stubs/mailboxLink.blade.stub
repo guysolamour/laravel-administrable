@@ -5,7 +5,7 @@
                             $new_mailboxes = \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->count()
                         @endphp
                         @if($new_mailboxes)
-                        <span class="badge badge-success">New {{ $new_mailboxes }}</span>
+                        <span class="badge badge-success">{{ $new_mailboxes }}</span>
                         @endif
                     </a>
                 </div>

@@ -15,7 +15,7 @@
         <div class="col-xl-4 col-lg-6 col-md-7 my-auto p-0">
             <div class="authentication-form mx-auto">
                 <div class="logo-centered text-center" style="width: auto">
-                    <a href="#"><img src="{{ config('administrable.logo_url') }}" alt="{{ config('app.name') }}"></a>
+                    <a href="#"><img src="{{ config('administrable.logo_url') }}" alt="{{ config('app.name') }}" width='200'></a>
                 </div>
                 Merci de confirmer votre mot de passe avant de continuer
                 <form  action="{{ route('{{singularSlug}}.password.confirm') }}" method="post">
@@ -37,7 +37,7 @@
                         <button class="btn btn-theme" type="submit">Confirmer le mot de passe</button>
                     </div>
 
-                    @if (Route::has('password.request'))
+                    @if (Route::has('{{singularSlug}}.password.request'))
                     <a class="btn btn-success" href="{{ route('{{singularSlug}}.password.request') }}">
                         Mot de passe oublié ?
                     </a>

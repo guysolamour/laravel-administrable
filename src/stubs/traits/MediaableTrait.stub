@@ -48,7 +48,8 @@ trait MediaableTrait
 
         $collections = $this->getMediaCollections();
 
-        foreach ($collections  as $collection) {
+        if ($collections) {
+          foreach ($collections  as $collection) {
             $media = $this->addMediaCollection($collection['label'])
                 ->useDisk(
                     config('media-library.collections_disc')
@@ -57,7 +58,10 @@ trait MediaableTrait
             if ($collection['conversion']) {
                 $media->withResponsiveImages();
             }
+          }
         }
+
+
     }
 
   /**
@@ -69,7 +73,8 @@ trait MediaableTrait
 
       $conversions = $this->getMediaConversions();
 
-      foreach ($conversions as $key =>  $conversion) {
+      if ($conversions) {
+        foreach ($conversions as $key =>  $conversion) {
           $media_conversion = $this->addMediaConversion($key);
 
           if (Arr::exists($conversion, 'height')  && Arr::get($conversion, 'height')){
@@ -79,6 +84,7 @@ trait MediaableTrait
           if (Arr::exists($conversion, 'width')  && Arr::get($conversion, 'width')){
               $media_conversion->width($conversion['width']);
           }
+      }
       }
     }
 
@@ -132,16 +138,17 @@ trait MediaableTrait
     {
         $attributes = self::getCollectionAttributes(request($collection . '-attributes'));
 
-        foreach ($images as $image) {
-            $attr = $attributes[$image->getClientOriginalName()];
-            $model->addMedia($image)
-                ->setName($attr['name'])
-                ->withCustomProperties([
-                    'order' => $attr['order'],
-                    'select' => $attr['select'],
-                ])
-                ->toMediaCollection($collection)
-                ;
+        if ($images){
+          foreach ($images as $image) {
+              $attr = $attributes[$image->getClientOriginalName()];
+              $model->addMedia($image)
+                  ->setName($attr['name'])
+                  ->withCustomProperties([
+                      'order' => $attr['order'],
+                      'select' => $attr['select'],
+                  ])
+                  ->toMediaCollection($collection);
+          }
         }
     }
 

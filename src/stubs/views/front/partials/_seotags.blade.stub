@@ -1,15 +1,20 @@
 @section('seo')
 @php
-    $seo_data = [];
+    if(isset($model) && $model){
+        $seo_data = $model;
+    }else {
+        $seo_data = [];
 
-    foreach(['model','title', 'description','keywords'] as $var){
-        if (isset($$var)){
-            $seo_data[$var] = $$var;
+        foreach(['model','title', 'description','keywords'] as $var){
+            if (isset($$var)){
+                $seo_data[$var] = $$var;
+            }
         }
     }
+
 @endphp
 {!!
-    App\Models\Seo::getTags($seo_data)
+    (\{{namespace}}\{{modelsFolder}}\Seo::getTags($seo_data))
 !!}
 
 @stop

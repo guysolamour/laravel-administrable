@@ -24,14 +24,22 @@
 
 
            {{-- insert sidebar links here --}}
+            @php
+            $countCommentNotifications = get_{{singularSlug}}()->unreadNotifications->filter(fn($item) => $item->type ===
+            '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')->count();
+            @endphp
             <li class="nav-item">
             <a href="{{ route('{{backLowerNamespace}}.comment.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.comment.index') }}">
               <i class="nav-icon fas fa-comments"></i>
               <p>
                 Commentaires
+                @if($countCommentNotifications)
+                <span class="badge badge-success right">{{ $countCommentNotifications  }}</span>
+                @endif
               </p>
             </a>
           </li>
+
             <li class="nav-item">
             <a href="{{ route('{{backLowerNamespace}}.user.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.user.index') }}">
               <i class="nav-icon fas fa-user"></i>

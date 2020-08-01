@@ -10,7 +10,7 @@
     <div class="card ">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.index') }}">Pages</a></li>
                 <li class="breadcrumb-item"><a
                         href="{{ route('{{backLowerNamespace}}.page.show', $page) }}">{{ $page->name }}</a></li>
@@ -20,7 +20,7 @@
 
 
     </div>
-
+    {!! form_start($form) !!}
     <div class="card">
         <h4 class="card-title">
             Edition
@@ -29,8 +29,14 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                   {!! form_start($form) !!}
-                   {!! form_rest($form) !!}
+                    {!! form_row($form->code, ['attr' => ['readonly']]) !!}
+                    @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                    {!! form_row($form->name) !!}
+                    {!! form_row($form->route) !!}
+                    @else
+                    {!! form_row($form->name, ['attr' => ['readonly']]) !!}
+                    {!! form_row($form->route, ['attr' => ['readonly']]) !!}
+                    @endif
                 </div>
 
             </div>
@@ -46,7 +52,6 @@
     </div>
     {!! form_end($form) !!}
 </div>
-
 
 
 @endsection

@@ -34,10 +34,17 @@
 
 
 
+
+            @php
+              $countCommandNotifications = get_{{singularSlug}}()->unreadNotifications->filter(fn($item) => $item->type === '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')->count();
+            @endphp
             <li class="menu-item {{ set_active_link('{{backLowerNamespace}}.comment.index') }}">
                 <a class="menu-link" href="{{ route('{{backLowerNamespace}}.comment.index') }}">
                     <span class="icon far fa-comments"></span>
                     <span class="title">Commentaires</span>
+                    @if($countCommandNotifications)
+                    <span class="badge badge-pill badge-primary">{{ $countCommandNotifications  }}</span>
+                    @endif
                 </a>
             </li>
 
@@ -95,6 +102,5 @@
             </li>
         </ul>
     </nav>
-
 </aside>
 <!-- END Sidebar -->

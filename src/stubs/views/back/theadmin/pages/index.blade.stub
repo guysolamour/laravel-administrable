@@ -18,7 +18,7 @@
 
     <div class="card">
         {{-- <h4 class="card-title">
-                Catégories
+                Pages
             </h4> --}}
 
         <div class="card-body">
@@ -52,6 +52,7 @@
                             </th>
                             @endif
                             <th></th>
+                            <th>Code</th>
                             <th>Nom</th>
                             <th>Route</th>
                             <th>Url</th>
@@ -71,6 +72,7 @@
                             </td>
                             @endif
                             <td>{{ $loop->iteration }}</td>
+                            <td>{{ $page->code }}</td>
                             <td><a class="text-dark" data-provide="tooltip" title="Aperçu rapide" href="#qv-pages-details-{{ $page->id }}"
                                     data-toggle="quickview">{{ $page->name }}</a></td>
                             <td>{{ $page->route }}</td>
@@ -201,9 +203,9 @@
 </div>
 @endif
 
-@include('back.partials._datatable')
+@include('{{backLowerNamespace}}.partials._datatable')
 
 @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-@include('back.partials._deleteAll')
+@include('{{backLowerNamespace}}.partials._deleteAll')
 @endif
 @endsection

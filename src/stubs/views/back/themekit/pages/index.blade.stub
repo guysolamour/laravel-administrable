@@ -58,6 +58,7 @@
                                 @endif
                                 <th>#</th>
 
+                                <th>Code</th>
                                 <th>Nom</th>
                                 <th>Route</th>
                                 <th>Url</th>
@@ -82,6 +83,7 @@
                                     @endif
 
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $page->code }}</td>
                                     <td>{{ $page->name }}</td>
                                     <td>{{ $page->route }}</td>
                                     <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
@@ -91,7 +93,7 @@
                                                 data-toggle="tooltip" data-placement="top" title="Afficher"><i
                                                     class="fas fa-eye"></i></a>
 
-                                            <a href="{{ route('{{singularSlug}}.page.edit', $page) }}" class="btn btn-info" data-toggle="tooltip"
+                                            <a href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Editer"><i class="fas fa-edit"></i></a>
 
                                             @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
@@ -104,7 +106,6 @@
                                     </td>
                                 </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>

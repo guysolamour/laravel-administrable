@@ -47,7 +47,7 @@
                                     <div class="card-header">
                                         <h3 class="card-title">Pages</h3>
                                         <div class="btn-group float-right">
-                                            <a href="{{ route('back.page.create') }}" class="btn  btn-primary"> <i
+                                            <a href="{{ route('{{backLowerNamespace}}.page.create') }}" class="btn  btn-primary"> <i
                                                     class="fa fa-plus"></i> Ajouter</a>
 
                                             @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
@@ -73,6 +73,7 @@
                                                         </th>
                                                         @endif
                                                         <th></th>
+                                                        <th>Code</th>
                                                         <th>Nom</th>
                                                         <th>Route</th>
                                                         <th>Url</th>
@@ -96,6 +97,7 @@
                                                         </td>
                                                         @endif
                                                         <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $page->code }}</td>
                                                         <td>{{ $page->name }}</td>
                                                         <td>{{ $page->route }}</td>
                                                         <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>

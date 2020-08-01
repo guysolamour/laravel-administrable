@@ -35,8 +35,8 @@
 </head>
 
 <body>
-    <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <!--[if lt IE 8]>
+            <p class="browserupgrade">Vous utilisez une version <strong>obsolète</strong> de votre navigateur. Merci <a href="http://browsehappy.com/">de mettre à jour votre navigateur</a> pour améliorer l'expérience utilisateur.</p>
         <![endif]-->
 
     <div class="wrapper">

@@ -8,7 +8,7 @@
 <div class="login-content">
     <div class="login-logo">
         <a href="/">
-            <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('administrable.name')}}">
+            <img src="{{ asset(config('administrable.logo_url')) }}" alt="{{ config('administrable.name')}}" width='200'>
         </a>
 
     </div>

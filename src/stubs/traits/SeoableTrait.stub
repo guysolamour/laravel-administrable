@@ -101,7 +101,7 @@ trait SeoableTrait
             OpenGraph::setDescription($tags['og:description'] ??  SEOMeta::getDescription());
         }
 
-        OpenGraph::setUrl($tags['og:url'] ?? $this->show_url);
+        OpenGraph::setUrl($tags['og:url']);
         OpenGraph::addProperty('type', $tags['og:type'] ?? 'article');
         OpenGraph::addProperty('locale', $tags['og:locale'] ?? config('app.locale'));
         if ($tags['og:image'] || $this->getFrontImageUrl()) {

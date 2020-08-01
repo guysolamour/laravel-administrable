@@ -8,6 +8,13 @@ use Illuminate\Support\Str;
 class PageMeta extends BaseModel
 {
 
+    const TYPES = [
+        'text'        => ['label' => 'Texte', 'value'          => 1],
+        'simpletext'  => ['label' => 'Texte (simple)', 'value' => 4],
+        'image'       => ['label' => 'Image', 'value'          => 2],
+        'video'       => ['label' => 'Vidéo', 'value'          => 3],
+    ];
+
     /**
      * The table associated with the model.
      *
@@ -17,6 +24,12 @@ class PageMeta extends BaseModel
 
 
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['code','name','title','type','content', 'page_id'];
 
 
     /**
@@ -29,39 +42,65 @@ class PageMeta extends BaseModel
      ];
 
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['name','title','image','content', 'page_id'];
 
 
     // Attributes
 
-     public function getImageUrlAttribute()
-     {
+    public function getImageUrlAttribute()
+    {
         if (!$this->isImage()) return '';
 
-        return (string) Str::of($this->content)
-                            ->after('src="')
-                            ->before('" />')
-                            ->before('?v');
-     }
+        return $this->content;
+    }
 
+    public function getVideoUrlAttribute()
+    {
+        if (!$this->isVideo()) return '';
 
+        return $this->content;
+    }
 
-
+    /**
+     *
+     * @return boolean
+     */
     public function isImage() :bool
     {
-       return $this->image;
+       return $this->type == self::TYPES['image']['value'];
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isVideo() :bool
+    {
+       return $this->type == self::TYPES['video']['value'];
+    }
+
+      /**
+     *
+     * @return boolean
+     */
+    public function isText() :bool
+    {
+       return $this->type == self::TYPES['text']['value'];
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isSimpleText() :bool
+    {
+       return $this->type == self::TYPES['simpletext']['value'];
     }
 
 
 
-    public static function boot()
+    public static function booted()
     {
-        parent::boot();
+        parent::booted();
 
         /**
          * @param self $model

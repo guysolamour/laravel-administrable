@@ -4,17 +4,17 @@ namespace {{namespace}}\Forms\{{backNamespace}};
 
 use Kris\LaravelFormBuilder\Form;
 
-class CategoryForm extends Form
+class PageForm extends Form
 {
     public function buildForm()
     {
 
         if ($this->getModel() && $this->getModel()->getKey()) {
             $method = 'PUT';
-            $url    = route('{{backLowerNamespace}}.category.update', $this->getModel());
+            $url    = route('{{backLowerNamespace}}.page.update', $this->getModel());
         } else {
             $method = 'POST';
-            $url    = route('{{backLowerNamespace}}.category.store');
+            $url    = route('{{backLowerNamespace}}.page.store');
         }
 
         $this->formOptions = [
@@ -24,10 +24,18 @@ class CategoryForm extends Form
         ];
 
 	    $this
+		    ->add('code','text', [
+			    'label' => 'Code',
+			    'rules' => 'required',
+        ])
 		    ->add('name','text', [
 			    'label' => 'Nom',
 			    'rules' => 'required',
-            ])
+        ])
+		    ->add('route','text', [
+			    'label' => 'Url (route)',
+			    'rules' => 'required|route_exists',
+        ])
         ;
     }
 }

@@ -122,8 +122,18 @@ class PageController extends Controller
 
     public function storeMetaTag(Page $page, Request $request)
     {
-        $request->validate($this->getValidationRules());
-        $page->metatags()->create($request->all());
+         $request->validate($this->getValidationRules());
+
+        $pagemeta = $page->metatags()->create([
+            'code'    => $request->get('code'),
+            'name'    => $request->get('name'),
+            'title'   => $request->get('title'),
+            'type'    => $request->get('type'),
+            'content' => $this->getContentFieldValue($request)
+        ]);
+
+        $this->saveImage($pagemeta, $request);
+
 
         flashy('Le meta tag a bien été inseré');
         return back();
@@ -131,24 +141,74 @@ class PageController extends Controller
     }
 
 
+
+
     public function updateMetaTag(Page $page, PageMeta $pagemeta ,Request $request)
     {
         $request->validate($this->getValidationRules());
-        $pagemeta->update($request->all());
+
+        $pagemeta->update([
+            'name'    => $request->get('name'),
+            'title'   => $request->get('title'),
+            'content' => $request->get('textcontent') ?? $request->get('videocontent')
+        ]);
+        $this->saveImage($pagemeta, $request);
+
 
         flashy('Le meta tag a bien été modifié');
         return back();
     }
 
+
+    public function deleteMetaTag(Page $page, PageMeta $pagemeta ,Request $request)
+    {
+
+        abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
+
+        $pagemeta->delete();
+
+        flashy('Le meta tag a bien été supprimé');
+        return back();
+    }
+
     private function getValidationRules() :array
     {
-      return [
-          'name'     => 'required',
-          'title'    => 'nullable',
-          'content'  => 'nullable',
-          'image'    => 'required|in:0,1',
-          'page_id'  => 'required|exists:\{{namespace}}\{{modelsFolder}}\Page,id',
-      ];
+        $rules =  [
+            'code'     => 'required',
+            'name'     => 'required',
+            'title'    => 'nullable',
+            'content'  => 'nullable',
+            'type'     => 'required',
+            'page_id'  => 'required|exists:\{{namespace}}\{{modelsFolder}}\Page,id',
+        ];
+
+        if ('image' === get_meta_type(request('type'))) {
+            $rules['imagecontent'] = 'required|image';
+        }
+
+        return $rules;
     }
+
+
+    private function getContentFieldValue($request) :?string
+    {
+        $types = \{{namespace}}\{{modelsFolder}}\PageMeta::TYPES;
+
+        foreach($types as $key => $type){
+            if ($request->get('type') == $type['value']){
+                return $request->get("{$key}content");
+            }
+        }
+        return null;
+    }
+
+    private function saveImage($pagemeta, $request)
+    {
+        if ($request->file('imagecontent') && $pagemeta->isImage()) {
+            $media = $pagemeta->addMediaFromRequest('imagecontent')->toMediaCollection(config('media-library.collections.front.label'));
+            $pagemeta->update(['content' => $media->getUrl()]);
+        }
+    }
+
 
 }

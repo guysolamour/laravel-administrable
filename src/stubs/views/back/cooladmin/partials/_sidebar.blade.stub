@@ -11,7 +11,7 @@
                 <img data-avatar="{{ get_{{singularSlug}}('id') }}" src="{{ get_{{singularSlug}}()->getFrontImageUrl() }}" alt="{{ get_{{singularSlug}}('full_name') }}" />
             </div>
             <h4 class="name">
-                <a href="{{ route('back.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">{{ get_{{singularSlug}}('full_name') }}</a>
+                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">{{ get_{{singularSlug}}('full_name') }}</a>
             </h4>
             <a >{{ get_{{singularSlug}}('role') }}</a>
 
@@ -20,9 +20,16 @@
             <ul class="list-unstyled navbar__list">
 
                 {{-- insert sidebar links here --}}
+                @php
+                 $countCommandNotifications = get_{{singularSlug}}()->unreadNotifications->filter(fn($item) => $item->type === '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')->count();
+                @endphp
                  <li class="{{ set_active_link('{{backLowerNamespace}}.comment.index') }}">
                     <a href="{{ route('{{backLowerNamespace}}.comment.index') }}">
                         <i class="far  fa-comments"></i>Commentaires</a>
+                        @if($countCommandNotifications)
+                        <span class="inbox-num">{{ $countCommandNotifications }}</span>
+                        @endif
+                </li>
                 </li>
                  <li class="{{ set_active_link('{{backLowerNamespace}}.user.index') }}">
                     <a href="{{ route('{{backLowerNamespace}}.user.index') }}">

@@ -12,11 +12,13 @@ class PostController extends Controller
 {
     public function index()
     {
+        $page = get_meta_page('blog');
+
         $posts = Post::online()->with('category')->last()->paginate(9);
 
         $categories = Category::withCount('posts')->last()->get();
 
-        return view('{{frontLowerNamespace}}.posts.index', compact('posts','categories'));
+        return view('{{frontLowerNamespace}}.posts.index', compact('page','posts','categories'));
     }
 
     public function show(Post $post)
@@ -48,7 +50,7 @@ class PostController extends Controller
             ->paginate(9);
 
         $posts->withPath(route('{{frontLowerNamespace}}.post.search', compact('q')));
-        $page = 2;//get_meta_page('search');
+        $page = get_meta_page('search');
 
         return view('{{frontLowerNamespace}}.posts.search', compact('posts', 'page'));
     }

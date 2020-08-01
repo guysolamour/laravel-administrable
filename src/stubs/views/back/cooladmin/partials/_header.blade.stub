@@ -15,7 +15,7 @@
                     @if($messages->count())
 
                     <div class="header-button-item has-noti js-item-menu">
-                        <i class="zmdi zmdi-comment-more"></i>
+                        <i class="fa fa-envelope"></i>
                         <div class="notifi-dropdown js-dropdown">
 
                             @foreach ($messages->take(3) as $message)
@@ -35,6 +35,47 @@
                             <div class="notifi__footer">
                                 <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">Voir tous les messages</a>
                             </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    @php
+                        $unreadNotifications = get_{{singularSlug}}()->unreadNotifications;
+                    @endphp
+                    @if($messages->count())
+
+                    <div class="header-button-item has-noti js-item-menu">
+                        <i class="fa fa-comment"></i>
+                        <div class="notifi-dropdown js-dropdown">
+
+                            @forelse($unreadNotifications as $notification)
+                                @if($notification->type === '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')
+                                <div class="mess__item">
+
+                                    <div class="content">
+                                        <p class="text-truncate">
+                                           <a href="{{ route('{{backLowerNamespace}}.comment.show', $notification->data['comment']['id']) }}" class="text-secondary">
+                                               Un commentaire vient d'être déposé sur le site,
+                                                par <br> <b>{{ $notification->data['commenter_name'] }}</b>
+                                                joignable à l'adresse <b>{{ $notification->data['commenter_email'] }}</b>.
+                                           </a>
+                                        </p>
+                                        <span class="time">{{ $message->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                                @endif
+                                <div class="notifi__footer">
+                                    <a href="{{ route('{{backLowerNamespace}}.notification.markasread') }}">Tous marquer comme lues</a>
+                                </div>
+                            @empty
+                            <div class="mess__item">
+                                <div class="content">
+                                    <p>
+                                        Pas de notifications pour l'instant
+                                    </p>
+                                </div>
+                            </div>
+                            @endforelse
                         </div>
                     </div>
                     @endif

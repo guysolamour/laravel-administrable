@@ -177,7 +177,7 @@
     <div class="row">
         <div class="form-group col-sm-12">
             <label for="page:author">Auteur de cet article / page web</label> <br>
-            <input type="text" class="form-control" id="page:author" name="seo[page:author]" value="{{ $tags['page:author'] ?? get_{{singularSlug}}('full_name') }}">
+            <input type="text" class="form-control" id="page:author" name="seo[page:author]" value="{{ $tags['page:author'] }}">
             <!-- <span class="text-muted form-text">Auteur de cet article / page web</span> -->
         </div>
         <div class="form-group col-sm-12">

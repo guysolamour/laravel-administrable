@@ -1,0 +1,84 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title', $tag->name)
+
+
+
+@section('content')
+
+
+<section class="au-breadcrumb m-t-75">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="au-breadcrumb-content">
+                        <div class="au-breadcrumb-left">
+                            <span class="au-breadcrumb-span">Vous êtes ici:</span>
+                            <ul class="list-unstyled list-inline au-breadcrumb__list">
+                                <li class="list-inline-item ">
+                                    <a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a>
+                                </li>
+                                <li class="list-inline-item seprate">
+                                    <span>/</span>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="{{ route('{{backLowerNamespace}}.tag.index') }}">Etiquettes</a>
+                                </li>
+                                <li class="list-inline-item seprate">
+                                    <span>/</span>
+                                </li>
+                                <li class="list-inline-item active">{{ $tag->name }}</li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <a href="{{ route('{{backLowerNamespace}}.tag.edit', $tag) }}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Editer</a>
+                            <a href="{{ route('{{backLowerNamespace}}.tag.destroy', $tag) }}" class="chosen-single btn btn-danger"
+                                data-method="delete"
+                                data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?">
+                                <i class="fas fa-trash"></i> Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="main-content mb-5 pt-5">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row au-card">
+                <div class="col-md-8">
+                    <div class="pb-2">
+                        <p><span class="font-weight-bold">Nom:</span></p>
+                        <p>
+                            {{ $tag->name }}
+                        </p>
+                    </div>
+
+                    <div class="pb-2">
+                        <p><span class="font-weight-bold">Date ajout:</span></p>
+                        <p>
+                            {{ $tag->created_at->format('d/m/Y h:i') }}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="btn-group">
+                        <a href="{{ route('{{backLowerNamespace}}.tag.edit', $tag) }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Editer</a>
+                        <a href="{{ route('{{backLowerNamespace}}.tag.destroy', $tag) }}" class="chosen-single btn btn-danger" data-method="delete"
+                            data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?">
+                            <i class="fas fa-trash"></i> Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@endsection

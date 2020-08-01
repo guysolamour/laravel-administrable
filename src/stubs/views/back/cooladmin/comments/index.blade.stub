@@ -41,7 +41,7 @@
                 <div class="col-md-12">
                     <!-- DATA TABLE -->
                     <h3 class="title-5 m-b-35">
-                        Catégories
+                        Commentaires
                     </h3>
                     <div class="table-data__tool">
                         <div class="table-data__tool-left">
@@ -95,7 +95,7 @@
                                     <td>{{ $comment->created_at->format('d/m/Y h:i') }}</td>
                                     <td>
                                         <div class="table-data-feature justify-content-start">
-                                            <a target="_blank" href="{{ route('{{frontLowerNamespace}}.'. strtolower(class_basename($comment->commentable)) .'.show', $comment->commentable) . '#comment-' . $comment->getKey() }}}" class="item"
+                                            <a  href="{{ route('{{backLowerNamespace}}.comment.show', $comment) }}" class="item"
                                                 data-toggle="tooltip" data-placement="top" title="Afficher">
                                                 <i class="zmdi zmdi-eye"></i>
                                             </a>

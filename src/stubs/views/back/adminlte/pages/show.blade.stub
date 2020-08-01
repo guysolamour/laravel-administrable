@@ -46,60 +46,9 @@
                             <div class="card-header">
                                 <h3 class="card-title">Page: {{ $page->name }}</h3>
                                 <div class="btn-group float-right">
-                                    @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-                                    <button class="btn btn-primary" data-toggle="modal" data-target="#addPageModal">
-                                        <i class="fas fa-edit"></i> Ajouter un champ personnalisé</button>
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="addPageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Ajout de champ personnalise</i> </h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form action="{{ route('{{backLowerNamespace}}.pagemeta.store', $page) }}" method="post" name="{{ $page->form_name }}">
-                                                    @csrf
-                                                    <div class="modal-body">
-                                                        <input type="hidden" name="page_id" value="{{ $page->getKey() }}">
-                                                        <div class="form-group">
-                                                            <label for="name{{ $page->id }}">Nom </label>
-                                                            <input type="text" class="form-control" name="name" id="name{{ $page->id }}">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="title{{ $page->id }}">Titre </label>
-                                                            <input type="text" class="form-control" name="title" id="title{{ $page->id }}">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="">Champ image</label>
-                                                            <select name="image" id="image_field{{ $page->id }}" class="custom-select">
-                                                                <option value="0">Non</option>
-                                                                <option value="1">Oui</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="content{{ $page->id }}">Contenu <span class="text-red">*</span></label>
-                                                            <textarea name="content" id="content{{ $page->id }}" class="form-control"
-                                                                data-tinymce></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer btn-group">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-undo"></i>
-                                                            Annuler</button>
-                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>
-                                                            Enregistrer</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                   @include('{{backLowerNamespace}}.pages._addmetataform')
                                     <a class="btn btn-info" href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}">
                                         <i class="fas fa-edit"></i> Modifier la page</a>
-                                    @endif
                                 </div>
                             </div>
 
@@ -129,23 +78,30 @@
                                             </p>
                                         </div>
                                     </div>
-
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        @foreach($page->metatags as $meta)
+                    <div class="row" style="width: 100%">
+                        @foreach($page->metatags->reverse() as $meta)
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">{{ $meta->name }}</h3>
-                                    <div class="btn-group float-right">
 
-                                        <button class="btn btn-info" data-toggle="modal" data-target="#editMetaModal{{ $meta->id }}">
-                                            <i class="fas fa-edit"></i> Modifier</button>
+                                    <h3 class="card-title">
+                                        {{ $meta->name }}
+                                        @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                                        | {{ $meta->code }}
+                                        @endif
+                                    </h3>
+                                    <div class="btn-group float-right">
+                                        <a class="btn btn-info" href="#" data-toggle="modal" data-target="#editMetaModal{{ $meta->id }}">
+                                            <i class="fas fa-edit"></i> Modifier </a>
+                                        @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                                        <a href="{{ route('{{backLowerNamespace}}.pagemeta.destroy',[$page, $meta]) }}" data-method="delete"
+                                            data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?" class="btn btn-danger"
+                                            data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fas fa-trash"></i> Supprimer</a>
+                                        @endif
 
                                     </div>
                                 </div>
@@ -153,10 +109,17 @@
 
                                 <div class="card-body row">
                                     <div class="col-md-12">
-                                        <h5>{{ $meta->title }}</h5>
+                                        <h5>
+                                            {{ $meta->title }}
+                                        </h5>
                                         <p>
                                             @if ($meta->isImage())
-                                            <img src="{{ $meta->image_url }}" alt="{{ $meta->name }}" class="img-fluid img-thumbnail">
+                                            <img src="{{ $meta->image_url }}" alt="{{ $meta->name }}" class="img-fluid img-thumbnail" style="height: 300px">
+                                            @elseif($meta->isVideo())
+                                            <div class="embed-responsive embed-responsive-16by9" style="display: {{ $meta->isVideo() ? 'block' : 'none' }}"">
+                                                                                <iframe class=" embed-responsive-item" src="{{$meta->video_url }}" allowfullscreen>
+                                                </iframe>
+                                            </div>
                                             @else
                                             {!! $meta->content !!}
                                             @endif
@@ -164,67 +127,7 @@
                                     </div>
 
                                 </div>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="editMetaModal{{ $meta->id }}" tabindex="-1" role="dialog"
-                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">{{ $meta->name }}</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="{{ route('{{backLowerNamespace}}.pagemeta.update', [$page, $meta]) }}" method="post"
-                                                    name="{{ $page->form_name }}">
-                                                    @csrf
-                                                    <div class="modal-body">
-                                                        <input type="hidden" name="page_id" value="{{ $page->getKey() }}">
-                                                        <div class="form-row">
-                                                            <div class="col">
-                                                                <div class="form-group">
-                                                                    <label for="name{{ $page->id }}">Nom </label>
-                                                                    <input type="text" class="form-control" name="name"
-                                                                        id="name{{ $page->id }}" value="{{ $meta->name }}" readonly>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col">
-                                                                <div class="form-group">
-                                                                    <label for="title{{ $page->id }}">Titre </label>
-                                                                    <input type="text" class="form-control" name="title"
-                                                                        id="title{{ $page->id }}" value="{{ $meta->title }}">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="">Champ image</label>
-                                                            <select name="image" id="image_field{{ $page->id }}" class="custom-select">
-                                                                <option value="0">Non</option>
-                                                                <option value="1">Oui</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="content{{ $page->id }}">Contenu <span
-                                                                    class="text-red">*</span></label>
-                                                            <textarea name="content" id="content{{ $page->id }}" class="form-control"
-                                                                data-tinymce>{{ $meta->content }}</textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer btn-group">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                                                class="fa fa-undo"></i>
-                                                            Annuler</button>
-                                                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>
-                                                            Enregistrer</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @include('{{backLowerNamespace}}.pages._updatemetaform', ['meta' => $meta])
                             </div>
                         </div>
                         @endforeach
@@ -242,4 +145,199 @@
 </div>
 <!-- /.content-wrapper -->
 
+@include('{{backLowerNamespace}}.partials._tinymce', [
+    'selector' => "form textarea[data-tinymce]",
+    'model' => $page->getModel(),
+    'model_name' => get_class($page->getModel()),
+    'prefix' => config('administrable.auth_prefix_path')
+])
 @endsection
+
+@push('js')
+<script>
+    class PageMeta
+       {
+        static init (){
+            $('form[name=addPageMeta]').each((index,form) => new PageMeta($(form)))
+        }
+
+        constructor(form){
+            this.binds()
+
+            this.form = form
+
+
+            this.selectField = this.form.find('select[name=type]')
+            this.textareaField = this.form.find('textarea[name=textcontent]')
+            this.simpletextareaField = this.form.find('textarea[name=simpletextcontent]')
+            this.imageField = this.form.find('input[name=imagecontent]')
+            this.videoField = this.form.find('input[name=videocontent]')
+            this.thumbnail = this.form.find('.thumbnail')
+            this.types = @json(\{{namespace}}\{{modelsFolder}}\PageMeta::TYPES) // render by blade
+
+
+            this.currentType = 'text'
+
+            this.addEvents()
+
+        }
+
+        binds() {
+            const methods = [
+                'addEvents', 'handleChange', 'showImageField', 'showTextField', 'showVideoField',
+                'validateFile', 'handleSubmit', 'handleImage', 'handleVideo'
+            ]
+
+            methods.forEach((fn) => this[fn] = this[fn].bind(this))
+        }
+
+        addEvents(){
+            this.selectField.on('change', this.handleChange)
+            this.form.on('submit', this.handleSubmit)
+            this.imageField.on('change', this.handleImage)
+            this.videoField.on('blur', this.handleVideo)
+        }
+
+        handleSubmit(event){
+
+            if (this.currentType === 'image'){
+                if (!this.thumbnail.find('img').attr('src')){
+                    alert("Ce type d'image n'est pas autorisé.")
+                    return false
+                }
+            }
+
+            if(this.currentType === 'video'){
+                if (!this.thumbnail.find('div').find('iframe').attr('src')){
+                    alert("Ce type de vidéo n'est pas autorisé.")
+                    return false
+                }
+            }
+
+            if (!this.form.find('input[name=code]').val()){
+                alert("Le champ code est obligatoire.")
+                return false
+            }
+        }
+
+        handleChange(event){
+            const value = event.target.value
+
+            if (value == this.types.text.value) {
+                this.showTextField()
+            }
+            else if (value == this.types.image.value) {
+                this.showImageField()
+            }
+            else if (value == this.types.video.value) {
+                this.showVideoField()
+            }
+            else if (value == this.types.simpletext.value) {
+                this.showSimpleTextField()
+            }
+
+
+        }
+
+        showImageField(){
+            this.currentType = 'image'
+            this.textareaField.attr('disabled', true).parents('.form-group').hide()
+            this.simpletextareaField.attr('disabled', true).parents('.form-group').hide()
+            this.videoField.attr('disabled', true).parents('.form-group').hide()
+            this.imageField.attr('disabled', false).parents('.form-group').show()
+        }
+
+        handleImage(){
+            const reader = new FileReader()
+            const image = event.target.files[0]
+
+
+            if (!this.validateFile(image)) {
+                this.thumbnail.find('img').attr('src', '').hide()
+                return
+            }
+
+            reader.readAsDataURL(image)
+
+            reader.onload = (event) => {
+                this.thumbnail.find('div').hide()
+                this.thumbnail.find('img').attr('src', event.target.result).show()
+            }
+        }
+
+        validateFile(image) {
+
+            const ext = image.name.substring(image.name.lastIndexOf('.') + 1).toLowerCase()
+
+            if (['png', 'jpg', 'gif', 'jpeg', 'svg'].includes(ext)) {
+                return true
+            } else {
+                alert("Erreur lors du traitement de l'image `" + image.name + '`. Veuillez choisir une image de type (jpg, jpeg, png,svg).',)
+                // swal({
+                //     title: 'Ajout de média !',
+                //     text: "Erreur lors du traitement de l'image `" + image.name + '`. Veuillez choisir une image de type (jpg, jpeg, png,svg).',
+                //     icon: 'error'
+                // })
+                return false
+            }
+        }
+
+        validURL(str) {
+            try {
+                new URL(str);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        showTextField(){
+            this.currentType = 'text'
+            this.videoField.attr('disabled', true).parents('.form-group').hide()
+            this.imageField.attr('disabled', true).parents('.form-group').hide()
+            this.simpletextareaField.attr('disabled', true).parents('.form-group').hide()
+            this.thumbnail.find('div').hide()
+            this.thumbnail.find('img').hide()
+            this.textareaField.attr('disabled', false).parents('.form-group').show()
+
+
+        }
+
+        showSimpleTextField(){
+            this.currentType = 'simpletext'
+            this.videoField.attr('disabled', true).parents('.form-group').hide()
+            this.imageField.attr('disabled', true).parents('.form-group').hide()
+            this.textareaField.attr('disabled', true).parents('.form-group').hide()
+            this.thumbnail.find('div').hide()
+            this.thumbnail.find('img').hide()
+            this.simpletextareaField.attr('disabled', false).parents('.form-group').show()
+
+
+        }
+
+        showVideoField(){
+            this.currentType = 'video'
+            this.imageField.attr('disabled', true).parents('.form-group').hide()
+            this.textareaField.attr('disabled', true).parents('.form-group').hide()
+            this.simpletextareaField.attr('disabled', true).parents('.form-group').hide()
+            this.videoField.attr('disabled', false).parents('.form-group').show()
+            this.thumbnail.find('div').show()
+            this.thumbnail.find('img').hide()
+        }
+
+        handleVideo() {
+            if(!this.validURL(event.target.value)) {
+                this.thumbnail.find('div').find('iframe').attr('src','')
+                alert("Le lien de la vidéo n'est pas valide")
+                return
+            }
+            this.thumbnail.find('img').hide()
+            this.thumbnail.find('div').find('iframe').attr('src', event.target.value).show()
+        }
+
+    }
+
+    PageMeta.init();
+
+</script>
+@endpush

@@ -24,5 +24,10 @@
                                     Catégories
                                 </a>
                             </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.tag.index') }}">
+                                    Etiquettes
+                                </a>
+                            </li>
                         </ul>
                     </li>

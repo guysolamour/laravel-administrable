@@ -23,7 +23,6 @@ class TagForm extends Form
         ];
 
         $this
-
             ->add('name', 'text', [
                 'label'  => 'Nom',
 

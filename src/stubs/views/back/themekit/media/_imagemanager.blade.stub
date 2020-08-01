@@ -1,4 +1,4 @@
-@if($front_image)
+@if(isset($front_image) && $front_image == true)
 <div class="card front-image-collection">
     <div class="card-header bg-secondary">
         <h3 class="card-title text-white">
@@ -30,7 +30,7 @@
 </div>
 @endif
 
-@if($back_image)
+@if(isset($back_image) && $back_image == true)
 <div class="card back-image-collection">
     <div class="card-header bg-secondary">
         <h3 class="card-title text-white">
@@ -62,7 +62,7 @@
 @endif
 
 
-@if($images)
+@if(isset($images) && $images == true)
 <div class="card images-collection">
     <div class="card-header bg-secondary">
         <h3 class="card-title text-white">

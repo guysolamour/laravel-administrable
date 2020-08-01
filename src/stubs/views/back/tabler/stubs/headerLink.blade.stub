@@ -20,7 +20,7 @@
                                         </div>
                                         <div class="lh-sm">
                                             <div class="strong">{{ $message->name }}</div>
-                                            <div class="tesxt-muted">{{ Str::limit($message->content,50) }}</div>
+                                            <div>{{ Str::limit($message->content,50) }}</div>
                                             <p class="font-italic" style="font-size: .8rem"><i class="far fa-clock mr-1"></i>&nbsp;  {{ $message->created_at->diffForHumans() }}</p>
                                         </div>
                                     </div>
@@ -32,6 +32,60 @@
                         <div class="card-footer mt-4">
                           <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}" class="btn btn-primary btn-sm btn-block">Voir tous les
                                 Messages</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @php
+                $unreadNotifications = get_{{singularSlug}}()->unreadNotifications;
+            @endphp
+            <div class="nav-item dropdown d-none d-md-flex mr-3">
+                <a href="#" class="nav-link px-0" data-toggle="dropdown" tabindex="-1">
+                   <i class="fa fa-comment icon"></i>&nbsp;
+                   @if($unreadNotifications->count())
+                        <span class="badge bg-success"></span>
+                    @endif
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-card" style="min-width: 22rem">
+                    <div class="card" >
+                        <div class="card-body">
+                            @forelse($unreadNotifications as $notification)
+                                @if($notification->type === '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')
+                                <a class="card" href="{{ route('{{backLowerNamespace}}.comment.show', $notification->data['comment']['id']) }}">
+                                    <div class="card-body">
+                                        <div>
+                                            <div class="lh-sm">
+                                                <div>
+                                                  Un commentaire vient d'être déposé sur le site,
+                                                  par <b>{{ $notification->data['commenter_name'] }}</b>
+                                                  joignable à l'adresse <b>{{ $notification->data['commenter_email'] }}</b>.
+                                                </div>
+                                                <p class="font-italic" style="font-size: .8rem"><i class="far fa-clock mr-1"></i>&nbsp;  {{ $notification->created_at->diffForHumans() }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </a>
+                                @endif
+                                <div class="card-footer mt-4">
+                                    <a href="{{ route('{{backLowerNamespace}}.notification.markasread') }}" class="btn btn-primary btn-sm btn-block">Tous marquer comme lues</a>
+                                </div>
+                            @empty
+                            <a class="card" href="#">
+                                <div class="card-body">
+                                    <div>
+
+                                        <div class="lh-sm">
+                                            <div>
+                                               Pas de notifications pour l'instant
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </a>
+                            @endforelse
                         </div>
                     </div>
                 </div>

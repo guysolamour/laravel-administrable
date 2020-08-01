@@ -1,5 +1,5 @@
 @component('mail::message')
-### Bonjour, {{ ${{singularSlug}}->full_name }},
+Bonjour {{ ${{singularSlug}}->full_name }},
 un message de contact vient d'être envoyé
 sur la plateforme par {{ $mailbox->name }} chez {{ $mailbox->email }}
 
@@ -8,7 +8,7 @@ Message de contact  {{ config('app.name') }}
 @endslot
 
 @component('mail::panel')
-{{ Str::limit($mailbox->content,200) }}
+{{ Str::limit($mailbox->content,500) }}
 @endcomponent
 
 
