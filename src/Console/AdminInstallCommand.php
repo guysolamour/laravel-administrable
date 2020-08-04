@@ -75,6 +75,11 @@ class AdminInstallCommand extends BaseCommand
     protected $preset = 'vue';
 
     /**
+     * @var bool
+     */
+    protected $migrate;
+
+    /**
      * @var array
      */
     protected  $themes = ['adminlte', 'theadmin', 'cooladmin', 'tabler', 'themekit'];
@@ -101,6 +106,8 @@ class AdminInstallCommand extends BaseCommand
                                 {--p|preset=vue : Ui preset to use }
                                 {--m|model=Models : Models folder name inside app directory }
                                 {--s|seed : Seed database with fake data }
+                                {--r|migrate=true : Run migrations }
+                                {--k|debug_packages : Add debug packages (debugbar, pretty routes ..) }
                                 {--d|create_db : Create database with default connection }
                                 {--t|theme= : Theme to use }
                                 {--l|locale=fr : Locale to use default fr }
@@ -112,13 +119,16 @@ class AdminInstallCommand extends BaseCommand
 
     protected function init()
     {
-        if ($this->checkIfPackageHasBeenInstalled()) {
-            throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
-        }
+        // if ($this->checkIfPackageHasBeenInstalled()) {
+        //     throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
+        // }
 
         $this->guard = $this->getGuard();
 
         $this->models_folder_name = ucfirst($this->option('model'));
+
+        $this->migrate = $this->option('migrate') === 'true' ? true : false;
+
 
         /**
          * The filter allows you to remove empty elements from the array like , simple
@@ -228,8 +238,10 @@ class AdminInstallCommand extends BaseCommand
         $this->info('App config set at ' . $env_path);
 
         // Run migrations
-        $this->info(PHP_EOL . 'Migrate');
-        $this->call('migrate');
+        if ($this->migrate){
+            $this->info(PHP_EOL . 'Migrate');
+            $this->call('migrate');
+        }
 
 
         // Seeds
@@ -260,9 +272,6 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Registering route middleware...');
         $kernel_path = $this->registerRouteMiddleware();
         $this->info('Route middleware registered in ' . $kernel_path);
-
-
-
 
 
         // Policies
@@ -338,15 +347,21 @@ class AdminInstallCommand extends BaseCommand
         $this->runProcess("composer dump-autoload -o");
 
 
-        // Add debugbar and IDE helper
-        $this->info(PHP_EOL . 'Add debugbar, IDE helper some dev packages');
-        // $this->loadDebugbar();
+        if ($this->option('debug_packages')) {
+            // Add debugbar and IDE helper
+            $this->info(PHP_EOL . 'Add debugbar, IDE helper some dev packages');
+            $this->loadDebugbar();
+        }
 
 
         // Seed Database
-        if ($this->option('seed')) {
-            $this->info(PHP_EOL . 'Seeding database...');
-            $this->call('db:seed');
+        if ($this->option('seed') && $this->migrate) {
+            if ($this->migrate){
+                $this->info(PHP_EOL . 'Seeding database...');
+                $this->call('db:seed');
+            }else {
+                $this->info(PHP_EOL . 'Can not seed if migrate option is false. You have to run migrations and seed manually.');
+            }
         }
     }
 
