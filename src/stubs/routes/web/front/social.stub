@@ -3,8 +3,9 @@
 Route::namespace('{{frontNamespace}}')->group(function () {
 
      /* Socials links */
-    Route::get('/facebook', 'RedirectController@facebook')->name('{{frontLowerNamespace}}.facebook');
-    Route::get('/twitter', 'RedirectController@twitter')->name('{{frontLowerNamespace}}.twitter');
-    Route::get('/linkedin', 'RedirectController@linkedin')->name('{{frontLowerNamespace}}.linkedin');
+    Route::get('facebook', 'RedirectController@facebook')->name('{{frontLowerNamespace}}.facebook');
+    Route::get('twitter', 'RedirectController@twitter')->name('{{frontLowerNamespace}}.twitter');
+    Route::get('linkedin', 'RedirectController@linkedin')->name('{{frontLowerNamespace}}.linkedin');
+    Route::get('youtube', 'RedirectController@youtube')->name('{{frontLowerNamespace}}.youtube');
 
 });
