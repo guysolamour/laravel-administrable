@@ -33,7 +33,7 @@ class AdminInstallCommand extends BaseCommand
         'migrations'      => ['User', 'Administrable', 'Media', 'Provider', 'Seo_meta_tag', 'Comment','Page', 'Page_meta'],
         'seeds'           => ['Configuration', 'Seeder', 'User', 'Page'],
         'controllers'     => [
-            'front'       => ['Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Home', 'Page', 'Redirect'],
+            'front'       => ['Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Home', 'Front', 'Redirect'],
             'back'        => ['User', 'Comment','Notification', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Configuration', 'Home', 'Media', 'Guard','Page'],
         ],
         'forms' => [
@@ -46,7 +46,7 @@ class AdminInstallCommand extends BaseCommand
         ],
 
         'views' => [
-            'front' => ['Auth', 'Dashboard', 'Home', 'Layouts', 'Legalmention', 'Partials', 'Comments'],
+            'front' => ['About','Auth', 'Dashboard', 'Home', 'Layouts', 'Legalmention', 'Partials', 'Comments'],
             'back'  => ['Users', 'Auth', 'Configuration', 'Dashboard', 'Guard', 'Layouts', 'Media', 'Partials', 'Comments', 'Pages']
         ],
         'emails' => [
@@ -112,8 +112,6 @@ class AdminInstallCommand extends BaseCommand
 
     protected function init()
     {
-
-
         if ($this->checkIfPackageHasBeenInstalled()) {
             throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
         }
@@ -155,7 +153,6 @@ class AdminInstallCommand extends BaseCommand
         $theme = $this->option('theme') ? strtolower($this->option('theme')) : strtolower(config('administrable.theme', 'theadmin'));
 
 
-
         if (!in_array($theme, $this->themes)) {
             throw new \Exception(sprintf('Le thème {%s} n\'est pas disponible. Les thèmes disponiblent sont {%s}', $theme, join(',', $this->themes)));
         }
@@ -173,10 +170,6 @@ class AdminInstallCommand extends BaseCommand
 
         $this->init();
 
-
-
-
-        // Skip options to generate articles, legal notices, optional testimonials
 
         $this->callSilent('multi-auth:install', [
             'name'    => $this->guard,

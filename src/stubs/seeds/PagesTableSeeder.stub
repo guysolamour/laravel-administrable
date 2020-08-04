@@ -38,16 +38,16 @@ class PagesTableSeeder extends Seeder
         ]);
 
         $mention_page = Page::create([
-            'code'   => 'legal-mention',
+            'code'   => 'legalmention',
             'name'   => 'Mentions légales',
-            'route'  => '{{frontLowerNamespace}}.legal-mention.index',
+            'route'  => '{{frontLowerNamespace}}.legalmention.index',
         ]);
 
-       /* $about_page = Page::create([
+        $about_page = Page::create([
             'code'   => 'about',
             'name'   => 'A propos',
             'route'  => '{{frontLowerNamespace}}.about.index',
-        ]);*/
+        ]);
 
         $blog_page = Page::create([
             'code'   => 'blog',
