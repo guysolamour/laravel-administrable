@@ -4,27 +4,31 @@ namespace Guysolamour\Administrable\Console;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Guysolamour\Administrable\Console\Crud\MakeCrudTrait;
 
 class RollbackCrudCommand extends BaseCommand
 {
-    use CommandTrait;
+    use MakeCrudTrait;
 
     /**
      * @var string
      */
     protected $model = '';
+
     /**
      * @var string
      */
     protected $theme = '';
+
     /**
      * @var string
      */
     protected $guard = '';
+
     /**
      * @var bool
      */
-    protected $rollback = true;
+    protected $rollback;
 
     /**
      * The name and signature of the console command.
@@ -33,7 +37,7 @@ class RollbackCrudCommand extends BaseCommand
      */
     protected $signature = 'administrable:rollback:crud
                              {model : Model name }
-                             {--r|rollback : Don\'t run artisan rollback command }
+                             {--r|rollback=true : Run artisan rollback command }
                              ';
     /**
      * The console command description.
@@ -48,27 +52,28 @@ class RollbackCrudCommand extends BaseCommand
     {
         $this->info('Rollback...');
 
-
-        $this->model = $this->argument('model');
-        $this->theme = config('administrable.theme', 'adminlte');
-        $this->guard = $this->getGuard();
-        $this->rollback = !$this->option('rollback');
+        $this->model    = $this->argument('model');
+        $this->theme    = config('administrable.theme', 'adminlte');
+        $this->guard    = $this->getGuard();
+        $this->rollback = $this->option('rollback') == 'true' ? true : false;
 
 
         $model = ucfirst($this->model);
-        $config_fields = $this->getCrudConfiguration($model);
+        $this->fields = $this->getCrudConfiguration($model);
 
 
-        if (!$config_fields){
+        if (!$this->fields){
             throw new \Exception(
                 "The [$model] model does not exists in the administrable.yaml file"
             );
         }
+
         $this->data_map = $this->parseName($this->model);
 
 
         // remove model
         $this->removeModel();
+
 
         // remove form
         $this->removeForm();
@@ -96,11 +101,35 @@ class RollbackCrudCommand extends BaseCommand
         $this->info(PHP_EOL . 'Removing model...');
 
         $path = app_path(sprintf("%s/%s.php", $this->data_map['{{modelsFolder}}'], $this->data_map['{{singularClass}}']));
+
+        foreach ($this->fields as $field) {
+            if ($this->isRelationField(Arr::get($field, 'type'))){
+
+                if ($this->isSimpleRelation($field)){
+                    $data_map = array_merge(
+                        $this->parseName($this->model),
+                        $this->parseRelationName($this->model, $this->getRelatedModel($field)),
+                        ['{{morphFieldName}}' => $this->getFieldName($field)],
+                        ['{{morphRelationableName}}' => $this->getMorphRelationableName($field)],
+                    );
+
+                    $related_model_path = $this->getRelationRelatedModelPath($field, $data_map);
+
+                    $start_key = '// ' . $data_map['{{modelSingularSlug}}'] . ' relation';
+                    $end_key = '// end ' .  $data_map['{{modelSingularSlug}}'] . ' relation';
+
+                    $complied = delete_all_between($start_key, $end_key, $this->filesystem->get($related_model_path));
+
+                    $this->writeFile($complied, $related_model_path);
+                    // dd($complied, 'salut');
+                }
+            }
+        }
+
         $this->filesystem->delete($path);
 
         $this->info(PHP_EOL . 'Model file removed at ' . $path);
 
-        $this->error(PHP_EOL . "You have to manually remove the relations methods in others models to which this [{$path}] are related");
     }
 
     protected function removeForm()
@@ -178,26 +207,20 @@ class RollbackCrudCommand extends BaseCommand
 
         // remove entry in sidebar
         $sidebar_path =  resource_path("views/{$this->data_map['{{backLowerNamespace}}']}/partials/_sidebar.blade.php");
-        $search = [
-            "{{ set_active_link('{$this->data_map['{{backLowerNamespace}}']}.{$this->data_map['{{singularSlug}}']}.index') }}",
-            "{{ route('{$this->data_map['{{backLowerNamespace}}']}.{$this->data_map['{{singularSlug}}']}.index') }}"
-        ];
 
-        $sidebar = str_replace($search, '', $this->filesystem->get($sidebar_path));
 
+        $start_key = "<!-- {$this->data_map['{{singularSlug}}']} link -->";
+        $end_key = "<!-- end {$this->data_map['{{singularSlug}}']} link -->";
+
+        $sidebar = delete_all_between($start_key, $end_key, $this->filesystem->get($sidebar_path));
         $this->writeFile($sidebar, $sidebar_path);
 
-        $this->error(PHP_EOL . 'You have to manually remove the link in sidebar file at ' . $sidebar_path);
 
-        // remove entry in big header themekit
-        if ($this->isTheadminTheme()) {
-            $header_path =  resource_path("views/{$this->data_map['{{backLowerNamespace}}']}/partials/_header.blade.php");
-            $search = "{{ route('{$this->data_map['{{backLowerNamespace}}']}.{$this->data_map['{{singularSlug}}']}.index') }}";
+        // remove route in header
+        $header_path =  resource_path("views/{$this->data_map['{{backLowerNamespace}}']}/partials/_header.blade.php");
+        $header = delete_all_between($start_key, $end_key, $this->filesystem->get($header_path));
+        $this->writeFile($header, $header_path);
 
-            $header = str_replace($search, '', $this->filesystem->get($header_path));
-
-            $this->writeFile($header, $header_path);
-        }
     }
 
     protected function parseName(?string $name = null): array
@@ -224,6 +247,5 @@ class RollbackCrudCommand extends BaseCommand
             '{{guard}}'                =>  $this->guard,
         ];
     }
-
 
 }

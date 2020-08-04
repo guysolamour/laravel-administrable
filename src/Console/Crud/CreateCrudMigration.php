@@ -101,7 +101,6 @@ class CreateCrudMigration
         $migration = $this->compliedFile($migration_stub, true, $data_map);
         $migration_path = $this->generateMigrationFields($migration, $data_map);
 
-        // check if there are many to many relationships and generate the pivot table
 
         if ($this->seeder) {
             $seeder_stub = $this->TPL_PATH . '/migrations/seed.stub';
@@ -148,7 +147,7 @@ class CreateCrudMigration
         foreach ($this->fields as $field) {
             // allow to generate the slug in the seed by putting the variable $ slug in front
             if ($field['type'] === "string") {
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->text(),';
+                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->text(50),';
             }
 
             if ($field['type'] === 'image') {

@@ -44,6 +44,50 @@ trait MakeCrudTrait
         ];
     }
 
+    /**
+     * @param $field
+     * @return array
+     */
+    protected function getModelAndRelatedModelStubs(array $field): array
+    {
+        if ($this->isSimpleOneToOneRelation($field)) {
+            $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/onetoone/belongsTo.stub');
+            $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/onetoone/hasOne.stub');
+        } else if ($this->isSimpleOneToManyRelation($field)) {
+            $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/onetomany/belongsTo.stub');
+            $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/onetomany/hasMany.stub');
+        }
+
+        // else if ($this->isSimpleManyToOneRelation($field)) {
+        //     $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/manytoone/hasMany.stub');
+        //     $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/manytoone/belongsTo.stub');
+        // }
+
+        else if ($this->isSimpleManyToManyRelation($field)) {
+
+            $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/manytomany/belongsToMany.stub');
+            $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/simple/manytomany/relatedBelongsToMany.stub');
+        } else if ($this->isPolymorphicOneToOneRelation($field)) {
+
+            $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/polymorphic/onetoone/morphOne.stub');
+            $related_stub = '';
+            // $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/polymorphic/onetoone/hasOne.stub');
+        }
+        // else if ($this->isPolymorphicOneToManyRelation($field)) {
+
+        //     $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/polymorphic/onetomany/morphMany.stub');
+        //     $related_stub = '';
+        //     // $related_stub = $this->filesystem->get($this->TPL_PATH . '/models/OneToOne/hasOne.stub');
+        // }
+        // else if ($this->isPolymorphicManyToOneRelation($field)) {
+
+        //     $model_stub = $this->filesystem->get($this->TPL_PATH . '/models/relations/polymorphic/manytoone/morphMany.stub');
+        //     $related_stub = '';
+        // }
+
+        return [$model_stub, $related_stub];
+    }
+
     protected function hasAction(string $key): bool
     {
         return in_array($key, $this->actions);
@@ -199,5 +243,10 @@ trait MakeCrudTrait
         return
             $this->getRelationType($field) === $this->RELATION_TYPES['polymorphic'] &&
             $this->getRelationName($field)   === $this->RELATION_NAMES['polymorphic']['m2o'];
+    }
+
+    protected function getRelationRelatedModelPath(array $field, array $data_map)
+    {
+       return app_path($data_map['{{modelsFolder}}'] . '/' . $this->modelNameWithoutNamespace($this->getRelatedModel($field)) . '.php');
     }
 }

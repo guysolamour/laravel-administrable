@@ -13,7 +13,7 @@
 
     <div class="card">
         {{-- <h4 class="card-title">
-                Articles
+                {{pluralClass}}
             </h4> --}}
 
         <div class="card-body">
@@ -126,7 +126,7 @@
         <footer class="dock-footer text-right">
             <button class="btn btn-flat btn-secondary" type="button" data-dock="close">Annuler</button>
             <button class="btn btn-flat btn-primary" type="submit"
-                onclick="$('#dock-new-{{singularSlug}} form[name={{ ${{singularSlug}}->form_name }}]').submit()">Enregistrer</button>
+                onclick="$('#dock-new-{{singularSlug}} form').submit()">Enregistrer</button>
         </footer>
     </div>
 

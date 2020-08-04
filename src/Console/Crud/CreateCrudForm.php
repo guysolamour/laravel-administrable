@@ -220,7 +220,6 @@ class CreateCrudForm
     {
         $choices = Arr::get($field, 'choices', []);
 
-
         if (empty($choices)) {
             return '';
         }
@@ -252,7 +251,6 @@ class CreateCrudForm
             $data_map = $this->parseName($this->model);
 
             $table_name = $data_map['{{pluralSnake}}'];
-
 
             return <<<TEXT
                 'rules'  => [

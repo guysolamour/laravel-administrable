@@ -210,7 +210,7 @@ class CreateCrudView
 
         $complied =  $this->loadBreadcrumbFor('create', $complied, $data_map);
 
-        $complied =  $this->loadLinkButtonFor('create', $complied, $data_map);
+        // $complied =  $this->loadLinkButtonFor('create', $complied, $data_map);
 
 
         $this->createDirectoryIfNotExists($path, false);
@@ -225,13 +225,14 @@ class CreateCrudView
 
         if ($this->isThemeKitTheme()) {
             $replace = <<<HTML
-
+                            <!-- {$data_map['{{singularSlug}}']} link -->
                             <div class="app-item">
                                 <a href="{{ route('{$data_map['{{backLowerNamespace}}']}.{$data_map['{{singularSlug}}']}.index') }}">
                                     <i class="fa {$data_map['{{icon}}']}"></i><span>{$data_map['{{pluralClass}}']}</span>
                                 </a>
                             </div>
-            HTML;
+                            <!-- end {$data_map['{{singularSlug}}']} link -->
+                        HTML;
 
 
             $header_path =  $views_path  . '/partials/_header.blade.php';
@@ -477,12 +478,12 @@ class CreateCrudView
         return $view;
     }
 
-    protected function insertFieldToViewEdit($show_views, $view)
-    {
-        $search = '{{morphImagesEdit}}';
-        $view = str_replace($search, $show_views, $view);
-        return $view;
-    }
+    // private  function insertFieldToViewEdit($show_views, $view)
+    // {
+    //     $search = '{{morphImagesEdit}}';
+    //     $view = str_replace($search, $show_views, $view);
+    //     return $view;
+    // }
 
     /**
      * @param string $var_name
@@ -612,7 +613,7 @@ class CreateCrudView
             $fields .= '                                    <th>Date création</th>' . "\n";
             $values = <<<TEXT
                 $values
-                            <td>{{ \${$var_name}->created_at->format('d/m/Y h:i') }}</td>
+                            <td>{{ \${$var_name}->formated_date }}</td>
             TEXT;
             // $values .= '                                        <td>{{ $' . $var_name . '->created_at->format(\'d/m/Y h:i\') }}</td>' . "\n";
         }
@@ -706,7 +707,7 @@ class CreateCrudView
         if (!$this->timestamps) {
             $values = <<<TEXT
                 $values
-                            <{$tag}>{{ \${$var_name}->created_at->format('d/m/Y h:i') }}</{$tag}>
+                            <{$tag}>{{ \${$var_name}->formated_date }}</{$tag}>
             TEXT;
         }
 

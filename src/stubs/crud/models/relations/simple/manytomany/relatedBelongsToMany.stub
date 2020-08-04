@@ -1,5 +1,7 @@
+    // {{modelPluralSlug}} relation
     public function {{modelPluralSlug}}()
     {
       return $this->belongsToMany({{modelSingularClass}}::class);
     }
+    // end {{modelPluralSlug}} relation
 

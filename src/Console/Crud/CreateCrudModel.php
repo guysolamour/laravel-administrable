@@ -16,10 +16,12 @@ class CreateCrudModel
      * @var string
      */
     private $model;
+
     /**
      * @var array
      */
     private $fields;
+
     /**
      * @var null|string
      */
@@ -101,7 +103,6 @@ class CreateCrudModel
             );
         }
 
-
         return [$model, $model_path];
     }
 
@@ -141,10 +142,12 @@ class CreateCrudModel
 
     protected function addRelations(string $model, string $model_path)
     {
-        $related_model = '';
         $default_model = '';
 
         foreach ($this->fields as $field) {
+
+            $related_model = '';
+
             if ($this->isRelationField($field['type'])) {
                 // we recover the model
                 [$model_stub, $related_stub] = $this->getModelAndRelatedModelStubs($field);
@@ -162,7 +165,7 @@ class CreateCrudModel
 
                 // add local foreign key
                 if ($this->isSimpleOneToOneRelation($field) || $this->isSimpleOneToManyRelation($field)) {
-                    $related_path = app_path($data_map['{{modelsFolder}}'] . '/' . $this->modelNameWithoutNamespace($this->getRelatedModel($field)) . '.php');
+                    $related_path = $this->getRelationRelatedModelPath($field, $data_map);
 
                     if ($local_keys = $this->getRelationLocalForeignKey($field)) {
                         $replace = '';
@@ -284,31 +287,26 @@ class CreateCrudModel
 
             } else if ($this->isPolymorphicField($field)) {
                 // related model
-
                 $data_map = array_merge($this->parseName(), ['{{morphFieldName}}' => $this->getFieldName($field)]);
                 $stub = $this->compliedFile($this->TPL_PATH . '/models/morphTo.stub', true, $data_map);
 
                 $search = '// add relation methods below';
 
-
                 $default_model = str_replace($search,   $search . "\n\n" . $stub, $model);
             }
+
+            if (!empty($related_model) && !empty($related_path)) {
+                // related model
+                $search = '// add relation methods below';
+                $this->replaceAndWriteFile(
+                    $this->filesystem->get($related_path),
+                    $search,
+                    $search . PHP_EOL . PHP_EOL . $related_model,
+                    $related_path
+                );
+            }
+
         }
-
-
-
-
-        if (!empty($related_model) && !empty($related_path)) {
-            // related model
-            $search = '// add relation methods below';
-            $this->replaceAndWriteFile(
-                $this->filesystem->get($related_path),
-                $search,
-                $search . PHP_EOL . PHP_EOL . $related_model,
-                $related_path
-            );
-        }
-
 
         // default model
         if (!empty($default_model)) {

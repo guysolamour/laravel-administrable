@@ -1,5 +1,7 @@
+    // {{modelSingularSlug}} relation
     public function {{modelSingularSlug}}()
     {
       return $this->hasOne({{modelSingularClass}}::class);
     }
+    // end {{modelSingularSlug}} relation
 

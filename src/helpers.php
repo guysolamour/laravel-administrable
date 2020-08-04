@@ -31,3 +31,20 @@ if (!function_exists('trans_fb')) {
         return $fallback;
     }
 }
+
+
+if (!function_exists('delete_all_between')) {
+    function delete_all_between(string $beginning, string $end, string $string): string
+    {
+        $beginningPos = strpos($string, $beginning);
+        $endPos = strpos($string, $end);
+        if ($beginningPos === false || $endPos === false) {
+            return $string;
+        }
+
+        $textToDelete = substr($string, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
+
+        return delete_all_between($beginning, $end, str_replace($textToDelete, '', $string)); // recursion to ensure all occurrences are replaced
+    }
+
+}
