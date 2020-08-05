@@ -71,6 +71,11 @@ class MakeCrudCommand extends BaseCommand
     protected $imagemanager = '';
 
     /**
+     * @var bool
+     */
+    protected $migration;
+
+    /**
      * @var string[]
      */
     protected const GLOBAL_OPTIONS = ['slug', 'edit_slug', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans', 'icon'];
@@ -94,6 +99,7 @@ class MakeCrudCommand extends BaseCommand
      */
     protected $signature = 'administrable:make:crud
                              {model : Model name }
+                             {--m|migration=true : Run artisan migrate command }
                              ';
     /**
      * The console command description.
@@ -112,6 +118,8 @@ class MakeCrudCommand extends BaseCommand
         $progress = $this->output->createProgressBar(10);
 
         $this->model = $this->argument('model');
+
+        $this->migration = $this->option('migration') == 'true' ? true : false;
 
 
         $model = ucfirst($this->model);
@@ -576,14 +584,19 @@ class MakeCrudCommand extends BaseCommand
             $this->entity,
             $this->seeder
         );
+
         $this->info('Migration file created at ' . $migration_path);
         $this->info('Seeder file created at ' . $seeder_path);
         $progress->advance();
 
+
         // Migrate
-        $this->info(PHP_EOL . 'Migrate...');
-        $this->call('migrate');
-        $progress->advance();
+        if ($this->migration) {
+            $this->info(PHP_EOL . 'Migrate...');
+            $this->call('migrate');
+            $progress->advance();
+        }
+
 
 
 
