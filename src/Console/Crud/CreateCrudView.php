@@ -15,12 +15,6 @@ class CreateCrudView
 
     use MakeCrudTrait;
 
-    private const DEFAULT_MEDIA_COLLECTION_LABEL = [
-        'front'       =>  'Image à la une',
-        'back'        =>  'Seconde image à la une',
-        'images'      =>  'Gallerie',
-    ];
-
 
     /**
      * @var string
@@ -795,16 +789,19 @@ class CreateCrudView
             return str_replace($search, '', $complied);
         }
 
+        /**
+         * @var string|array $field
+         */
         $field = $this->imagemanager;
 
 
-        $default_label = self::DEFAULT_MEDIA_COLLECTION_LABEL;
+        $media_collections = config('media-library.collections');
 
         if (true === $field) {
             $labels = <<<LABEL
-            'front_image_label' =>  '{$default_label['front']}',
-            'back_image_label'  =>  '{$default_label['back']}',
-            'images_label'      =>  '{$default_label['images']}',
+            'front_image_label' =>  '{$media_collections['front']['description']}',
+            'back_image_label'  =>  '{$media_collections['back']['description']}',
+            'images_label'      =>  '{$media_collections['images']['description']}',
             LABEL;
 
             if ('show' !== $action) {
@@ -819,44 +816,40 @@ class CreateCrudView
             $labels = '';
             $collections = '';
 
-            foreach (['front', 'back', 'images'] as $collection) {
-                if (array_key_exists($collection, $field)) {
-                    if ('images' === $collection) {
-                        $labels .= "'{$collection}' =>  '{$field[$collection]}'," . PHP_EOL;
-                        $collections .= "'{$collection}' =>  true," . PHP_EOL;
+            foreach ($media_collections as $key => $collection ) {
+                if (Arr::exists($field, $key)){
+                    if ('images' === $key) {
+                        $labels .= "'{$key}_label' =>  '{$field[$key]}'," . PHP_EOL;
+                        $collections .= "'{$key}' =>  true," . PHP_EOL;
                     } else {
-                        $labels .= "'{$collection}_image_label' =>  '{$field[$collection]}'," . PHP_EOL;
-                        $collections .= "'{$collection}_image' =>  true," . PHP_EOL;
+                        $labels .= "'{$key}_image_label' =>  '{$field[$key]}'," . PHP_EOL;
+                        $collections .= "'{$key}_image' =>  true," . PHP_EOL;
                     }
-                } else {
-                    $collections .= "'{$collection}' =>  false," . PHP_EOL;
                 }
             }
+
+
             if ('show' !== $action) {
                 $labels .= $collections;
             }
         } else if (is_array($field)) {
             $labels = '';
             $collections = '';
-            foreach (['front', 'back', 'images'] as $collection) {
-                if (in_array($collection, $field)) {
-                    if ('images' === $collection) {
+
+
+            foreach ($media_collections as $key => $collection){
+                if (in_array($key, $field)) {
+                    if ('images' === $key) {
                         $labels .= <<<LABEL
-                            '{$collection}' =>  '{$default_label[$collection]}',\n
+                            '{$key}_label' =>  '{$media_collections[$key]['description']}',\n
                         LABEL;
-                        // $labels .= "'{$collection}' =>  '{$default_label[$collection]}'," . PHP_EOL;
-                        $collections .= "'{$collection}' =>  true," . PHP_EOL;
+                        $collections .= "'{$key}' =>  true," . PHP_EOL;
                     } else {
-                        // $labels .= "'{$collection}_image_label' =>  '{$default_label[$collection]}',". PHP_EOL;
                         $labels .= <<<LABEL
-                            '{$collection}_image_label' =>  '{$default_label[$collection]}',\n
+                            '{$key}_image_label' =>  '{$media_collections[$key]['description']}',\n
                         LABEL;
-                        $collections .= "'{$collection}_image' =>  true," . PHP_EOL;
+                        $collections .= "'{$key}_image' =>  true," . PHP_EOL;
                     }
-                } else {
-                    $collections .= <<<TEX
-                            '{$collection}' =>  false,\n
-                        TEX;
                 }
             }
 

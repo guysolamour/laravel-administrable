@@ -25,13 +25,13 @@ return [
      */
     'media_model' => {{namespace}}\{{modelsFolder}}\Media::class,
 
-      /**
-     * Default app collections
-     */
-    'collections' => [
-        'front'          => ['label' => 'front-image', 'conversion' => true, 'multiple' => false],
-        'back'           => ['label' => 'back-image', 'conversion'  => true, 'multiple' => false],
-        'images'         => ['label' => 'images', 'conversion' => true, 'multiple' => true],
+    /**
+    * Default app collections
+    */
+   'collections' => [
+        'front'          => ['label' => 'front-image', 'description' => 'Image à la une','conversion' => true, 'multiple' => false],
+        'back'           => ['label' => 'back-image','description' => 'Seconde image à la une', 'conversion'  => true, 'multiple' => false],
+        'images'         => ['label' => 'images', 'description' => 'Gallerie', 'conversion' => true, 'multiple' => true],
         'attachments'    => ['label' => 'attachments', 'conversion' => true],
         'seo'            => ['label' => 'seo', 'conversion' => false],
     ],

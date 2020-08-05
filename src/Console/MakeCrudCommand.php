@@ -66,6 +66,17 @@ class MakeCrudCommand extends BaseCommand
 
     protected $imagemanager = '';
 
+    /**
+     * @var string[]
+     */
+    protected const GLOBAL_OPTIONS = ['slug', 'edit_slug', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans', 'icon'];
+
+    /**
+     * @var string[]
+     */
+    protected const RESERVED_WORDS = ['slug', 'icon', 'edit_slug', 'breadcrumb', 'timestamps', 'seeder', 'trans'];
+
+
 
     /**
      * @var string
@@ -159,10 +170,7 @@ class MakeCrudCommand extends BaseCommand
             }
 
             // tester le truc de icon si tableau et exception
-            $this->setConfigOption([
-                'slug', 'edit_slug' ,'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans',
-                'icon'
-            ]);
+            $this->setConfigOption();
 
             // Ajout du champ slug dans le formulaire
             // Il faut avoir un champ slug avant d'utiliser le edit_slug
@@ -570,7 +578,7 @@ class MakeCrudCommand extends BaseCommand
 
         // Migrate
         $this->info(PHP_EOL . 'Migrate...');
-        $this->call('migrate');
+        // $this->call('migrate');
         $progress->advance();
 
 
@@ -674,14 +682,13 @@ class MakeCrudCommand extends BaseCommand
     }
 
 
-    /**
-     * @param array $options
-     */
-    private function setConfigOption(array $options): void
-    {
-        foreach ($options as $option) {
 
-            if(isset($this->fields[$option]) && is_array($this->fields[$option])){
+    private function setConfigOption(): void
+    {
+
+        foreach (self::GLOBAL_OPTIONS as $option) {
+
+            if(isset($this->fields[$option]) && is_array($this->fields[$option]) && in_array($option, self::RESERVED_WORDS)){
                 throw new \Exception(
                     "A field can not has [$option] for name. The [$option] word is reserved."
                 );
