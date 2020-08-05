@@ -81,8 +81,19 @@ class CreateCrudRoute
      */
     protected function loadRoutes(): string
     {
+        $actions = $this->actions;
 
-        $unusedActions = array_diff($this->ACTIONS, $this->actions);
+
+        $unusedActions = array_diff($this->ACTIONS, $actions);
+
+        if (in_array('create', $unusedActions)) {
+             $unusedActions[] = 'store';
+        }
+
+        if (in_array('edit', $unusedActions)) {
+             $unusedActions[] = 'update';
+        }
+
 
         if (!empty($unusedActions)) {
             // the array_map allows you to add the single quotes around the field
