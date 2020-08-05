@@ -189,12 +189,14 @@ class CreateCrudMigration
                 if ($this->isSimpleRelation($field)) {
                     $fields .= <<<TEXT
                                \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)};
+                                \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)}->constrained('{$this->getModelTableName($this->getRelatedModel($field))}')->onDelete('{$this->getFieldOnDelete($field)}');
+
 
                     TEXT;
-                    $fields .= <<<TEXT
-                               \$table->foreign('{$this->getFieldName($field)}')->references('{$this->getFieldReferences($field)}')->on('{$this->getModelTableName($this->getRelatedModel($field))}')->onDelete('{$this->getFieldOnDelete($field)}');
+                    // $fields .= <<<TEXT
+                    //            \$table->foreign('{$this->getFieldName($field)}')->references('{$this->getFieldReferences($field)}')->on('{$this->getModelTableName($this->getRelatedModel($field))}')->onDelete('{$this->getFieldOnDelete($field)}');
 
-                    TEXT;
+                    // TEXT;
                 }
             } else if ($this->isPolymorphicField($field)) {
                 $fields .= <<<TEXT

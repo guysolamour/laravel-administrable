@@ -73,7 +73,7 @@ class MakeCrudCommand extends BaseCommand
     /**
      * @var bool
      */
-    protected $migration;
+    protected $migrate;
 
     /**
      * @var string[]
@@ -99,7 +99,7 @@ class MakeCrudCommand extends BaseCommand
      */
     protected $signature = 'administrable:make:crud
                              {model : Model name }
-                             {--m|migration=true : Run artisan migrate command }
+                             {--m|migrate=true : Run artisan migrate command }
                              ';
     /**
      * The console command description.
@@ -119,7 +119,7 @@ class MakeCrudCommand extends BaseCommand
 
         $this->model = $this->argument('model');
 
-        $this->migration = $this->option('migration') == 'true' ? true : false;
+        $this->migrate = $this->option('migrate') == 'true' ? true : false;
 
 
         $model = ucfirst($this->model);
@@ -591,7 +591,7 @@ class MakeCrudCommand extends BaseCommand
 
 
         // Migrate
-        if ($this->migration) {
+        if ($this->migrate) {
             $this->info(PHP_EOL . 'Migrate...');
             $this->call('migrate');
             $progress->advance();

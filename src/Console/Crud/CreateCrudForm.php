@@ -245,6 +245,10 @@ class CreateCrudForm
     {
         $rule = $this->getFieldRules($field);
 
+        if ($length = Arr::get($field, 'length')) {
+            $rule .= "|max:$length";
+        }
+
         if (empty($rule)) {
             return '';
         }
