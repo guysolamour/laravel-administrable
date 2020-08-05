@@ -46,6 +46,10 @@ class CreateCrudForm
      * @var bool
      */
     private $seeder;
+    /**
+     * @var bool
+     */
+    private $edit_slug;
 
 
     /**
@@ -59,7 +63,7 @@ class CreateCrudForm
      * @param boolean $entity
      * @param boolean $seeder
      */
-    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder, bool $edit_slug)
     {
         $this->model       = $model;
         $this->fields      = $fields;
@@ -71,6 +75,7 @@ class CreateCrudForm
         $this->timestamps  = $timestamps;
         $this->entity      = $entity;
         $this->seeder      = $seeder;
+        $this->edit_slug   = $edit_slug;
 
         $this->filesystem   = new Filesystem;
     }
@@ -85,11 +90,12 @@ class CreateCrudForm
      * @param boolean $timestamps
      * @param boolean $entity
      * @param boolean $seeder
+     * @param boolean $edit_slug
      * @return void
      */
-    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder, bool $edit_slug)
     {
-        return (new CreateCrudForm($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $entity, $seeder))
+        return (new CreateCrudForm($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $entity, $seeder, $edit_slug))
             ->loadForm();
     }
 
@@ -178,7 +184,7 @@ class CreateCrudForm
 
 
         // add slug field
-        if ($this->slug) {
+        if ($this->slug && $this->edit_slug) {
             $data_map = $this->parseName($this->model);
 
             $table_name = $data_map['{{pluralSnake}}'];
@@ -191,7 +197,7 @@ class CreateCrudForm
                                 'required',
                                 \Illuminate\Validation\Rule::unique('{$table_name}')->ignore(\$this->getModel())
                             ],
-                        ]);
+                        ])
 
             TEXT;
         }

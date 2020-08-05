@@ -56,6 +56,10 @@ class MakeCrudCommand extends BaseCommand
      */
     protected $slug;
     /**
+     * @var bool
+     */
+    protected $edit_slug = false;
+    /**
      * @var string
      */
     protected $icon = 'fa-folder';
@@ -135,17 +139,42 @@ class MakeCrudCommand extends BaseCommand
                     return trim($action);
                 }, array_filter($actions));
 
-                // We remove the actions from the list because already in the instance
+                // We remove the actions from the list because already exists on the instance
                 $this->fields  =  Arr::except($this->fields, 'actions');
             } else {
                 $this->actions = $this->ACTIONS;
             }
 
+            // on gere le cas du edit slug ici avnt de faire la configuration des options globaux
+            // on stocke la configuration globale si elle a été définie
+            // celui ci pourra ecraser sur un modele en particulier
+            if ($edit_slug = $this->getCrudConfiguration('edit_slug')) {
 
+                if (!is_bool($edit_slug)) {
+                    throw new \Exception(
+                        sprintf("The global edit_slug option must be a boolean. Current value is [%s]", $edit_slug)
+                    );
+                }
+                $this->edit_slug = (bool) $edit_slug;
+            }
+
+            // tester le truc de icon si tableau et exception
             $this->setConfigOption([
-                'slug', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans',
+                'slug', 'edit_slug' ,'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans',
                 'icon'
             ]);
+
+            // Ajout du champ slug dans le formulaire
+            // Il faut avoir un champ slug avant d'utiliser le edit_slug
+
+            if($this->edit_slug && !$this->slug){
+                throw new \Exception(
+                    sprintf(
+                        'You have to use edit_slug when the model is sluggable'
+                    )
+                );
+            }
+
             $this->setDefaultTypeAndRule();
 
             $this->sanitizeFields();
@@ -558,7 +587,8 @@ class MakeCrudCommand extends BaseCommand
                 $this->slug,
                 $this->timestamps,
                 $this->entity,
-                $this->seeder
+                $this->seeder,
+                $this->edit_slug
             );
             $this->info('Form created at ' . $form_path);
             $progress->advance();
@@ -650,6 +680,13 @@ class MakeCrudCommand extends BaseCommand
     private function setConfigOption(array $options): void
     {
         foreach ($options as $option) {
+
+            if(isset($this->fields[$option]) && is_array($this->fields[$option])){
+                throw new \Exception(
+                    "A field can not has [$option] for name. The [$option] word is reserved."
+                );
+            }
+
             if (isset($this->fields[$option]) && (is_bool($this->fields[$option]) || !empty($this->fields[$option]))) {
                 // is option model (generate only model and migration)
                 if (array_key_exists($option, $this->fields)) {
