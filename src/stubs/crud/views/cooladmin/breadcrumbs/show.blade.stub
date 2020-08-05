@@ -8,7 +8,7 @@
                                     <span>/</span>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">{{pluralClass}}</a>
+                                    <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">{{translateModelUcfirst}}</a>
                                 </li>
                                 <li class="list-inline-item seprate">
                                     <span>/</span>

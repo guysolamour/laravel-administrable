@@ -1,7 +1,7 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','{{pluralClass}}')
+@section('title','{{translateModelUcfirst}}')
 
 
 
@@ -25,7 +25,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="card-title">{{pluralClass}}</h3>
+                    <h3 class="card-title">{{translateModelUcfirst}}</h3>
                     <div class="btn-group float-right">
                         {{-- create link --}}
                         <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\{{singularClass}}" id="delete-all">

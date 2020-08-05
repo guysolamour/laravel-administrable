@@ -59,6 +59,11 @@ class CreateCrudView
      * @var string
      */
     private $icon;
+    /**
+     *
+     * @var string
+     */
+    private $trans;
 
     /**
      * CreateCrudView constructor.
@@ -68,7 +73,7 @@ class CreateCrudView
      * @param null|string $slug
      * @param bool $timestamps
      */
-    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon, string $trans)
     {
         $this->model           = $model;
         $this->fields          = $fields;
@@ -79,6 +84,7 @@ class CreateCrudView
         $this->imagemanager    = $imagemanager;
         $this->theme           = $theme;
         $this->icon            = $icon;
+        $this->trans           = $trans;
 
         $this->filesystem      = new Filesystem;
     }
@@ -92,7 +98,7 @@ class CreateCrudView
      * @param bool $timestamps
      * @return string
      */
-    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon, string $trans)
     {
         return (new CreateCrudView(
             $model,
@@ -103,7 +109,8 @@ class CreateCrudView
             $slug,
             $timestamps,
             $imagemanager,
-            $icon
+            $icon,
+            $trans
         ))->loadViews();
     }
 
@@ -129,6 +136,9 @@ class CreateCrudView
             '{{singularSlug}}'         =>  Str::singular(Str::slug($name)),
             '{{singularSnake}}'        =>  Str::singular(Str::snake($name)),
             '{{singularClass}}'        =>  Str::singular(Str::studly($name)),
+            '{{translateModelLower}}'        =>  Str::lower($this->getModelTranslation($name)),
+            // '{{translateModelUpper}}'        =>  Str::upper($this->trans),
+            '{{translateModelUcfirst}}'        =>  $this->getModelTranslation($name),
             '{{frontNamespace}}'       =>  ucfirst(config('administrable.front_namespace')),
             '{{frontLowerNamespace}}'  =>  Str::lower(config('administrable.front_namespace')),
             '{{backNamespace}}'        =>  ucfirst(config('administrable.back_namespace')),
@@ -140,6 +150,15 @@ class CreateCrudView
             '{{breadcrumb}}'           =>  $this->guestBreadcrumbFieldNane(),
             '{{guard}}'                =>  config('administrable.guard', 'admin')
         ];
+    }
+
+    protected function getModelTranslation(string $name) :string
+    {
+        if (empty($this->trans)) {
+            return Str::plural(Str::studly($name));
+        }
+
+        return $this->trans;
     }
 
     /**

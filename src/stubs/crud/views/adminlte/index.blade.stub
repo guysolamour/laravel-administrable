@@ -1,7 +1,7 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','{{pluralClass}}')
+@section('title','{{translateModelUcfirst}}')
 
 
 @section('content')

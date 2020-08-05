@@ -23,7 +23,7 @@
 <div class="row">
     <div class="col-12">
         <h3 class="title-5 m-b-35">
-            {{--  {{pluralClass}}  --}}
+            {{--  {{translateModelUcfirst}}  --}}
         </h3>
         <div class="row">
             <div class="col-md-8">

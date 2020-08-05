@@ -7,7 +7,7 @@
                                 <li class="list-inline-item seprate">
                                     <span>/</span>
                                 </li>
-                                <li class="list-inline-item active">{{pluralClass}}</li>
+                                <li class="list-inline-item active">{{translateModelUcfirst}}</li>
                             </ul>
                         </div>
 

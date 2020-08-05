@@ -5,7 +5,7 @@
                                 <i class="fa {{icon}} icon"></i>&nbsp;
                             </span>
                             <span class="nav-link-title">
-                                {{pluralClass}}
+                                {{translateModelUcfirst}}
                             </span>
                         </a>
                     </li>

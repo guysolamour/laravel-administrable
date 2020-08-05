@@ -1,7 +1,7 @@
                     <!-- {{singularSlug}} link -->
                     <div class="nav-item">
                         <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
-                            <i class="fa {{icon}}"></i><span>{{pluralClass}}</span>
+                            <i class="fa {{icon}}"></i><span>{{translateModelUcfirst}}</span>
                         </a>
                     </div>
                     <!-- end {{singularSlug}} link -->

@@ -3,7 +3,7 @@
                         <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
                           <i class="nav-icon fa {{icon}} icon"></i>
                           <p>
-                            {{pluralClass}}
+                            {{translateModelUcfirst}}
                           </p>
                         </a>
                     </li>

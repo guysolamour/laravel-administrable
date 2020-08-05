@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-md-12">
                     {{-- <h3 class="title-5 m-b-35">
-                          {{pluralClass}}
+                          {{translateModelUcfirst}}
                     </h3> --}}
                     <div class="card-body p-0">
 

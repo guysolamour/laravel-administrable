@@ -10,9 +10,9 @@ return [
     'app_short_name'   => config('app.short_name', 'Lvl'),
 
     /**
-         * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
-         * The theme should not be changed once the installation has been done
-         */
+     * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
+     * The theme should not be changed once the installation has been done
+     */
     'theme' => 'themekit',
 
     /**

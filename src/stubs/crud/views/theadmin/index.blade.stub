@@ -1,7 +1,7 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','{{pluralClass}}')
+@section('title','{{translateModelUcfirst}}')
 
 
 
@@ -13,14 +13,14 @@
 
     <div class="card">
         {{-- <h4 class="card-title">
-                {{pluralClass}}
+                {{translateModelUcfirst}}
             </h4> --}}
 
         <div class="card-body">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title h3">
-                        {{pluralClass}}
+                        {{translateModelUcfirst}}
                     </h5>
                     <div class="btn-group">
                         {{-- create link --}}
@@ -72,7 +72,7 @@
                                         </div>
 
                                         <div class="card-body text-center pb-50">
-                                            <h4 class="mt-2 mb-0"><a class="hover-primary text-white" href="#">{{pluralClass}}</a></h4>
+                                            <h4 class="mt-2 mb-0"><a class="hover-primary text-white" href="#">{{translateModelUcfirst}}</a></h4>
                                         </div>
                                     </div>
 

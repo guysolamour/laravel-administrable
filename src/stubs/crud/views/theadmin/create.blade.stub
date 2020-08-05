@@ -1,7 +1,7 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
 
-@section('title','{{singularClass}}')
+@section('title','Ajout {{translateModelLower}}')
 
 
 

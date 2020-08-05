@@ -63,6 +63,10 @@ class MakeCrudCommand extends BaseCommand
      * @var string
      */
     protected $icon = 'fa-folder';
+    /**
+     * @var string
+     */
+    protected $trans = '';
 
     protected $imagemanager = '';
 
@@ -578,7 +582,7 @@ class MakeCrudCommand extends BaseCommand
 
         // Migrate
         $this->info(PHP_EOL . 'Migrate...');
-        // $this->call('migrate');
+        $this->call('migrate');
         $progress->advance();
 
 
@@ -647,7 +651,8 @@ class MakeCrudCommand extends BaseCommand
                 $this->slug,
                 $this->timestamps,
                 $this->imagemanager,
-                $this->icon
+                $this->icon,
+                $this->trans,
             );
             $this->info('Views created at ' . $view_path);
             $progress->advance();

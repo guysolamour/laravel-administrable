@@ -3,6 +3,6 @@
                         <li class="breadcrumb-item">
                             <a href="{{ route('{{guard}}.dashboard') }}"><i class="ik ik-home"></i></a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{pluralClass}}</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{translateModelUcfirst}}</li>
                     </ol>
                 </nav>
