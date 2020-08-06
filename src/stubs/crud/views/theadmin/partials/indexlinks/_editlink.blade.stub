@@ -1,0 +1,2 @@
+ <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.edit',${{singularSlug}}) }}" data-provide="tooltip"
+                                        title="Editer"><i class="ti-pencil"></i></a>

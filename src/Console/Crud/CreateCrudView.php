@@ -136,9 +136,9 @@ class CreateCrudView
             '{{singularSlug}}'         =>  Str::singular(Str::slug($name)),
             '{{singularSnake}}'        =>  Str::singular(Str::snake($name)),
             '{{singularClass}}'        =>  Str::singular(Str::studly($name)),
-            '{{translateModelLower}}'        =>  Str::lower($this->getModelTranslation($name)),
+            '{{translateModelLower}}'  =>  Str::lower($this->getModelTranslation($name)),
             // '{{translateModelUpper}}'        =>  Str::upper($this->trans),
-            '{{translateModelUcfirst}}'        =>  $this->getModelTranslation($name),
+            '{{translateModelUcfirst}}'=>  $this->getModelTranslation($name),
             '{{frontNamespace}}'       =>  ucfirst(config('administrable.front_namespace')),
             '{{frontLowerNamespace}}'  =>  Str::lower(config('administrable.front_namespace')),
             '{{backNamespace}}'        =>  ucfirst(config('administrable.back_namespace')),
@@ -146,20 +146,13 @@ class CreateCrudView
             '{{modelsFolder}}'         =>  $this->getCrudConfiguration('folder', 'Models'),
             '{{administrableLogo}}'    =>  asset(config('administrable.logo_url')),
             '{{theme}}'                =>  $this->theme,
-            '{{icon}}'                =>  $this->icon,
+            '{{icon}}'                 =>  $this->icon,
             '{{breadcrumb}}'           =>  $this->guestBreadcrumbFieldNane(),
             '{{guard}}'                =>  config('administrable.guard', 'admin')
         ];
     }
 
-    protected function getModelTranslation(string $name) :string
-    {
-        if (empty($this->trans)) {
-            return Str::plural(Str::studly($name));
-        }
 
-        return $this->trans;
-    }
 
     /**
      * @return string
@@ -212,6 +205,17 @@ class CreateCrudView
         return $complied;
     }
 
+    // protected function loadIndexLinkFor(string $key, string $complied, array $data_map): string
+    // {
+    //     if ($this->breadcrumb) {
+    //         $breadcrumb_stub = $this->TPL_PATH . '/views/' . $this->theme . "/breadcrumbs/{$key}.blade.stub";
+    //         $replace = $this->compliedFile($breadcrumb_stub, true, $data_map);
+    //         return  str_replace('{{-- breadcrumb --}}', $replace, $complied);
+    //     }
+
+    //     return $complied;
+    // }
+
     private function loadIndexView($guard, $views_path, $data_map)
     {
         $stub  =  $this->TPL_PATH . '/views/' . $this->theme . '/index.blade.stub';
@@ -223,7 +227,9 @@ class CreateCrudView
 
         $complied =  $this->loadBreadcrumbFor('create', $complied, $data_map);
 
-        // $complied =  $this->loadLinkButtonFor('create', $complied, $data_map);
+        $complied =  $this->loadIndexLinkButtonFor($complied, $data_map);
+
+
 
 
         $this->createDirectoryIfNotExists($path, false);
@@ -233,6 +239,9 @@ class CreateCrudView
 
 
         $view = $this->insertFieldToViewIndex($fields, $complied, $values, $data_map);
+
+        // load index links
+        // loadIndexLinkFor('show', $complied, $data_map)
 
 
 
@@ -262,19 +271,15 @@ class CreateCrudView
         $this->writeFile($view, $path, false);
     }
 
-    protected function loadLinkButtonFor(string $key, string $complied, array $data_map): string
+    protected function loadIndexLinkButtonFor(string $complied, array $data_map): string
     {
-        if ($this->hasCrudAction($key)) {
-            $stub  =  $this->TPL_PATH . '/views/' . $this->theme . "/partials/links/_{$key}link.blade.stub";
-            $replace = $this->compliedFile($stub, true, $data_map);
 
-            $complied = str_replace("{{-- {$key} link --}}", $replace, $complied);
-
-            if ($this->isTheAdminTheme() && ('edit' === $key || 'delete' === $key)) {
-                $stub  =  $this->TPL_PATH . '/views/' . $this->theme . "/partials/links/_show{$key}link.blade.stub";
+        foreach (['show', 'edit', 'delete'] as $action) {
+            if ($this->hasAction($action)) {
+                $stub  =  $this->TPL_PATH . '/views/' . $this->theme . "/partials/indexlinks/_{$action}link.blade.stub";
                 $replace = $this->compliedFile($stub, true, $data_map);
 
-                $complied = str_replace("{{-- show{$key} link --}}", $replace, $complied);
+                $complied = str_replace("{{-- index {$action} link --}}", $replace, $complied);
             }
         }
 
@@ -399,6 +404,26 @@ class CreateCrudView
 
 
         $this->writeFile($complied, $path, false);
+    }
+
+    protected function loadLinkButtonFor(string $key, string $complied, array $data_map): string
+    {
+        if ($this->hasCrudAction($key)) {
+            $stub  =  $this->TPL_PATH . '/views/' . $this->theme . "/partials/links/_{$key}link.blade.stub";
+            $replace = $this->compliedFile($stub, true, $data_map);
+
+            $complied = str_replace("{{-- {$key} link --}}", $replace, $complied);
+
+            if ($this->isTheAdminTheme() && ('edit' === $key || 'delete' === $key)) {
+                $stub  =  $this->TPL_PATH . '/views/' . $this->theme . "/partials/links/_show{$key}link.blade.stub";
+                $replace = $this->compliedFile($stub, true, $data_map);
+
+                $complied = str_replace("{{-- show{$key} link --}}", $replace, $complied);
+            }
+        }
+
+
+        return $complied;
     }
 
 
@@ -919,4 +944,6 @@ class CreateCrudView
 
         return str_replace($search, $partial, $complied);
     }
+
+
 }

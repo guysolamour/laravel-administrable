@@ -1,0 +1,3 @@
+<a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.destroy',${{singularSlug}}) }}" data-method="delete"
+                                            data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?" class="btn btn-danger"
+                                            data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fas fa-trash"></i></a>

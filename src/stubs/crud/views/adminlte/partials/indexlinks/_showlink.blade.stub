@@ -1,0 +1,4 @@
+   <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.show', ${{singularSlug}}) }}"
+                                                                    class="btn btn-primary" data-toggle="tooltip"
+                                                                    data-placement="top" title="Afficher"><i
+                                                                        class="fas fa-eye"></i></a>

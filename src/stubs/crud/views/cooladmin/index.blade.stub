@@ -64,21 +64,9 @@
 {{values}}
                                       <td>
                                         <div class="table-data-feature">
-                                            <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.show', ${{singularSlug}}) }}"
-                                                class="item" data-toggle="tooltip" data-placement="top" title="Voir">
-                                                <i class="zmdi zmdi-mail-send"></i>
-                                            </a>
-                                            <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.edit', ${{singularSlug}}) }}" class="item" data-toggle="tooltip" data-placement="top" title="Editer" data-original-title="Editer">
-                                                <i class="zmdi zmdi-edit"></i>
-                                            </a>
-
-                                            <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.destroy', ${{singularSlug}}) }}"
-                                                class="chosen-single item " data-toggle="tooltip" data-placement="top" title="Supprimer"
-                                                data-method="delete"
-                                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
-                                                <i class="zmdi zmdi-delete"></i>
-                                            </a>
-
+                                            {{-- index show link --}}
+                                            {{-- index edit link --}}
+                                            {{-- index delete link --}}
                                         </div>
                                     </td>
                                 </tr>

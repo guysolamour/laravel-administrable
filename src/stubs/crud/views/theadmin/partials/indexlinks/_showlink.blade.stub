@@ -1,0 +1,2 @@
+    <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.show',${{singularSlug}}) }}" data-provide="tooltip"
+                                        title="Afficher"><i class="ti-eye"></i></a>

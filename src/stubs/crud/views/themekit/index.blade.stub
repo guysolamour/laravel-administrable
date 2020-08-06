@@ -56,14 +56,9 @@
 {{values}}
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.show', ${{singularSlug}}) }}" class="btn btn-primary"
-                                            data-toggle="tooltip" data-placement="top" title="Afficher"><i class="fas fa-eye"></i></a>
-
-                                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.edit', ${{singularSlug}}) }}" class="btn btn-info"
-                                            data-toggle="tooltip" data-placement="top" title="Editer"><i class="fas fa-edit"></i></a>
-                                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.destroy',${{singularSlug}}) }}" data-method="delete"
-                                            data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?" class="btn btn-danger"
-                                            data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fas fa-trash"></i></a>
+                                        {{-- index show link --}}
+                                        {{-- index edit link --}}
+                                        {{-- index delete link --}}
                                     </div>
                                 </td>
                             </tr>

@@ -249,4 +249,13 @@ trait MakeCrudTrait
     {
        return app_path($data_map['{{modelsFolder}}'] . '/' . $this->modelNameWithoutNamespace($this->getRelatedModel($field)) . '.php');
     }
+
+    protected function getModelTranslation(string $name): string
+    {
+        if (empty($this->trans)) {
+            return Str::plural(Str::studly($name));
+        }
+
+        return $this->trans;
+    }
 }
