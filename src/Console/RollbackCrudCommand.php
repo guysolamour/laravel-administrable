@@ -177,6 +177,15 @@ class RollbackCrudCommand extends BaseCommand
 
         $this->filesystem->delete($path);
 
+        foreach ($this->fields as $field) {
+            if ($this->isSimpleManyToManyRelation($field)) {
+                $migration_name = Str::snake($this->getIntermediateClassName($field));
+                $path = Arr::first($this->filesystem->glob($migrations_path . "/*{$migration_name}"));
+                $this->filesystem->delete($path);
+            }
+        }
+
+
         $this->info(PHP_EOL . 'Migration file removed at ' . $path);
     }
 

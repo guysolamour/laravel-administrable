@@ -261,12 +261,6 @@ class CreateCrudMigration
 
 
 
-    protected function getIntermediateClassName(array $field): string
-    {
-        $class_name = Str::singular(Str::studly($this->getRelationIntermediateTable($field, true)));
-
-        return sprintf("Create%sPivotTable", $class_name);
-    }
 
     protected function createManyToManyRelationPivotTable()
     {

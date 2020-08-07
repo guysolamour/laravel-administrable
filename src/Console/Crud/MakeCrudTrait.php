@@ -258,4 +258,7 @@ trait MakeCrudTrait
 
         return $this->trans;
     }
+
+
+
 }
