@@ -66,7 +66,6 @@ class CreateCrudMigration
         $this->breadcrumb   = $breadcrumb;
         $this->theme        = $theme;
         $this->slug         = $slug;
-        $this->slug         = $slug;
         $this->timestamps   = $timestamps;
         $this->entity       = $entity;
         $this->seeder       = $seeder;
@@ -188,10 +187,7 @@ class CreateCrudMigration
 
                 if ($this->isSimpleRelation($field)) {
                     $fields .= <<<TEXT
-                               \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)};
                                 \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)}->constrained('{$this->getModelTableName($this->getRelatedModel($field))}')->onDelete('{$this->getFieldOnDelete($field)}');
-
-
                     TEXT;
                     // $fields .= <<<TEXT
                     //            \$table->foreign('{$this->getFieldName($field)}')->references('{$this->getFieldReferences($field)}')->on('{$this->getModelTableName($this->getRelatedModel($field))}')->onDelete('{$this->getFieldOnDelete($field)}');
@@ -214,7 +210,7 @@ class CreateCrudMigration
 
         // add slug field and the linked field
         if ($this->slug) {
-            $fields .= '            $table->string(' . "'slug'" . ')->unique();';
+            $fields .= '           $table->string(' . "'slug'" . ')->unique();';
         }
         //
 
@@ -311,11 +307,23 @@ class CreateCrudMigration
         return '';
     }
 
+
+
     protected function getFieldAttributes(array $field): string
     {
         $constraints = $this->getFieldConstraints($field);
 
         $attr = '';
+
+        if ($default = Arr::get($field, 'default')){
+            if (is_bool($default)) {
+
+                $attr .= sprintf("->default(%s)", $default ? 'true' : 'false');
+            }else {
+                $attr .= sprintf("->default('%s')", $default);
+            }
+        }
+
 
         if (empty($constraints)) {
             return $attr;
@@ -337,6 +345,7 @@ class CreateCrudMigration
                 $attr .=  "->$constraint()";
             }
         }
+
 
         return $attr;
     }
