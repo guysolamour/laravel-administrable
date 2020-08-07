@@ -60,6 +60,10 @@ class MakeCrudCommand extends BaseCommand
      */
     protected $edit_slug = false;
     /**
+     * @var bool
+     */
+    protected $clone = false;
+    /**
      * @var string
      */
     protected $icon = 'fa-folder';
@@ -78,12 +82,12 @@ class MakeCrudCommand extends BaseCommand
     /**
      * @var string[]
      */
-    protected const GLOBAL_OPTIONS = ['slug', 'edit_slug', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans', 'icon'];
+    protected const GLOBAL_OPTIONS = ['slug', 'edit_slug', 'clone', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans', 'icon'];
 
     /**
      * @var string[]
      */
-    protected const RESERVED_WORDS = ['slug', 'icon', 'edit_slug', 'breadcrumb', 'timestamps', 'seeder', 'trans'];
+    protected const RESERVED_WORDS = ['slug', 'icon', 'clone', 'edit_slug', 'breadcrumb', 'timestamps', 'seeder', 'trans'];
 
 
 
@@ -171,15 +175,7 @@ class MakeCrudCommand extends BaseCommand
             // on gere le cas du edit slug ici avnt de faire la configuration des options globaux
             // on stocke la configuration globale si elle a été définie
             // celui ci pourra ecraser sur un modele en particulier
-            if ($edit_slug = $this->getCrudConfiguration('edit_slug')) {
-
-                if (!is_bool($edit_slug)) {
-                    throw new \Exception(
-                        sprintf("The global edit_slug option must be a boolean. Current value is [%s]", $edit_slug)
-                    );
-                }
-                $this->edit_slug = (bool) $edit_slug;
-            }
+            $this->setGlobalConfigOption(['clone', 'edit_slug']);
 
             // tester le truc de icon si tableau et exception
             $this->setConfigOption();
@@ -666,6 +662,7 @@ class MakeCrudCommand extends BaseCommand
                 $this->imagemanager,
                 $this->icon,
                 $this->trans,
+                $this->clone,
             );
             $this->info('Views created at ' . $view_path);
             $progress->advance();
@@ -699,11 +696,26 @@ class MakeCrudCommand extends BaseCommand
         }
     }
 
+    private function setGlobalConfigOption(array $options)
+    {
+        foreach($options as $value){
+
+            if ($option = $this->getCrudConfiguration($value)) {
+
+                if (!is_bool($option)) {
+                    throw new \Exception(
+                        sprintf("The global [%s] option must be a boolean. Current value is [%s]", $value, $option)
+                    );
+                }
+                $this->$value = $option;
+            }
+        }
+    }
+
 
 
     private function setConfigOption(): void
     {
-
         foreach (self::GLOBAL_OPTIONS as $option) {
 
             if(isset($this->fields[$option]) && is_array($this->fields[$option]) && in_array($option, self::RESERVED_WORDS)){
@@ -713,10 +725,7 @@ class MakeCrudCommand extends BaseCommand
             }
 
             if (isset($this->fields[$option]) && (is_bool($this->fields[$option]) || !empty($this->fields[$option]))) {
-                // is option model (generate only model and migration)
                 if (array_key_exists($option, $this->fields)) {
-
-
                     if ($option === 'slug') {
                         $this->slug =  strtolower($this->fields['slug']);
                     } else {

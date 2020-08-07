@@ -12,6 +12,47 @@ class AdminInstallCommand extends BaseCommand
 
     use CommandTrait;
 
+
+    /**
+     * The defaults stubs
+     * @var array
+     */
+    protected const DEFAULTS = [
+        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model', 'Seo', 'Comment', 'Page', 'PageMeta'],
+        'migrations'      => ['User', 'Administrable', 'Media', 'Provider', 'Seo_meta_tag', 'Comment','Page', 'Page_meta'],
+        'seeds'           => ['Configuration', 'Seeder', 'User', 'Page'],
+        'controllers'     => [
+            'front'       => ['Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Home', 'Front', 'Redirect'],
+            'back'        => ['User','Default', 'Comment','Notification', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Configuration', 'Home', 'Media', 'Guard','Page'],
+        ],
+        'forms'     => [
+            'front' => [],
+            'back'  => ['User', 'Comment', 'Configuration', 'Create', 'Guard', 'ResetPassword', 'Page']
+        ],
+        'routes'    => [
+            'front' => ['Auth', 'Default', 'Social', 'Comment'],
+            'back'  => ['User', 'Auth', 'Configuration', 'Media', 'Other', 'Profile', 'Comment', 'Page', 'Notification']
+        ],
+
+        'views'     => [
+            'front' => ['About','Auth', 'Dashboard', 'Home', 'Layouts', 'Legalmention', 'Partials', 'Comments'],
+            'back'  => ['Users', 'Auth', 'Configuration', 'Dashboard', 'Guard', 'Layouts', 'Media', 'Partials', 'Comments', 'Pages']
+        ],
+        'emails'    => [
+            'front' => ['Replycomment'],
+            'back'  => ['Comment']
+        ],
+        'mails'     => [
+            'front' => ['ReplyComment'],
+            'back'  => ['Comment']
+        ],
+        'notifications' => [
+            'front'     => [],
+            'back'      => ['ResetPassword', 'VerifyEmail', 'Comment']
+        ],
+
+    ];
+
     /**
      * @var string
      */
@@ -24,45 +65,6 @@ class AdminInstallCommand extends BaseCommand
     protected $crud_models = ['Post', 'Testimonial', 'Mailbox'];
 
 
-    /**
-     * Les générations à effectuer par défaut
-     * @var array
-     */
-    protected const DEFAULTS = [
-        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model', 'Seo', 'Comment', 'Page', 'PageMeta'],
-        'migrations'      => ['User', 'Administrable', 'Media', 'Provider', 'Seo_meta_tag', 'Comment','Page', 'Page_meta'],
-        'seeds'           => ['Configuration', 'Seeder', 'User', 'Page'],
-        'controllers'     => [
-            'front'       => ['Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Home', 'Front', 'Redirect'],
-            'back'        => ['User', 'Comment','Notification', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Configuration', 'Home', 'Media', 'Guard','Page'],
-        ],
-        'forms' => [
-            'front' => [],
-            'back'  => ['User', 'Comment', 'Configuration', 'Create', 'Guard', 'ResetPassword', 'Page']
-        ],
-        'routes' => [
-            'front' => ['Auth', 'Default', 'Social', 'Comment'],
-            'back'  => ['User', 'Auth', 'Configuration', 'Media', 'Other', 'Profile', 'Comment', 'Page']
-        ],
-
-        'views' => [
-            'front' => ['About','Auth', 'Dashboard', 'Home', 'Layouts', 'Legalmention', 'Partials', 'Comments'],
-            'back'  => ['Users', 'Auth', 'Configuration', 'Dashboard', 'Guard', 'Layouts', 'Media', 'Partials', 'Comments', 'Pages']
-        ],
-        'emails' => [
-            'front' => ['Replycomment'],
-            'back'  => ['Comment']
-        ],
-        'mails' => [
-            'front' => ['ReplyComment'],
-            'back'  => ['Comment']
-        ],
-        'notifications' => [
-            'front' => [],
-            'back'  => ['ResetPassword', 'VerifyEmail', 'Comment']
-        ],
-
-    ];
 
     /**
      * @var array
@@ -791,6 +793,7 @@ class AdminInstallCommand extends BaseCommand
             $controllers_path . $data_map["{{frontNamespace}}"]
         );
 
+        // Back controllers
         $controllers_to_create = [...self::DEFAULTS['controllers']['back'], ...$this->crud_models];
 
         if ($this->isTheAdminTheme()) {

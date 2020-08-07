@@ -51,6 +51,7 @@
                             <td>
                                 <nav class="nav no-gutters gap-2 fs-16">
                                     {{-- index show link --}}
+                                    {{-- index clone link --}}
                                     {{-- index edit link --}}
                                     {{-- index delete link --}}
                                 </nav>

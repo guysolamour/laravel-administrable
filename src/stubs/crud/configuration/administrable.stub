@@ -1,6 +1,12 @@
 # Where to store models in app folder
 folder: {{modelsFolder}}
 
+# Desactiver globalement la modification du champ slug dans les formulaires
+edit_slug: false
+
+# add clone model in index page
+clone: true
+
 # Models definitions
 Category:
   name:  { name: name, type: string, rules: nullable, nullable: true }
@@ -12,7 +18,7 @@ Category:
 
 Image:
   url: { type: string, rules: required|string , sslug: true}
-  user_id: { type: { relation: one to one, type: simple, related: user, property: name, withdefault: 'pierre,papier,ciseaux' }, rules: required }
+  user_id: { type: { relation: one to one, type: simple, related: user, property: name }, rules: required }
 
   # entity: true
   image: # { type: polymorphic, rules: required}

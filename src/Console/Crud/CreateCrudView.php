@@ -64,16 +64,28 @@ class CreateCrudView
      * @var string
      */
     private $trans;
+    /**
+     *
+     * @var bool
+     */
+    private $clone;
+
+
 
     /**
-     * CreateCrudView constructor.
      * @param string $model
      * @param array $fields
-     * @param string $breadcrumb
-     * @param null|string $slug
-     * @param bool $timestamps
+     * @param array $actions
+     * @param string|null $breadcrumb
+     * @param string $theme
+     * @param string|null $slug
+     * @param boolean $timestamps
+     * @param boolean|array $imagemanager
+     * @param string $icon
+     * @param string $trans
+     * @param boolean $clone
      */
-    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon, string $trans)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon, string $trans, bool $clone)
     {
         $this->model           = $model;
         $this->fields          = $fields;
@@ -85,20 +97,27 @@ class CreateCrudView
         $this->theme           = $theme;
         $this->icon            = $icon;
         $this->trans           = $trans;
+        $this->clone           = $clone;
 
         $this->filesystem      = new Filesystem;
     }
 
     /**
+     *
      * @param string $model
      * @param array $fields
-     * @param string $breadcrumb
+     * @param array $actions
+     * @param string|null $breadcrumb
      * @param string $theme
-     * @param null|string $slug
-     * @param bool $timestamps
-     * @return string
+     * @param string|null $slug
+     * @param boolean $timestamps
+     * @param boolean|array $imagemanager
+     * @param string $icon
+     * @param string $trans
+     * @param boolean $clone
+     * @return void
      */
-    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon, string $trans)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps,  $imagemanager, string $icon, string $trans, bool $clone)
     {
         return (new CreateCrudView(
             $model,
@@ -110,7 +129,8 @@ class CreateCrudView
             $timestamps,
             $imagemanager,
             $icon,
-            $trans
+            $trans,
+            $clone
         ))->loadViews();
     }
 
@@ -273,9 +293,15 @@ class CreateCrudView
 
     protected function loadIndexLinkButtonFor(string $complied, array $data_map): string
     {
+        $actions = ['show', 'edit', 'delete'];
 
-        foreach (['show', 'edit', 'delete'] as $action) {
-            if ($this->hasAction($action)) {
+
+        if ($this->clone) {
+           $actions[] = 'clone';
+        }
+
+        foreach ($actions as $action) {
+            if ( (isset($this->$action) && $this->$action) || $this->hasAction($action)) {
                 $stub  =  $this->TPL_PATH . '/views/' . $this->theme . "/partials/indexlinks/_{$action}link.blade.stub";
                 $replace = $this->compliedFile($stub, true, $data_map);
 
@@ -344,7 +370,7 @@ class CreateCrudView
             $edit_button = <<<'TEXT'
                 @if (isset($edit) && $edit)
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
+                    <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
                 </div>
                 @endif
             TEXT;
@@ -357,7 +383,7 @@ class CreateCrudView
             $create_button = <<<'TEXT'
                 @if (!isset($edit))
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
+                    <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
                 </div>
                 @endif
             TEXT;
@@ -370,8 +396,6 @@ class CreateCrudView
     }
     private function loadCreateView($guard, $views_path, $data_map)
     {
-
-
         $stub  =  $this->TPL_PATH . '/views/' . $this->theme . '/create.blade.stub';
         $path =  $views_path . '/' . $guard . '/create.blade.php';
 

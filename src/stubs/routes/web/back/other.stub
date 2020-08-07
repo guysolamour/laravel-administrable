@@ -3,7 +3,7 @@
 Route::middleware(['{{singularSlug}}.auth'])->group(function () {
     Route::namespace('{{backNamespace}}')->group(function () {
 
-         Route::post('model/destroy/all', 'HomeController@destroyModels')->name('{{backLowerNamespace}}.model.destroy.all');
-         Route::get('notifications/markread', 'NotificationController@markAsRead')->name('{{backLowerNamespace}}.notification.markasread');
+         Route::post('model/destroy/all', 'DefaultController@destroyModels')->name('{{backLowerNamespace}}.model.destroy.all');
+         Route::get('model/{model}/{key}/clone', 'DefaultController@clone')->name('{{backLowerNamespace}}.model.clone');
     });
 });

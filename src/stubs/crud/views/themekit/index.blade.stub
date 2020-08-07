@@ -57,6 +57,7 @@
                                 <td>
                                     <div class="btn-group" role="group">
                                         {{-- index show link --}}
+                                        {{-- index clone link --}}
                                         {{-- index edit link --}}
                                         {{-- index delete link --}}
                                     </div>

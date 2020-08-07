@@ -2,10 +2,49 @@
 
 use {{namespace}}\{{modelsFolder}}\Page;
 use {{namespace}}\{{modelsFolder}}\Admin;
+use {{namespace}}\{{modelsFolder}}\BaseModel;
 use {{namespace}}\{{modelsFolder}}\Configuration;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 
+
+if (!function_exists('get_base64encode_class')) {
+    function get_base64encode_class(BaseModel $model) :string
+    {
+       return base64_encode(get_class($model));
+    }
+}
+
+
+if (!function_exists('get_clone_model_params')) {
+    function get_clone_model_params(BaseModel $model) :array
+    {
+       return [
+           get_base64encode_class($model),
+           $model,
+       ];
+    }
+}
+
+if (!function_exists('get_form_class_name')) {
+    function get_form_class_name(BaseModel $model) :string
+    {
+        $name = class_basename(get_class($model));
+
+        return sprintf('\{{namespace}}\Forms\{{backLowerNamespace}}\%sForm', Str::singular(Str::studly($name)));
+    }
+}
+
+if (!function_exists('guest_views_folder_name')) {
+    /**
+     * @param BaseModel|string $model
+     * @return string
+     */
+    function guest_views_folder_name($model) :string
+    {
+        return Str::plural(Str::slug(class_basename($model)));
+    }
+}
 
 
 if (!function_exists('get_month')) {
