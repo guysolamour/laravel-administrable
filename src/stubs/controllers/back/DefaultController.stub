@@ -37,7 +37,12 @@ class DefaultController extends Controller
         $model = (new $model())->resolveRouteBinding($key);
         $form = $this->getForm($model->replicate(), $model->getFormClassName());
 
-        return view('{{backLowerNamespace}}.' . guest_views_folder_name($model) . '.create', compact('form'));
+        if ($form_class_name = $model->getFormClassName()){
+            $form = $this->getForm($model->replicate(), $form_class_name);
+            return view('{{backLowerNamespace}}.' . guest_views_folder_name($model) . '.create', compact('form'));
+        }
+
+        return view('{{backLowerNamespace}}.' . guest_views_folder_name($model) . '.create');
     }
 
 

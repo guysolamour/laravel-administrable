@@ -45,6 +45,19 @@ class PostForm extends Form
                 ]
 
             ])
+              ->add('tag_id', 'entity', [
+                "class" => \{{namespace}}\{{modelsFolder}}\Tag::class,
+                "property" => 'name',
+                "label" => 'Etiquette',
+                "rules" => 'required|exists:{{namespace}}\{{modelsFolder}}\Tag,id',
+                "query_builder" => function(\{{namespace}}\{{modelsFolder}}\Tag $tag){
+                    return $tag->where('id','!=', \{{namespace}}\{{modelsFolder}}\Tag::UNCATEGORIZED)->get();
+                },
+                'attr' => [
+                    'class' => 'custom-select'
+                ]
+
+            ])
             ->add('online', 'select', [
                 'choices' => ['0' => 'Non', '1' => 'Oui'],
                 'rules' => 'required',

@@ -71,6 +71,8 @@
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.tag.show', $tag) }}"
                                         data-provide="tooltip" title="Afficher"><i
                                             class="ti-eye"></i></a>
+                                    <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($tag)) }}" data-provide="tooltip"
+                                        title="Cloner"><i class="fas fa-clone"></i></a>
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.tag.edit', $tag) }}"
                                         data-provide="tooltip" title="Editer"><i
                                             class="ti-pencil"></i></a>

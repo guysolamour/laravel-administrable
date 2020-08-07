@@ -114,6 +114,11 @@
                                                                     data-placement="top" title="Afficher"><i
                                                                         class="fas fa-eye"></i></a>
 
+                                                                     <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($testimonial)) }}"
+                                                                class="btn btn-secondary" data-toggle="tooltip"
+                                                                data-placement="top" title="Cloner"><i
+                                                                    class="fas fa-clone"></i></a>
+
                                                                 <a href="{{ route('{{backLowerNamespace}}.testimonial.edit', $testimonial) }}"
                                                                     class="btn btn-info" data-toggle="tooltip"
                                                                     data-placement="top" title="Editer"><i

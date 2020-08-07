@@ -99,6 +99,11 @@
                                                 <i class="zmdi zmdi-lock"></i>
                                             </a>
 
+                                            <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($user)) }}"
+                                                class="item" data-toggle="tooltip" data-placement="top" title="Cloner">
+                                                <i class="fas fa-clone"></i>
+                                            </a>
+
                                             <a href="{{ route('{{backLowerNamespace}}.user.edit', $user) }}" class="item" data-toggle="tooltip" data-placement="top" title="Editer" data-original-title="Editer">
                                                 <i class="zmdi zmdi-edit"></i>
                                             </a>

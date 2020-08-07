@@ -99,6 +99,11 @@
                                                                     data-placement="top" title="Afficher"><i
                                                                         class="fas fa-eye"></i></a>
 
+                                                                <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($category)) }}"
+                                                                class="btn btn-secondary" data-toggle="tooltip"
+                                                                data-placement="top" title="Cloner"><i
+                                                                    class="fas fa-clone"></i></a>
+
                                                                 <a href="{{ route('{{backLowerNamespace}}.category.edit', $category) }}"
                                                                     class="btn btn-info" data-toggle="tooltip"
                                                                     data-placement="top" title="Editer"><i

@@ -93,6 +93,12 @@
                                                 data-toggle="tooltip" data-placement="top" title="Afficher">
                                                 <i class="zmdi zmdi-eye"></i>
                                             </a>
+
+                                            <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($category)) }}"
+                                                class="item" data-toggle="tooltip" data-placement="top" title="Cloner">
+                                                <i class="fas fa-clone"></i>
+                                            </a>
+
                                             <a href="{{ route('{{backLowerNamespace}}.category.edit', $category) }}" class="item"
                                                 data-toggle="tooltip" data-placement="top" title="Editer">
                                                 <i class="zmdi zmdi-edit"></i>

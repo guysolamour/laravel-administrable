@@ -797,7 +797,6 @@ class AdminInstallCommand extends BaseCommand
         $controllers_to_create = [...self::DEFAULTS['controllers']['back'], ...$this->crud_models];
 
 
-
         $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/back');
 
         if ($this->isTheAdminTheme()) {

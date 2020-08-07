@@ -109,6 +109,11 @@
                                                 class="item" data-toggle="tooltip" data-placement="top" title="Voir">
                                                 <i class="zmdi zmdi-mail-send"></i>
                                             </a>
+
+                                            <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($testimonial)) }}"
+                                                class="item" data-toggle="tooltip" data-placement="top" title="Cloner">
+                                                <i class="fas fa-clone"></i>
+                                            </a>
                                             <a href="{{ route('{{backLowerNamespace}}.testimonial.edit', $testimonial) }}" class="item" data-toggle="tooltip" data-placement="top" title="Editer" data-original-title="Editer">
                                                 <i class="zmdi zmdi-edit"></i>
                                             </a>

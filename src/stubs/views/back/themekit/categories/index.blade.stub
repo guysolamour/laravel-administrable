@@ -82,6 +82,10 @@
                                             <a href="{{ route('{{backLowerNamespace}}.category.show', $category) }}" class="btn btn-primary" data-toggle="tooltip"
                                                 data-placement="top" title="Afficher"><i class="fas fa-eye"></i></a>
 
+                                             <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($category)) }}" class="btn btn-secondary"
+                                            title="Cloner"><i class="fas fa-clone"></i></a>
+
+
                                             <a href="{{ route('{{backLowerNamespace}}.category.edit', $category) }}" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Editer"><i class="fas fa-edit"></i></a>
                                             <a href="{{ route('{{backLowerNamespace}}.category.destroy',$category) }}" data-method="delete"

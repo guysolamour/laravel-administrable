@@ -93,6 +93,10 @@
                                                 data-toggle="tooltip" data-placement="top" title="Afficher"><i
                                                     class="fas fa-eye"></i></a>
 
+                                             <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($page)) }}" class="btn btn-secondary"
+                                            title="Cloner"><i class="fas fa-clone"></i></a>
+
+
                                             <a href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}" class="btn btn-info" data-toggle="tooltip"
                                                 data-placement="top" title="Editer"><i class="fas fa-edit"></i></a>
 

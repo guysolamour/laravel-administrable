@@ -86,6 +86,8 @@
                                 <nav class="nav no-gutters gap-2 fs-16">
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.testimonial.show',$testimonial) }}" data-provide="tooltip"
                                         title="Afficher"><i class="ti-eye"></i></a>
+                                    <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($testimonial)) }}" data-provide="tooltip"
+                                        title="Cloner"><i class="fas fa-clone"></i></a>
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.testimonial.edit',$testimonial) }}" data-provide="tooltip"
                                         title="Editer"><i class="ti-pencil"></i></a>
                                     <a class="nav-link hover-danger" href="#" data-provide="tooltip" title="Supprimer"
