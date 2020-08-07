@@ -796,11 +796,22 @@ class AdminInstallCommand extends BaseCommand
         // Back controllers
         $controllers_to_create = [...self::DEFAULTS['controllers']['back'], ...$this->crud_models];
 
+
+
+        $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/back');
+
         if ($this->isTheAdminTheme()) {
-            $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/' . $this->theme);
-        } else {
-            $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/back');
+            $theadmin_controllers = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/' . $this->theme);
+            $controllers_stub = array_merge($controllers_stub, $theadmin_controllers);
         }
+
+
+
+        // if ($this->isTheAdminTheme()) {
+        //     $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/' . $this->theme);
+        // } else {
+        //     $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/back');
+        // }
         $controllers_stub = array_filter($controllers_stub, function ($controller) use ($controllers_to_create) {
             $name = (string) Str::of($controller->getFilenameWithoutExtension())->before('Controller');
             return in_array($name, $controllers_to_create);

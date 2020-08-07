@@ -352,9 +352,13 @@ trait CommandTrait
 
     protected function getRelatedModelTableName(array $field): string
     {
-        $table_name = $this->getRelatedModel($field);
+        $related_model = $this->getRelatedModel($field);
 
-        return Str::plural(Str::slug($table_name));
+        if (Str::contains($related_model, '\\')) {
+            $related_model = class_basename($related_model);
+        }
+
+        return Str::plural(Str::slug($related_model));
     }
 
     protected function getRelatedModel(array $field): string
@@ -406,7 +410,7 @@ trait CommandTrait
 
     protected function getRelationType(array $field): ?string
     {
-        return Arr::get($field['type'], 'type');
+        return Arr::get(Arr::get($field, 'type'), 'type');
     }
 
     protected function getNonRelationType(array $field)
@@ -482,8 +486,7 @@ trait CommandTrait
 
     protected function modelNameWithoutNamespace(string $model): string
     {
-        $parts = explode('\\', $model);
-        return end($parts);
+        return class_basename($model);
     }
 
 

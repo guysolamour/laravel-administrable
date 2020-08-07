@@ -330,26 +330,28 @@ class MakeCrudCommand extends BaseCommand
                         $this->fields[$key]['type']['related'] = $related;
                     }
 
+                    // dd('sisi');
+
                     // remove the | end in case the user forgot it
                     $this->fields[$key]['rules'] = rtrim($this->fields[$key]['rules'], '|');
 
 
                     $this->checkIfRelatedModelExists($related);
 
-                    if (!$this->getRelatedModelProperty($field)) {
+                    if (!$this->getRelatedModelProperty($this->fields[$key])) {
                         throw new \Exception(
                             sprintf(
                                 'The [%s] relation field must have a property key who exists on the related table.',
-                                $this->getFieldName($field),
+                                $this->getFieldName($this->fields[$key]),
                             )
                         );
                     }
 
-                    if (!$this->checkIfRelatedModelPropertyExists($field)) {
+                    if (!$this->checkIfRelatedModelPropertyExists($this->fields[$key])) {
                         throw new \Exception(
                             sprintf(
                                 'The [%s] related property does not exists on [%s] model.',
-                                $this->getRelatedModelProperty($field),
+                                $this->getRelatedModelProperty($this->fields[$key]),
                                 $related,
                             )
                         );
@@ -357,7 +359,7 @@ class MakeCrudCommand extends BaseCommand
 
 
                     // Add exists rule
-                    if (!$this->isPolymorphicField($field)) {
+                    if (!$this->isPolymorphicField($this->fields[$key])) {
 
                         if (!Str::contains($field['rules'], 'exists')) {
                             if (empty($field['rules'])) {

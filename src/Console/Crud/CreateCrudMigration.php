@@ -124,16 +124,32 @@ class CreateCrudMigration
 
         $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
 
-        $database_seeder = $this->filesystem->get($database_seeder_path);
         $search = "    {";
-        $replace = ' $this->call(' .  $data_map['{{pluralClass}}'] . 'TableSeeder::class' . ");";
-        $route_mw = "\n        " . $replace;
 
+        foreach($this->fields as $field){
 
-        $database_seeder = str_replace($search, $search . $route_mw, $database_seeder);
+            if (!is_array($field)){
+                continue;
+            }
 
-        // Overwrite config file
-        $this->filesystem->put($database_seeder_path, $database_seeder);
+            if ($this->isRelationField(Arr::get($field, 'type'))){
+                $related_model = Str::plural($this->getRelatedModelWithoutNamespace($field));
+                $search = ' $this->call(' .  $related_model . 'TableSeeder::class' . ");";
+            }
+        }
+
+        $database_seeder = $this->filesystem->get($database_seeder_path);
+        $seeder = $data_map['{{pluralClass}}'] . 'TableSeeder::class';
+        $this->replaceAndWriteFile(
+            $database_seeder,
+            $search,
+            <<<TEXT
+            $search
+                     \$this->call($seeder);
+            TEXT,
+
+            $database_seeder_path
+        );
 
         return $database_seeder_path;
     }
@@ -187,7 +203,7 @@ class CreateCrudMigration
 
                 if ($this->isSimpleRelation($field)) {
                     $fields .= <<<TEXT
-                                \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)}->constrained('{$this->getModelTableName($this->getRelatedModel($field))}')->onDelete('{$this->getFieldOnDelete($field)}');
+                                \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)}->constrained('{$this->getModelTableName($this->getRelatedModel($field))}','{$this->getFieldReferences($field)}')->onDelete('{$this->getFieldOnDelete($field)}');
                     TEXT;
                     // $fields .= <<<TEXT
                     //            \$table->foreign('{$this->getFieldName($field)}')->references('{$this->getFieldReferences($field)}')->on('{$this->getModelTableName($this->getRelatedModel($field))}')->onDelete('{$this->getFieldOnDelete($field)}');
