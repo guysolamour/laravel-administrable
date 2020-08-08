@@ -53,6 +53,7 @@
                             <th>Contenu</th>
                             <th>Status</th>
                             <th>Catégorie</th>
+                            <th>Etiquette</th>
                             <th>Date ajout</th>
 
                             <th>Actions</th>
@@ -82,8 +83,16 @@
                                 <a href="" class="bdage badge-dark badge-pill p-2">Santé</a>
                             </td> --}}
                             <td>
+                                @if($post->category)
                                 <a href="{{ route('{{backLowerNamespace}}.category.show', $post->category) }}"
                                     class="badge badge-secondary badge-pill p-2">{{ $post->category->name }}</a>
+                                @endif
+                            </td>
+                            <td>
+                                @if($post->tag)
+                                <a href="{{ route('{{backLowerNamespace}}.tag.show', $post->tag) }}"
+                                    class="badge badge-secondary badge-pill p-2">{{ $post->tag->name }}</a>
+                                @endif
                             </td>
                             <td>{{ $post->created_at->format('d/m/Y h:i') }}</td>
 

@@ -81,4 +81,24 @@ class Post extends BaseModel
             'slug' => ['source' => 'title']
         ];
     }
+
+    public static function booted()
+    {
+        parent::booted();
+
+        /**
+         * @param \{{namespace}}\{{modelsFolder}}\BaseModel $model
+         */
+        static::saving(function ($model) {
+
+            if (request('publish_date') ) {
+                if (request('publish_time')){
+                    $model->created_at = request('publish_date') . ' ' . request('publish_time') . ':00';
+                }else {
+                    $model->created_at = request('publish_date') . ' 00:00:00';
+                }
+            }
+
+        });
+    }
 }

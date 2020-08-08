@@ -35,6 +35,21 @@ composer require guysolamour/laravel-administrable
 php artisan administrable:install
 ```
 
+The ***--debug_packages*** option is used to add some development packages
+such as (the debugbar and others). The default value is *false*
+
+```php
+php artisan administrable:make:crud {Model} --debug_packages="true"
+```
+
+or
+
+```php
+php artisan administrable:make:crud {Model} --debug_packages="false"
+```
+
+Par défaut le ***guard*** utilisé est ***admin*** et peut être changé en passant en argument de la commande le nom du ***guard*** à utiliser.
+
 By default the **guard** used is **admin** and can be changed by passing in argument of the command the name of the **guard** to use.
 
 ```php
@@ -111,7 +126,12 @@ php artisan administrable:install {guard=admin} -m "Models"
 
 - **create_db**
 
-To automatically create the database, you must first configure the database access in the ***.env*** file and use this option.
+To automatically create the database.
+
+We hope that the database username is ***root*** and
+password is ***root*** too.
+
+If not, you have to manually create the database.
 
 ```php
 php artisan administrable:install {guard=admin} --create_db
@@ -266,6 +286,22 @@ This command generates the crud (***model***, ***controller***, ***migration***,
 ```php
 php artisan administrable:make:crud {Model}
 ```
+
+The ***--migrate*** option is used to run artisan migrate command
+
+```php
+php artisan administrable:make:crud {Model} --migrate="true"
+```
+
+or
+
+```php
+php artisan administrable:make:crud {Model} --migrate="false"
+```
+
+**NB:**
+
+- The default value is *true*.
 
 To adapt the generation, a configuration file ***administrable.yaml*** located at the root of the project is used. This file uses the **Yaml** language. If you do not know this syntax you can go [to the official website] (https://www.yaml.org) to learn more.
 
@@ -426,6 +462,47 @@ Post:
 - One of the two options can  be used.
 - Only one field can be sluggable
 - Only  (***text***, ***longText***, ***mediumText***) type fields can be sluggify
+
+### edit slug
+
+To have the slug field in form and edit it
+
+```yaml
+Post:
+  name: {slug: true }
+  edit_slug: true
+```
+
+Or use it globally. This will affect all models
+
+```yaml
+edit_slug: true
+```
+
+**NB:**
+
+- The default value is *false*.
+- A slug field is required on the model
+
+### clone
+
+To have a button in index vue to clone or duplicate a field
+
+```yaml
+Post:
+  name: {slug: true }
+  clone: true
+```
+
+Or use it globally. This will affect all models
+
+```yaml
+clone: true
+```
+
+**NB:**
+
+- The default value is *true*.
 
 ### trans
 
@@ -699,9 +776,17 @@ Post:
   user_id: { type: relation, related: user }
 ```
 
-The related is mandatory we must know to which field the relationship is related
-The related is mandatory and is the linked model. We can just pass the name
-or the namespace.
+The related is optional, we guest the name by remove the *_id*  on the field's name.
+If the field doest not respect this convention, you have to use this option.
+
+```yaml
+Post:
+  user_id: { type: relation }
+```
+
+Dans ce cas, le related sera **user**.
+
+It is possible to use the full qualify class name.
 
 ```yaml
 Post:
@@ -919,6 +1004,18 @@ Rollback a crud
 
 ```php
 php artisan administrable:rollback:crud {model}
+```
+
+The ***--rollback*** option is used to run the rollback artisan command. The default value is *true*
+
+```php
+php artisan administrable:make:crud {Model} --rollback="true"
+```
+
+or
+
+```php
+php artisan administrable:make:crud {Model} --rollback="false"
 ```
 
 **NB:**

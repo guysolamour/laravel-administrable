@@ -6,7 +6,9 @@
             <div class="card-body">
                 <h5 class="card-title">{{ $post->title }}</h5>
                 <p class="card-text">{!! Str::limit(strip_tags($post->content,100)) !!}</p>
+                @if($post->category)
                 <a href="{{ route('{{frontLowerNamespace}}.post.category', $post->category) }}" class="card-link">{{ $post->category->name }}</a> <br>
+                @endif
                 <a href="#" class="card-link">{{ $post->approvedComments->count() }} Commentaire(s)</a> <br>
                 <a href="{{ route('{{frontLowerNamespace}}.post.show', $post) }}" class="btn btn-info"><i class="fas fa-book-open"></i>
                     Lire la suite</a>

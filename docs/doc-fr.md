@@ -36,12 +36,24 @@ composer require guysolamour/laravel-administrable
 php artisan administrable:install
 ```
 
+L'option ***--debug_packages*** sert à rajouter des packages de développement tels que
+(la debugbar et autres). La valeur par défaut est *false*
+
+```php
+php artisan administrable:make:crud {Model} --debug_packages="true"
+```
+
+ou
+
+```php
+php artisan administrable:make:crud {Model} --debug_packages="false"
+```
+
 Par défaut le ***guard*** utilisé est ***admin*** et peut être changé en passant en argument de la commande le nom du ***guard*** à utiliser.
 
 ```php
 php artisan administrable:install client
 ```
-
 
 ### Les options
 
@@ -114,7 +126,11 @@ php artisan administrable:install {guard=admin} -m "Models"
 
 - **create_db**
 
-Pour créer automatiquement la base de base de donnée. Il faudra au préalable configurer les accès de la base de donnée dans le fichier ***.env***.
+Pour créer automatiquement la base de base de donnée.
+
+Nous partons du principe que l'utilisateur de la base de donnée est ***root*** et le mot de passe est ***root***.
+
+Si tel n'est pas de cas vous devez créer manuellement la base de donnée.
 
 ```php
 php artisan administrable:install {guard=admin} --create_db
@@ -207,7 +223,7 @@ php artisan storage:link
 
 ### 5. Créer le guard
 
-Vous devez créer un guard en base de donné avant de se connecter.
+Vous devez créer un guard en base de donnée afin de pouvoir vous connecter.
 
 Exemple:
 
@@ -223,7 +239,7 @@ php artisan administrable:create -u johndoe -e john@doe.fr -p 12345678
 
 **NB:**
 
-- Si une option n'est pas passé, elle vous sera demandé interactivement.
+- Si une option n'est pas passée, elle vous sera demandé interactivement.
 - Les options disponible sont: *username*, *email* et *password*
 
 ### 6. Seed de la base de donnée
@@ -269,6 +285,22 @@ Cette commande génère le crud (modèle, controller, migration, formulaire, vue
 ```php
 php artisan administrable:make:crud {Model}
 ```
+
+L'option ***--migrate*** sert à exécuter la commande artisan migrate
+
+```php
+php artisan administrable:make:crud {Model} --migrate="true"
+```
+
+ou
+
+```php
+php artisan administrable:make:crud {Model} --migrate="false"
+```
+
+**NB:**
+
+- La valuer par défaut est *true*.
 
 Pour adapter la génération, un fichier de configuration ***administrable.yaml*** se trouvant à la racine du projet est utilisé. Ce fichier utilise le langage **Yaml**. Si vous ne maitriser cette syntaxe vous pouvez vous rendre [sur le site officiel](https://www.yaml.org) pour en apprendre davantage.
 
@@ -430,6 +462,47 @@ Post:
 - Une des deux options ne peut être utilisé.
 - un seul champ peut avoir ce attribut
 - Seul les champs de type (***text*** , ***longText***, ***mediumText***) peuvent être sluggifier
+
+### edit slug
+
+Pour avoir le champ slug dans le formulaire afin de le modifer
+
+```yaml
+Post:
+  name: {slug: true }
+  edit_slug: true
+```
+
+ou bien le passer globalement. Celui affectera alors tous les modèles
+
+```yaml
+edit_slug: true
+```
+
+**NB:**
+
+- La valeur par défaut est *false*.
+- La présence d'un champ slug sur le modèle est obligatoire
+
+### clone
+
+Pour avoir un boutton pour cloner ou dupliquer un champ sur la vue index
+
+```yaml
+Post:
+  name: {slug: true }
+  clone: true
+```
+
+ou bien le passer globalement. Celui affectera alors tous les modèles
+
+```yaml
+clone: true
+```
+
+**NB:**
+
+- La valeur par défaut est *true*.
 
 ### trans
 
@@ -697,9 +770,17 @@ Post:
   user_id: { type: relation, related: user }
 ```
 
-le related est obligatoire on doit savoir à quel champ est lié la relation
-Le related est obligatoire et est le modele lié. On peut passer juste le nom
-ou le namespace.
+Le related n'est pas oblgatoire, il sera defini par le nom du champ
+auquel on retire le _id. si votre champ ne respecte pas cette convention vous devriez alors utiliser le related
+
+```yaml
+Post:
+  user_id: { type: relation }
+```
+
+Dans ce cas, le related sera **user**.
+
+C'est possible d'utiliser le namespace complet.
 
 ```yaml
 Post:
@@ -915,10 +996,22 @@ La relation polymorphique ***many to many*** n'est pas encore implantée. J'ai p
 
 ## Rollback Crud
 
-Revenir en arrière après un crud
+Revenir en arrière après un crud. La valeur par défaut est *true*
 
 ```php
 php artisan administrable:rollback:crud {model}
+```
+
+L'option ***--rollback*** sert à exécuter la commande artisan rollback
+
+```php
+php artisan administrable:make:crud {Model} --rollback="true"
+```
+
+ou
+
+```php
+php artisan administrable:make:crud {Model} --rollback="false"
 ```
 
 **NB:**

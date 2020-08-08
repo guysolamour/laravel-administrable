@@ -8,19 +8,19 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
                 aria-controls="nav-home" aria-selected="true">
-                <i class="fas fa-home"></i> Accueil
+                <i class="fas fa-home"></i>&nbsp; Accueil
             </a>
             <a class="nav-item nav-link" id="nav-facebook-tab" data-toggle="tab" href="#nav-facebook" role="tab"
             aria-controls="nav-facebook" aria-selected="false">
-            <i class="fab fa-facebook"></i> Facebook
+            <i class="fab fa-facebook"></i>&nbsp; Facebook
         </a>
         <a class="nav-item nav-link" id="nav-twitter-tab" data-toggle="tab" href="#nav-twitter" role="tab"
         aria-controls="nav-twitter" aria-selected="false">
-        <i class="fab fa-twitter"></i> Twitter
+        <i class="fab fa-twitter"></i>&nbsp; Twitter
     </a>
     <a class="nav-item nav-link" id="nav-others-tab" data-toggle="tab" href="#nav-others" role="tab"
     aria-controls="nav-others" aria-selected="false">
-    <i class="fa fa-user"></i> Auteur de cet article / page web
+    <i class="fa fa-user"></i>&nbsp; Auteur de cet article / page web
 </a>
 </div>
 </nav>
@@ -177,7 +177,7 @@
     <div class="row">
         <div class="form-group col-sm-12">
             <label for="page:author">Auteur de cet article / page web</label> <br>
-            <input type="text" class="form-control" id="page:author" name="seo[page:author]" value="{{ $tags['page:author'] ?? get_{{singularSlug}}('full_name') }}">
+            <input type="text" class="form-control" id="page:author" name="seo[page:author]" value="{{ $tags['page:author'] }}">
             <!-- <span class="text-muted form-text">Auteur de cet article / page web</span> -->
         </div>
         <div class="form-group col-sm-12">

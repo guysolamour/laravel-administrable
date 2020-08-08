@@ -28,10 +28,10 @@ class PostForm extends Form
 			      'label' => 'Titre',
 			      'rules' => 'required',
             ])
-             ->add('slug','text', [
-              'label' => 'Url',
-              // 'rules' => 'required',
-            ])
+            //  ->add('slug','text', [
+            //   'label' => 'Url',
+            //   // 'rules' => 'required',
+            // ])
             ->add('category_id', 'entity', [
                 "class" => \{{namespace}}\{{modelsFolder}}\Category::class,
                 "property" => 'name',

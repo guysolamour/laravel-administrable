@@ -11,7 +11,14 @@
         <div class="col-md-8">
              <h1 class="text-center">{{ $post->title }}</h1>
              <p>
+                @if($post->category)
                  Catégorie : <a href="{{ route('{{frontLowerNamespace}}.post.category',$post->category) }}" class="btn btn-link">{{ $post->category->name }}</a>
+                @endif
+             </p>
+             <p>
+                @if($post->tag)
+                 Catégorie : <a href="{{ route('{{frontLowerNamespace}}.post.tag',$post->tag) }}" class="btn btn-link">{{ $post->category->name }}</a>
+                @endif
              </p>
              <p>
                  {!! $post->content !!}

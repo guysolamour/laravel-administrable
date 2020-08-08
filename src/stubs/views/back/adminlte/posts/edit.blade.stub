@@ -40,21 +40,67 @@
                 </div>
             </div>
             <div class="card-body">
+                {!! form_start($form) !!}
                 <div class='row'>
                     <div class='col-md-8'>
-                       @include('{{backLowerNamespace}}.posts._form',['edit' => true])
+                       {!! form_row($form->title) !!}
+                        <div class="form-row">
+                            <div class="col">
+                                {!! form_row($form->category_id) !!}
+                            </div>
+                            <div class="col">
+                                {!! form_row($form->tag_id) !!}
+                            </div>
+                        </div>
+                        {!! form_row($form->content) !!}
+
+                        @seoForm([
+                        'model' => $form->getModel()
+                        ])
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
+                        </div>
                     </div>
                     <div class='col-md-4'>
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                Publication
+                            </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                                    title="Réduire">
+                                    <i class="fas fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <a href=""
+                                    onclick="event.preventDefault();document.querySelector('form[name={{$form->getModel()->form_name}}]').submit()"
+                                    class="btn btn-success">Publier</a>
+                            </div>
+                            {!! form_row($form->online) !!}
+                            {!! form_row($form->allow_comment) !!}
+
+                        </div>
+                    </div>
                       <div class="card">
-                          <div class="card-header">
-                              <h3 class="card-title">Publication</h3>
-                          </div>
-                          <div class="card-body">
-                              <div class="text-center mb-4">
-                                  <a href="" onclick="event.preventDefault();document.querySelector('form[name={{$form->getModel()->form_name}}]').submit()" class="btn btn-success">Publier</a>
-                              </div>
-                          </div>
-                      </div>
+
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="publish_date">Date de publication: <span
+                                        class="font-weight-bold">({{ $post->created_at->format('d/m/Y') }})</span></label>
+                                <input type="date" name="publish_date" id="publish_date" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="publish_time">Heure de publication: <span
+                                        class="font-weight-bold">({{ $post->created_at->format('h:i:s') }}</span>)</label>
+                                <input type="time" name="publish_time" id="publish_time" class="form-control">
+                            </div>
+                        </div>
+                    </div>
                         @include('{{backLowerNamespace}}.media._imagemanager', [
                             'front_image_label'            => 'Image à la une',
                             'back_image_label'             => 'Image à la une (2)',
@@ -70,6 +116,7 @@
                     </div>
 
                 </div>
+                {!! form_end($form) !!}
             </div>
 
         </div>
@@ -81,5 +128,10 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
+@include('{{backLowerNamespace}}.partials._tinymce', [
+    'selector' => "form[name={$form->getModel()->form_name}] textarea[data-tinymce]",
+    'model' => $form->getModel(),
+    'model_name' => get_class($form->getModel()),
+    'prefix' => config('administrable.auth_prefix_path')
+])
 @endsection
