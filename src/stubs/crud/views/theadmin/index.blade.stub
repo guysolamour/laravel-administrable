@@ -41,6 +41,7 @@
                             </th>
                             <th>#</th>
 {{fields}}
+                            {{-- add fields here --}}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -48,6 +49,7 @@
                         @foreach(${{pluralSlug}} as ${{singularSlug}})
                         <tr>
 {{values}}
+                            {{-- add values here --}}
                             <td>
                                 <nav class="nav no-gutters gap-2 fs-16">
                                     {{-- index show link --}}
@@ -74,6 +76,7 @@
 
                                     <div class="quickview-block">
                                       {{quickViewValues}}
+                                      {{-- add quick values here --}}
                                     </div>
                                 </div>
 

@@ -45,6 +45,7 @@ class CommentForm extends Form
                 ]);
         }
 	    $form
+        // add fields here
 		    ->add('commentable','text', [
 			      'label' => 'Cible',
                   'value' => $this->getModel()->commentable->title,

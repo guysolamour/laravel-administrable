@@ -73,6 +73,7 @@
                                     <th>Nom</th>
                                     <th>Message</th>
                                     <th>Date</th>
+                                    {{-- add fields here --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -92,6 +93,7 @@
                                       <td><a href="Javascript:void(1)">{{ $message->name }}</a></td>
                                       <td>{{ Str::limit($message->content,25) }}</td>
                                       <td>{{ $message->created_at->diffForHumans() }}</td>
+                                      {{-- add values here --}}
                                       <td>
                                           <div class="btn-group" role="group">
                                               <a href="{{ route('{{backLowerNamespace}}.mailbox.show',$message) }}" class="btn btn-info"><i class="fas fa-eye"></i></a>

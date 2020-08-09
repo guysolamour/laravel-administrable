@@ -17,6 +17,8 @@ class {{singularClass}}Form extends Form
       ];
 
 	    $this
+        // add fields here
+
         ->add('pseudo','text', [
 			    'label' => 'Pseudo',
 			    'rules' => [

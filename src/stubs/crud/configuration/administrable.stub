@@ -8,6 +8,21 @@ edit_slug: false
 clone: true
 
 # Models definitions
+
+Todo:
+  title: { name: title, default: true, nullable: true }
+  description: { name: description, type: text, rules: required }
+  # url: { name: url, type: string, rules: required|string, length: 145 }
+  # age: { name: age, type: integer:3, rules: required|string }
+  # category_id: { type: { relation: one to many, type: simple,  property: name }, trans: Categorie, nullable: true }
+  # tag_id: { type: { relation: one to many, type: simple,  property: name }, trans: Etiquette, nullable: true }
+  user_id: { type: { relation: one to one, type: simple,  property: name }, rules: required }
+  post_id: { type: { relation: one to many, type: simple, property: title }, rules: required }
+  imagemanager: true
+  slug: title
+  clone: false
+  # edit_slug: true
+
 Category:
   name:  { name: name, type: string, rules: nullable, nullable: true }
   title: { name: title, default: salut, rules: nullable, nullable: true }

@@ -48,6 +48,7 @@
                 <th>Nom</th>
                 <th>Route</th>
                 <th>Url</th>
+                {{-- add fields here --}}
                 <th>Actions</th>
             </thead>
             <tbody>
@@ -67,6 +68,7 @@
                     <td>{{ $page->name }}</td>
                     <td>{{ $page->route }}</td>
                     <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
+                    {{-- add values here --}}
                     <td>
 
                         <div class="btn-group" role="group">

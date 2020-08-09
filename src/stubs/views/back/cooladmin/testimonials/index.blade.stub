@@ -73,6 +73,7 @@
                                 <th>Status</th>
                                 <th>Contenu</th>
                                 <th>Date ajout</th>
+                                {{-- add fields here --}}
 
                                 <th>Actions</th>
                             </thead>
@@ -102,6 +103,7 @@
                                     <td>{!! Str::limit(strip_tags($testimonial->content),50) !!}</td>
 
                                     <td>{{ $testimonial->created_at->format('d/m/Y h:i') }}</td>
+                                    {{-- add values here --}}
 
                                     <td>
                                         <div class="table-data-feature">

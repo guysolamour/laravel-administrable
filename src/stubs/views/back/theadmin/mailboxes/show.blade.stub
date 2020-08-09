@@ -33,6 +33,7 @@
                         <small>{{ $mailbox->email }}</small>
 
                     </div>
+                    {{-- add fields here --}}
                 </div>
             </div>
 

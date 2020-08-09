@@ -74,6 +74,7 @@
                                 <th>Code</th>
                                 <th>Nom</th>
                                 <th>Date ajout</th>
+                                {{-- add fields here --}}
 
                                 <th>Actions</th>
                             </thead>
@@ -94,7 +95,7 @@
                                     <td>{{ $page->name }}</td>
                                     <td>{{ $page->route }}</td>
                                     <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
-
+                                    {{-- add values here --}}
                                     <td>
 
                                         <div class="table-data-feature justify-content-start">

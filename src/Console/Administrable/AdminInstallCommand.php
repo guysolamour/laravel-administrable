@@ -1,10 +1,12 @@
 <?php
 
-namespace Guysolamour\Administrable\Console;
+namespace Guysolamour\Administrable\Console\Administrable;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
+use Guysolamour\Administrable\Console\BaseCommand;
+use Guysolamour\Administrable\Console\CommandTrait;
 
 
 class AdminInstallCommand extends BaseCommand
@@ -121,9 +123,9 @@ class AdminInstallCommand extends BaseCommand
 
     protected function init()
     {
-        // if ($this->checkIfPackageHasBeenInstalled()) {
-        //     throw new \Exception("The installation has already been done, remove all generated files and run installation again!");
-        // }
+        if ($this->checkIfPackageHasBeenInstalled()) {
+            $this->triggerError("The installation has already been done, remove all generated files and run installation again!");
+        }
 
         $this->guard = $this->getGuard();
 

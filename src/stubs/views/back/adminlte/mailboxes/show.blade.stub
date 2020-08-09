@@ -39,12 +39,14 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body p-0">
+
               <div class="mailbox-read-info">
 
                <h6>Nom: {{ $mailbox->name }}</h6>
                 <h6>Email: {{ $mailbox->email }}
                   <span class="mailbox-read-time float-right">{{ $mailbox->created_at->format('d/m/Y h:i') }}</span></h6>
               </div>
+              {{-- add fields here --}}
 
               <div class="mailbox-read-message">
                   <p>

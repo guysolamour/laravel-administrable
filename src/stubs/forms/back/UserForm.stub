@@ -25,6 +25,8 @@ class UserForm extends Form
         ];
 
 	    $this
+        // add fields here
+
         ->add('name','text', [
 			    'label' => 'Nom',
 		    ])

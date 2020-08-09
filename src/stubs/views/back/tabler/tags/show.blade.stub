@@ -33,6 +33,7 @@
         </h3>
         <div class="row">
             <div class="col-md-8">
+                {{-- add fields here --}}
                 <div class="pb-2">
                     <p><span class="font-weight-bold">Nom:</span></p>
                     <p>
@@ -49,10 +50,7 @@
             </div>
             <div class="col-md-4">
                 @include('{{backLowerNamespace}}.media._show', [
-                'model' => $tag,
-                // 'front_image_label' => 'titi',
-                // 'back_image_label' => 'tata',
-                // 'images_label' => 'toto',
+                  'model' => $tag,
                 ])
             </div>
         </div>

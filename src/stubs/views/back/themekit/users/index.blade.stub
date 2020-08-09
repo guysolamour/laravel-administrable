@@ -56,11 +56,11 @@
                             </th>
                             <th>#</th>
                             <th>Nom</th>
-                            <th>Pseudo</th>
                             <th>Email</th>
+                            <th>Job</th>
                             <th>Date ajout</th>
 
-                            <th>Actions</th>
+                            {{-- add fields here --}}
 
                             <th>Actions</th>
                         </thead>
@@ -83,6 +83,7 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->job }}</td>
+                                {{-- add values here --}}
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('{{backLowerNamespace}}.user.show', $user) }}" class="btn btn-primary"

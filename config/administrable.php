@@ -3,8 +3,8 @@
 return [
 
     /**
-         * Used in the back office
-         */
+     * Used in the back office
+     */
     'app_first_name'   => config('app.first_name', 'Admin'),
     'app_last_name'    => config('app.last_name', 'Admin'),
     'app_short_name'   => config('app.short_name', 'Lvl'),

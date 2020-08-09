@@ -24,6 +24,8 @@ class PageForm extends Form
         ];
 
 	    $this
+        // add fields here
+
 		    ->add('code','text', [
 			    'label' => 'Code',
 			    'rules' => 'required',

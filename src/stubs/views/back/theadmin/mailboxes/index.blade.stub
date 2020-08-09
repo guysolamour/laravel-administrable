@@ -53,6 +53,7 @@
                                     <th>Nom</th>
                                     <th>Message</th>
                                     <th>Date</th>
+                                    {{-- add fields here --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -71,6 +72,7 @@
                                     <td><a class="text-dark" data-provide="tooltip" title="Apercu rapide"  href="#qv-mailboxes-details-{{ $message->id }}" data-toggle="quickview">{{ $message->name }}</a></td>
                                     <td>{{ Str::limit($message->content,25) }}</td>
                                     <td>{{ $message->created_at->diffForHumans() }}</td>
+                                    {{-- add values here --}}
                                     <td>
                                         <nav class="nav no-gutters gap-2 fs-16">
                                             <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.mailbox.show', $message) }}" data-provide="tooltip"
@@ -102,6 +104,7 @@
                                                   <h4 class="mt-2 mb-0"><a class="hover-primary text-white" href="#">{{ $message->name }}</a></h4>
                                                   <span><i class="fa fa-map-marker w-20px"></i> {{ $message->email }}</span> <br>
                                                   <span><i class="fa fa-phone w-20px"></i> {{ $message->phone_number }}</span>
+                                                  {{-- add quick values here --}}
                                               </div>
                                           </div>
 

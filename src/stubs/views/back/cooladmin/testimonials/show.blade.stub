@@ -59,8 +59,7 @@
 
                         <div class="row">
                             <div class="col-md-8">
-
-
+                                {{-- add fields here --}}
                                <div class="pb-2">
                                     <p><span class="font-weight-bold">Nom:</span></p>
                                     <p>

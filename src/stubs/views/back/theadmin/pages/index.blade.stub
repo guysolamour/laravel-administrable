@@ -56,6 +56,7 @@
                             <th>Nom</th>
                             <th>Route</th>
                             <th>Url</th>
+                            {{-- add fields here --}}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -77,6 +78,7 @@
                                     data-toggle="quickview">{{ $page->name }}</a></td>
                             <td>{{ $page->route }}</td>
                             <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
+                            {{-- add values here --}}
 
                             <td>
                                 <nav class="nav no-gutters gap-2 fs-16">
@@ -121,6 +123,7 @@
                                 </div>
 
                                 <div class="quickview-block form-type-material">
+                                    {{-- add quick values here --}}
                                     <div>
                                         <p><span class="font-weight-bold">Nom:</span></p>
                                         <p>

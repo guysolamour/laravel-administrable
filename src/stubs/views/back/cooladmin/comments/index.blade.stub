@@ -68,6 +68,7 @@
                                 <th>Contenu</th>
                                 <th>Approuvé</th>
                                 <th>Date ajout</th>
+                                {{-- add fields here --}}
 
                                 <th>Actions</th>
                             </thead>
@@ -93,6 +94,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $comment->created_at->format('d/m/Y h:i') }}</td>
+                                    {{-- add values here --}}
                                     <td>
                                         <div class="table-data-feature justify-content-start">
                                             <a  href="{{ route('{{backLowerNamespace}}.comment.show', $comment) }}" class="item"

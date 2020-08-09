@@ -34,7 +34,7 @@
                                     class="fa fa-trash"></i> Supprimer</a>
                         </div>
                     </section>
-
+                    {{-- add fields here --}}
                     <div>
                         <p><span class="font-weight-bold">Nom:</span></p>
                         <p>

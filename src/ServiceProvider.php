@@ -2,11 +2,11 @@
 
 namespace Guysolamour\Administrable;
 
-// use Illuminate\Support\Facades\Blade;
-use Guysolamour\Administrable\Console\MakeCrudCommand;
-use Guysolamour\Administrable\Console\AdminInstallCommand;
-use Guysolamour\Administrable\Console\CreateAdministrableCommand;
-use Guysolamour\Administrable\Console\RollbackCrudCommand;
+use Guysolamour\Administrable\Console\Crud\AddCrudCommand;
+use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
+use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
+use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
+use Guysolamour\Administrable\Console\Administrable\CreateAdministrableCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -41,6 +41,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->commands([
                 AdminInstallCommand::class,
                 MakeCrudCommand::class,
+                AddCrudCommand::class,
                 RollbackCrudCommand::class,
                 CreateAdministrableCommand::class,
             ]);

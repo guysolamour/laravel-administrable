@@ -41,6 +41,7 @@
                         <div class="card-body row">
                             <div class="col-md-12">
                                 <div class="row">
+                                    {{-- add fields here --}}
                                     <div class="col-md-6">
                                         <p><span class="font-weight-bold">Nom:</span></p>
                                         <p>

@@ -55,6 +55,7 @@
                             <th>Catégorie</th>
                             <th>Etiquette</th>
                             <th>Date ajout</th>
+                            {{-- add fields here --}}
 
                             <th>Actions</th>
                         </tr>
@@ -95,6 +96,7 @@
                                 @endif
                             </td>
                             <td>{{ $post->created_at->format('d/m/Y h:i') }}</td>
+                            {{-- add values here --}}
 
                             <td>
                                 <nav class="nav no-gutters gap-2 fs-16">
@@ -128,6 +130,7 @@
                                     </div>
 
                                     <div class="quickview-block form-type-material">
+                                        {{-- add quick values here --}}
                                         <div>
                                             <p><span class="font-weight-bold">Titre:</span></p>
                                             <p>

@@ -62,18 +62,12 @@
                         {!! form_row($form->linkedin) !!}
                     </div>
 
-                    {{--<div class="col-md-6">--}}
-                    {{--{!! form_row($form->cgu) !!}--}}
-                    {{--</div>--}}
+                    {{-- add fields here --}}
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         {!! form_row($form->about) !!}
                     </div>
-
-                    {{--<div class="col-md-6">--}}
-                    {{--{!! form_row($form->cgu) !!}--}}
-                    {{--</div>--}}
                     <div class="col-md-12">
                         <div class="form-group">
                             <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-edit"></i> Enregistrer</button>

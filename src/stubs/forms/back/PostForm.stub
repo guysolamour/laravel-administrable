@@ -24,6 +24,8 @@ class PostForm extends Form
         ];
 
 	    $this
+        // add fields here
+
 		    ->add('title','text', [
 			      'label' => 'Titre',
 			      'rules' => 'required',

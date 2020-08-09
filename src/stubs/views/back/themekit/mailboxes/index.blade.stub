@@ -62,6 +62,7 @@
                                 <th>Nom</th>
                                 <th>Message</th>
                                 <th>Date</th>
+                                {{-- add fields here --}}
                                 <th>Actions</th>
                             </thead>
                             <tbody>
@@ -89,6 +90,7 @@
                                     </td>
                                     <td>{{ Str::limit($message->content,50) }}</td>
                                     <td>{{ $message->created_at->diffForHumans() }}</td>
+                                    {{-- add values here --}}
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a href="{{ route('{{backLowerNamespace}}.mailbox.show', $message) }}" class="btn btn-primary" data-toggle="tooltip"

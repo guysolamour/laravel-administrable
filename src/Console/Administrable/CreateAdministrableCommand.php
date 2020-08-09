@@ -1,8 +1,10 @@
 <?php
 
-namespace Guysolamour\Administrable\Console;
+namespace Guysolamour\Administrable\Console\Administrable;
 
 use Illuminate\Support\Str;
+use Guysolamour\Administrable\Console\BaseCommand;
+use Guysolamour\Administrable\Console\CommandTrait;
 
 class CreateAdministrableCommand extends BaseCommand
 {

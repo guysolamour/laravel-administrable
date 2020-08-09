@@ -255,7 +255,7 @@ class CreateCrudView
         $this->createDirectoryIfNotExists($path, false);
 
         $var_name = $data_map['{{singularSlug}}'];
-        [$values, $fields] = $this->showIndexFields($var_name, $views_path, $data_map);
+        [$fields, $values] = $this->showIndexFields($var_name, $views_path, $data_map);
 
 
         $view = $this->insertFieldToViewIndex($fields, $complied, $values, $data_map);
@@ -328,8 +328,7 @@ class CreateCrudView
 
         $this->createDirectoryIfNotExists($path, false);
 
-        $var_name = $data_map['{{singularSlug}}'];
-        $show_views = $this->showViewFields($var_name, $data_map);
+        $show_views = $this->getShowViewFields($this->fields, $data_map, $this->timestamps);
 
         $complied = $this->loadImagemanagerViewsAndAssets($data_map, $complied, 'show');
 
@@ -453,80 +452,7 @@ class CreateCrudView
 
 
 
-    /**
-     * @param $field_name
-     * @return string
-     */
-    protected function showViewFields(string $field_name, array $data_map): string
-    {
-        $show_views = '';
 
-        $guard = $data_map['{{backLowerNamespace}}'];
-
-
-        foreach ($this->fields as $key =>  $field) {
-            /**
-             * If the field is of type imagemanager we skip it
-             */
-            if ($this->isImageableField($key)) {
-                continue;
-            } else if ($this->isRelationField($field['type'])) {
-
-                if ($this->isSimpleRelation($field)) {
-                    if ($this->isSimpleOneToOneRelation($field) || $this->isSimpleOneToManyRelation($field)) {
-                        $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
-                        $show_views = <<<TEXT
-                            $show_views
-                                        <p class="pb-2">
-                                            <b>$model: </b>
-                                            <a href="{{ route('$guard.{$this->getRelationModelWithoutId($this->getFieldName($field))}.show', \${$field_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}) }}">
-                                                {{ \${$field_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}->{$this->getRelatedModelProperty($field)} }}
-                                            </a>
-                                        </p>
-                        TEXT;
-                    } else {
-                        $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
-                        $show_views = <<<TEXT
-                            $show_views
-                                        <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0]->{$this->getRelatedModelProperty($field)} }}</p>
-                        TEXT;
-                    }
-                } else if ($this->isPolymorphicField($field)) {
-                    if ($this->isPolymorphicOneToOneRelation($field)) {
-                        $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
-                        $show_views = <<<TEXT
-                            $show_views
-                                        <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}->{$this->getRelatedModelProperty($field)} }}</p>
-                        TEXT;
-                    } else {
-                        $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
-                        $show_views = <<<TEXT
-                            $show_views
-                                        <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0]->{$this->getRelatedModelProperty($field)} }}</p>
-                        TEXT;
-                    }
-                }
-            } else {
-                $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
-                $show_views = <<<TEXT
-                    $show_views
-                            <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getFieldName($field)} }}</p>
-                TEXT;
-            }
-        }
-
-        if ($this->timestamps) {
-            $show_views = <<<TEXT
-                $show_views
-                            <p class="pb-2"><b>Date ajout: </b>{{ \${$field_name}->created_at->format('d/m/Y h:i') }}</p>
-            TEXT;
-            // $show_views .= '                <p class="pb-2"><b>Date ajout:</b> {{ $' . $field_name . '->created_at->format(\'d/m/Y h:i\') }}</p>' . "\n";
-        }
-
-        // if we have to display the media show
-
-        return $show_views;
-    }
 
     /**
      * @param $show_views
@@ -558,7 +484,7 @@ class CreateCrudView
 
         $fields = '';
 
-        $guard = $data_map['{{backLowerNamespace}}'];
+        // $guard = $data_map['{{backLowerNamespace}}'];
 
 
         $stub  =  $this->TPL_PATH . '/views/' . $this->theme . '/partials/_checkbox.blade.stub';
@@ -577,99 +503,101 @@ class CreateCrudView
                         <td>{{ \$loop->iteration }}</td>
         TEXT;
 
-        foreach ($this->fields as $key => $field) {
+        [$fields, $values] = $this->getIndexViewFields($this->fields, $data_map, $fields, $values);
+
+        // foreach ($this->fields as $key => $field) {
 
 
-            if ($this->isImageableField($key)) {
-                continue;
-            }
+        //     if ($this->isImageableField($key)) {
+        //         continue;
+        //     }
 
-            // if the field is of type image we skip it because we do not want to display it on the index page
-            if ($field['type'] == 'image') {
-                continue;
-            };
-
-
-
-            if ($this->isRelationField($field['type'])) {
-                $value = ucfirst(translate_model_field($this->getRelationModelWithoutId($field['name']), $field['trans'] ?? null));
-                $fields = <<<TEXT
-                    $fields
-                                    <th>$value</th>
-                    TEXT;
-            } else {
-                $value = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
-                $fields = <<<TEXT
-                    $fields
-                                    <th>$value</th>
-                    TEXT;
-            }
+        //     // if the field is of type image we skip it because we do not want to display it on the index page
+        //     if ($field['type'] == 'image') {
+        //         continue;
+        //     };
 
 
-            if (!$this->isRelationField($field['type']) && $this->isTextField($this->getFieldType($field))) {
 
-                if ($this->isTheadminTheme() && ($this->getFieldName($field) === $this->guestBreadcrumbFieldNane())) {
-                    $values = <<<TEXT
-                        $values
-                                    <td>
-                                        <a class="text-dark" data-provide="tooltip" title="Apercu rapide"
-                                            href="#qv-{$data_map['{{pluralSlug}}']}-details-{{ \${$var_name}->id }}" data-toggle="quickview"
-                                        >
-                                            {{ Str::limit(\${$var_name}->{$this->getFieldName($field)},50) }}
-                                        </a>
-                                    </td>
-                    TEXT;
-                } else {
-                    $values = <<<TEXT
-                        $values
-                                    <td>{{ Str::limit(\${$var_name}->{$this->getFieldName($field)},50) }}</td>
-                    TEXT;
-                }
-            } else if ($this->isRelationField($field['type'])) {
+        //     if ($this->isRelationField($field['type'])) {
+        //         $value = ucfirst(translate_model_field($this->getRelationModelWithoutId($field['name']), $field['trans'] ?? null));
+        //         $fields = <<<TEXT
+        //             $fields
+        //                             <th>$value</th>
+        //             TEXT;
+        //     } else {
+        //         $value = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
+        //         $fields = <<<TEXT
+        //             $fields
+        //                             <th>$value</th>
+        //             TEXT;
+        //     }
 
-                if ($this->isSimpleRelation($field)) {
-                    if ($this->isSimpleOneToOneRelation($field) || $this->isSimpleOneToManyRelation($field)) {
-                        $values = <<<TEXT
-                        $values
-                                        <td>
-                                            <a href="{{ route( '{$guard}.{$this->getRelationModelWithoutId($this->getFieldName($field))}.show',\${$var_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))} ) }}" classs="badge badge-secondary p-2">
-                                                {{ \$$var_name->{$this->getRelationModelWithoutId($this->getFieldName($field))}->{$this->getRelatedModelProperty($field)} }}
-                                            </a>
-                                        </td>
-                        TEXT;
-                    } else {
-                        $values = <<<TEXT
-                        $values
-                                        <td>
-                                            <a href="{{ route( '{$guard}.{$this->getRelationModelWithoutId($this->getFieldName($field))}.show',\${$var_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0] ) }}" classs="badge badge-secondary p-2">
-                                                {{ \$$var_name->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0]->{$this->getRelatedModelProperty($field)} }}
-                                            </a>
-                                        </td>
-                        TEXT;
-                    }
-                } else if ($this->isPolymorphicField($field)) {
-                    if ($this->isPolymorphicOneToOneRelation($field)) {
-                        $values = <<<TEXT
-                        $values
-                                        <td>
-                                            <a href="Javascript:void(0)" classs="badge badge-secondary p-2">
-                                                {{ \$$var_name->{$this->getRelationModelWithoutId($this->getFieldName($field))}->{$this->getRelatedModelProperty($field)} }}
-                                            </a>
-                                        </td>
-                        TEXT;
-                    } else {
-                        $values = <<<TEXT
-                        $values
-                                        <td>
-                                            <a href="Javascript:void(0)" classs="badge badge-secondary p-2">
-                                                {{ \$$var_name->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0]->{$this->getRelatedModelProperty($field)} }}
-                                            </a>
-                                        </td>
-                        TEXT;
-                    }
-                }
-            }
-        }
+
+        //     if (!$this->isRelationField($field['type']) && $this->isTextField($this->getFieldType($field))) {
+
+        //         if ($this->isTheadminTheme() && ($this->getFieldName($field) === $this->guestBreadcrumbFieldNane())) {
+        //             $values = <<<TEXT
+        //                 $values
+        //                             <td>
+        //                                 <a class="text-dark" data-provide="tooltip" title="Apercu rapide"
+        //                                     href="#qv-{$data_map['{{pluralSlug}}']}-details-{{ \${$var_name}->id }}" data-toggle="quickview"
+        //                                 >
+        //                                     {{ Str::limit(\${$var_name}->{$this->getFieldName($field)},50) }}
+        //                                 </a>
+        //                             </td>
+        //             TEXT;
+        //         } else {
+        //             $values = <<<TEXT
+        //                 $values
+        //                             <td>{{ Str::limit(\${$var_name}->{$this->getFieldName($field)},50) }}</td>
+        //             TEXT;
+        //         }
+        //     } else if ($this->isRelationField($field['type'])) {
+
+        //         if ($this->isSimpleRelation($field)) {
+        //             if ($this->isSimpleOneToOneRelation($field) || $this->isSimpleOneToManyRelation($field)) {
+        //                 $values = <<<TEXT
+        //                 $values
+        //                                 <td>
+        //                                     <a href="{{ route( '{$guard}.{$this->getRelationModelWithoutId($this->getFieldName($field))}.show',\${$var_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))} ) }}" classs="badge badge-secondary p-2">
+        //                                         {{ \$$var_name->{$this->getRelationModelWithoutId($this->getFieldName($field))}->{$this->getRelatedModelProperty($field)} }}
+        //                                     </a>
+        //                                 </td>
+        //                 TEXT;
+        //             } else {
+        //                 $values = <<<TEXT
+        //                 $values
+        //                                 <td>
+        //                                     <a href="{{ route( '{$guard}.{$this->getRelationModelWithoutId($this->getFieldName($field))}.show',\${$var_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0] ) }}" classs="badge badge-secondary p-2">
+        //                                         {{ \$$var_name->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0]->{$this->getRelatedModelProperty($field)} }}
+        //                                     </a>
+        //                                 </td>
+        //                 TEXT;
+        //             }
+        //         } else if ($this->isPolymorphicField($field)) {
+        //             if ($this->isPolymorphicOneToOneRelation($field)) {
+        //                 $values = <<<TEXT
+        //                 $values
+        //                                 <td>
+        //                                     <a href="Javascript:void(0)" classs="badge badge-secondary p-2">
+        //                                         {{ \$$var_name->{$this->getRelationModelWithoutId($this->getFieldName($field))}->{$this->getRelatedModelProperty($field)} }}
+        //                                     </a>
+        //                                 </td>
+        //                 TEXT;
+        //             } else {
+        //                 $values = <<<TEXT
+        //                 $values
+        //                                 <td>
+        //                                     <a href="Javascript:void(0)" classs="badge badge-secondary p-2">
+        //                                         {{ \$$var_name->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0]->{$this->getRelatedModelProperty($field)} }}
+        //                                     </a>
+        //                                 </td>
+        //                 TEXT;
+        //             }
+        //         }
+        //     }
+        // }
 
         if (!$this->timestamps) {
             $fields .= '                                    <th>Date création</th>' . "\n";
@@ -681,7 +609,7 @@ class CreateCrudView
         }
 
 
-        return [$values, $fields];
+        return [$fields, $values];
     }
     /**
      * @param string $var_name
@@ -799,7 +727,7 @@ class CreateCrudView
 
 
         $search = '{{quickViewValues}}';
-        if ('theadmin' === $this->theme) {
+        if ($this->isTheadminTheme()) {
             $values = $this->getIndexFields($data_map);
             $form = str_replace($search, $values, $form);
         } else {

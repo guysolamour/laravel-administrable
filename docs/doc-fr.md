@@ -994,6 +994,25 @@ Post:
 
 La relation polymorphique ***many to many*** n'est pas encore implantée. J'ai pas encore eu à l'utiliser dans mes différents projets.
 
+## Append Crud
+
+Pour ajouter un ou Plusieurs champs sur un modèle existant.
+
+```php
+php artisan administrable:append:crud {model} --fields="field1,field2,field3"
+```
+
+ou avec la version courte
+
+```php
+php artisan administrable:append:crud {model} -f="field1,field2,field3"
+```
+
+**NB:**
+
+- Le modèle doit exister
+- Les champs doivent être définis de la même manière que celle de la commande **administrable:make:crud** dans le fichier de *administrable.yaml*
+
 ## Rollback Crud
 
 Revenir en arrière après un crud. La valeur par défaut est *true*
@@ -1017,8 +1036,6 @@ php artisan administrable:make:crud {Model} --rollback="false"
 **NB:**
 
 - Le modèle doit être défini dans le fichier *administrable.yaml*.
-- Le lien généré dans la vue *partials/_sidebar.blade.php* doit être retiré manuellement.
-- Les différentes méthodes des relations liées à ce modèle doivent être retirés manuellement.
 
 Exemple:
 

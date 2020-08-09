@@ -23,7 +23,7 @@ class {{singularClass}}Form extends Form
         ];
 
         $this
-
+            // add fields here
 
 
         ;

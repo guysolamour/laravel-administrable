@@ -1,9 +1,10 @@
 <?php
 
-namespace Guysolamour\Administrable\Console;
+namespace Guysolamour\Administrable\Console\Crud;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Guysolamour\Administrable\Console\BaseCommand;
 use Guysolamour\Administrable\Console\Crud\MakeCrudTrait;
 
 class RollbackCrudCommand extends BaseCommand
@@ -63,12 +64,14 @@ class RollbackCrudCommand extends BaseCommand
 
 
         if (!$this->fields){
-            throw new \Exception(
+            $this->triggerError(
                 "The [$model] model does not exists in the administrable.yaml file"
             );
         }
 
         $this->data_map = $this->parseName($this->model);
+
+        // dd($this->data_map);
 
 
         // remove model
@@ -100,6 +103,8 @@ class RollbackCrudCommand extends BaseCommand
     {
         $this->info(PHP_EOL . 'Removing model...');
 
+        // dd(app_path(sprintf("%s/%s.php", $this->data_map['{{modelsFolder}}'], $this->data_map['{{singularClass}}'])));
+
         $path = app_path(sprintf("%s/%s.php", $this->data_map['{{modelsFolder}}'], $this->data_map['{{singularClass}}']));
 
         foreach ($this->fields as $field) {
@@ -115,13 +120,17 @@ class RollbackCrudCommand extends BaseCommand
 
                     $related_model_path = $this->getRelationRelatedModelPath($field, $data_map);
 
-                    $start_key = '// ' . $data_map['{{modelSingularSlug}}'] . ' relation';
-                    $end_key = '// end ' .  $data_map['{{modelSingularSlug}}'] . ' relation';
 
-                    $complied = delete_all_between($start_key, $end_key, $this->filesystem->get($related_model_path));
+                    if ($this->filesystem->exists($related_model_path)){
 
-                    $this->writeFile($complied, $related_model_path);
-                    // dd($complied, 'salut');
+                        $start_key = '// ' . $data_map['{{modelSingularSlug}}'] . ' relation';
+                        $end_key = '// end ' .  $data_map['{{modelSingularSlug}}'] . ' relation';
+
+                        $complied = delete_all_between($start_key, $end_key, $this->filesystem->get($related_model_path));
+
+                        $this->writeFile($complied, $related_model_path);
+
+                    }
                 }
             }
         }
