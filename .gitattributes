@@ -10,7 +10,7 @@
 /.coveralls.yml export-ignore
 *.php linguist-detectable=true
 *.html linguist-detectable=true
-*.js linguist-detectable=php
+*.js linguist-detectable=false
 /phpunit.xml export-ignore
 /CHANGELOG-* export-ignore
 /CONTRIBUTING.md export-ignore

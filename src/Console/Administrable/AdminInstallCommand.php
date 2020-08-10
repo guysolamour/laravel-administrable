@@ -99,6 +99,9 @@ class AdminInstallCommand extends BaseCommand
      */
     protected $models_folder_name = 'Models';
 
+
+    protected const DB_CONNECTIONS = ['mysql' => 'mysql', 'sqlite' => 'sqlite'];
+
     /**
      * The name and signature of the console command.
      *
@@ -112,7 +115,7 @@ class AdminInstallCommand extends BaseCommand
                                 {--s|seed : Seed database with fake data }
                                 {--r|migrate=true : Run migrations }
                                 {--k|debug_packages : Add debug packages (debugbar, pretty routes ..) }
-                                {--d|create_db : Create database with default connection }
+                                {--d|create_db= : Create database with default connection }
                                 {--t|theme= : Theme to use }
                                 {--l|locale=fr : Locale to use default fr }
                             ';
@@ -147,7 +150,7 @@ class AdminInstallCommand extends BaseCommand
          */
         foreach ($models as $model) {
             if (!in_array(ucfirst($model), $this->crud_models)) {
-                throw new \Exception(sprintf('Le modèle {%s} n\'est pas disponible. Les modèles disponible sont {%s}', $model, join(',', $this->crud_models)));
+                $this->triggerError(sprintf('Le modèle {%s} n\'est pas disponible. Les modèles disponible sont {%s}', $model, join(',', $this->crud_models)));
             }
         }
 
@@ -155,20 +158,20 @@ class AdminInstallCommand extends BaseCommand
         $this->crud_models = $models;
 
 
-        $preset = strtolower($this->option('preset'));
+        $preset = Str::lower($this->option('preset'));
 
         if (!in_array($preset, $this->presets)) {
-            throw new \Exception(sprintf('Le preset {%s} n\'est pas disponible. Les presets disponiblent sont {%s}', $preset, join(',', $this->presets)));
+            $this->triggerError(sprintf('Le preset {%s} n\'est pas disponible. Les presets disponiblent sont {%s}', $preset, join(',', $this->presets)));
         }
 
         $this->preset = $preset;
 
 
-        $theme = $this->option('theme') ? strtolower($this->option('theme')) : strtolower(config('administrable.theme', 'theadmin'));
+        $theme = $this->option('theme') ? Str::lower($this->option('theme')) : Str::lower(config('administrable.theme', 'theadmin'));
 
 
         if (!in_array($theme, $this->themes)) {
-            throw new \Exception(sprintf('Le thème {%s} n\'est pas disponible. Les thèmes disponiblent sont {%s}', $theme, join(',', $this->themes)));
+            $this->triggerError(sprintf('Le thème {%s} n\'est pas disponible. Les thèmes disponiblent sont {%s}', $theme, join(',', $this->themes)));
         }
 
 
@@ -348,7 +351,7 @@ class AdminInstallCommand extends BaseCommand
 
         // Composer dump-autoload
         $this->info("Running composer dump-autoload");
-        $this->runProcess("composer dump-autoload -o");
+        $this->runProcess("composer dump-autoload --no-scripts");
 
 
         if ($this->option('debug_packages')) {
@@ -1251,14 +1254,57 @@ class AdminInstallCommand extends BaseCommand
         return $kernel_path;
     }
 
+    protected function createDatabase()
+    {
+        // Create database
+        $create_db = $this->option('create_db');
+        $db_connection = Str::lower(Str::before($create_db, "://"));
+
+        if (!in_array($db_connection, self::DB_CONNECTIONS)) {
+            $this->triggerError(
+                sprintf("The [%s] database connection is not alowed. Allowed connections are [%s]", $db_connection, join(',', self::DB_CONNECTIONS))
+            );
+        }
+
+        if (!empty($create_db)) {
+
+            if ($db_connection === self::DB_CONNECTIONS['mysql']) {
+                $db_user = Str::of($create_db)->after('://')->before(':')->__toString();
+                $db_port = Str::of($create_db)->after('127.0.0.1:')->before('/')->__toString();
+                $db_password = Str::of($create_db)->after($db_user . ':')->before('@')->__toString();
+                $db_database = Str::lower(Str::of($create_db)->after($db_port . '/')->__toString());
+            } else if ($db_connection === self::DB_CONNECTIONS['sqlite']) {
+                $db_database = Str::after($create_db, '://');
+            }
+
+            $params = [
+                '--connection' => $db_connection,
+                'database'     => $db_database
+            ];
+
+            if ($db_connection === self::DB_CONNECTIONS['mysql']) {
+                if ($db_user) {
+                    $params['--username'] = $db_user;
+                }
+
+                if ($db_password) {
+                    $params['--password'] = $db_password;
+                }
+
+                if ($db_port) {
+                    $params['--port'] = $db_port;
+                }
+            }
+
+            $this->call('cmd:db:create', $params);
+
+        }
+    }
+
 
     protected function addEnvVariables()
     {
-        // $data_map = $this->parseName();
         $env_path = base_path('.env');
-        //$env = $this->filesystem->get($env_path);
-
-
 
         $this->replaceAndWriteFile(
             $this->filesystem->get($env_path),
@@ -1322,12 +1368,8 @@ class AdminInstallCommand extends BaseCommand
         // generate a new key
         $this->call('key:generate');
 
-        // Create database
-        if ($this->option('create_db')) {
-            $this->call('cmd:db:create', [
-                '--connection' => config('database.default')
-            ]);
-        }
+
+        $this->createDatabase();
 
         return $env_path;
     }
@@ -1659,6 +1701,6 @@ class AdminInstallCommand extends BaseCommand
         $this->call('clear-compiled');
 
         // composer install
-        $this->runProcess("composer update");
+        $this->runProcess("composer update --no-scripts");
     }
 }

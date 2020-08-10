@@ -126,24 +126,31 @@ php artisan administrable:install {guard=admin} -m "Models"
 
 - **create_db**
 
-To automatically create the database.
+To create database.
 
-We hope that the database username is ***root*** and
-password is ***root*** too.
+The *--create_db* with this ***db_connection://db_user:db_password@127.0.0.1:db_port/db_name***
 
-If not, you have to manually create the database.
-
-```php
-php artisan administrable:install {guard=admin} --create_db
-```
-
-or with the short version
+To create database *administrable* for mysql.
 
 ```php
-php artisan administrable:install {guard=admin} -d
+php artisan administrable:install {guard=admin} --create_db="mysql://root:root@127.0.0.1:3306/administrable"
 ```
 
-- **seed**
+To create database *administrable* for sqlite.
+
+```php
+php artisan administrable:install {guard=admin} --create_db="sqlite://administrable"
+```
+
+ou avec la version courte
+
+```php
+php artisan administrable:install {guard=admin} -d "mysql://root:root@127.0.0.1:3306/administrable"``
+```
+
+**NB:** Only *mysql* and *sqlite* are supported.
+
+**seed**
 To automatically seed the database, you must first configure the database access in the ***.env*** file.
 
 ```php

@@ -128,19 +128,27 @@ php artisan administrable:install {guard=admin} -m "Models"
 
 Pour créer automatiquement la base de base de donnée.
 
-Nous partons du principe que l'utilisateur de la base de donnée est ***root*** et le mot de passe est ***root***.
+Il faudra passer cette chaine ***db_connection://db_user:db_password@127.0.0.1:db_port/db_name*** à l'option *--create_db*
 
-Si tel n'est pas de cas vous devez créer manuellement la base de donnée.
+Pour créer une base de donnée *administrable* pour mysql.
 
 ```php
-php artisan administrable:install {guard=admin} --create_db
+php artisan administrable:install {guard=admin} --create_db="mysql://root:root@127.0.0.1:3306/administrable"
+```
+
+Pour créer une base de donnée *administrable* pour sqlite.
+
+```php
+php artisan administrable:install {guard=admin} --create_db="sqlite://administrable"
 ```
 
 ou avec la version courte
 
 ```php
-php artisan administrable:install {guard=admin} -d
+php artisan administrable:install {guard=admin} -d "mysql://root:root@127.0.0.1:3306/administrable"
 ```
+
+**NB:** Seuls *mysql* and *sqlite* sont supportés.
 
 - **seed**
 
