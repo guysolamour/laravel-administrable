@@ -28,10 +28,10 @@ class Page extends BaseModel
     }
 
 
-    public function getTag(string $name, ?string $key = null)
+    public function getTag(string $code, ?string $key = null)
     {
 
-        $tag = $this->metatags->filter(fn ($tag)=> $tag->name == $name)->first();
+        $tag = $this->metatags->filter(fn ($tag)=> $tag->code == $code)->first();
 
         if ($tag) {
             return $key ? $tag->$key : $tag;

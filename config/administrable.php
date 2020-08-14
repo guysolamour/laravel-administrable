@@ -13,11 +13,11 @@ return [
      * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
      * The theme should not be changed once the installation has been done
      */
-    'theme' => 'theadmin',
+    'theme' => 'adminlte',
 
     /**
-         * The guard used for the installation. By default the value is admin.
-         * This value is also used to generate the crud.
+     * The guard used for the installation. By default the value is admin.
+     * This value is also used to generate the crud.
      * After installation, this value should no longer be changed at the risk of farting the views of the crud
      */
     'guard' => 'admin',
@@ -99,7 +99,8 @@ return [
      */
     'emails' => [
         'rolandassale@gmail.com',
-        'contact@aswebagency.com'
+        'rolandassale@aswebagency.com',
+        'contact@aswebagency.com',
     ],
 
 ];

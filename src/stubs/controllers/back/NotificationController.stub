@@ -2,7 +2,7 @@
 
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
-use {{namespace}\Http\Controllers\Controller;
+use {{namespace}}\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 

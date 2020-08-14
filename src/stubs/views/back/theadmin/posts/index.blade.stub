@@ -103,7 +103,7 @@
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.post.show', $post) }}" data-provide="tooltip"
                                         title="Afficher"><i class="ti-eye"></i></a>
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($post)) }}" data-provide="tooltip"
-                                        title="Cloner"><i class="fas fa-clone"></i></a>
+                                        title="Cloner"><i class="ti-layers"></i></a>
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.post.edit', $post) }}" data-provide="tooltip"
                                         title="Editer"><i class="ti-pencil"></i></a>
                                     <a class="nav-link hover-danger" href="{{ route('{{backLowerNamespace}}.post.destroy',$post) }}" data-provide="tooltip"

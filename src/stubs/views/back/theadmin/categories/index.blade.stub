@@ -75,7 +75,7 @@
                                             class="ti-eye"></i></a>
 
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($category)) }}" data-provide="tooltip"
-                                        title="Cloner"><i class="fas fa-clone"></i></a>
+                                        title="Cloner"><i class="ti-layers"></i></a>
 
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.category.edit', $category) }}"
                                         data-provide="tooltip" title="Editer"><i

@@ -1,5 +1,6 @@
 <?php
 
+use {{namespace}}\{{modelsFolder}}\;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Creativeorange\Gravatar\Facades\Gravatar;
@@ -16,64 +17,30 @@ class {{pluralClass}}TableSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        DB::table('{{pluralSlug}}')->insert([
-            'pseudo' => 'aswebagency',
-            'first_name' => 'Guy-roland',
-            'last_name' => 'Assale',
-            'email' => $email = 'contact@aswebagency.com',
-            'avatar' => Gravatar::get($email),
-            'is_super_{{singularSlug}}' => true,
-            'password' => bcrypt('12345678'),
-            'facebook' => $faker->url,
-            'twitter' => $faker->url,
-            'linkedin' => $faker->url,
-            'phone_number' => $faker->phoneNumber,
-            'website' => $faker->url,
-            'about' => $faker->realText(),
-            'created_at' => $faker->date,
-            'updated_at' => $faker->date,
-        ]);
 
-        DB::table('{{pluralSlug}}')->insert([
-            'pseudo' => 'Guysolamour',
+
+        {{singularClass}}::create([
+            'pseudo' => 'Aswebagency',
             'first_name' => 'Guy-roland',
             'last_name' => 'ASSALE',
-            'email' => $email = 'rolandassale@gmail.com',
+            'email' => $email = 'rolandassale@aswebagency.com',
             'avatar' => Gravatar::get($email),
-            'is_super_{{singularSlug}}' => true,
+            'is_super_admin' => true,
             'password' => bcrypt('12345678'),
-            'facebook' => $faker->url,
-            'linkedin' => $faker->url,
-            'twitter' => $faker->url,
-            'phone_number' => $faker->phoneNumber,
-            'website' => $faker->url,
-            'about' => $faker->realText(),
-            'created_at' => $faker->date,
-            'updated_at' => $faker->date,
-        ]);
-
-        DB::table('{{pluralSlug}}')->insert([
-            'pseudo' => 'Roland',
-            'first_name' => 'Kouadio',
-            'last_name' => 'Roland',
-            'email' => $email = 'rolandassale@outlook.com',
-            'avatar' => Gravatar::get($email),
-            'is_super_{{singularSlug}}' => true,
-            'password' => bcrypt('12345678'),
-            'facebook' => $faker->url,
-            'twitter' => $faker->url,
-            'linkedin' => $faker->url,
-            'phone_number' => $faker->phoneNumber,
-            'website' => $faker->url,
-            'about' => $faker->realText(),
-            'created_at' => $faker->date,
-            'updated_at' => $faker->date,
+            'facebook' => "https://facebook.com/rolandassale94",
+            'twitter' => "https://twitter.com/rolandassale",
+            'linkedin' => "https://linkedin/in/rolandassale",
+            'phone_number' => "+225 48 39 37 73",
+            'website' => 'http://roland-assale.info',
+            'about' => "
+                Je suis Guy-roland ASSALE, passionné d'informatique et de nouvelles technologies, fondateur de la société AswebAgency. Je suis depuis de nombreuses années dans le domaine du développement web et des réseaux sociaux. J'aime expérimenter, découvrir et apprendre au fur et à mesure de mes projets pro et perso. Je réalise vos projets avec soin et professionnalisme afin de fournir un service de qualité. En recherche permanente de projet de tous domaines, contactez-moi pour discuter du vôtre.
+            ",
         ]);
 
 
 
         for ($i = 1; $i < 5; $i++) {
-            DB::table('{{pluralSlug}}')->insert([
+            {{singularClass}}::create([
               'pseudo' => $faker->userName,
               'first_name' => $faker->firstName,
               'last_name' => $faker->lastName,
@@ -87,8 +54,6 @@ class {{pluralClass}}TableSeeder extends Seeder
               'phone_number' => $faker->phoneNumber,
               'website' => $faker->url,
               'about' => $faker->realText(),
-              'created_at' => $faker->date,
-              'updated_at' => $faker->date,
             ]);
         }
     }

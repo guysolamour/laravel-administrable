@@ -1,7 +1,7 @@
 # Where to store models in app folder
 folder: {{modelsFolder}}
 
-# Desactiver globalement la modification du champ slug dans les formulaires
+# Activate or deactivate slug editing in form globally
 edit_slug: false
 
 # add clone model in index page
@@ -23,147 +23,785 @@ Todo:
   clone: false
   # edit_slug: true
 
-Category:
-  name:  { name: name, type: string, rules: nullable, nullable: true }
-  title: { name: title, default: salut, rules: nullable, nullable: true }
-  image: { name: image, type: image }
-  description: { name: description, type: text, rules: required }
-  seed: true
-  slug: title
-
-Image:
-  url: { type: string, rules: required|string , sslug: true}
-  user_id: { type: { relation: one to one, type: simple, related: user, property: name }, rules: required }
-
-  # entity: true
-  image: # { type: polymorphic, rules: required}
-    type: polymorphic
-    rules: required
-    # model_id: koffiable_id
-    # model_type: koffiable_type
-    # polymorphic: true
-  # timestamps: false
-  friend:
-    polymorphic: true
 
 
 
-Terrain:
-  user_id:
-    # type: { name: One To Many, related: user, property: name }
-    type:
-      relation:  one to one
-      type: simple
-      # related: app\models\user
-      onDelete: cascade
-      related: User
-      property: name
-      # local_keys: { foreign_key: kguy_id, local_key: kid }
-      # related_keys:  { foreign_key: guy_id, other_key: id }
-      # withdefault: 'pierre,papier,ciseaux'
-    # rules: nullable
-    rules: required
-  # user_id: { type: { relation: one to one, type: simple, related: user, property: name, withdefault: 'pierre,papier,ciseaux' }, rules: required }
-  # age: { type: bigInteger:6, trans: koffi }
-  name: { rules: nullable|string, trans: nom, default: assale }
-  # title: { name: title, default: salut, rules: nullable, nullable: true }
-  # name: { name: name, type: string, length: 225, rules: nullable  }
-  title: { name: title, type: string:255, rules: required|string,  slug: true  }
-  # image: {  type: string, length: 180 , rules: string|email|nullable }
+## Crud
 
-  # il faudra vérifier si le modèle crelated exixte déja dans notre cas image sinon on le créé rapidement
-  # image:
-  #   # type: { name: One To Many, related: user, property: name }
-  #   type:
-  #     relation:  one to many
-  #     type: polymorphic
-  #     related: image
-  #     name: 'immafedkfkkffkk'
-  #     # onDelete: cascade
-  #     property: name
-  #     # intermediate_table: terrain_caca
-  #     # foreign: {}
-  #     # local_keys: { foreign_key: terrain_id, join_key: user_id }
-  #     # related_keys: { foreign_key: user_id, join_key: terrain_id }
-  #     # related_keys:  { foreign_key: guy_id, other_key: otherid }
-  #     # withdefault: 'pierre,papier,ciseaux'
-  #   # rules: nullable
-  #   rules: required
+# This command generates the crud (***model***, ***controller***, ***migration***, ***form***, ***views***, ***seed***) for a particular model.
 
-  # user_id:
-  #   # type: { name: One To Many, related: user, property: name }
-  #   type:
-  #     relation:  many to many
-  #     type: simple
-  #     # related: app\models\user
-  #     onDelete: cascade
-  #     related: user
-  #     property: name
-  #     intermediate_table: terrain_caca
-  #     # foreign: {}
-  #     # local_keys: { foreign_key: terrain_id, join_key: user_id }
-  #     # related_keys: { foreign_key: user_id, join_key: terrain_id }
-  #     # related_keys:  { foreign_key: guy_id, other_key: otherid }
-  #     withdefault: 'pierre,papier,ciseaux'
-  #   # rules: nullable
-  #   rules: required
+# ```php
+# php artisan administrable:make:crud {Model}
+# ```
 
-  # user_id:
-  #   # type: { name: One To Many, related: user, property: name }
-  #   type:
-  #     relation:  one to one
-  #     type: simple
-  #     # related: app\models\user
-  #     onDelete: cascade
-  #     related: User
-  #     property: name
-      # local_keys: { foreign_key: kguy_id, local_key: kid }
-      # related_keys:  { foreign_key: guy_id, other_key: id }
-  #     withdefault: 'pierre,papier,ciseaux'
-  #   # rules: nullable
-  #   rules: required
+# The ***--migrate*** option is used to run artisan migrate command
+
+# ```php
+# php artisan administrable:make:crud {Model} --migrate="true"
+# ```
+
+# or
+
+# ```php
+# php artisan administrable:make:crud {Model} --migrate="false"
+# ```
+
+# **NB:**
+
+# - The default value is *true*.
+
+# To adapt the generation, a configuration file ***administrable.yaml*** located at the root of the project is used. This file uses the **Yaml** language. If you do not know this syntax you can go [to the official website] (https://www.yaml.org) to learn more.
+
+# Example of model declaration: ***Post***
+
+# ```yaml
+# Post:
+#   name: { name: name, type: string, rules: nullable, slug: true }
+#   image: { name: image, type: image, rules: required }
+#   breadcrumb: name
+#   imagemanager:
+#     - front
+#     - back
+#     - images
+# ```
+
+# ***NB***: The name of the model is compulsory and must correspond to that defined in the configuration file.
+
+# ### Overview
+
+# Only the name is required to declare a field (in some case).
+
+# ```yaml
+# Post:
+#   name: {  }
+# ```
+
+# ```yaml
+# Post:
+#   name: { name: name }
+# ```
+
+# However it can be optional if other keys are passed.
+
+# ```yaml
+# Post:
+#   name: { type: string, rules: required }
+# ```
+
+# ### The type of the field
+
+# ```yaml
+# Post:
+#   name: {  type: string }
+# ```
+
+# The default type is: ***string***
+# The available types are:
+
+# | | | | |
+# |--|--|--|--|
+# | string | text | mediumText | longText
+# | date| datetime| boolean | enum |
+# | decimal| float| double| |
+# | integer| mediumInteger| bigInteger| polymorphic |
+# | ipAdress| image| relation| file |
+
+# For file type fields you can use the *file* or *image* type (just an alias)
+
+# ```yaml
+# Post:
+#   name: {  type: file }
+# ```
+
+# or
+
+# ```yaml
+# Post:
+#   name: {  type: image }
+# ```
+
+# ### The validation
+
+# The validation rules are passed by the key ***rules*** and by default is an empty string.
+
+# ```yaml
+# Post:
+#   name: { rules: required }
+# ```
+
+# It uses the default validation rules of [laravel] (https://laravel.com/docs/validation).
+
+# Several rules must be separated by the pipe character **|**
+
+# ```yaml
+# Post:
+#   name: { rules: required|string|min:2 }
+# ```
+
+# For the rule ***required*** we can use the diminutive ***req*** (just an alias)
+
+# ```yaml
+# Post:
+#   name: { rules: req|string|min:2 }
+# ```
+
+# ### Nullable
+
+# To make a field nullable
+
+# ```yaml
+# Post:
+#   name: {  nullable: true }
+# ```
+
+# or use the nullable validation rule
+
+# ```yaml
+# Post:
+#   name: { rules: nullable }
+# ```
+
+# - If a field has the nullable validation rule, the field is automatically nullable.
+# - If a field is nullable then it automatically has the nullable validation rule.
+# - No need to specify it in twice.
+
+# ### Length
+
+# To define the length of a field
+
+# ```yaml
+# Post:
+#   name: { length: 60 }
+# ```
+
+# For the ***string*** (*text*, *mediumText*, *longText*) or ***int*** (*int*, *smallInt*, *BigInt*)  types,  you can pass the size of the field to the type separate by ***: ***.
+
+# ```yaml
+# Post:
+#   name: {  type: string:60  }
+# ```
+
+# ```yaml
+# User:
+#   age: { type: int:3 }
+# ```
+
+# ### slug
+
+# To sluggify a field
+
+# ```yaml
+# Post:
+#   name: {slug: true }
+# ```
+
+# or pass the slug option at the model level with the name of the field to be sluggified which must be defined beforehand (***important***).
+
+# ```yaml
+# Post:
+#   name: { name: name, type: string:125, rules: nullable}
+#   age: { type: int:3 }
+#   slug: name
+# ```
+
+# **NB:**
+
+# - One of the two options can  be used.
+# - Only one field can be sluggable
+# - Only  (***text***, ***longText***, ***mediumText***) type fields can be sluggify
+
+# ### edit slug
+
+# To have the slug field in form and edit it
+
+# ```yaml
+# Post:
+#   name: {slug: true }
+#   edit_slug: true
+# ```
+
+# Or use it globally. This will affect all models
+
+# ```yaml
+# edit_slug: true
+# ```
+
+# **NB:**
+
+# - The default value is *false*.
+# - A slug field is required on the model
+
+# ### clone
+
+# To have a button in index vue to clone or duplicate a field
+
+# ```yaml
+# Post:
+#   name: {slug: true }
+#   clone: true
+# ```
+
+# Or use it globally. This will affect all models
+
+# ```yaml
+# clone: true
+# ```
+
+# **NB:**
+
+# - The default value is *true*.
+
+# ### trans
+
+# The model can be translated with the *trans* option
+
+# ```yaml
+# Post:
+#   name: { name: name, type: string:125, rules: nullable}
+#   age: { type: int:3 }
+#   trans: article
+# ```
+
+# To field can be translated too.
+
+# ```yaml
+# Post:
+#   name: { trans: nom }
+# ```
+
+# **NB:** This translation is only used for display at view level.
+# If the option is not passed, the translation file in  **resources/lang**  in the current locale folder will be used.
+
+# ### default value
+
+# Field's default value
+
+# ```yaml
+# Post:
+#   name: { default: john }
+# ```
+
+# ### The actions
+
+# Sometimes we do not want to generate all actions (http verbs).
+
+# NB: The authorized values are: ***index***, ***show***, ***create***, ***edit*** and ***delete***
+
+# Actions can be separated by a , (*comma*)
+
+# ```yaml
+# Post:
+#   actions: index,show,create,edit,delete
+# ```
+
+# Actions can be separated by the character pipe |
+
+# ```yaml
+# Post:
+#   actions: index|show|create|edit|delete
+# ```
+
+# Actions can be declared as a list
+
+# ```yaml
+# Post:
+#   actions:
+#     - index
+#     - show
+#     - create
+#     - edit
+#     - delete
+# ```
+
+# ### tinymce
+
+# To use the tinymce rich editor for a field
+
+# ```yaml
+# Post:
+#   name: { tinymce: true }
+# ```
+
+# ### timestamps
+
+# By default for each model laravel manages the *created_at* and *updated_at* fields.
+# To deactivate it you can proceed as follows:
+
+# ```yaml
+# Post:
+#   timestamps: false
+# ```
+
+# It will add on the model the attribute
+
+# ```php
+# protected $timestamps = false;
+# ```
+
+# ### imagemanger
+
+# To use the image manager for a specific model.
+
+# **NB**:
+
+# - A model can only use 03 collections (*front*, *back* and *images*)
+
+# To use all collections and default labels
+
+# ```yaml
+# Post:
+#   imagemanager: true
+# ```
+
+# You can choose the collection (s) to use
+
+# ```yaml
+# Post:
+#     imagemanager:
+#       - front
+#       - back
+#       - images
+# ```
+
+# Labels can be changed this way
+
+# With the comma syntax
+
+# ```yaml
+# Post:
+#   imagemanager: { front: front image label, back: back image label, images: images label }
+# ```
+
+# or with the other syntax
+
+# ```yaml
+# Post:
+#     imagemanager:
+#       front: front image label
+#       back: back image label
+#       images: images label
+# ```
+
+# ### Icon
+
+# To change the icon used in the administration sidebar.
+
+# ```yaml
+# Post:
+#   name: { name: name,trans: nom, default: john }
+#   icon: fa-folder
+# ```
+
+# **NB**:
+
+# - The icon must be taken from the font awesome library.
+# - The default value is fa-folder
+
+# ### The polymorphic type
+
+# To create a polymorphic field
+
+# ```yaml
+# Post:
+#   name: { type: string, rules: required, type: polymorphic }
+# ```
+
+# or
+
+# ```yaml
+# Post:
+#   name: { rules: required, polymorphic: true }
+# ```
+
+# The name of the polymorphic relation is the name of the field with the suffix ***able*** by default. This behavior can be modified with:
+
+# ```yaml
+# Post:
+#   image:
+#     type: image
+#     name: mediaable
+#     rules: required
+# ```
+
+# Polymorphic field names can be changed with
+
+# ```yaml
+# Post:
+#   image:
+#     type: image
+#     model_id: imageable_id
+#     model_type: imageable_type
+#     rules: required
+# ```
+
+# The *model_id* must have the suffix ***_ id*** and the *model_type* must have the suffix ***_ type***
+
+# **NB:** To generate the model and the migration, you will have to use the *entity* tag on model's definition.
+
+# ```yaml
+# Post:
+#   name: { rules: required }
+#   entity: true
+# ```
+
+# ### Constraints
+
+# ```yaml
+# Post:
+#   name: { constraints: nullable}
+# ```
+
+# Constraints can be separated by  a comma *,*
+
+# ```yaml
+# Post:
+#   name: { constraints: nullable,unique,index}
+# ```
+
+# or with the list syntax
+
+# ```yaml
+# Post:
+#   name:
+#     constraints:
+#        - nullable
+#        - unique
+#        - index
+# ```
+
+# **NB**:
+
+# - The constraints must be valid according to the database management system.
+# - For the constraint ***set null***, no need to pass the field to ***nullable***. It’s done automatically.
+# - On the other hand, do not forget to remove the validation rule ***required*** if it is present because a field cannot be both ***required*** and ***nullable***.
+# - If the field is ***nullable*** no need to put it in the list of constraints and vice versa.
+# - For the ***default*** constraint  the value can be passed with **:**
+
+# ```yaml
+# Post:
+#   age: { constraints: default:18 }
+# ```
+
+# ### seeder
+
+# To avoid generating a seeder file
+
+# ```yaml
+# Post:
+#   age: { constraints: default:18}
+#   seeder: false
+# ```
+
+# **breadcrumb**
+# For breadcrumb, the procedure is as follows:
+
+# ```yaml
+# Post:
+#   age: { breadcrumb: true}
+# ```
+
+# or pass the breadcrumb option at the model level with the name of the field to use
+
+# ```yaml
+# Post:
+#   age: { name: age}
+#   breadcrumb: age
+# ```
+
+# **NB**
+
+# - One of the two possibilities cannot be used.
+# - only one field can have this breadcrumb attribute
+# - The breadcrumb is only used in administration panel.
+
+# ### Relationships
+
+# For relations the type ***relation*** is used
+
+# ```yaml
+# Post:
+#   user_id: { type: relation, related: user }
+# ```
+
+# The related is optional, we guest the name by remove the *_id*  on the field's name.
+# If the field doest not respect this convention, you have to use this option.
+
+# ```yaml
+# Post:
+#   user_id: { type: relation }
+# ```
+
+# Dans ce cas, le related sera **user**.
+
+# It is possible to use the full qualify class name.
+
+# ```yaml
+# Post:
+#   user_id: { type: relation, related: App\Models\User }
+# ```
+
+# You can change the deletion policy. OnDelete tag
+
+# ```yaml
+# Post:
+#   user_id: { type: { relation: one to one, type: simple, related: user, property: name, onDelete: cascade }, rules: required }
+# ```
+
+# You can change the key used for the foreign key.
+
+# ```yaml
+# Post:
+#   user_id: { type: { relation: one to one, type: simple, related: user, property: name, references: id }, rules: required }
+# ```
+
+# By default it is id which is used
+# **NB:**
+
+# - The authorized values are: ***cascade*** and ***set null***.
+# - No onDelete on a polymorphic type field.
+# - if a field must be polymorphic it will be necessary to create the linked model first before making the connection
+# - for relationship type fields if the related is not passed it is the name of the field which is used
 
 
+# ### Type simple
 
-  # user_id: { type: relation, related: user, property: name, rules: "nullable|exists:user,id" }
+# #### One to One (simple)
 
+# ```yaml
+# Post:
+#   user_id: { type: { relation: one to one, type: simple, related: user, property: name }, rules: required }
+# ```
 
-  # image: { type: image, rules: required }
-  # image: image required slug
-  description: { name: description, type: text, rules: required, tinymce: true, gbreadcrumb: true }
-  # slug: name
-  breadcrumb: title
-  # trans: configuration # Est juste utilisé que pour de l'affichage de gestion
-  # imagemanager: { front: Image Front Yml, back: Image Back Yml, images: Images }
-  # imagemanager: true
-  # timestamps: false
-  actions: index,show,create,edit,delete,
-  # actions: index|show|create|edit|delete|
-  # actions: index,show,titi,
-  # actions:
-  #   - index
-  #   - show
-  #   - create
-  #   - edit
-  #   - delete
-  imagemanager:
-    - front
-    - back
-    - images
-  # user_id:
-  #   name: user_id
-  #   type: { name: One To Many , related: user, property: name, onDelete: cascade|set null }
+# **NB:**
 
-  # relation: { field: user_id, related: user, property: name}
+# - The related is obligatory we must know to which field the relation is linked
+# - The related is mandatory and is the linked model. We can just pass the name
+# or the namespace.
+# - The property is the field used only for display and must exist on the linked model.
 
-  #  'user_id' => [
-  #       'name' => 'user_id', 'type' => [
-  #           'relation' => [
-  #               'name' => 'Many to One',
-  #               'model' => 'App\Models\User',
-  #               'property' => 'name'
-  #           ]
-  #       ],
-  #       'trans' => 'client',
-  #       'guest' => ['name','email','phone_number']
-  #   ],
+# ### Foreign keys
+
+# - For the model we are going to create
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: many to many
+#       type: simple
+#       related: user
+#       property: name
+#       intermediate_table: post_user
+#       local_keys: { foreign_key: kguy_id, local_key: kid }
+#     rules: required
+# ```
+
+# - For the model to be linked
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: many to many
+#       type: simple
+#       related: user
+#       property: name
+#       intermediate_table: post_user
+#       related_keys:  { foreign_key: guy_id, other_key: id }
+#     rules: required
+# ```
+
+# #### One to Many (simple)
+
+# ```yaml
+# Post:
+#   user_id: { type: { relation: one to many, type: simple, related: user, property: name }, rules: required }
+# ```
+
+# **NB:**
+
+# - The related is obligatory (we must know to which field the relation is linked)
+# - The related is mandatory and is the linked model. We can just pass the name
+# or the full namespace.
+# - The property is the field used only for display and must exist on the linked model.
+
+# #### Foreign keys
+
+# - For the model we are going to create
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: many to many
+#       type: simple
+#       related: user
+#       property: name
+#       intermediate_table: post_user
+#       local_keys: { foreign_key: kguy_id, local_key: kid }
+#     rules: required
+# ```
+
+# - For the model that will be linked
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: many to many
+#       type: simple
+#       related: user
+#       property: name
+#       intermediate_table: post_user
+#       related_keys:  { foreign_key: guy_id, other_key: id }
+#     rules: required
+# ```
+
+# **Many to Many (simple)**
+
+# ```yaml
+# Post:
+#   user_id: { type: { relation: many to many, type: simple, related: user, property: name }, rules: required }
+# ```
+
+# **NB:**
+
+# - The pivot table is automatically generated.
+# - You can change the name of the pivot intermediate table.
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: many to many
+#       type: simple
+#       related: user
+#       property: name
+#       intermediate_table: post_user
+#     rules: required
+# ```
+
+# #### Foreign keys
+
+# - For the model we are going to create
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: many to many
+#       type: simple
+#       related: user
+#       property: name
+#       intermediate_table: post_user
+#       local_keys: { foreign_key: terrain_id, join_key: user_id }
+#     rules: required
+# ```
+
+# - For the model that will be linked
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: many to many
+#       type: simple
+#       related: user
+#       property: name
+#       intermediate_table: post_user
+#       related_keys: { foreign_key: user_id, join_key: terrain_id }
+#     rules: required
+# ```
+
+# If the keys are passed and the intermediate table (pivot) is not then this table will be created with the convention.
+
+# ### One to One (polymorphic)
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: one to one
+#       type: polymorphic
+#       related: user
+#       property: name
+#     rules: required
+# ```
+
+# ### One to Many (polymorphic)
+
+# ```yaml
+# Post:
+#   user_id:
+#     type:
+#       relation: one to many
+#       type: polymorphic
+#       related: user
+#       property: name
+#     rules: required
+# ```
+
+# ### Many to Many polymorphic
+
+# The ***many to many*** polymorphic relationship is not yet established. I haven't had to use it in my various projects yet.
+
+# ## Append Crud
+
+# To append one or many fields on an existing model.
+
+# ```php
+# php artisan administrable:append:crud {model} --fields="field1,field2,field3"
+# ```
+
+# with the short version
+
+# ```php
+# php artisan administrable:append:crud {model} -f="field1,field2,field3"
+# ```
+
+# **NB:**
+
+# - The model must exists
+# - The fields must be defined in the same way as that of the **administrable:make:crud** command in the  *administrable.yaml* file
+
+# ## Rollback Crud
+
+# Rollback a crud
+
+# ```php
+# php artisan administrable:rollback:crud {model}
+# ```
+
+# The ***--rollback*** option is used to run the rollback artisan command. The default value is *true*
+
+# ```php
+# php artisan administrable:make:crud {Model} --rollback="true"
+# ```
+
+# or
+
+# ```php
+# php artisan administrable:make:crud {Model} --rollback="false"
+# ```
+
+# **NB:**
+
+# - The model must have been defined in *administrable.yaml* file.
+
+# Example:
+
+# ```php
+# php artisan administrable:rollback:crud Post
+# ```
+
+# By default the rollback artisan command will be run, if you want to change it.
+
+# ```php
+# php artisan administrable:rollback:crud Post --rollback
+# ```
+
+# or with the short versioning
+
+# ```php
+# php artisan administrable:rollback:crud Post -r
+# ```

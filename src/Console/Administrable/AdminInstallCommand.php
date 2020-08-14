@@ -1315,6 +1315,13 @@ class AdminInstallCommand extends BaseCommand
 
         $this->replaceAndWriteFile(
             $this->filesystem->get($env_path),
+            "APP_URL=http://localhost",
+            'APP_URL=http://localhost:8000',
+            $env_path
+        );
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($env_path),
             $search = "APP_ENV",
             <<<TEXT
             APP_FIRST_NAME={$this->guard}
