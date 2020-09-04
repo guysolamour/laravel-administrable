@@ -12,6 +12,9 @@ trait MakeCrudTrait
     use CommandTrait;
 
 
+
+
+
     /**
      * Parse guard name
      * Get the guard name in different cases
@@ -152,9 +155,12 @@ trait MakeCrudTrait
         $fields = empty($fields) ? $this->fields : $fields;
 
         foreach ($fields as $field) {
-            // allow to generate the slug in the seed by putting the variable $ slug in front
             if ($field['type'] === "string") {
                 $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->text(50),';
+            }
+
+            if ($field['type'] === "json") {
+                $seed_fields .= "\n" . "                '{$field['name']}'  => " . 'json_encode($faker->text(50)),';
             }
 
             if ($field['type'] === 'image') {

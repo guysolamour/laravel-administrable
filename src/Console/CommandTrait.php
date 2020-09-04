@@ -41,7 +41,7 @@ trait CommandTrait
      * @var string[]
      */
     protected $TYPES = [
-        'string', 'text', 'mediumText', 'longText',
+        'string', 'text', 'mediumText', 'longText', 'json',
         'date', 'datetime',
         'boolean', 'enum',
         'decimal', 'float', 'double',
@@ -344,6 +344,18 @@ trait CommandTrait
 
         return true;
     }
+
+    protected function checkIfCrudHasAlreadyBeenDoneForModel(string $model): bool
+    {
+        $model_path = sprintf("%s\%s\%s.", $this->getNamespace(), $this->getCrudConfiguration('folder', 'Models'), ucfirst($model));
+
+        if (!class_exists($model_path)) {
+            $this->triggerError("The model [{$model}] crud has already been done.");
+        }
+
+        return true;
+    }
+
 
     protected function checkIfRelatedModelPropertyExists(array $field): bool
     {

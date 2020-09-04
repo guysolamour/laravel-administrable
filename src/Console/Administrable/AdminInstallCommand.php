@@ -115,9 +115,9 @@ class AdminInstallCommand extends BaseCommand
                                 {--s|seed : Seed database with fake data }
                                 {--r|migrate=true : Run migrations }
                                 {--k|debug_packages : Add debug packages (debugbar, pretty routes ..) }
-                                {--d|create_db= : Create database with default connection }
+                                {--d|create_db= : Create database  }
                                 {--t|theme= : Theme to use }
-                                {--l|locale=fr : Locale to use default fr }
+                                {--l|locale=fr : Locale to use }
                             ';
 
 

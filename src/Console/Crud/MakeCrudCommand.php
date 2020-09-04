@@ -56,6 +56,9 @@ class MakeCrudCommand extends BaseCrudCommand
         $this->theme = config('administrable.theme');
 
 
+        $this->checkIfCrudHasAlreadyBeenDoneForModel($this->model);
+
+
         $config_fields = $this->getCrudConfiguration(ucfirst($this->model));
 
         $this->fields = $this->getCleanFields($config_fields);
