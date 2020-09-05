@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\Route;
 
 
 if (!function_exists('get_base64encode_class')) {
-    function get_base64encode_class(BaseModel $model) :string
+    /**
+     * @param BaseModel $model
+     * @return string
+     */
+    function get_base64encode_class($model) :string
     {
        return base64_encode(get_class($model));
     }
@@ -17,7 +21,11 @@ if (!function_exists('get_base64encode_class')) {
 
 
 if (!function_exists('get_clone_model_params')) {
-    function get_clone_model_params(BaseModel $model) :array
+    /**
+     * @param BaseModel $model
+     * @return array
+     */
+    function get_clone_model_params($model) :array
     {
        return [
            get_base64encode_class($model),
@@ -27,7 +35,11 @@ if (!function_exists('get_clone_model_params')) {
 }
 
 if (!function_exists('get_form_class_name')) {
-    function get_form_class_name(BaseModel $model) :string
+    /**
+     * @param BaseModel $model
+     * @return string
+     */
+    function get_form_class_name($model) :string
     {
         $name = class_basename(get_class($model));
 
@@ -37,7 +49,7 @@ if (!function_exists('get_form_class_name')) {
 
 if (!function_exists('guest_views_folder_name')) {
     /**
-     * @param BaseModel|string $model
+     * @param BaseModel $model
      * @return string
      */
     function guest_views_folder_name($model) :string

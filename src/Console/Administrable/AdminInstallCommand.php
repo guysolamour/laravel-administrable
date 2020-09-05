@@ -32,7 +32,7 @@ class AdminInstallCommand extends BaseCommand
             'back'  => ['User', 'Comment', 'Configuration', 'Create', 'Guard', 'ResetPassword', 'Page']
         ],
         'routes'    => [
-            'front' => ['Auth', 'Default', 'Social', 'Comment'],
+            'front' => ['Auth', 'Default', 'Social', 'Comment', 'Rickroll'],
             'back'  => ['User', 'Auth', 'Configuration', 'Media', 'Other', 'Profile', 'Comment', 'Page', 'Notification']
         ],
 
@@ -1258,6 +1258,9 @@ class AdminInstallCommand extends BaseCommand
     {
         // Create database
         $create_db = $this->option('create_db');
+
+        if (!$create_db) return;
+
         $db_connection = Str::lower(Str::before($create_db, "://"));
 
         if (!in_array($db_connection, self::DB_CONNECTIONS)) {

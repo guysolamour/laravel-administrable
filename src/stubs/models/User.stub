@@ -4,6 +4,7 @@ namespace {{namespace}};
 
 use {{namespace}}\Traits\CommenterTrait;
 use {{namespace}}\Traits\MediaableTrait;
+use {{namespace}}\Traits\ModelTrait;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -11,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
-    use Notifiable, CommenterTrait, MediaableTrait;
+    use Notifiable, CommenterTrait, MediaableTrait, ModelTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -40,25 +41,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-    * @param string $email
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null|static
-    */
-    public static function findByEmail($email)
-    {
-      return static::where('email', $email)->first();
-    }
 
-    public function getMediaCollections(): array
-    {
-        return config('media-library.collections', []);
-    }
-
-
-    public function getMediaConversions(): array
-    {
-        return config('media-library.conversions', []);
-    }
     // add relation methods below
 }

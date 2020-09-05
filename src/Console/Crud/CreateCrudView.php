@@ -100,6 +100,7 @@ class CreateCrudView
         $this->clone           = $clone;
 
         $this->filesystem      = new Filesystem;
+
     }
 
     /**
@@ -246,6 +247,7 @@ class CreateCrudView
         $complied =  $this->loadBreadcrumbFor('index', $complied, $data_map);
 
         $complied =  $this->loadBreadcrumbFor('create', $complied, $data_map);
+        $complied =  $this->loadLinkButtonFor('create', $complied, $data_map);
 
         $complied =  $this->loadIndexLinkButtonFor($complied, $data_map);
 
@@ -436,6 +438,7 @@ class CreateCrudView
             $replace = $this->compliedFile($stub, true, $data_map);
 
             $complied = str_replace("{{-- {$key} link --}}", $replace, $complied);
+            // dd($replace, $complied);
 
             if ($this->isTheAdminTheme() && ('edit' === $key || 'delete' === $key)) {
                 $stub  =  $this->TPL_PATH . '/views/' . $this->theme . "/partials/links/_show{$key}link.blade.stub";

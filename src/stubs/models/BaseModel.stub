@@ -4,6 +4,7 @@ namespace {{namespace}}\{{modelsFolder}};
 
 use {{namespace}}\Traits\DraftableTrait;
 use {{namespace}}\Traits\MediaableTrait;
+use {{namespace}}\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -12,7 +13,7 @@ abstract class BaseModel extends Model implements HasMedia
 {
 
    //  use Cachable;
-   use DraftableTrait, MediaableTrait;
+   use DraftableTrait, MediaableTrait, ModelTrait;
 
     /**
      * Get the lasts items ordered by id DESC

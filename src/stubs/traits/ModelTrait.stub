@@ -1,0 +1,62 @@
+<?php
+
+namespace {{namespace}}\Traits;
+
+
+
+trait ModelTrait
+{
+    public function getMediaCollections(): array
+    {
+        return config('media-library.collections', []);
+    }
+
+
+    public function getMediaConversions(): array
+    {
+        return config('media-library.conversions', []);
+    }
+
+    /**
+     * Guest form name
+     *
+     * @return string
+     */
+    public function getFormNameAttribute(): string
+    {
+        return get_form_name($this);
+    }
+
+
+    /**
+     * @param string $email
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null|static
+     */
+    public static function findByEmail($email)
+    {
+        return static::where('email', $email)->first();
+    }
+
+    /**
+     * Get formated date
+     *
+     * @return string
+     */
+    public function getFormatedDateAttribute(): string
+    {
+        return $this->created_at->format('d/m/Y h:i');
+    }
+
+
+    /**
+     * Get FormBuilder class name
+     *
+     * @return string
+     */
+    public function getFormClassName()
+    {
+        return get_form_class_name($this);
+    }
+
+}

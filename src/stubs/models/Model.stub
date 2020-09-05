@@ -2,6 +2,7 @@
 
 namespace {{namespace}};
 
+use {{namespace}}\Traits\ModelTrait;
 use {{namespace}}\Traits\MediaableTrait;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +13,7 @@ use {{namespace}}\Notifications\{{backNamespace}}\Auth\ResetPassword;
 
 class {{singularClass}} extends Authenticatable implements HasMedia
 {
-    use Notifiable, MediaableTrait;
+    use Notifiable, MediaableTrait, ModelTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -147,36 +148,18 @@ class {{singularClass}} extends Authenticatable implements HasMedia
     }
 
 
-    /**
-    * @param string $email
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null|static
-    */
-    public static function findByEmail($email)
-    {
-      return static::where('email', $email)->first();
-    }
 
     public function getRouteKeyName()
     {
       return 'pseudo';
     }
 
-    public function getMediaCollections(): array
-    {
-        return config('media-library.collections', []);
-    }
 
 
-    public function getMediaConversions(): array
-    {
-        return config('media-library.conversions', []);
-    }
 
 
     // add relation methods below
 
 
-    // ajouter la relation post dynamiquement
 
 }

@@ -2,9 +2,11 @@
 
 namespace {{namespace}}\{{modelsFolder}};
 
+use {{namespace}}\Traits\ModelTrait;
+
 class {{singularClass}} extends BaseModel
 {
-
+    use ModelTrait;
 
     public $fillable = [{{fillable}}];
 

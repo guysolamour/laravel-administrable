@@ -1,6 +1,6 @@
 <?php
 
-use {{namespace}}\{{modelsFolder}}\;
+use {{namespace}}\{{modelsFolder}}\{{singularClass}};
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Creativeorange\Gravatar\Facades\Gravatar;
