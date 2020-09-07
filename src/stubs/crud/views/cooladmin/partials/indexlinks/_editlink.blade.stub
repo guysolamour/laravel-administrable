@@ -1,3 +1,0 @@
-<a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.edit', ${{singularSlug}}) }}" class="item" data-toggle="tooltip" data-placement="top" title="Editer" data-original-title="Editer">
-                                                <i class="zmdi zmdi-edit"></i>
-                                            </a>

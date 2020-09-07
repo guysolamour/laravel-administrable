@@ -2,7 +2,6 @@
 
 namespace Guysolamour\Administrable\Console\Crud;
 
-use Illuminate\Support\Arr;
 use Guysolamour\Administrable\Console\BaseCommand;
 
 

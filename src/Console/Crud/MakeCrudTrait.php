@@ -279,7 +279,7 @@ trait MakeCrudTrait
 
         if (
             $type === 'string' || $type === 'decimal' || $type === 'double' ||
-            $type === 'float'
+            $type === 'float' || $type === 'json'
         ) {
             return 'text';
         } elseif (

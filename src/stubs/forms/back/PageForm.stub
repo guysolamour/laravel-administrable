@@ -2,7 +2,9 @@
 
 namespace {{namespace}}\Forms\{{backNamespace}};
 
+use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\Form;
+use Illuminate\Support\Facades\Route;
 
 class PageForm extends Form
 {
@@ -34,10 +36,28 @@ class PageForm extends Form
 			    'label' => 'Nom',
 			    'rules' => 'required',
         ])
-		    ->add('route','text', [
-			    'label' => 'Url (route)',
-			    'rules' => 'required|route_exists',
-        ])
+        ->add('route', 'select', [
+            'choices' => $this->getRoutesNames(),
+            'rules' => 'nullable|route_exists',
+            'label' => 'Url (route)',
+            'attr' => [
+                'class' => 'form-control select2'
+            ]
+
+        ]);
         ;
+    }
+
+    private function getRoutesNames(): array
+    {
+        $routes = collect(Route::getRoutes()->getRoutesByName());
+
+        $routes = $routes->filter(function ($route, $key) {
+            return Str::startsWith($key, Str::lower(config('administrable.front_namespace'))) ||  $key === 'home';
+        })->keys();
+
+        $routes = $routes->mapWithKeys(fn ($route) => [$route => $route])->all();
+
+        return $routes;
     }
 }

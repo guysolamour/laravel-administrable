@@ -1,7 +1,0 @@
-  <td>
-                                        <label class="au-checkbox" for="check-{{ ${{singularSlug}}->id }}">
-                                            <input type="checkbox" data-check data-id="{{ ${{singularSlug}}->id }}"
-                                                id="check-{{ ${{singularSlug}}->id }}">
-                                            <span class="au-checkmark"></span>
-                                        </label>
-                                    </td>

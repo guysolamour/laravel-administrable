@@ -15,7 +15,7 @@ trait MediaableTrait
 
     public function getFrontImageAttribute()
     {
-        return $this->getMedia(config('media-library.collections.front.label'), ['select' => true])->first();
+        return $this->getMedia(config('media-library.collections.front.label', 'default'), ['select' => true])->first();
     }
 
     public function getFrontImageUrl() :?string
@@ -31,13 +31,13 @@ trait MediaableTrait
 
     public function getBackImageAttribute()
     {
-        return $this->getMedia(config('media-library.collections.back.label'), ['select' => true])->first();
+        return $this->getMedia(config('media-library.collections.back.label', 'default'), ['select' => true])->first();
     }
 
 
     public function getImagesAttribute()
     {
-        $medias = $this->getMedia(config('media-library.collections.images.label'), ['select' => true]);
+        $medias = $this->getMedia(config('media-library.collections.images.label', 'default'), ['select' => true]);
 
         return $this->sortImages($medias);
     }

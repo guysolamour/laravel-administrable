@@ -2,18 +2,21 @@
 
 namespace {{namespace}}\{{modelsFolder}};
 
-use Illuminate\Support\Str;
-
 
 class PageMeta extends BaseModel
 {
 
     const TYPES = [
-        'text'        => ['label' => 'Texte', 'value'          => 1],
-        'simpletext'  => ['label' => 'Texte (simple)', 'value' => 4],
-        'image'       => ['label' => 'Image', 'value'          => 2],
-        'video'       => ['label' => 'Vidéo', 'value'          => 3],
+        'text'               => ['label' => 'Texte', 'value'           => 1],
+        'simpletext'         => ['label' => 'Texte (simple)', 'value'  => 4],
+        'image'              => ['label' => 'Image', 'value'           => 2],
+        'video'              => ['label' => 'Vidéo', 'value'           => 3],
+        'attachedfile'       => ['label' => 'Autres fichiers', 'value' => 5],
+        'group'              => ['label' => 'Groupe de champ', 'value' => 6],
     ];
+
+
+    const DEFAULT_GROUP_CODE = 'defaultgroup';
 
     /**
      * The table associated with the model.
@@ -22,14 +25,15 @@ class PageMeta extends BaseModel
      */
     protected $table = 'page_metas';
 
-
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['code','name','title','type','content', 'page_id'];
+    protected $fillable = ['code','name','title','type','content', 'page_id', 'parent_id'];
+
 
 
     /**
@@ -45,13 +49,28 @@ class PageMeta extends BaseModel
 
 
     // Attributes
-
     public function getImageUrlAttribute()
     {
-        if (!$this->isImage()) return '';
-
-        return $this->content;
+        return optional($this->image)->getUrl();
     }
+
+    public function getAttachedFileUrlAttribute()
+    {
+        return optional($this->attachedfile)->getUrl();
+    }
+
+    public function getImageAttribute()
+    {
+        if ($this->isImage()) {
+            return $this->attachedfile;
+        }
+    }
+
+    public function attachedfile()
+    {
+        return $this->belongsTo(Media::class, 'content');
+    }
+
 
     public function getVideoUrlAttribute()
     {
@@ -60,6 +79,17 @@ class PageMeta extends BaseModel
         return $this->content;
     }
 
+    public function children()
+    {
+        return $this->hasMany(PageMeta::class, 'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(PageMeta::class, 'parent_id');
+    }
+
+
     /**
      *
      * @return boolean
@@ -67,6 +97,15 @@ class PageMeta extends BaseModel
     public function isImage() :bool
     {
        return $this->type == self::TYPES['image']['value'];
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isAttachedFile(): bool
+    {
+        return $this->type == self::TYPES['attachedfile']['value'];
     }
 
     /**
@@ -97,6 +136,18 @@ class PageMeta extends BaseModel
     }
 
 
+    /**
+     * Scope a query to only include
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeGroupField($query)
+    {
+        return $query->whereNull('parent_id')->where('type', self::TYPES['group']['value']);
+    }
+
+
 
     public static function booted()
     {
@@ -108,6 +159,15 @@ class PageMeta extends BaseModel
         static::creating(function ($model) {
             if (!$model->title) {
                 $model->title = $model->name;
+            }
+        });
+
+        /**
+         * @param self $model
+         */
+        static::deleted(function ($model) {
+            if ($model->children) {
+                $model->children->each->delete();
             }
         });
     }

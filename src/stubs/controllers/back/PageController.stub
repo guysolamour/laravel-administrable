@@ -54,6 +54,7 @@ class PageController extends Controller
 
         Page::create($request->all());
 
+
         flashy('L\' élément a bien été ajouté');
         return redirect()->route('{{backLowerNamespace}}.page.index');
     }
@@ -66,7 +67,7 @@ class PageController extends Controller
      */
     public function show(Page $page)
     {
-        $page->load('metatags');
+        $page->load(['metatags' => fn($query) => $query->groupField()]);
 
         return view('{{backLowerNamespace}}.pages.show', compact('page'));
     }
@@ -122,15 +123,22 @@ class PageController extends Controller
 
     public function storeMetaTag(Page $page, Request $request)
     {
-         $request->validate($this->getValidationRules());
+        $request->validate($this->getValidationRules());
 
-        $pagemeta = $page->metatags()->create([
+        $data = [
             'code'    => $request->get('code'),
             'name'    => $request->get('name'),
             'title'   => $request->get('title'),
             'type'    => $request->get('type'),
+            'parent_id'    => $request->get('parent_id'),
             'content' => $this->getContentFieldValue($request)
-        ]);
+        ];
+
+        if ('group' === get_meta_type(request('type'))) {
+            $data['parent_id'] = null;
+        }
+
+        $pagemeta = $page->metatags()->create($data);
 
         $this->saveImage($pagemeta, $request);
 
@@ -143,15 +151,19 @@ class PageController extends Controller
 
 
 
+
+
+
     public function updateMetaTag(Page $page, PageMeta $pagemeta ,Request $request)
     {
-        $request->validate($this->getValidationRules());
+        $request->validate($this->getValidationRules(true));
 
         $pagemeta->update([
             'name'    => $request->get('name'),
             'title'   => $request->get('title'),
-            'content' => $request->get('textcontent') ?? $request->get('videocontent')
+            'content' => $this->getContentFieldValue($request),
         ]);
+
         $this->saveImage($pagemeta, $request);
 
 
@@ -171,7 +183,7 @@ class PageController extends Controller
         return back();
     }
 
-    private function getValidationRules() :array
+      private function getValidationRules(bool $edit = false): array
     {
         $rules =  [
             'code'     => 'required',
@@ -182,31 +194,54 @@ class PageController extends Controller
             'page_id'  => 'required|exists:\{{namespace}}\{{modelsFolder}}\Page,id',
         ];
 
-        if ('image' === get_meta_type(request('type'))) {
-            $rules['imagecontent'] = 'required|image';
+        if (!$edit) {
+            if ('image' === get_meta_type(request('type'))) {
+                $rules['imagecontent'] = 'required|image';
+            }
+
+            if ('attachedfile' === get_meta_type(request('type'))) {
+                $rules['attachedfilecontent'] = 'required|file';
+            }
         }
 
         return $rules;
     }
 
 
-    private function getContentFieldValue($request) :?string
+
+     /**
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return string|null
+     */
+    private function getContentFieldValue($request): ?string
     {
         $types = \{{namespace}}\{{modelsFolder}}\PageMeta::TYPES;
 
-        foreach($types as $key => $type){
-            if ($request->get('type') == $type['value']){
+        foreach ($types as $key => $type) {
+            if ($request->get('type') == $type['value']) {
                 return $request->get("{$key}content");
             }
         }
         return null;
     }
 
+
     private function saveImage($pagemeta, $request)
     {
-        if ($request->file('imagecontent') && $pagemeta->isImage()) {
-            $media = $pagemeta->addMediaFromRequest('imagecontent')->toMediaCollection(config('media-library.collections.front.label'));
-            $pagemeta->update(['content' => $media->getUrl()]);
+        if ('image' === get_meta_type(request('type'))) {
+            $key = 'imagecontent';
+        } else if ('attachedfile' === get_meta_type(request('type'))) {
+            $key = 'attachedfilecontent';
+        } else {
+            $key = null;
+        }
+
+
+        if ($request->file($key)) {
+            $media = $pagemeta->addMediaFromRequest($key)->toMediaCollection(config('media-library.collections.attachments.label'));
+
+            $pagemeta->update(['content' => $media->getKey()]);
         }
     }
 

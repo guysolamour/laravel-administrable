@@ -1,7 +1,5 @@
 <?php
 
-use {{namespace}}\{{modelsFolder}}\PageMeta;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -21,13 +19,11 @@ class CreatePageMetasTable extends Migration
             $table->string('name');
             $table->string('code');
             $table->string('title')->nullable();
-             $table->enum('type', Arr::pluck(PageMeta::TYPES, 'value'));
+            $table->string('type');
             $table->longText('content')->nullable();
 
             $table->foreignId('page_id')->constrained('pages')->onDelete('cascade');
-
-
-            $table->timestamps();
+            $table->foreignId('parent_id')->nullable();
         });
     }
 

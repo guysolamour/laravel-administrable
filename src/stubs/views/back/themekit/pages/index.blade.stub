@@ -87,7 +87,13 @@
                                     <td>{{ $page->code }}</td>
                                     <td>{{ $page->name }}</td>
                                     <td>{{ $page->route }}</td>
-                                    <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
+                                    <td>
+                                        @if($page->uri)
+                                        <a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a>
+                                        @else
+                                        Pas d'url défini
+                                        @endif
+                                    </td>
                                     {{-- add values here --}}
                                     <td>
                                         <div class="btn-group" role="group">
@@ -123,7 +129,5 @@
 </div>
 
 @include('{{backLowerNamespace}}.partials._datatable')
-@if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-@include('{{backLowerNamespace}}.partials._deleteAll')
-@endif
+@includeWhen(get_{{singularSlug}}()->isConceptor{{singularClass}}(), '{{backLowerNamespace}}.partials._deleteAll')
 @endsection

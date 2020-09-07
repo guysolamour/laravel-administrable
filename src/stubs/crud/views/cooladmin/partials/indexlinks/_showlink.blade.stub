@@ -1,4 +1,0 @@
-  <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.show', ${{singularSlug}}) }}"
-                                                class="item" data-toggle="tooltip" data-placement="top" title="Voir">
-                                                <i class="zmdi zmdi-mail-send"></i>
-</a>

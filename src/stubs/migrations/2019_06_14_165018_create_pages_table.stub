@@ -21,7 +21,7 @@ class CreatePagesTable extends Migration
             $table->string('route')->unique();
             $table->string('slug')->unique();
 
-            $table->timestamps();
+
         });
     }
 

@@ -1,6 +1,0 @@
-<!-- {{singularSlug}} link -->
- <li class="{{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
-                    <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
-                        <i class="far  {{icon}}"></i>{{translateModelUcfirst}}</a>
-                </li>
-<!-- end {{singularSlug}} link -->

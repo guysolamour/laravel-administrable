@@ -18,8 +18,6 @@ class BaseCommand extends Command
     protected  const BASE_PATH = __DIR__ . '/../..';
 
 
-
-
     protected $filesystem;
 
 

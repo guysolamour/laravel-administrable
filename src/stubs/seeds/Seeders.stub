@@ -20,18 +20,18 @@ class {{pluralClass}}TableSeeder extends Seeder
 
 
         {{singularClass}}::create([
-            'pseudo' => 'Aswebagency',
+            'pseudo' => 'AswebAgency',
             'first_name' => 'Guy-roland',
             'last_name' => 'ASSALE',
             'email' => $email = 'rolandassale@aswebagency.com',
             'avatar' => Gravatar::get($email),
             'is_super_admin' => true,
-            'password' => bcrypt('12345678'),
-            'facebook' => "https://facebook.com/rolandassale94",
-            'twitter' => "https://twitter.com/rolandassale",
-            'linkedin' => "https://linkedin/in/rolandassale",
+            'password' => '12345678',
+            'facebook' => "https://roland-assale.info/facebook",
+            'twitter' => "https://roland-assale/twitter",
+            'linkedin' => "https://roland-assale/linkedin",
             'phone_number' => "+225 48 39 37 73",
-            'website' => 'http://roland-assale.info',
+            'website' => 'https://roland-assale.info',
             'about' => "
                 Je suis Guy-roland ASSALE, passionné d'informatique et de nouvelles technologies, fondateur de la société AswebAgency. Je suis depuis de nombreuses années dans le domaine du développement web et des réseaux sociaux. J'aime expérimenter, découvrir et apprendre au fur et à mesure de mes projets pro et perso. Je réalise vos projets avec soin et professionnalisme afin de fournir un service de qualité. En recherche permanente de projet de tous domaines, contactez-moi pour discuter du vôtre.
             ",
@@ -47,7 +47,7 @@ class {{pluralClass}}TableSeeder extends Seeder
               'email' => $email = $faker->email,
               'avatar' => Gravatar::get($email),
               'is_super_{{singularSlug}}' => false,
-              'password' => bcrypt('12345678'),
+              'password' => '12345678',
               'facebook' => $faker->url,
               'twitter' => $faker->url,
               'linkedin' => $faker->url,

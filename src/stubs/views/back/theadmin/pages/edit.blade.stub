@@ -12,8 +12,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.index') }}">Pages</a></li>
-                <li class="breadcrumb-item"><a
-                        href="{{ route('{{backLowerNamespace}}.page.show', $page) }}">{{ $page->name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.page.show', $page) }}">{{ $page->name }}</a></li>
                 <li class="breadcrumb-item active">Edition</li>
             </ol>
         </nav>
@@ -55,3 +54,18 @@
 
 
 @endsection
+
+@push('css')
+<link rel="stylesheet" href="{{ asset('vendor/{{theme}}/vendor/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/{{theme}}/vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endpush
+
+@push('js')
+<script src="{{ asset('vendor/{{theme}}/vendor/select2/js/select2.full.js') }}"></script>
+
+<script>
+    $('.select2').select2({
+        theme: 'bootstrap4'
+    });
+</script>
+@endpush

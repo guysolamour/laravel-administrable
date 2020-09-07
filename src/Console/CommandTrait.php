@@ -263,7 +263,7 @@ trait CommandTrait
     {
         $type = is_array($type) ? $type['type'] : $type;
 
-        if ($type === 'string' || $type === 'text' || $type === 'mediumText' || $type === 'longText') {
+        if ($type === 'string' || $type === 'text' || $type === 'mediumText' || $type === 'json' || $type === 'longText') {
             return 'text';
         } else if ($type === 'integer' || $type === 'mediumInteger' || $type === 'bigInteger') {
             return 'int';
@@ -304,7 +304,6 @@ trait CommandTrait
      */
     public function isTextField($type): bool
     {
-
         return 'text' == $this->getFieldType($type);
     }
 
@@ -502,8 +501,6 @@ trait CommandTrait
     {
         return class_basename($model);
     }
-
-
 
 
 
@@ -1130,9 +1127,6 @@ trait CommandTrait
                 sprintf("The model [%s] is not defined in the [%s] file.", $this->model, base_path('administrable.yaml'))
             );
         }
-
-
-
 
         // validate breadcrumb
         if (!Arr::get($this->fields, $this->breadcrumb)) {

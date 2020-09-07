@@ -165,7 +165,7 @@ php artisan administrable:install {guard=admin} -s
 
 - **theme**
 
-To change the administration theme (template). The available themes are: **adminlte**, **cooladmin**, **tabler**, **theadmin** and **themekit**
+To change the administration theme (template). The available themes are: **adminlte**, **tabler**, **theadmin** and **themekit**
 
 **NB:** The default theme is ***adminlte***.
 

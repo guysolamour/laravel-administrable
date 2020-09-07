@@ -189,8 +189,6 @@ class MakeCrudCommand extends BaseCrudCommand
 
 
 
-
-
     private function removeFileExtension(string $file): string
     {
         return pathinfo($file, PATHINFO_FILENAME);

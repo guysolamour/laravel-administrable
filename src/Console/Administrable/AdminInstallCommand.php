@@ -86,7 +86,7 @@ class AdminInstallCommand extends BaseCommand
     /**
      * @var array
      */
-    protected  $themes = ['adminlte', 'theadmin', 'cooladmin', 'tabler', 'themekit'];
+    protected  $themes = ['adminlte', 'theadmin', 'tabler', 'themekit'];
 
     /**
      * @var string
@@ -150,7 +150,7 @@ class AdminInstallCommand extends BaseCommand
          */
         foreach ($models as $model) {
             if (!in_array(ucfirst($model), $this->crud_models)) {
-                $this->triggerError(sprintf('Le modèle {%s} n\'est pas disponible. Les modèles disponible sont {%s}', $model, join(',', $this->crud_models)));
+                $this->triggerError(sprintf('The {%s} model is not available. Available models are {%s}', $model, join(',', $this->crud_models)));
             }
         }
 
@@ -161,7 +161,7 @@ class AdminInstallCommand extends BaseCommand
         $preset = Str::lower($this->option('preset'));
 
         if (!in_array($preset, $this->presets)) {
-            $this->triggerError(sprintf('Le preset {%s} n\'est pas disponible. Les presets disponiblent sont {%s}', $preset, join(',', $this->presets)));
+            $this->triggerError(sprintf('The {%s} preset is not available. Available presets are {%s}', $preset, join(',', $this->presets)));
         }
 
         $this->preset = $preset;
@@ -171,7 +171,7 @@ class AdminInstallCommand extends BaseCommand
 
 
         if (!in_array($theme, $this->themes)) {
-            $this->triggerError(sprintf('Le thème {%s} n\'est pas disponible. Les thèmes disponiblent sont {%s}', $theme, join(',', $this->themes)));
+            $this->triggerError(sprintf('The {%s} theme is not available. Available theme are {%s}', $theme, join(',', $this->themes)));
         }
 
 

@@ -152,7 +152,6 @@ class CreateCrudController
     {
         $stub = $this->TPL_PATH . '/controllers/Controller.stub';
 
-
         $path = $controllers_path . "/{$controller_name}Controller.php";
 
         return [$stub, $path];

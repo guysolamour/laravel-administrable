@@ -23,19 +23,24 @@ class PagesTableSeeder extends Seeder
             'route'  => 'home',
         ]);
 
-        /* $home_page->metatags()->create([
-            'code'    => 'contact',
-            'name'    => 'Appel à l\'action contact',
-            'title'   => 'Appel à l\'action contact',
-            'content' => "Parlons de votre projet et réalisons le maintenant",
-            'type'   => PageMeta::TYPES['simpletext']['value'],
-        ]); */
+        /**
+         * @var \{{namespace}}\{{modelsFolder}}\Page $home_page
+         */
+        $home_page->generateSeo(false);
+
+
 
         $contact_page = Page::create([
             'code'   => 'contact',
             'name'   => 'Contact',
-            'route'  => 'front.contact.create',
+            'route'  => '{{frontLowerNamespace}}.contact.create',
         ]);
+
+        /**
+         * @var \{{namespace}}\{{modelsFolder}}\Page $contact_page
+         */
+        $contact_page->generateSeo(false);
+
 
         $mention_page = Page::create([
             'code'   => 'legalmention',
@@ -43,24 +48,42 @@ class PagesTableSeeder extends Seeder
             'route'  => '{{frontLowerNamespace}}.legalmention.index',
         ]);
 
+        /**
+         * @var \{{namespace}}\{{modelsFolder}}\Page $mention_page
+         */
+        $mention_page->generateSeo(false);
+
+
         $about_page = Page::create([
             'code'   => 'about',
             'name'   => 'A propos',
             'route'  => '{{frontLowerNamespace}}.about.index',
         ]);
+        /**
+        * @var \{{namespace}}\{{modelsFolder}}\Page $about_page
+        */
+        $about_page->generateSeo(false);
 
         $blog_page = Page::create([
             'code'   => 'blog',
             'name'   => 'Blog',
             'route'  => '{{frontLowerNamespace}}.post.index',
         ]);
+        /**
+        * @var \{{namespace}}\{{modelsFolder}}\Page $blog_page
+        */
+        $blog_page->generateSeo(false);
+
 
         $search_page = Page::create([
             'code'   => 'search',
             'name'   => 'Recherche',
             'route'  => '{{frontLowerNamespace}}.post.search',
         ]);
-
+        /**
+        * @var \{{namespace}}\{{modelsFolder}}\Page $search_page
+        */
+        $search_page->generateSeo(false);
 
     }
 }

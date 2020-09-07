@@ -1,103 +1,160 @@
 @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-<button class="btn btn-primary" data-toggle="modal" data-target="#addPageMetaDataModal">
-    <i class="fas fa-edit"></i> Ajouter un champ personnalisé</button>
-
-<!-- Modal -->
-<div class="modal fade" id="addPageMetaDataModal" tabindex="-1" role="dialog" aria-labelledby="addPageMetaDataModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addPageMetaDataModalLabel">Ajout de champ personnalisé</i> </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('{{backLowerNamespace}}.pagemeta.store', $page) }}" method="post" name="addPageMeta"
-                enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <input type="hidden" name="page_id" value="{{ $page->getKey() }}">
-
-                    <div class="form-group d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i>
-                            Enregistrer</button>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="code{{ $page->id }}">Code <span class="text-red">*</span>
-                                </label>
-                                <input type="text" class="form-control" name="code" id="code{{ $page->id }}" >
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="name{{ $page->id }}">Nom <span class="text-red">*</span> </label>
-                                <input type="text" class="form-control" name="name" id="name{{ $page->id }}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="title{{ $page->id }}">Titre </label>
-                                <input type="text" class="form-control" name="title" id="title{{ $page->id }}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="">Type de champ</label>
-                                <select name="type" id="image_field{{ $page->id }}" class="custom-select">
-                                    @foreach(\{{namespace}}\{{modelsFolder}}\PageMeta::TYPES as $type)
-                                    <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="content{{ $page->id }}">Contenu </label>
-                        <textarea name="textcontent" id="content{{ $page->id }}" class="form-control" data-tinymce></textarea>
-                    </div>
-
-                    <div class="form-group" style="display: none">
-                        <label for="simpletextcontent{{ $page->id }}">Contenu </label>
-                        <textarea name="simpletextcontent" id="simpletextcontent{{ $page->id }}" class="form-control"></textarea>
-                    </div>
-
-
-                    <div class="form-group" style="display: none">
-                        <label for="imageField">Choisir l'image</label>
-                        <input type="file" accept="image/*" class="form-control" id="imageField" name="imagecontent">
-                    </div>
-                    <div class="form-group" style="display: none">
-                        <label for="videoField">Url de la vidéo</label>
-                        <input type="url" class="form-control" id="videoField" name="videocontent"
-                            placeholder="https://youtube.com?v=74df8g585">
-                    </div>
-
-
-                    <div class="thumbnail" >
-                        <img src="" alt="" class="img-fluid img-thumbnail" style="display: none">
-                        <div class="embed-responsive embed-responsive-16by9" style="display: none">
-                            <iframe class="embed-responsive-item" src=""
-                                allowfullscreen></iframe>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer btn-group">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-undo"></i>
-                        Annuler</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Enregistrer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
+@if(isset($group) && $group)
+<button class="btn btn-secondary" data-toggle="modal" title="Voir le contenu du groupe"
+    data-target="#addPageMetaDataModalGroup{{ $group->getKey() }}">
+    <i class="fas fa-plus"></i> &nbsp;</button>
+@else
+<button class="btn btn-primary" data-toggle="modal" title="Ajouter un champ au groupe"
+    data-target="#addPageMetaDataModal">
+    <i class="fas fa-plus"></i> &nbsp;Ajouter un champ personnalisé</button>
 @endif
 
+
+<!-- Modal -->
+@if(isset($group) && $group)
+<div class="modal fade" id="addPageMetaDataModalGroup{{ $group->getKey() }}" tabindex="-1" role="dialog"
+    aria-labelledby="addPageMetaDataModalLabel{{ $group->getKey() }}" aria-hidden="true">
+    @else
+    <div class="modal fade" id="addPageMetaDataModal" tabindex="-1" role="dialog"
+        aria-labelledby="addPageMetaDataModalLabel" aria-hidden="true">
+        @endif
+        >
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 1140px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @if(isset($group) && $group)
+                    <h5 class="modal-title" id="addPageMetaDataModalLabel{{ $group->getKey() }}">Ajout de champ
+                        personnalisé: {{ $group->name }} </h5>
+                    @else
+                    <h5 class="modal-title" id="addPageMetaDataModalLabel">Ajout de champ personnalisé </h5>
+                    @endif
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('{{backLowerNamespace}}.pagemeta.store', $page) }}" method="post" name="addPageMeta"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body" style="max-height: 34.375rem">
+                        <input type="hidden" name="page_id" value="{{ $page->getKey() }}">
+
+                        <div class="form-group d-flex justify-content-end">
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-primary "><i class="fa fa-save"></i>
+                                    &nbsp; Enregistrer</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true"><i class="fa fa-times"></i> &nbsp;Annuler</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="code{{ $page->id }}">Code <span class="text-red">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" name="code" id="code{{ $page->id }}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="name{{ $page->id }}">Nom <span class="text-red">*</span> </label>
+                                    <input type="text" class="form-control" name="name" id="name{{ $page->id }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="title{{ $page->id }}">Titre </label>
+                                    <input type="text" class="form-control" name="title" id="title{{ $page->id }}">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="">Type de champ</label>
+                                    <select name="type" id="image_field{{ $page->id }}" class="custom-select">
+                                        @foreach(\{{namespace}}\{{modelsFolder}}\PageMeta::TYPES as $type)
+                                        <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="">Groupe de champ</label>
+                                    <select name="parent_id" id="group_field{{ $page->id }}" class="custom-select ">
+                                        @if(isset($group) && $group)
+                                        <option value="{{ $group['id'] }}" selected>{{ $group['name'] }}</option>
+                                        @else
+                                        @foreach($page->metatags as $group_field)
+                                        <option value="{{ $group_field['id'] }}" {{
+                                            (isset($group) && $group && $group['code'] === $group_field['code']) ||
+                                            ($group_field['code'] === \{{namespace}}\{{modelsFolder}}\PageMeta::DEFAULT_GROUP_CODE) ? 'selected' : ''
+                                        }}>
+                                            {{ $group_field['name'] }}
+                                        </option>
+                                        @endforeach
+
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="content{{ $page->id }}">Contenu </label>
+                            <textarea name="textcontent" id="content{{ $page->id }}" class="form-control"
+                                data-tinymce></textarea>
+                        </div>
+
+                        <div class="form-group" style="display: none">
+                            <label for="simpletextcontent{{ $page->id }}">Contenu </label>
+                            <textarea name="simpletextcontent" id="simpletextcontent{{ $page->id }}"
+                                class="form-control"></textarea>
+                        </div>
+
+
+                        <div class="form-group" style="display: none">
+                            <label for="imageField">Choisir l'image</label>
+                            <input type="file" accept="image/*" class="form-control" id="imageField"
+                                name="imagecontent">
+                        </div>
+                        <div class="form-group" style="display: none">
+                            <label for="videoField">Url de la vidéo</label>
+                            <input type="url" class="form-control" id="videoField" name="videocontent"
+                                placeholder="https://youtube.com?v=74df8g585">
+                        </div>
+                        <div class="form-group" style="display: none">
+                            <label for="attachedField">Autres fichiers</label>
+                            <input type="file" class="form-control" id="attachedField" name="attachedfilecontent">
+                        </div>
+
+
+                        <div class="thumbnail">
+                            <img src="" alt="" class="img-fluid img-thumbnail" style="display: none">
+                            <div class="embed-responsive embed-responsive-16by9" style="display: none">
+                                <iframe class="embed-responsive-item" src="" allowfullscreen></iframe>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer btn-group">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i>
+                            &nbsp;Annuler</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>
+                            &nbsp;Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    @push('css')
+    <style>
+        .tox .tox-tinymce {
+            height: 270px !important;
+        }
+    </style>
+    @endpush

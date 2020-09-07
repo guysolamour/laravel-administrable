@@ -3,11 +3,14 @@
 namespace {{namespace}}\{{modelsFolder}};
 
 use {{namespace}}\Traits\SeoableTrait;
+use Illuminate\Support\Facades\Route;
 use Cviebrock\EloquentSluggable\Sluggable;
 
 class Page extends BaseModel
 {
     use Sluggable, SeoableTrait;
+
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +27,9 @@ class Page extends BaseModel
     // Attributes
     public function getUriAttribute()
     {
-        return route($this->attributes['route']);
+        if (Route::has($this->attributes['route'])) {
+            return route($this->attributes['route']);
+        }
     }
 
 
@@ -64,5 +69,24 @@ class Page extends BaseModel
         return [
             'slug' => ['source' => 'name']
         ];
+    }
+
+    public static function booted()
+    {
+        parent::booted();
+
+        /**
+         * @param self $model
+         */
+        static::created(function ($model) {
+
+            $model->metatags()->create([
+                'code'    => 'defaultgroup',
+                'name'    => 'Groupe par défaut',
+                'title'   => 'Groupe par défaut',
+                'type'    =>  PageMeta::TYPES['group']['value'],
+            ]);
+
+        });
     }
 }

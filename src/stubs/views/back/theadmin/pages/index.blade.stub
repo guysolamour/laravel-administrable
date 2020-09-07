@@ -77,7 +77,13 @@
                             <td><a class="text-dark" data-provide="tooltip" title="Aperçu rapide" href="#qv-pages-details-{{ $page->id }}"
                                     data-toggle="quickview">{{ $page->name }}</a></td>
                             <td>{{ $page->route }}</td>
-                            <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
+                            <td>
+                                @if($page->uri)
+                                <a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a>
+                                @else
+                                Pas d'url défini
+                                @endif
+                            </td>
                             {{-- add values here --}}
 
                             <td>
@@ -92,7 +98,7 @@
                                      <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}" data-provide="tooltip"
                                             title="Editer"><i class="ti-pencil"></i></a>
 
-                                    @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                                    @if(get_admin()->isConceptorAdmin())
                                     <a class="nav-link hover-danger"
                                         href="{{ route('{{backLowerNamespace}}.page.destroy',$page) }}" data-provide="tooltip"
                                         title="" data-method="delete"
@@ -139,10 +145,13 @@
                                     <div>
                                         <p><span class="font-weight-bold">Url:</span></p>
                                         <p>
+                                            @if($page->uri)
                                             <a href="{{ $page->route }}" class="text-primary" target="_blank">{{ $page->route }}</a>
+                                            @else
+                                            Pas d'url défini
+                                            @endif
                                         </p>
                                     </div>
-
 
                                 </div>
                                 <footer class="p-12 text-right">
@@ -210,8 +219,6 @@
 @endif
 
 @include('{{backLowerNamespace}}.partials._datatable')
+@includeWhen(get_{{singularSlug}}()->isConceptor{{singularClass}}(), '{{backLowerNamespace}}.partials._deleteAll')
 
-@if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-@include('{{backLowerNamespace}}.partials._deleteAll')
-@endif
 @endsection

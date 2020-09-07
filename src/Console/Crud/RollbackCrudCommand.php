@@ -71,8 +71,6 @@ class RollbackCrudCommand extends BaseCommand
 
         $this->data_map = $this->parseName($this->model);
 
-        // dd($this->data_map);
-
 
         // remove model
         $this->removeModel();
@@ -102,8 +100,6 @@ class RollbackCrudCommand extends BaseCommand
     protected function removeModel()
     {
         $this->info(PHP_EOL . 'Removing model...');
-
-        // dd(app_path(sprintf("%s/%s.php", $this->data_map['{{modelsFolder}}'], $this->data_map['{{singularClass}}'])));
 
         $path = app_path(sprintf("%s/%s.php", $this->data_map['{{modelsFolder}}'], $this->data_map['{{singularClass}}']));
 

@@ -102,6 +102,20 @@ if (!function_exists('get_meta_type')) {
     }
 }
 
+if (!function_exists('get_meta_type')) {
+    function get_meta_type(int $id) :string
+    {
+        $types = \{{namespace}}\{{modelsFolder}}\PageMeta::TYPES;
+
+        foreach ($types as $key => $type) {
+            if ($type['value'] === $id) {
+                return $key;
+            }
+        }
+        return '';
+    }
+}
+
 
 if (!function_exists('isConceptor{{singularClass}}')) {
     function isConceptor{{singularClass}}({{singularClass}} ${{singularSlug}}) :bool

@@ -1,4 +1,0 @@
-                <li class="{{ set_active_link('{{backLowerNamespace}}.testimonial.index') }}">
-                    <a href="{{ route('{{backLowerNamespace}}.testimonial.index') }}">
-                        <i class="far  fa-comments-alt"></i>Témoignages</a>
-                </li>

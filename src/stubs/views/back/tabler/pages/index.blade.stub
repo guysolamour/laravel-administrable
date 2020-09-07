@@ -2,107 +2,164 @@
 
 @section('title','Pages')
 
-
 @section('content')
 
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
 
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="d-flex justify-content-between">
-            <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
-                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Pages</a></li>
-            </ol>
+                </div>
+                <div class="col-sm-6">
+                    <div class='float-sm-right'>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a>
+                            </li>
+                            <li class="breadcrumb-item active">Pages</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
 
-            <a href="{{ route('{{backLowerNamespace}}.page.create') }}" class="btn btn-success">
-                <i class="fa fa-plus"></i>&nbsp; Ajouter</a>
-        </div>
-    </div>
-</div>
+    <!-- Main content -->
+    <section class="content">
 
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+            </div>
+            <div class="card-body">
+                <div class='row'>
+                    <div class="col-md-12">
+                        <div class="card" style='box-shadow: 0 0 1px rgba(0,0,0,0), 0 1px 3px rgba(0,0,0,0);'>
 
-<div class="row">
-    <div class="col-12">
-        <div class="d-flex justify-content-between mb-3">
-            <h3> Pages </h3>
-            @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Page" id="delete-all"><i
-                    class="fa fa-trash"></i> &nbsp; Tous supprimer</a>
-            @endif
-        </div>
+                            <!-- /.card-header -->
+                            <div class="card-body p-0">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between">
+                                        <h3 class="card-title">Pages</h3>
+                                        <div class="btn-group">
+                                            <a href="{{ route('{{backLowerNamespace}}.page.create') }}" class="btn  btn-primary"> <i
+                                                    class="fa fa-plus"></i> &nbsp;Ajouter</a>
 
-        <table class="table table-vcenter card-table" id='list'>
-            <thead>
-                <th></th>
-                @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-                <th>
-                    <label class="form-check" for="check-all">
-                        <input class="form-check-input" type="checkbox" id="check-all">
-                        <span class="form-check-label"></span>
-                    </label>
-                </th>
-                @endif
+                                            @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                                            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\Page"
+                                                id="delete-all"> <i class="fa fa-trash"></i>&nbsp;
+                                                Tous supprimer</a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped" id="list">
+                                                <thead>
+                                                    <tr>
+                                                        @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                                                        <th>
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    id="check-all">
+                                                                <label class="custom-control-label"
+                                                                    for="check-all"></label>
+                                                            </div>
+                                                        </th>
+                                                        @endif
+                                                        <th></th>
+                                                        <th>Code</th>
+                                                        <th>Nom</th>
+                                                        <th>Route</th>
+                                                         <th>Url</th>
+                                                        {{-- add fields here --}}
+                                                        <th>Actions</th>
 
-                <th>#</>
-                <th>Code</th>
-                <th>Nom</th>
-                <th>Route</th>
-                <th>Url</th>
-                {{-- add fields here --}}
-                <th>Actions</th>
-            </thead>
-            <tbody>
-                @foreach($pages as $page)
-                <tr class="tr-shadow">
-                    <td></td>
-                    @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-                    <td>
-                        <label class="form-check" for="check-{{ $page->id }}">
-                            <input class="form-check-input" type="checkbox" data-check data-id="{{ $page->id }}"
-                                id="check-{{ $page->id }}"> <span class="form-check-label"></span>
-                        </label>
-                    </td>
-                    @endif
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $page->code }}</td>
-                    <td>{{ $page->name }}</td>
-                    <td>{{ $page->route }}</td>
-                    <td><a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a></td>
-                    {{-- add values here --}}
-                    <td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($pages as $page)
+                                                    <tr>
+                                                        @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
+                                                        <td>
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input type="checkbox" data-check
+                                                                    class="custom-control-input"
+                                                                    data-id="{{ $page->id }}"
+                                                                    id="check-{{ $page->id }}">
+                                                                <label class="custom-control-label"
+                                                                    for="check-{{ $page->id }}"></label>
+                                                            </div>
+                                                        </td>
+                                                        @endif
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $page->code }}</td>
+                                                        <td>{{ $page->name }}</td>
+                                                        <td>{{ $page->route }}</td>
+                                                        <td>
+                                                            @if($page->uri)
+                                                             <a href="{{ $page->uri }}" target="_blank">{{ $page->uri }}</a>
+                                                            @else
+                                                             Pas d'url défini
+                                                            @endif
+                                                        </td>
+                                                        {{-- add values here --}}
+                                                        <td>
+                                                            <div class="btn-group" role="group">
+                                                                <a href="{{ route('{{backLowerNamespace}}.page.show', $page) }}"
+                                                                    class="btn btn-primary" data-toggle="tooltip"
+                                                                    data-placement="top" title="Afficher"><i
+                                                                        class="fas fa-eye"></i>&nbsp;</a>
+                                                                {{-- <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($page)) }}"
+                                                                class="btn btn-secondary" data-toggle="tooltip"
+                                                                data-placement="top" title="Cloner"><i
+                                                                    class="fas fa-clone"></i></a> --}}
 
-                        <div class="btn-group" role="group">
-                            <a href="{{ route('{{backLowerNamespace}}.page.show', $page) }}" class="btn btn-primary"
-                                data-toggle="tooltip" data-placement="top" title="Afficher"><i
-                                    class="fas fa-eye"></i></a>
+                                                                <a href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}"
+                                                                    class="btn btn-info" data-toggle="tooltip"
+                                                                    data-placement="top" title="Editer"><i
+                                                                        class="fas fa-edit"></i>&nbsp;</a>
 
-                                        <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($page)) }}" class="btn btn-secondary" data-toggle="tooltip"
-                              data-placement="top" title="Cloner"><i class="fas fa-clone"></i></a>
+                                                                @if(get_admin()->isConceptorAdmin())
+                                                                <a href="{{ route('{{backLowerNamespace}}.page.destroy',$page) }}"
+                                                                    data-method="delete"
+                                                                    data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                                                    class="btn btn-danger" data-toggle="tooltip"
+                                                                    data-placement="top" title="Supprimer"><i
+                                                                        class="fas fa-trash"></i>&nbsp;</a>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
 
-                            <a href="{{ route('{{backLowerNamespace}}.page.edit', $page) }}" class="btn btn-info"
-                              data-toggle="tooltip" data-placement="top" title="Editer"><i
-                                  class="fas fa-edit"></i></a>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.mail-box-messages -->
+                            </div>
 
-                            @if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-                            <a href="{{ route('{{backLowerNamespace}}.page.destroy',$page) }}" data-method="delete"
-                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
-                                class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Supprimer"><i
-                                    class="fas fa-trash"></i></a>
-                            @endif
                         </div>
-                    </td>
-                </tr>
-                @endforeach
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
 
-            </tbody>
-        </table>
-    </div>
+        </div>
+        <!-- /.card-body -->
+
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
 </div>
+
 
 @include('{{backLowerNamespace}}.partials._datatable')
-
-@if(get_{{singularSlug}}()->isConceptor{{singularClass}}())
-@include('{{backLowerNamespace}}.partials._deleteAll')
-@endif
-
+@includeWhen(get_{{singularSlug}}()->isConceptor{{singularClass}}(, '{{backLowerNamespace}}.partials._deleteAll')
 @endsection
