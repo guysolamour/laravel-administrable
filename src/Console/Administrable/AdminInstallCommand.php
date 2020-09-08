@@ -1349,6 +1349,13 @@ class AdminInstallCommand extends BaseCommand
             COOKIE_CONSENT_ENABLED=true
 
 
+            MAIL_DKIM_SELECTOR=dkim
+            MAIL_DKIM_DOMAIN=
+            MAIL_DKIM_PASSPHRASE=''
+            MAIL_DKIM_ALGORITHM=rsa-sha256
+            MAIL_DKIM_IDENTITY=null
+
+
             {$search}
             TEXT,
             $env_path
@@ -1679,6 +1686,16 @@ class AdminInstallCommand extends BaseCommand
     public function loadDebugbar()
     {
         $composer_path = base_path('composer.json');
+
+        $this->replaceAndWriteFile(
+            $this->filesystem->get($composer_path),
+            $search = '"require": {',
+            <<<TEXT
+            $search
+                    "simonschaufi/laravel-dkim": "^1.0"
+            TEXT,
+            $composer_path
+        );
 
         $this->replaceAndWriteFile(
             $this->filesystem->get($composer_path),

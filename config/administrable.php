@@ -25,7 +25,7 @@ return [
     /**
      * The color useed by for the emails header background.
      */
-    'notificatio_email_header_color' => '#33cabb',
+    'notification_email_header_color' => '#33cabb',
 
     /**
      * The logo link to use for administration
