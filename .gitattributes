@@ -12,6 +12,8 @@
 *.html linguist-detectable=false
 *.css linguist-detectable=false
 *.js linguist-detectable=false
+*.less linguist-detectable=false
+*Makefile linguist-detectable=false
 /phpunit.xml export-ignore
 /CHANGELOG-* export-ignore
 /CONTRIBUTING.md export-ignore

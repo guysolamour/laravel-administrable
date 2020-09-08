@@ -63,7 +63,7 @@ REMOTE_SERVER_USER=www-data
 
 
 # Ip address for the remote server
-HOST=193.200.241.133
+HOST={{server}}
 
 
 # The strategy used to get the source files (git clone or git archive)
@@ -76,11 +76,11 @@ REPOSITORY=
 
 
 # The project name
-APPLICATION=ecologyfog
+APPLICATION={{appname}}
 
 
 # The website domain
-DOMAIN=ecologyfog.com
+DOMAIN={{appurl}}
 
 
 # The name of the archive that will be created when copying the source code
@@ -197,16 +197,6 @@ VIM_RC_URL=https://raw.githubusercontent.com/amix/vimrc/master/vimrcs/basic.vim
 VIM_SET_NUMBER=yes
 
 
-###################################################################################################################
-##########                                                                                            #############
-##########                               SEED                                                         #############
-##########                                                                                            #############
-###################################################################################################################
-
-# vimrc path to copy
-# SEED_FILE=
-# COMMAND=
-
 
 ###################################################################################################################
 ##########                                                                                            #############
@@ -219,13 +209,6 @@ VIM_SET_NUMBER=yes
 clean: ## remove deploy temporary files
 		rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE)
 		rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE).tgz
-
-
-
-
-
-
-
 
 
 help: ## Display this help

@@ -63,7 +63,7 @@ class DeployCommand extends BaseCommand
         }
 
         $this->server = $this->option('server');
-        if (!filter_var($this->server, FILTER_VALIDATE_IP)){
+        if (!empty($this->server) && !filter_var($this->server, FILTER_VALIDATE_IP)){
             $this->triggerError("The server ip [{$this->server}] is not a valid ip.");
         }
 
@@ -90,10 +90,10 @@ class DeployCommand extends BaseCommand
     protected function compliedAndMoveFile(array $files)
     {
         foreach ($files as $file ) {
-            $makefile_path = $this->path . "/{$file}";
+            $makefile_path = $this->path . "/tmp/{$file}";
             $makefile = $this->compliedFile($makefile_path);
             $this->writeFile($makefile, $makefile_path);
-            $this->filesystem->move($this->path . "/{$file}", base_path($file));
+            $this->filesystem->move($this->path . "/tmp/{$file}", base_path($file));
 
             if (self::VAULT_FILE === $file) {
                 $this->addFileToGitIgnore($file);
