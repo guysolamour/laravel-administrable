@@ -1,0 +1,26 @@
+---
+- name: Install PyOpenSSL
+  pip:
+    name: PyOpenSSL
+    state: present
+  when: dkim_keys == 'true' or dkim_keys == 'yes'
+
+- name: Generate private key
+  openssl_privatekey:
+    path: "{{ dkim_private_key_path }}"
+  when: dkim_keys == 'true' or dkim_keys == 'yes'
+
+- name: Extract public key from private key
+  openssl_publickey:
+    path: "{{ dkim_public_key_path }}"
+    privatekey_path: "{{ dkim_private_key_path }}"
+  when: dkim_keys == 'true' or dkim_keys == 'yes'
+
+- name: Display private key for copy
+  shell: "cat {{ dkim_public_key_path }}"
+  register: public_key
+  when: dkim_keys == 'true' or dkim_keys == 'yes'
+
+- debug:
+    var: public_key.stdout
+  when: (show_dkim_public_key == 'true' or show_dkim_public_key == 'yes') and (dkim_keys == 'true' or dkim_keys == 'yes')

@@ -1,0 +1,10 @@
+---
+- name: ANSISTRANO | Remove archive and project folder locally
+  delegate_to: localhost
+  become_user: "{{ remote_default_user }}"
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ archive_path }}"
+    - "{{ playbooks_directory_path }}/tmp/{{ archive }}"

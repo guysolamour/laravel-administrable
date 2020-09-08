@@ -1,0 +1,13 @@
+---
+- name: Create archive from project folder
+  become_user: "{{ remote_default_user }}"
+  shell: "git archive master | gzip > {{ archive }}.tgz"
+  args:
+    chdir: "{{ playbooks_directory_path | dirname  }}"
+  delegate_to: localhost
+  when: copy_strategy == 'archive'
+
+- name: Move archive to playbook directory
+  command: mv "{{ playbooks_directory_path | dirname  }}/{{ archive }}.tgz"  "{{ playbooks_directory_path }}/tmp"
+  delegate_to: localhost
+  when: copy_strategy == 'archive'

@@ -1,0 +1,24 @@
+---
+- name: Run a specific command
+  hosts: all
+  gather_facts: no
+  remote_user:  "{{ user }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_winrm_server_cert_validation: ignore
+    path: "/home/{{ user }}/{{ domain }}/current"
+
+  tasks:
+
+  - name: "Run {{ command }} command"
+    shell: "{{ command }}"
+    args:
+      chdir: "{{ path }}"
+    register: command_result
+    when:  command is defined
+
+  - debug:
+      var: command_result.stdout
+
+
+

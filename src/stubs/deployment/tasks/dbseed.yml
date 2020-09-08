@@ -1,0 +1,25 @@
+---
+- name: Seed database
+  hosts: all
+  gather_facts: no
+  remote_user:  "{{ user }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_winrm_server_cert_validation: ignore
+    path: "/home/{{ user }}/{{ domain }}/current"
+
+  tasks:
+  - name: Run seed
+    shell: "php artisan db:seed --force"
+    args:
+      chdir: "{{ path }}"
+    when:  seed_file is undefined
+
+  - name: "Run {{ seed_file }} seed"
+    shell: "php artisan db:seed --class {{ seed_file }}"
+    args:
+      chdir: "{{ path }}"
+    when:  seed_file is defined
+
+
+

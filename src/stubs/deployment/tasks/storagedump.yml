@@ -1,0 +1,27 @@
+---
+- name: Dump storage folder
+  hosts: all
+  remote_user:  "{{ user }}"
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_winrm_server_cert_validation: ignore
+    dump_path: "/home/{{ user }}/{{ application }}storage.zip"
+
+  tasks:
+  - name: Zip storage folder
+    archive:
+      path: "/home/{{ user }}/{{ domain }}/shared/storage/"
+      dest: "{{ dump_path }}"
+      format: zip
+
+  - name: Copy file from remote to host
+    fetch:
+      src: "{{ dump_path }}"
+      dest: "{{ path }}/"
+      flat: yes
+
+  - name: Delete remote archive
+    file:
+      path: "{{ dump_path }}"
+      state: absent

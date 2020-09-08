@@ -1,0 +1,25 @@
+---
+- name: Config cache
+  shell: php artisan config:cache
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+
+- name: Route cache
+  shell: php artisan route:cache
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+
+- name: Config clear
+  shell: php artisan config:clear
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+
+- name: Clear cache
+  shell: php artisan cache:clear
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+
+- name: View clear
+  shell: php artisan view:clear
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"

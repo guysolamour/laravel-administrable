@@ -1,0 +1,32 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Add default nginx config
+  template:
+    src: "{{ playbooks_directory_path }}/templates/default.j2"
+    dest: "/etc/nginx/sites-available/default"
+    force: no
+
+- name: "Copy nginx config file {{ domain }}"
+  become: yes
+  template:
+    src: "{{ playbooks_directory_path }}/templates/vhost.j2"
+    dest: "/etc/nginx/sites-available/{{ domain }}"
+    force: no
+
+- name: "Create symlink {{ domain }}"
+  become: yes
+  file:
+    src: "/etc/nginx/sites-available/{{ domain }}"
+    dest: "/etc/nginx/sites-enabled/{{ domain }}"
+    state: link
+
+# si probleme de demarrage lancer la commande sudo killall apache2
+- name: nginx reload
+  become: yes
+  service:
+    name: nginx
+    state: reloaded

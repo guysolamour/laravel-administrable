@@ -1,0 +1,45 @@
+---
+- name: PHP Install
+  apt:
+    name: php
+
+- name: Install PHP libs
+  apt:
+    update_cache: yes
+    name:
+      - "php{{ php_version }}-fpm"
+      - "php{{ php_version }}-curl"
+      - "php{{ php_version }}-mysql"
+      - "php{{ php_version }}-mbstring"
+      - "php{{ php_version }}-xml"
+      - "php{{ php_version }}-zip"
+      - "php{{ php_version }}-bz2"
+      - "php{{ php_version }}-bcmath"
+      - "php{{ php_version }}-intl"
+      - "php{{ php_version }}-gd"
+      - "php{{ php_version }}-opcache"
+      - python3-dev
+      - libffi-dev
+      - libssl-dev
+    state: present
+
+- name: Install composer
+  shell: |
+     php -r "readfile('https://getcomposer.org/installer');" | php
+     php composer-setup.php
+     php -r "unlink('composer-setup.php');"
+     mv composer.phar /usr/local/bin/composer
+  args:
+     creates: /usr/local/bin/composer
+
+- name: Disable PHP errors
+  lineinfile:
+    dest: "/etc/php/{{ php_version }}/fpm/php.ini"
+    regexp: "display_errors ="
+    line: "display_errors = 0"
+
+- name: php reload
+  become: yes
+  service:
+    name: "php{{ php_version }}-fpm"
+    state: reloaded

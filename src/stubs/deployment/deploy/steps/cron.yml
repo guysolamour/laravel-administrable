@@ -1,0 +1,7 @@
+---
+- name: Add crontab entry for Laravel scheduler
+  cron:
+      name: "Run Laravel scheduler"
+      job: "php {{ deploy_path }}/current/artisan schedule:run --quiet"
+      state: present
+  when: scheduler == 'yes' or scheduler == 'true'

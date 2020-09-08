@@ -1,0 +1,23 @@
+---
+- name: Run a specific command
+  hosts: all
+  gather_facts: no
+  remote_user:  "{{ user }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_winrm_server_cert_validation: ignore
+    path: "/home/{{ user }}/{{ domain }}/current"
+
+  tasks:
+
+  - name: "Get dkim public key"
+    shell: "cat storage/dkim/dkim.public.pub"
+    args:
+      chdir: "{{ path }}"
+    register: public_key
+
+  - debug:
+      var: public_key.stdout
+
+
+

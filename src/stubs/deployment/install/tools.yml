@@ -1,0 +1,44 @@
+---
+
+- name: Update Cache
+  apt:
+    update_cache: yes
+
+- name: TOOLS | zsh & vim & git
+  apt:
+    name:
+      - git
+      - zip
+      - unzip
+    state: present
+
+- name: "USER | Création de {{ user }}"
+  become: yes
+  user:
+    name: "{{ user }}"
+    # shell: /usr/bin/zsh
+    password: "{{ user_password }}"
+    groups: "{{ remote_server_user }}"
+    # update_password: on_create
+  no_log: true
+
+
+- name: USER | Clef
+  become: yes
+  authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: "{{ lookup('file','~/.ssh/id_rsa.pub') }}"
+
+- name: "USER | sudoers {{ user }}"
+  become: yes
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^{{ user }}"
+    line: '{{ user }} ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+# - name: Expiring password for user "{{ user }}"
+#   shell: chage -d 0 "{{ user }}"
+
+

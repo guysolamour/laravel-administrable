@@ -9,7 +9,8 @@
 /.sensiolabs.yml export-ignore
 /.coveralls.yml export-ignore
 *.php linguist-detectable=true
-*.html linguist-detectable=true
+*.html linguist-detectable=false
+*.css linguist-detectable=false
 *.js linguist-detectable=false
 /phpunit.xml export-ignore
 /CHANGELOG-* export-ignore

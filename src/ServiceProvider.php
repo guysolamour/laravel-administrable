@@ -2,6 +2,7 @@
 
 namespace Guysolamour\Administrable;
 
+use Guysolamour\Administrable\Console\DeployCommand;
 use Guysolamour\Administrable\Console\Crud\AddCrudCommand;
 use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
@@ -44,6 +45,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 AddCrudCommand::class,
                 RollbackCrudCommand::class,
                 CreateAdministrableCommand::class,
+                DeployCommand::class,
             ]);
         }
 

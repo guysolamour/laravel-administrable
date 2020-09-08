@@ -1,0 +1,9 @@
+---
+- name: Install dependencies
+  # become: no
+  composer:
+    command: install
+    arguments: --no-scripts
+    working_dir: "{{ ansistrano_release_path.stdout }}"
+    optimize_autoloader: yes
+

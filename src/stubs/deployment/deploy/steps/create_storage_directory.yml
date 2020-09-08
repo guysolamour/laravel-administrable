@@ -1,0 +1,14 @@
+---
+- name: Create storage directory
+  file:
+    path: "{{ item }}"
+    mode: '0777'
+    state: directory
+  with_items:
+    - "{{ ansistrano_shared_path }}/storage/app/public"
+    - "{{ ansistrano_shared_path }}/storage/framework/cache"
+    - "{{ ansistrano_shared_path }}/storage/framework/sessions"
+    - "{{ ansistrano_shared_path }}/storage/framework/testing"
+    - "{{ ansistrano_shared_path }}/storage/framework/views"
+    - "{{ ansistrano_shared_path }}/storage/logs"
+    - "{{ ansistrano_shared_path }}/storage/dkim"

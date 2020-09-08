@@ -1,0 +1,8 @@
+[program:{{ user }}-worker]
+process_name=%(program_name)s
+command=php "{{ deploy_path }}/current/artisan horizon"
+autostart=true
+autorestart=true
+user={{ remote_server_user }}
+redirect_stderr=true
+stdout_logfile="{{ deploy_path }}/current/storage/horizon.log"

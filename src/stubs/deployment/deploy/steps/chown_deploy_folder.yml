@@ -1,0 +1,18 @@
+
+---
+- name: "Update chown to {{ user }}:{{ remote_server_user }}"
+  file:
+    path: "{{ ansistrano_deploy_to }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ remote_server_user }}"
+    recurse: yes
+
+- name: "Update chown to storage folder"
+  file:
+    path: "{{ ansistrano_shared_path }}"
+    state: directory
+    mode: 0777
+    follow: yes
+    recurse: yes
+

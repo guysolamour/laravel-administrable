@@ -1,0 +1,7 @@
+---
+- name: Include download_source_code_via_clone file
+  include_tasks: "{{ playbooks_directory_path }}/deploy/steps/download_source_code_via_clone.yml"
+
+- name: Include download_source_code_via_archive file
+  include_tasks: "{{ playbooks_directory_path }}/deploy/steps/download_source_code_via_archive.yml"
+

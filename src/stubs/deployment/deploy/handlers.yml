@@ -1,0 +1,11 @@
+- name: nginx reload
+  become: yes
+  service:
+    name: nginx
+    state: reloaded
+
+- name: php reload
+  become: yes
+  service:
+    name: "php{{ php_version }}-fpm"
+    state: reloaded
