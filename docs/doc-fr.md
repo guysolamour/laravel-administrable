@@ -1063,6 +1063,74 @@ ou avec la syntaxe courte
 php artisan administrable:rollback:crud Post -r
 ```
 
+## Déploiement
+
+Pour déployer l'application, il faudra utiliser cette commande qui vas générer les
+différents scripts.
+
+```php
+php artisan administrable:deploy
+```
+
+Par défaut, les scripts seront stockés dans le dossier ***.deployment*** à la racine du projet.
+
+L'option ***--path*** sert à changer le chemin.
+
+```php
+php artisan administrable:deploy --path=".deployment"
+```
+
+ou avec la version courte
+
+```php
+php artisan administrable:deploy -d=".deployment"
+```
+
+Cette commande stockera les scripts de déploiement dans le dossier choisi.
+Un fichier Makefile sera mis à la racine de ce projet contenant toutes les commandes disponibles.
+
+**NB:**
+
+- Le chemin doit être relatif au dossier du projet en cours
+- Par défaut le chemin est *.deployment*
+
+Vous pouvez aussi passer l'adresse IP du serveur avec cette option
+
+```php
+php artisan administrable:deploy --server="000.000.000.000"
+```
+
+ou avec la version courte
+
+```php
+php artisan administrable:deploy -s="000.000.000.000"
+```
+
+Lors du déploiement, les données sensibles (mot de passe, token et autres) seront cryptés pour leurs protections.
+L'option ***--password*** permettra d'enregistrer le mot de passe qui permettra de décrypter ces données.
+
+```php
+php artisan administrable:deploy --password="mypassword"
+```
+
+ou avec la version courte
+
+```php
+php artisan administrable:deploy -p="mypassword"
+```
+
+Le mot de passe seran enregistré dans le fichier ***.vault-pass*** à la racine du projet. Ce fichier ne doit pas être versionné.
+
+## Backup
+
+Une commande existe pour déployer pour enregistrer tous les fichiers contenus dans le dossier storage et l'envoyer par ftp.
+
+```php
+php artisan administrable:storage:dump
+```
+
+Cette commande sera lancée automatiquement toutes les semaines.
+
 ## Sécurité
 
 Si vous découvrez des problèmes liés à la sécurité, veuillez envoyer un e-mail au lieu d'utiliser le système de issue. Le mail est disponible dans le fichier *composer.json*

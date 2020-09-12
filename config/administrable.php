@@ -66,6 +66,34 @@ return [
             '.htaccess',
         ],
     ],
+    'storage_dump' => [
+        'filename' => config('app.name','storage_dump'),
+        'limit' => 5,
+        /*
+         * The directory where the temporary files will be stored.
+         * Can not be storage path
+         */
+        'temporary_directory' => public_path(),
+        /**
+         * Where to store dumps on each disk
+         */
+        'dump_folder'  => 'storagedump',
+        /*
+        * The disk names on which the backups will be stored.
+        */
+        'disks' => ['ftp'],
+        /*
+        * You can get notified when specific events occur.
+        */
+        'notifications' => [
+            'mail' => [
+                'from' => [
+                    'address' => 'from@administrable.com',
+                    'name' => 'storage_backup',
+                ],
+            ],
+        ],
+    ],
     'comments' => [
         /**
          * By default comments posted are marked as approved. If you want

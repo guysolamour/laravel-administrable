@@ -48,7 +48,7 @@ class MediaManager {
     this.images_extensions = ['jpg', 'gif', 'jpeg', 'png', 'svg', 'gif']
     this.doc_extensions = ['doc', 'pdf', 'xlsx', 'docx', 'ppt', 'pptx']
     this.authorized_extensions = [...this.images_extensions, ...this.doc_extensions, 'zip']
-    this.limit_size = 1024000;
+    this.limit_size = 5120000;
 
 
     this.uploadingImages = []

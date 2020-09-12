@@ -84,24 +84,20 @@ if (!function_exists('configuration')) {
 if (!function_exists('get_meta_page')) {
     function get_meta_page(string $name)
     {
-        return Page::where('code', $name)->firstOrFail();
+        return Page::firstWhere('code', $name);
     }
 }
 
-if (!function_exists('get_meta_type')) {
-    function get_meta_type(int $id) :string
+if (!function_exists('get_meta_tag')) {
+    function get_meta_tag(string $page_name, string $code, ?string $key = null)
     {
-        $types = \{{namespace}}\{{modelsFolder}}\PageMeta::TYPES;
+        $page = get_meta_page($page_name);
 
-        foreach ($types as $key => $type) {
-            if ($type['value'] === $id) {
-                return $key;
-            }
-        }
-        return '';
+        if (!$page) return;
+
+        return $page->getTag($code, $key);
     }
 }
-
 if (!function_exists('get_meta_type')) {
     function get_meta_type(int $id) :string
     {

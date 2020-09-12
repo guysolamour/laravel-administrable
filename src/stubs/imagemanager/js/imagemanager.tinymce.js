@@ -48,7 +48,7 @@ class TinymceImageManager {
 
 
     this.authorized_extensions = ['png', 'jpg', 'gif', 'jpeg', 'svg']
-    this.limit_size = 1024000;
+    this.limit_size = 5120000;
 
     this.collection = 'attachments'
     this.uploadingImages = []

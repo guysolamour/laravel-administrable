@@ -48,3 +48,24 @@ if (!function_exists('delete_all_between')) {
     }
 
 }
+
+if (!function_exists('create_zip_archive_from_folder')) {
+    function create_zip_archive_from_folder(string $filePath, string $folderPath): string
+    {
+        $zip = new \ZipArchive();
+
+
+        if ($zip->open($filePath, \ZipArchive::CREATE) === TRUE) {
+            $files = Illuminate\Support\Facades\File::allFiles($folderPath);
+
+            foreach ($files as $key => $value) {
+                $relativeNameInZipFile = basename($value);
+                $zip->addFile($value, $relativeNameInZipFile);
+            }
+
+            $zip->close();
+        }
+
+        return $filePath;
+    }
+}

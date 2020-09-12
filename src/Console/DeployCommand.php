@@ -37,6 +37,7 @@ class DeployCommand extends BaseCommand
                              {--d|path=.deployment : Relative to the current path }
                              {--s|server= : Server IP adress }
                              {--p|password= : Decryption password code }
+                             {--f|force : Force scripts generation }
                              ';
 
                              /**
@@ -58,7 +59,7 @@ class DeployCommand extends BaseCommand
     public function handle()
     {
         $this->path = base_path($this->option('path'));
-        if ($this->filesystem->exists($this->path)){
+        if ($this->filesystem->exists($this->path) && !$this->option('force')){
             $this->triggerError("Deployment scripts generation have already been done.");
         }
 
