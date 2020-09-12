@@ -19,7 +19,7 @@
     # shell: /usr/bin/zsh
     password: "{{ user_password }}"
     groups: "{{ remote_server_user }}"
-    # update_password: on_create
+    update_password: on_create
   no_log: true
 
 

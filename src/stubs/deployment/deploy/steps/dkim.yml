@@ -1,4 +1,14 @@
 ---
+- name: Check if private key exits
+  stat:
+    path: "{{ dkim_private_key_path }}"
+  register: dkim_private_key_exists
+
+- name: Check if public key exits
+  stat:
+    path: "{{ dkim_public_key_path }}"
+  register: dkim_public_key_exists
+
 - name: Install PyOpenSSL
   pip:
     name: PyOpenSSL
@@ -8,13 +18,14 @@
 - name: Generate private key
   openssl_privatekey:
     path: "{{ dkim_private_key_path }}"
-  when: dkim_keys == 'true' or dkim_keys == 'yes'
+    backup: yes
+  when: (dkim_keys == 'true' or dkim_keys == 'yes') and dkim_private_key_exists.stat.exists == false
 
 - name: Extract public key from private key
   openssl_publickey:
     path: "{{ dkim_public_key_path }}"
     privatekey_path: "{{ dkim_private_key_path }}"
-  when: dkim_keys == 'true' or dkim_keys == 'yes'
+  when: (dkim_keys == 'true' or dkim_keys == 'yes') and dkim_public_key_exists.stat.exists == false
 
 - name: Display private key for copy
   shell: "cat {{ dkim_public_key_path }}"

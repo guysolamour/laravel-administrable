@@ -16,3 +16,12 @@
     follow: yes
     recurse: yes
 
+- name: "Update chown log file"
+  file:
+    path: "{{ ansistrano_shared_path }}/storage/logs"
+    state: directory
+    mode: 0777
+    follow: yes
+    recurse: yes
+
+

@@ -1,0 +1,12 @@
+---
+- name: Ensure postfix is installed.
+  apt:
+    name: redis-server
+    state: present
+
+
+- name: Ensure redis is started and enabled at boot.
+  service:
+    name: redis-server
+    state: started
+    enabled: yes

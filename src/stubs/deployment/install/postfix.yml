@@ -1,0 +1,41 @@
+---
+- name: Ensure mail utils.
+  apt:
+    name: mailutils
+    state: present
+
+- name: Ensure postfix is installed.
+  apt:
+    name: postfix
+    state: present
+
+- name: Update Postfix configuration.
+  lineinfile:
+    dest: /etc/postfix/main.cf
+    line: "{{ item.name }} = {{ item.value }}"
+    regexp: "^{{ item.name }} ="
+    mode: 0644
+  with_items:
+    - name: inet_interfaces
+      value: loopback-only
+    - name: inet_protocols
+      value: all
+
+- name: Forwad Root Emails
+  lineinfile:
+    dest: /etc/aliases
+    line: "root: {{ forward_root_emails }}"
+
+- name: Ensusre emails forwak takes effect
+  shell: newaliases
+
+- name: restart postfix
+  service:
+    name: postfix
+    state: restarted
+
+- name: Ensure postfix is started and enabled at boot.
+  service:
+    name: postfix
+    state: started
+    enabled: true

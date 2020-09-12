@@ -41,12 +41,13 @@
 ## This line cannot be modified
 .PHONY: clean help deploy create view edit install dbdump storagedump
 
+
 ## This line cannot be modified
 .DEFAULT_GOAL:= help
 
 
 # The playbook folder
-PLAYBOOKS_DIR= $(shell pwd)/.deployment
+PLAYBOOKS_DIR={{path}}
 
 # The name of the file that will store the code to decrypt passwords
 VAULT_PASS=.vault-pass
@@ -172,6 +173,10 @@ STORAGE_DUMP_PATH=$(shell pwd)
 # Generate DKIM keys for email encryption
 DKIM_KEYS=yes
 
+# In the ansistrano shared folder
+DKIM_STORAGE_PRIVATE_KEY_PATH=storage/dkim/dkim.private.key
+DKIM_STORAGE_PUBLIC_KEY_PATH=storage/dkim/dkim.public.pub
+
 # Display the public key in console in order to copy it and put it on the host of the domain
 SHOW_DKIM_PUBLIC_KEY=yes
 
@@ -183,7 +188,7 @@ SHOW_DKIM_PUBLIC_KEY=yes
 
 
 ZSH_THEME=random
-ZSH_PLUGINS=git composer npm
+ZSH_PLUGINS=git composer npm sudo
 
 ###################################################################################################################
 ##########                                                                                            #############
@@ -197,26 +202,54 @@ VIM_RC_URL=https://raw.githubusercontent.com/amix/vimrc/master/vimrcs/basic.vim
 VIM_SET_NUMBER=yes
 
 
-
 ###################################################################################################################
 ##########                                                                                            #############
+##########                               PHP                                                          #############
+##########                                                                                            #############
+###################################################################################################################
+
+MEMORY_LIMIT=128M
+UPLOAD_MAX_FILESIZE=50M
+POST_MAX_SIZE=50M
+
+
+###################################################################################################################
+#######################
 ##########                                       TASKS                                                #############
 ##########                          Just shortcuts to launch ansible tasks                            #############
 ##########                                                                                            #############
 ###################################################################################################################
 
-
+#------------------------------------------------------------------------------------------------------------------------------>
 clean: ## remove deploy temporary files
 		rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE)
 		rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE).tgz
 
-
+#------------------------------------------------------------------------------------------------------------------------------>
 help: ## Display this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-
+#------------------------------------------------------------------------------------------------------------------------------>
 deploy: ## Deploy website
-	ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/deploy.yml \
+	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/deploy.yml \
+						--vault-password-file $(VAULT_PASS) \
+												--extra-vars " \
+														playbooks_directory_path=$(PLAYBOOKS_DIR) show_dkim_public_key=$(SHOW_DKIM_PUBLIC_KEY) \
+														application=$(APPLICATION) domain=$(DOMAIN) php_version=$(PHP_VERSION) \
+														remote_default_user=$(REMOTE_DEFAULT_USER) \
+														remote_server_user=$(REMOTE_SERVER_USER) \
+														archive=$(ARCHIVE) repository=$(REPOSITORY) \
+														user=$(USER) database_name=$(DATABASE_NAME) \
+														dkim_storage_private_key_path=$(DKIM_STORAGE_PRIVATE_KEY_PATH) \
+                                                        dkim_storage_public_key_path=$(DKIM_STORAGE_PUBLIC_KEY_PATH) \
+														database_user=$(DATABASE_USER) keep_releases=$(KEEP_RELEASES) \
+														build_javascript=$(BUILD_JAVASCRIPT) copy_strategy=$(COPY_STRATEGY) \
+														scheduler=$(SCHEDULER) horizon=$(HORIZON) dkim_keys=$(DKIM_KEYS) \
+													"
+
+#------------------------------------------------------------------------------------------------------------------------------>
+rollback: ## Rollback website
+	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/rollback.yml \
 						--vault-password-file $(VAULT_PASS) \
 												--extra-vars " \
 														playbooks_directory_path=$(PLAYBOOKS_DIR) show_dkim_public_key=$(SHOW_DKIM_PUBLIC_KEY) \
@@ -230,9 +263,9 @@ deploy: ## Deploy website
 														scheduler=$(SCHEDULER) horizon=$(HORIZON) dkim_keys=$(DKIM_KEYS) \
 													" -v
 
-
+#------------------------------------------------------------------------------------------------------------------------------>
 dbdump: ## Dump database
-	ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/dbdump.yml \
+	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/dbdump.yml \
 						--vault-password-file $(VAULT_PASS) \
 												--extra-vars " \
 															playbooks_directory_path=$(PLAYBOOKS_DIR) \
@@ -240,9 +273,9 @@ dbdump: ## Dump database
 															user=$(USER) database_name=$(DATABASE_NAME) \
 															database_user=$(DATABASE_USER) path=$(DB_DUMP_PATH) \
 												"
-
+#------------------------------------------------------------------------------------------------------------------------------>
 install: ## Install and configure the server
-	ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/install.yml \
+	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/install.yml \
 						--vault-password-file $(VAULT_PASS) \
 												--extra-vars " \
 														playbooks_directory_path=$(PLAYBOOKS_DIR)  zsh_plugins=$(ZSH_PLUGINS) \
@@ -252,44 +285,37 @@ install: ## Install and configure the server
 														user=$(USER) database_name=$(DATABASE_NAME) zsh_theme=$(ZSH_THEME) \
 														database_user=$(DATABASE_USER) default_nginx_serveur=$(DEFAULT_NGINX_SERVEUR) \
 														ftp_host=$(FTP_HOST) ftp_username=$(FTP_USERNAME) vim_rc_url=$(VIM_RC_URL) \
-													  model_cache_enabled=$(MODEL_CACHE_ENABLED) vim_set_number=$(VIM_SET_NUMBER) \
+														model_cache_enabled=$(MODEL_CACHE_ENABLED) vim_set_number=$(VIM_SET_NUMBER) \
 														mail_from_address=$(MAIL_FROM_ADDRESS) app_first_name=$(APP_FIRST_NAME) \
-														app_last_name=admin=$(APP_LAST_NAME=admin) \
-												" -v
-
+														app_last_name=$(APP_LAST_NAME) memory_limit=$(MEMORY_LIMIT) \
+														upload_max_filesize=$(UPLOAD_MAX_FILESIZE) post_max_size=$(POST_MAX_SIZE) \
+												"
+#------------------------------------------------------------------------------------------------------------------------------>
 storagedump: ## Dump the storage folder
 	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/storagedump.yml \
 						--vault-password-file $(VAULT_PASS) \
-                                                --extra-vars " \
+												--extra-vars " \
 															playbooks_directory_path=$(PLAYBOOKS_DIR) \
 															application=$(APPLICATION) domain=$(DOMAIN) \
 															user=$(USER)  \
 															path=$(STORAGE_DUMP_PATH)  \
 												"
-
+#------------------------------------------------------------------------------------------------------------------------------>
 dbseed: ## Seed database
 	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/dbseed.yml \
 						--vault-password-file $(VAULT_PASS) \
-                                                --extra-vars " \
+												--extra-vars " \
 															seed_file='$(SEED_FILE)' user='$(USER)' \
 															domain='$(DOMAIN)' \
 												"
 
+#------------------------------------------------------------------------------------------------------------------------------>
 run: ## Run a command on host machine from deploy directory
-	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/run.yml \
-						--vault-password-file $(VAULT_PASS) \
-                                                --extra-vars " \
-															user='$(USER)' \
-															domain='$(DOMAIN)' command='$(COMMAND)' \
-												"
+	@ssh $(APPLICATION)@$(HOST) "cd /home/$(APPLICATION)/$(DOMAIN)/current && $(COMMAND)"
 
+#------------------------------------------------------------------------------------------------------------------------------>
 dkim: ## Display dkim publick key
-	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/dkim.yml \
-						--vault-password-file $(VAULT_PASS) \
-                                                --extra-vars " \
-															user='$(USER)' \
-															domain='$(DOMAIN)' \
-                                               "
+	@make run COMMAND="cat $(DKIM_STORAGE_PUBLIC_KEY_PATH)" --silent
 
 
 ###################################################################################################################
@@ -298,13 +324,15 @@ dkim: ## Display dkim publick key
 ##########                                                                                            #############
 ###################################################################################################################
 
-
+#------------------------------------------------------------------------------------------------------------------------------>
 create: ## Create passwords file content
 	@ansible-vault create $(PLAYBOOKS_DIR)/variables/passwords.yml --vault-password-file=$(VAULT_PASS)
 
+#------------------------------------------------------------------------------------------------------------------------------>
 view: ## View passwords file content
 	@ansible-vault view $(PLAYBOOKS_DIR)/variables/passwords.yml --vault-password-file=$(VAULT_PASS)
 
+#------------------------------------------------------------------------------------------------------------------------------>
 edit: ## Edit passwords file
 	@ansible-vault edit $(PLAYBOOKS_DIR)/variables/passwords.yml --vault-password-file=$(VAULT_PASS)
 

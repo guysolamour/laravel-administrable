@@ -111,6 +111,7 @@ class DeployCommand extends BaseCommand
         return [
             '{{server}}'            =>  $this->server ?: '',
             '{{appname}}'           =>  config('app.name', ''),
+            '{{path}}'              =>  $this->path,
             '{{appurl}}'            =>  config('app.url', ''),
             '{{appfirstname}}'      =>  config('app.first_name', ''),
             '{{applastname}}'       =>  config('app.last_name', ''),

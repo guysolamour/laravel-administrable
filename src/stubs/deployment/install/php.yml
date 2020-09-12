@@ -18,6 +18,7 @@
       - "php{{ php_version }}-intl"
       - "php{{ php_version }}-gd"
       - "php{{ php_version }}-opcache"
+      - "php{{ php_version }}-redis"
       - python3-dev
       - libffi-dev
       - libssl-dev
@@ -32,11 +33,22 @@
   args:
      creates: /usr/local/bin/composer
 
-- name: Disable PHP errors
+
+- name: Update PHP configuration.
   lineinfile:
     dest: "/etc/php/{{ php_version }}/fpm/php.ini"
-    regexp: "display_errors ="
-    line: "display_errors = 0"
+    line: "{{ item.name }} = {{ item.value }}"
+    regexp: "^{{ item.name }} ="
+    mode: 0644
+  with_items:
+    - name: display_errors
+      value: "0"
+    - name: memory_limit
+      value: "{{ memory_limit }}"
+    - name: upload_max_filesize
+      value: "{{ upload_max_filesize }}"
+    - name: post_max_size
+      value: "{{ post_max_size }}"
 
 - name: php reload
   become: yes

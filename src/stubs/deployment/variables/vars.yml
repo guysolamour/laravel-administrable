@@ -1,8 +1,8 @@
 archive_path: "{{ playbooks_directory_path }}/tmp/{{ archive }}.tgz"
 deploy_path: "/home/{{ user }}/{{ domain }}"
 
-dkim_private_key_path: "{{ ansistrano_shared_path }}/storage/dkim/dkim.private.key"
-dkim_public_key_path: "{{ ansistrano_shared_path }}/storage/dkim/dkim.public.pub"
+dkim_private_key_path: "{{ ansistrano_shared_path }}/{{ dkim_storage_private_key_path }}"
+dkim_public_key_path: "{{ ansistrano_shared_path }}/{{ dkim_storage_public_key_path }}"
 
 ansistrano_deploy_from: "{{ archive_path }}"
 ansistrano_deploy_to: "{{ deploy_path }}"
@@ -13,7 +13,7 @@ ansistrano_after_symlink_tasks_file: "{{ playbooks_directory_path }}/deploy/afte
 ansistrano_after_cleanup_tasks_file: "{{ playbooks_directory_path }}/deploy/after_cleanup_tasks.yml"
 ansistrano_git_repo: "{{ repository }}"
 ansistrano_keep_releases: "{{ keep_releases  | default(5) }}"
-ansistrano_allow_anonymous_stats: no
+ansistrano_allow_anonymous_stats: yes
 ansistrano_shared_files: [".env"]
 ansistrano_shared_paths: ["storage" ]
 

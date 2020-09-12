@@ -24,7 +24,17 @@
     dest: "/etc/nginx/sites-enabled/{{ domain }}"
     state: link
 
-# si probleme de demarrage lancer la commande sudo killall apache2
+- name: Update Nginx configuration.
+  lineinfile:
+    dest: "/etc/nginx/nginx.conf"
+    line: "{{ item.name }} {{ item.value }};"
+    regexp: "{{ item.name }}"
+    mode: 0644
+  with_items:
+    - name: client_max_body_size
+      value: 100M
+
+# sudo killall apache2
 - name: nginx reload
   become: yes
   service:

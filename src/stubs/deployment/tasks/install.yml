@@ -43,3 +43,9 @@
 
   - name: Include nginx file
     include_tasks: "{{ playbooks_directory_path }}/install/nginx.yml"
+
+  - name: Include redis file
+    include_tasks: "{{ playbooks_directory_path }}/install/redis.yml"
+
+  - name: Include postfix file
+    include_tasks: "{{ playbooks_directory_path }}/install/postfix.yml"
