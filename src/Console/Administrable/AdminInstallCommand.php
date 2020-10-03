@@ -1415,18 +1415,15 @@ class AdminInstallCommand extends BaseCommand
     {
         $locales_path = self::TPL_PATH . '/locales/' . $this->option('locale');
 
-
         if ($this->filesystem->exists(resource_path("lang/{$this->option('locale')}"))) {
             return;
         }
-
 
         $locales_stub = $this->getFilesFromDirectory($locales_path, true);
         $this->compliedAndWriteFileRecursively(
             $locales_stub,
             resource_path("lang")
         );
-
 
         $locale_json = self::TPL_PATH . '/locales/' . '/json/' .  $this->option('locale') . '.json';
         $locale_path = resource_path("lang/") . $this->option('locale') . '.json';

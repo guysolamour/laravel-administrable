@@ -6,12 +6,12 @@ use App\Models\Admin;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
-use App\Notifications\Back\Auth\StorageBackupWasSuccessful;
+use Guysolamour\Administrable\Notifications\Back\SuccessfulStorageFolderBackupNotification;
 
 
 class StorageDumpCommand extends BaseCommand
 {
-
+    const DUMPS_TO_KEEP = 5;
     /**
      * The name and signature of the console command.
      *
@@ -41,13 +41,11 @@ class StorageDumpCommand extends BaseCommand
     public function handle()
     {
 
-        $limit = (int) ($this->option('limit') ?? config('administrable.storage_dump.limit', 5));
+        $limit = (int) ($this->option('limit') ?? config('administrable.storage_dump.limit', self::DUMPS_TO_KEEP));
         $temporary_directory = config('administrable.storage_dump.temporary_directory', public_path());
 
         $disks = config('administrable.storage_dump.disks',['ftp']);
         $dump_folder = config('administrable.storage_dump.dump_folder', 'storagedump');
-
-
 
         // create zip
         $filename = $this->getFileName();
@@ -67,22 +65,25 @@ class StorageDumpCommand extends BaseCommand
             }
 
             // send notifications
-            if (!$this->option('send')) {
+            if ($this->option('send')) {
                 $notifiable = $this->getNotifiable();
+
+                $notification = config('administrable.storage_dump.notifications.mail.class', SuccessfulStorageFolderBackupNotification::class);
+
                 if ($notifiable){
-                    $notifiable->notify(new StorageBackupWasSuccessful($filename, $disk));
+                    $notifiable->notify(new $notification($filename, $disk));
                 }
             }
-
         }
 
-
-        // delete local zip
+        // delete local zip file
         $this->filesystem->delete($file);
 
     }
 
-
+    /**
+     * @return string
+     */
     private function getFileName() :string
     {
         return Str::lower(config('administrable.storage_dump.filename', 'storage_dump') . '-' . date('Y_m_d_His') . '.zip');

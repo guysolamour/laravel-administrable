@@ -91,6 +91,10 @@ return [
                     'address' => 'from@administrable.com',
                     'name' => 'storage_backup',
                 ],
+                /**
+                 * Notification to use
+                 */
+                //'class' => '\App\Notifications\Back\SuccessfulStorageFolderBackupNotification'
             ],
         ],
     ],
