@@ -5,7 +5,7 @@ namespace Guysolamour\Administrable\Console;
 
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
-
+use Illuminate\Support\Facades\Artisan;
 
 class DeployCommand extends BaseCommand
 {
@@ -39,6 +39,7 @@ class DeployCommand extends BaseCommand
                              {--s|server= : Server IP adress }
                              {--p|password= : Decryption password code }
                              {--f|force : Force scripts generation }
+                             {--k|key : Generate Env app key }
                              ';
 
                              /**
@@ -81,6 +82,10 @@ class DeployCommand extends BaseCommand
             self::TPL_PATH . '/deployment',
             $this->path . '/',
         );
+
+        // Complied Env File
+        $this->addAppKeyToEnvFile();
+
 
         $this->compliedAndMoveFile(self::FILES_TO_MOVE);
 
@@ -125,6 +130,28 @@ class DeployCommand extends BaseCommand
             '{{notifemail}}'        =>  Str::lower(config('mail.from.address', '')),
             '{{vaultcode}}'         =>  Str::lower($this->password ?: ''),
         ];
+    }
+
+
+    protected function addAppKeyToEnvFile()
+    {
+        if (!$this->option('key')){
+            return;
+        }
+
+        $data_map = array_merge($this->parseName(), ['{{ vault_app_key }}'   =>  $this->getAppKey()]);
+
+        $env_path = $this->path . '/templates/env.j2';
+        $env_stub = $this->compliedFile($env_path, true, $data_map);
+
+        $this->writeFile($env_stub, $this->path . '/templates/env.j2');
+    }
+
+    protected function getAppKey() :string
+    {
+        Artisan::call('key:generate --show');
+
+       return str_replace(PHP_EOL,'', Artisan::output());
     }
 
     protected function addFileToGitIgnore(string $file)

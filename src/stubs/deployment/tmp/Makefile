@@ -35,6 +35,7 @@
 ##########             vault_database_password: password                                              #############
 ##########             vault_database_root_password: password                                         #############
 ##########             vault_ftp_password: password: password                                         #############
+##########   vault_app_key: copier coller le résultat de la commande php artisan key:generate --show  #############                               #############
 ###################################################################################################################
 
 
