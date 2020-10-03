@@ -6,21 +6,26 @@
     state: directory
     owner: "{{ user }}"
     group: "{{ remote_server_user }}"
+    mode: 0775
     recurse: yes
 
-- name: "Update chown to storage folder"
+- name: "Change bootstrap cache folder permission and ownner"
   file:
-    path: "{{ ansistrano_shared_path }}"
+    path: "{{ ansistrano_release_path.stdout }}/bootstrap/cache"
     state: directory
-    mode: 0777
+    owner: "{{ user }}"
+    group: "{{ remote_server_user }}"
+    mode: 0775
     follow: yes
     recurse: yes
 
-- name: "Update chown log file"
+- name: "Change storage folder permission and ownner"
   file:
-    path: "{{ ansistrano_shared_path }}/storage/logs"
+    path: "{{ ansistrano_shared_path }}/storage"
     state: directory
-    mode: 0777
+    mode: 0775
+    owner: "{{ user }}"
+    group: "{{ remote_server_user }}"
     follow: yes
     recurse: yes
 

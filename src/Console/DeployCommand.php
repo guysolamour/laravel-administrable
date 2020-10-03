@@ -3,6 +3,7 @@
 namespace Guysolamour\Administrable\Console;
 
 
+use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 
 
@@ -72,16 +73,19 @@ class DeployCommand extends BaseCommand
 
 
         // copy directory
+        if ($this->option('force')){
+            $this->filesystem->deleteDirectory($this->path);
+        }
+
         $this->filesystem->copyDirectory(
             self::TPL_PATH . '/deployment',
             $this->path . '/',
         );
 
-
         $this->compliedAndMoveFile(self::FILES_TO_MOVE);
 
 
-        $this->triggerSuccess("Deploy scripts generate successfuly");
+        $this->triggerSuccess("Deploy scripts generated successfuly");
     }
 
     /**
@@ -110,16 +114,16 @@ class DeployCommand extends BaseCommand
     protected function parseName(?string $name = null): array
     {
         return [
-            '{{server}}'            =>  $this->server ?: '',
-            '{{appname}}'           =>  config('app.name', ''),
-            '{{path}}'              =>  $this->path,
-            '{{appurl}}'            =>  config('app.url', ''),
-            '{{appfirstname}}'      =>  config('app.first_name', ''),
-            '{{applastname}}'       =>  config('app.last_name', ''),
-            '{{ftphost}}'           =>  config('filesystems.disks.ftp.host', ''),
-            '{{ftpusername}}'       =>  config('filesystems.disks.ftp.username', ''),
-            '{{notifemail}}'        =>  config('mail.from.address', ''),
-            '{{vaultcode}}'         =>  $this->password ?: '',
+            '{{server}}'            =>  Str::lower($this->server ?: ''),
+            '{{appname}}'           =>  Str::lower(config('app.name', '')),
+            '{{path}}'              =>  Str::lower($this->path),
+            '{{appurl}}'            =>  Str::lower(config('app.url', '')),
+            '{{appfirstname}}'      =>  Str::lower(config('app.first_name', '')),
+            '{{applastname}}'       =>  Str::lower(config('app.last_name', '')),
+            '{{ftphost}}'           =>  Str::lower(config('filesystems.disks.ftp.host', '')),
+            '{{ftpusername}}'       =>  Str::lower(config('filesystems.disks.ftp.username', '')),
+            '{{notifemail}}'        =>  Str::lower(config('mail.from.address', '')),
+            '{{vaultcode}}'         =>  Str::lower($this->password ?: ''),
         ];
     }
 

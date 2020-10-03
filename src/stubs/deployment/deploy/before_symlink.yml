@@ -2,9 +2,6 @@
 - name: Include composer file
   include_tasks: "{{ playbooks_directory_path }}/deploy/steps/composer.yml"
 
-- name: Include key_generate file
-  include_tasks: "{{ playbooks_directory_path }}/deploy/steps/key_generate.yml"
-
 - name: Include env file
   include_tasks: "{{ playbooks_directory_path }}/deploy/steps/env.yml"
 

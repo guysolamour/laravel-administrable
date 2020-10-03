@@ -33,6 +33,7 @@
   command: which zsh
   register: zsh_path
 
+
 - name: Switch to zsh
   user:
     name: "{{ user }}"

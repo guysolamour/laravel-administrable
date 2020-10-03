@@ -1,6 +1,4 @@
 ---
-
-
 - name: Clear cache
   shell: php artisan cache:clear
   args:
@@ -28,5 +26,16 @@
 
 - name: Route cache
   shell: php artisan route:cache
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+
+- name: Horizon Publish
+  shell: php artisan horizon:publish
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+  when: horizon == 'yes' or horizon == 'true'
+
+- name: Telescope Publish
+  shell: php artisan telescope:publish
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"

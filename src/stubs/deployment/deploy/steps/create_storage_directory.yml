@@ -2,8 +2,10 @@
 - name: Create storage directory
   file:
     path: "{{ item }}"
-    mode: '0777'
+    mode: '0775'
     state: directory
+    owner: "{{ user }}"
+    group: "{{ remote_server_user }}"
   with_items:
     - "{{ ansistrano_shared_path }}/storage/app/public"
     - "{{ ansistrano_shared_path }}/storage/framework/cache"

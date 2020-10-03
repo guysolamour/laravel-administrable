@@ -15,7 +15,20 @@
 - name: Make sure supervisor job is configured for Horizon
   template:
     src: "{{ playbooks_directory_path }}/templates/supervisor.conf.j2"
-    dest: "/etc/supervisor/conf.d/{{ user }}-worker.conf"
+    dest: "/etc/supervisor/conf.d/{{ user }}.conf"
+  when: horizon == 'yes' or horizon == 'true'
+
+- name: Restart supervisor
+  shell: supervisorctl "{{ item }}"
+  become: yes
+  with_items:
+    - reread
+    - update
+  when: horizon == 'yes' or horizon == 'true'
+
+- name: Start horizon
+  shell: supervisorctl start "{{ application }}"
+  become: yes
   when: horizon == 'yes' or horizon == 'true'
 
 

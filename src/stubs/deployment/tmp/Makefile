@@ -1,16 +1,16 @@
 ###################################################################################################################
 ##########                                                                                            #############
 ##########                                  DEPLOIMENT SYSTEM                                         #############
-##########                        The technology used is ansible with ansistrano                      #############
-##########               by Guysolamour | rolandassale@gmail.com | www.roland-assale.info             #############
+##########                        The technology used is ansible with ansistrano   roles              #############
+##########        by Guy-roland ASSALE | rolandassale@gmail.com | https://www.roland-assale.info      #############
 ###################################################################################################################
 
 
 ###################################################################################################################
 ##########                                                                                            #############
-##########                       PREPARING THE SERVER                                                 #############
+##########                                 PREPARING THE SERVER                                       #############
 ##########            1- Create a user to run the tasks                                               #############
-##########            2- Put this user in the sodoers and add the SSH keys                            #############
+##########            2- Put this user in the sodoers files and add SSH keys in the remote            #############
 ##########            3- install python-apt on the remote machine                                     #############
 ###################################################################################################################
 
@@ -38,11 +38,11 @@
 ###################################################################################################################
 
 
-## This line cannot be modified
-.PHONY: clean help deploy create view edit install dbdump storagedump
+# This line must not be modified
+.PHONY: clean help deploy rollback create view edit install run dkim dbseed dbdump storagedump
 
 
-## This line cannot be modified
+# This line must be modified
 .DEFAULT_GOAL:= help
 
 
@@ -59,7 +59,7 @@ VAULT_PASS=.vault-pass
 REMOTE_DEFAULT_USER=$(shell whoami)
 
 # The user who will run the server in PHP
-# In most cases the value is www-data
+# In most cases the value is www-data (nginx && apache)
 REMOTE_SERVER_USER=www-data
 
 
@@ -125,6 +125,9 @@ SCHEDULER=yes
 # Install laravel horizon to manage queues
 HORIZON=no
 
+# Le mail qui sera utilisé pour redirigére tous les mails envoyer à l'utilisateur root
+# No ou false pour désactiver  ou le mail pour envoyer
+FORWARD_ROOT_EMAILS=no
 
 ###################################################################################################################
 ##########                                                                                            #############
@@ -188,7 +191,7 @@ SHOW_DKIM_PUBLIC_KEY=yes
 
 
 ZSH_THEME=random
-ZSH_PLUGINS=git composer npm sudo
+ZSH_PLUGINS="git composer npm sudo"
 
 ###################################################################################################################
 ##########                                                                                            #############
@@ -222,8 +225,8 @@ POST_MAX_SIZE=50M
 
 #------------------------------------------------------------------------------------------------------------------------------>
 clean: ## remove deploy temporary files
-		rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE)
-		rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE).tgz
+	@rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE)
+	@rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE).tgz
 
 #------------------------------------------------------------------------------------------------------------------------------>
 help: ## Display this help
@@ -241,7 +244,7 @@ deploy: ## Deploy website
 														archive=$(ARCHIVE) repository=$(REPOSITORY) \
 														user=$(USER) database_name=$(DATABASE_NAME) \
 														dkim_storage_private_key_path=$(DKIM_STORAGE_PRIVATE_KEY_PATH) \
-                                                        dkim_storage_public_key_path=$(DKIM_STORAGE_PUBLIC_KEY_PATH) \
+														dkim_storage_public_key_path=$(DKIM_STORAGE_PUBLIC_KEY_PATH) \
 														database_user=$(DATABASE_USER) keep_releases=$(KEEP_RELEASES) \
 														build_javascript=$(BUILD_JAVASCRIPT) copy_strategy=$(COPY_STRATEGY) \
 														scheduler=$(SCHEDULER) horizon=$(HORIZON) dkim_keys=$(DKIM_KEYS) \
@@ -289,6 +292,7 @@ install: ## Install and configure the server
 														mail_from_address=$(MAIL_FROM_ADDRESS) app_first_name=$(APP_FIRST_NAME) \
 														app_last_name=$(APP_LAST_NAME) memory_limit=$(MEMORY_LIMIT) \
 														upload_max_filesize=$(UPLOAD_MAX_FILESIZE) post_max_size=$(POST_MAX_SIZE) \
+														forward_root_emails=$(FORWARD_ROOT_EMAILS) \
 												"
 #------------------------------------------------------------------------------------------------------------------------------>
 storagedump: ## Dump the storage folder

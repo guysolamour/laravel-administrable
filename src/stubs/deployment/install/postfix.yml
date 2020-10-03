@@ -25,9 +25,11 @@
   lineinfile:
     dest: /etc/aliases
     line: "root: {{ forward_root_emails }}"
+  when: forward_root_emails != 'false' or forward_root_emails != 'no'
 
-- name: Ensusre emails forwak takes effect
+- name: Ensusre emails forward takes effect
   shell: newaliases
+  when: forward_root_emails != 'false' or forward_root_emails != 'no'
 
 - name: restart postfix
   service:

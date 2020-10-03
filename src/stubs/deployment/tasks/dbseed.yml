@@ -16,7 +16,7 @@
     when:  seed_file is undefined
 
   - name: "Run {{ seed_file }} seed"
-    shell: "php artisan db:seed --class {{ seed_file }}"
+    shell: "php artisan db:seed --class {{ seed_file }} --force"
     args:
       chdir: "{{ path }}"
     when:  seed_file is defined

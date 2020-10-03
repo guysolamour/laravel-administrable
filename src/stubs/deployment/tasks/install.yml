@@ -14,7 +14,7 @@
       update_cache: yes
       upgrade: dist
 
-  - name: Include var file
+  - name: Include vars file
     include_vars: "{{ playbooks_directory_path }}/variables/vars.yml"
 
   - name: Include password file
