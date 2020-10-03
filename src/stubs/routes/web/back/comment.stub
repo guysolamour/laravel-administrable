@@ -13,6 +13,7 @@ Route::middleware(['{{singularSlug}}.auth'])->group(function () {
             'destroy'    => '{{backLowerNamespace}}.comment.destroy',
         ])->except(['create','store']);
 
+        Route::post('comments/{comment}/reply', 'CommentController@reply')->name('{{backLowerNamespace}}.comment.reply');
         Route::get('comments/{comment}/approved', 'CommentController@approved')->name('{{backLowerNamespace}}.comment.approved');
     });
 });

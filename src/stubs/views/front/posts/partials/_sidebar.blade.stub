@@ -33,7 +33,7 @@
 
 <div class="card mb-4" style="width: 18rem;">
     <div class="card-header">
-        Liste des étiquttes
+        Liste des étiquettes
     </div>
     <ul class="list-group list-group-flush">
         @foreach ($tags as $tag)

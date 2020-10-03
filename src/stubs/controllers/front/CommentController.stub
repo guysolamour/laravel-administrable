@@ -51,7 +51,7 @@ class CommentController extends Controller
         $comment->approved = get_{{singularSlug}}() ? true : !config('administrable.comments.approval_required');
         $comment->save();
 
-        // send notification to {{plualSlug}}
+        // send notification to {{pluralSlug}}
         if (!get_{{singularSlug}}()) {
             Notification::send({{singularClass}}::getNotifiables()->get(), new CommentNotification($comment));
             flashy('Votre commentaire a bien été ajouté. Ce dernier sera affiché dès lors qu\'il sera aprouvé. ');

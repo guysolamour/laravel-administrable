@@ -90,12 +90,56 @@
                                     @endunless
                                     <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.comment.edit', $comment) }}" data-provide="tooltip"
                                         title="Editer"><i class="ti-pencil"></i></a>
+                                    <a href="#" class="btn btn-secondary" title="Répondre" data-toggle="modal"
+                                    data-target="#answerModal{{ $comment->getKey() }}"><i class="fas fa-undo"></i></a>
                                     <a class="nav-link hover-danger" href="{{ route('{{backLowerNamespace}}.comment.destroy',$comment) }}" data-provide="tooltip"
                                     data-method="delete"
                                     data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
                                         title="Supprimer" data-original-title="Supprimer"><i class="ti-close"></i></a>
                                 </nav>
                             </td>
+                              <div class="modal fade" id="answerModal{{ $comment->getKey() }}" tabindex="-1"
+                                aria-labelledby="answerModal{{ $comment->getKey() }}Label" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="answerModal{{ $comment->getKey() }}Label">Répondre au commentaire de
+                                                :<i>`{{ $comment->getCommenterName() }}`</i></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="alert alert-secondary">
+                                                {{ $comment->comment }}
+                                            </div>
+                                            <form action="{{ route('{{backLowerNamespace}}.comment.reply', $comment) }}" method="post"
+                                                id="answerComment{{ $comment->getKey() }}">
+                                                @csrf
+                                                <input type="hidden" name="child_id" value="{{ $comment->getKey() }}">
+
+                                                <div class="form-group">
+                                                    <input type="text" name="guest_name" class="form-control" placeholder="Votre nom"
+                                                        value="{{ get_admin('full_name') }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" name="guest_email" class="form-control" placeholder="Votre email"
+                                                        value="{{ get_admin('email') }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <textarea name="comment" class="form-control" placeholder="Ecrivez votre réponse commentaire"
+                                                        rows="10" required></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                            <button type="submit" form="answerComment{{ $comment->getKey() }}" class="btn btn-primary"><i
+                                                    class="fa fa-plus"></i> Répondre</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="qv-comments-details-{{ $comment->id }}" class="quickview quickview-lg">
                                 <div class="quickview-body">
 

@@ -35,6 +35,44 @@ class CommentController extends Controller
         return view('{{backLowerNamespace}}.comments.show', compact('comment'));
     }
 
+     /**
+     * @param Comment $comment
+     * @param Request $request
+     */
+    public function reply(Comment $comment, Request $request)
+    {
+        $request->validate([
+            'comment'  => 'required',
+            'child_id' => 'required',
+        ]);
+
+
+        $reply                   = new Comment;
+        $reply->comment          = $request->get('comment');
+        $reply->child_id         = $request->get('child_id');
+        $reply->commentable_id   = $comment->commentable_id;
+        $reply->commentable_type = $comment->commentable_type;
+
+
+        if ( $request->get('guest_name') === get_{{singularSlug}}('full_name') && $request->get('guest_email') === get_{{singularSlug}}('email')){
+            $reply->commenter_id    = get_{{singularSlug}}('id');
+            $reply->commenter_type  = get_class(get_{{singularSlug}}());
+        }else {
+            $reply->guest_name    = $request->get('guest_name');
+            $reply->guest_email   = $request->get('guest_email');
+        }
+
+        $reply->save();
+
+        // check if  reply notification and send notifcation
+        if ($comment->reply_notification && $comment->getCommenterEmail() != $reply->getCommenterEmail()) {
+            Mail::to($comment->getCommenterEmail())->send(new ReplyCommentMail($comment));
+        }
+
+        flashy('Votre réponse a bien été ajoutée. Ce dernière sera affichée dès lors qu\'ells sera aprouvée. ');
+        return back();
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
