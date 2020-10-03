@@ -46,15 +46,10 @@ class ImageManager {
         error: { message: `Erreur lors de la suppression de l'image`, type: 'danger' },
         swal: { message: `Etes de vous sûr de bien vouloir supprimer l'image ? Cette action est irréversible.`, type: 'warning' },
       },
-      size: {
-        error: { message: `Image trop grande, la taille ne peut dépasser 1024 Ko.`, type: 'danger' }
-      }
     }
 
 
     this.authorized_extensions = ['png', 'jpg', 'gif', 'jpeg', 'svg']
-
-    this.limit_size = 5120000;
 
 
     this.uploadingImages = []
@@ -233,11 +228,11 @@ class ImageManager {
                             <a href="#" class="file-close">
                                 <i class="fa fa-times"></i>
                             </a>
-                            <img src="${ e.target.result}" class="card-img-top" alt="${image.name}">
+                            <img src="${e.target.result}" class="card-img-top" alt="${image.name}">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Nom:
-                                <span> ${ image.name}</span>
+                                <span> ${image.name}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Taille:
@@ -548,7 +543,7 @@ class ImageManager {
       })
   }
 
-  alert(key, duration = 5000) {
+  alert(key, duration = 3000) {
 
     const modal = this.getModalAlert()
 
@@ -1003,7 +998,7 @@ class ImageManager {
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             Nom:
-                            <span>${ this.isEmptyModel() ? image.new_name : image.name}</span>
+                            <span>${this.isEmptyModel() ? image.new_name : image.name}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             Taille:
@@ -1271,7 +1266,7 @@ class ImageManager {
     this.renderHeaderButtons()
 
     // Sélectionner l'image
-    this.getImageBox(image.id).find(this.config.checkimage).trigger('click')
+    //this.getImageBox(image.id).find(this.config.checkimage).trigger('click')
 
     this.setModalFooter()
   }
@@ -1494,10 +1489,10 @@ class ImageManager {
                 title="Supprimer l'image" style="font-size: 1.5rem; display: none;cursor: pointer;color: red">
             </i>
             <a href="${image.url}" title='${this.isEmptyModel() ? image.new_name : image.name}' data-fancybox="gallery"
-                            data-caption="${ this.isEmptyModel() ? image.new_name : image.name}">
+                            data-caption="${this.isEmptyModel() ? image.new_name : image.name}">
                 <img style="height:${height}px;" class="img-thumbnail" src='${this.isEmptyModel() ? image.url : image.url}'
                 data-id="${image.id}"
-                alt="${ this.isEmptyModel() ? image.new_name : image.name}">
+                alt="${this.isEmptyModel() ? image.new_name : image.name}">
             </a>
             `
 
@@ -1527,7 +1522,7 @@ class ImageManager {
 
   getPreviewedImageTemplateForEmptyModel(image, event = false) {
     return `
-                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${ (image.select) ? this.config.chooseimage : ''}" data-id="${image.id}">
+                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${(image.select) ? this.config.chooseimage : ''}" data-id="${image.id}">
                     <div class="file-man-box">
                         <a href="#" class="file-close">
                             <i class="fa fa-check"></i>
@@ -1558,7 +1553,7 @@ class ImageManager {
                             `}
 
                             <button class="dropdown-item" type="button"  data-rename data-toggle="modal"
-                                data-target="${ this.config.renamemodal}" data-id='${image.id}' data-name='${image.new_name}'>
+                                data-target="${this.config.renamemodal}" data-id='${image.id}' data-name='${image.new_name}'>
                                 <i class="fa fa-edit"></i> &nbsp;
                                 Renommer
                             </button>
@@ -1582,7 +1577,7 @@ class ImageManager {
                              </div>
                         </a>
                         <div class="file-man-title">
-                            <h5 class="mb-0 text-overflow filename">${ this.isEmptyModel() ? image.new_name : image.name}</h5>
+                            <h5 class="mb-0 text-overflow filename">${this.isEmptyModel() ? image.new_name : image.name}</h5>
                             <p class="mb-0"><small>${this.getFileSize(image.size)}</small></p>
                         </div>
 
@@ -1600,7 +1595,7 @@ class ImageManager {
     }
 
     return `
-                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${ (image.select) ? this.config.chooseimage : ''}" ${event ? '' : `data-id="${image.id}"`}>
+                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${(image.select) ? this.config.chooseimage : ''}" ${event ? '' : `data-id="${image.id}"`}>
                     <div class="file-man-box">
                         <a href="#" class="file-close">
                             <i class="fa fa-check"></i>
@@ -1631,7 +1626,7 @@ class ImageManager {
                             `}
 
                             <button class="dropdown-item" type="button"  data-rename data-toggle="modal"
-                                data-target="${ this.config.renamemodal}" data-id='${image.id}' data-name='${image.name}'>
+                                data-target="${this.config.renamemodal}" data-id='${image.id}' data-name='${image.name}'>
                                 <i class="fa fa-edit"></i>
                                 Renommer
                             </button>
@@ -1952,13 +1947,6 @@ class ImageManager {
   upload(images, collection) {
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
-
-
-      if (image.size > this.limit_size) {
-        this.alert(this.alerts.size.error)
-        return
-      }
-
 
       if (this.isEmptyModel()) {
         const reader = new FileReader()

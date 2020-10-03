@@ -5,7 +5,7 @@ $routes = config('administrable.rickroll.routes', []);
 
 
 foreach ($routes as $route) {
-    if ($route !== config('administrable.auth_prefix_path')) {
+    if ($route !== config('administrable.auth_prefix_path', 'administrable')) {
         Route::redirect($route, $redirect_url);
     }
 }

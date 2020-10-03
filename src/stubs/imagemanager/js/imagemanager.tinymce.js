@@ -40,15 +40,11 @@ class TinymceImageManager {
         error: { message: `Erreur lors de la suppression de l'image`, type: 'danger' },
         swal: { message: `Etes de vous sûr de bien vouloir supprimer l'image ? Cette action est irréversible.`, type: 'warning' },
       },
-      size: {
-        error: { message: `Image trop grande, la taille ne peut dépasser 1024 Ko.`, type: 'danger' }
-      }
     }
 
 
 
     this.authorized_extensions = ['png', 'jpg', 'gif', 'jpeg', 'svg']
-    this.limit_size = 5120000;
 
     this.collection = 'attachments'
     this.uploadingImages = []
@@ -1120,7 +1116,7 @@ class TinymceImageManager {
 
   getPreviewedImageTemplateForEmptyModel(image, event = false) {
     return `
-                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${ (image.select) ? this.config.chooseimage : ''}" data-id="${image.id}">
+                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${(image.select) ? this.config.chooseimage : ''}" data-id="${image.id}">
                     <div class="file-man-box">
                         <a href="#" class="file-close">
                             <i class="fa fa-check"></i>
@@ -1151,7 +1147,7 @@ class TinymceImageManager {
                             `}
 
                             <button class="dropdown-item" type="button"  data-rename data-toggle="modal"
-                                data-target="${ this.config.renamemodal}" data-id='${image.id}' data-name='${image.new_name}'>
+                                data-target="${this.config.renamemodal}" data-id='${image.id}' data-name='${image.new_name}'>
                                 <i class="fa fa-edit"></i>
                                 Renommer
                             </button>
@@ -1163,7 +1159,7 @@ class TinymceImageManager {
                             </div>
                         </a>
                         <div class="file-man-title">
-                            <h5 class="mb-0 text-overflow filename">${ this.isEmptyModel() ? image.new_name : image.name}</h5>
+                            <h5 class="mb-0 text-overflow filename">${this.isEmptyModel() ? image.new_name : image.name}</h5>
                             <p class="mb-0"><small>${this.getFileSize(image.size)}</small></p>
                         </div>
 
@@ -1182,7 +1178,7 @@ class TinymceImageManager {
     }
 
     return `
-                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${ (image.select) ? this.config.chooseimage : ''}" ${event ? '' : `data-id="${image.id}"`}>
+                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${(image.select) ? this.config.chooseimage : ''}" ${event ? '' : `data-id="${image.id}"`}>
                     <div class="file-man-box">
                         <a href="#" class="file-close">
                             <i class="fa fa-check"></i>
@@ -1213,7 +1209,7 @@ class TinymceImageManager {
                             `}
 
                             <button class="dropdown-item" type="button"  data-rename data-toggle="modal"
-                                data-target="${ this.config.renamemodal}" data-id='${image.id}' data-name='${image.name}'>
+                                data-target="${this.config.renamemodal}" data-id='${image.id}' data-name='${image.name}'>
                                 <i class="fa fa-edit"></i>
                                 Renommer
                             </button>
@@ -1241,11 +1237,6 @@ class TinymceImageManager {
   upload(images) {
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
-
-      if (image.size > this.limit_size) {
-        this.alert(this.alerts.size.error)
-        return
-      }
 
       if (this.isEmptyModel()) {
         const reader = new FileReader()
@@ -1324,11 +1315,11 @@ class TinymceImageManager {
                             <a href="#" class="file-close">
                                 <i class="fa fa-times"></i>
                             </a>
-                            <img src="${ e.target.result}" class="card-img-top" alt="${image.name}">
+                            <img src="${e.target.result}" class="card-img-top" alt="${image.name}">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Nom:
-                                <span> ${ image.name}</span>
+                                <span> ${image.name}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                 Taille:

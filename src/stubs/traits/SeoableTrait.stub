@@ -16,7 +16,7 @@ trait SeoableTrait
     public function getShowUrlAttribute()
     {
         $name = strtolower(class_basename(new self));
-        return route("{{backLowerNamespace}}.{$name}.show", $this);
+        return route("{{frontLowerNamespace}}.{$name}.show", $this);
     }
 
     public function seo()
@@ -53,7 +53,7 @@ trait SeoableTrait
     public function addSeoImageAndGetUrl($key, $default) :?string
     {
         if (request($key)) {
-            $collection = config('media-library.collections.seo');
+            $collection = config('media-library.collections.seo.label');
             if ($collection) {
                 // delete old image if exists
                 $this->getMedia($collection, ['field' => $key])->each->delete();
@@ -68,8 +68,10 @@ trait SeoableTrait
 
     }
 
-    public function generateTags(Model $tags)
+    public function generateTags(?Model $tags)
     {
+        $tags = is_null($tags) ? $this->seo : $tags ;
+
         // Page
         SEOMeta::setTitle($tags['page:title'] ?? $this->title);
         SEOMeta::setRobots('robots', "{$tags['robots:index']},{$tags['robots:follow']}");
@@ -90,9 +92,6 @@ trait SeoableTrait
             SEOMeta::setDescription($tags['page:canonical:url']);
         }
 
-        if ($tags['page:meta:keywords']) {
-            SEOMeta::setKeywords($tags['page:meta:keywords']);
-        }
 
         // OpenGraph
         OpenGraph::setTitle($tags['og:title'] ?? SEOMeta::getTitle());
@@ -101,9 +100,16 @@ trait SeoableTrait
             OpenGraph::setDescription($tags['og:description'] ??  SEOMeta::getDescription());
         }
 
-        OpenGraph::setUrl($tags['og:url']);
+        if ($tags['og:url']) {
+            OpenGraph::setUrl($tags['og:url']);
+        }
+        else if (method_exists($this, 'getFrontRoute')) {
+            OpenGraph::setUrl($this->getFrontRoute());
+        }
+
         OpenGraph::addProperty('type', $tags['og:type'] ?? 'article');
         OpenGraph::addProperty('locale', $tags['og:locale'] ?? config('app.locale'));
+
         if ($tags['og:image'] || $this->getFrontImageUrl()) {
             OpenGraph::addImage($tags['og:image'] ?? $this->getFrontImageUrl());
         }

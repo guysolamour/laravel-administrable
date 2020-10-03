@@ -25,6 +25,15 @@ class MediaManager {
     }
 
 
+
+
+    // this.collections = {
+    //     front: 'front-image',
+    //     back: 'back-image',
+    //     images: 'images',
+    // }
+
+
     this.alerts = {
       rename: {
         success: { message: `L'image a bien été renommée`, type: 'success' },
@@ -39,16 +48,12 @@ class MediaManager {
         error: { message: `Erreur lors de la suppression de l'image`, type: 'danger' },
         swal: { message: `Etes de vous sûr de bien vouloir supprimer l'image ? Cette action est irréversible.`, type: 'warning' },
       },
-      size: {
-        error: { message: `Image trop grande, la taille ne peut dépasser 1024 Ko.`, type: 'danger' }
-      }
     }
 
 
     this.images_extensions = ['jpg', 'gif', 'jpeg', 'png', 'svg', 'gif']
     this.doc_extensions = ['doc', 'pdf', 'xlsx', 'docx', 'ppt', 'pptx']
     this.authorized_extensions = [...this.images_extensions, ...this.doc_extensions, 'zip']
-    this.limit_size = 5120000;
 
 
     this.uploadingImages = []
@@ -59,7 +64,6 @@ class MediaManager {
 
     this.setOptions(opts)
 
-    console.log(this.config);
     this.init()
 
     // this.addImagesEvents()
@@ -74,7 +78,7 @@ class MediaManager {
       'handleSortable', 'chooseImage', 'unChooseImage', 'sort',
       'handleChange', 'renameImage', 'downloadImage', 'getImageProperties', 'refresh', 'search', 'resetSearch',
       'viewImage', 'deleteImage', 'deleteAllImages', 'handleDrop', 'uploadModal', 'downloadAllImage', 'uncheckAll',
-      'checkAll', 'isMultipleCollection'
+      'checkAll', 'isMultipleCollection', 'copyurl'
     ]
 
 
@@ -116,6 +120,13 @@ class MediaManager {
     this.getModalContainer().on('click', this.config.viewimage, this.viewImage)
     this.getModalContainer().on('click', this.config.deleteimage, this.deleteImage)
 
+    /**
+     * Ajout des champs dans le formulaire pour la création
+     */
+    // if (this.isEmptyModel()) {
+    //     this.form = $(`form[name=${this.config.form_name}]`)
+    //     this.appendCollectionsFormFields()
+    // }
 
 
     this.getRenameModal().on('show.bs.modal', this.renameImage)
@@ -195,27 +206,25 @@ class MediaManager {
                             <a href="#" class="file-close">
                                 <i class="fa fa-times"></i>
                             </a>
-
                                 ${this.isImageFile(image) ? `
-                                    <img src="${ e.target.result}" class="card-img-top" alt="${image.name}">
+                                    <img src="${e.target.result}" class="card-img-top" alt="${image.name}">
 
                                 ` : `
                                     <i class='fa ${this.getFileIcon(image)} fileicon selectedimage' ></i>
                                 `}
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Nom:
-                                <span> ${ image.name}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Taille:
-                                <span>${this.getFileSize(image.size)}</span>
-                                </li>
-                            </ul>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Nom:
+                                    <span> ${image.name}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Taille:
+                                    <span>${this.getFileSize(image.size)}</span>
+                                    </li>
+                                </ul>
                         </div>
                     </div>
                 `)
-
         prepend ? parent.prepend(html) : parent.append(html)
       };
     }
@@ -305,6 +314,15 @@ class MediaManager {
   downloadAllImage(event) {
     event.preventDefault()
 
+    // if (this.isEmptyModel()) {
+    //     swal({
+    //         title: 'Téléchargement !',
+    //         text: 'Les fichiers non persistés ne sont pas téléchargeable pour le moment!',
+    //         icon: 'warning',
+    //         dangerMode: true,
+    //     })
+    //     return
+    // }
 
     swal({
       title: 'Téléchargement !',
@@ -412,6 +430,28 @@ class MediaManager {
               this.renderHeaderButtons()
             })
 
+          // if (this.isEmptyModel()) {
+
+          //     this.selectedImages = []
+          //     this.images = []
+
+          //     this.hideBoxWhenDeleteAll()
+
+          //     this.addCheckUncheckAll();
+
+          //     this.renderHeaderButtons()
+
+          // } else {
+          //     axios.delete(`${this.getUrl()}/${this.collection}/all`)
+          //         .then(({ data }) => {
+          //             this.hideBoxWhenDeleteAll()
+
+          //             this.addCheckUncheckAll();
+
+          //             this.renderHeaderButtons()
+          //         })
+          // }
+
         }
       })
   }
@@ -475,7 +515,24 @@ class MediaManager {
               this.alert(this.alerts.delete.success)
 
             })
+          // if (this.isEmptyModel()) {
+          //     // Désélectionner l'élément
+          //     this.getImageBox(image.id).find(this.config.uncheckimage).trigger('click')
 
+          //     this.removeDeleteInModalImageBox(image)
+
+
+
+          // } else {
+          //     axios.delete(this.getUrl(), { data: { image_id: image.id } })
+          //         .then((data) => {
+          //             this.removeDeleteInModalImageBox(image)
+
+          //             this.alert(this.alerts.delete.success)
+
+          //         })
+
+          // }
         } else {
           // swal('suppression désapprouvé')
           // $(event.target).parents('.imagebox').find('img').css('border', 'none')
@@ -671,6 +728,16 @@ class MediaManager {
   }
 
   refresh() {
+    // on ne peut pas rafraichir des éléments qui ne sont pas persistés
+    // if (this.isEmptyModel()) {
+    //     swal({
+    //         title: 'Rafraichissement !',
+    //         text: 'Le rafraichissement est impossible tant que le(s) fichier(s) ne sont pas encore persisté(s)',
+    //         icon: 'warning',
+    //         dangerMode: true,
+    //     })
+    //     return
+    // }
 
     // Récupérer les fichiers pour le modal
     this.getModalContainer().empty()
@@ -692,10 +759,26 @@ class MediaManager {
 
     this.button = $(event.target)
 
+    /**
+     * Puisque on recupere les images déjà envoyées
+     * Il faudra réinitialiser le tableau si ce n'est pas la même collection
+     */
+    // if (this.isEmptyModel()) {
+    //     if (this.collection && this.collection != this.button.data('image')) {
+    //         this.images = []
+    //     }
+    // }
+
+
+
+
 
     this.collection = this.config.collection
 
     this.generateFormFor(this.collection)
+
+
+    // this.addCheckUncheckAll();
 
 
     axios.get(`${this.getUrl()}/${this.collection}`)
@@ -708,6 +791,29 @@ class MediaManager {
         this.renderHeaderButtons()
       })
 
+    // Récupérer les fichiers pour le modal
+    // if (!this.isEmptyModel()) {
+    //     axios.get(`${this.getUrl()}/${this.collection}`)
+    //         .then(({ data }) => {
+    //             this.addImages(data)
+    //         })
+    // } else {
+    //     /**
+    //      * Récupérer les images déjà envoyés s'ils existent
+    //      */
+    //     // this.images ? this.addImages(this.images, false) : this.addImages([])
+
+    //     if (this.tempImages[this.collection]) {
+    //         this.images = this.tempImages[this.collection]
+    //         this.addImages(this.images, false)
+    //     } else {
+    //         this.addImages([])
+    //     }
+
+    // }
+
+    // // On désactive les boutons de téléchargement, rafraichir, et suppression  si la collection est vide
+    // this.renderHeaderButtons()
 
     this.modal('show')
 
@@ -784,7 +890,9 @@ class MediaManager {
     return $(this.config.modalimagescontainer)
   }
 
-
+  // getCollectionContainer() {
+  //     return $(this.button.data('container'))
+  // }
 
   closeModal() {
 
@@ -795,7 +903,63 @@ class MediaManager {
       fnMediaManagerCommit(selectedImage)
     }
     this.modal('hide')
+    return
 
+    // if (this.isMultipleCollection()) {
+
+    //     if (this.isFrontImageCollection() && typeof window.fnAvatarCommit === 'function' && this.selectedImage) {
+    //         fnAvatarCommit(this.selectedImage)
+    //     }
+    //     this.modal('hide')
+    //     return
+    // } else {
+
+    // }
+
+
+    // if (this.isEmptyModel()) {
+    //     const input = this.form.find(`input.${this.collection}`)
+    //     const input_attributes = this.form.find(`input.${this.collection}-attributes`)
+
+
+    //     const dT = new DataTransfer()
+    //     const attr = []
+
+    //     this.images.forEach(image => {
+    //         attr.push({
+    //             [image.name]: { order: image.order, select: image.select, name: image.new_name }
+    //         })
+    //         dT.items.add(image)
+    //     })
+
+    //     input.prop('files', dT.files)
+    //     input_attributes.val(JSON.stringify(attr))
+
+
+    //     this.tempImages[this.collection] = this.images
+
+    // }
+
+    // if (this.isImagesCollection(this.collection)) {
+
+    //     this.getCollectionContainer().empty()
+
+    //     this.selectedImages.forEach(image => {
+    //         this.getCollectionContainer().append(this.getPreviewedImageTemplate(image))
+    //     })
+
+    //     if (this.selectedImages.length) {
+    //         this.getCollectionContainer().prev().removeClass('d-none')
+    //         $('[data-delete=all]').show()
+    //     } else {
+    //         this.getCollectionContainer().prev().addClass('d-none')
+    //     }
+    // } else {
+    //     this.previewImageInCollectionContainer(this.selectedImage)
+    // }
+
+
+    this.modal('hide')
   }
 
   uploadModal(event) {
@@ -875,6 +1039,12 @@ class MediaManager {
 
   setSelectedModalImage(name = null, image = null, push = true) {
 
+    /**
+     * Passer manuellement le select à true puisque rien n'est persisté
+     */
+    // if (image && this.isEmptyModel()) {
+    //     image.select = true
+    // }
 
     this.getSelectedModalImage().empty()
 
@@ -893,7 +1063,9 @@ class MediaManager {
       }
 
       if (name) {
-
+        // if (!this.isEmptyModel()) {
+        //     this.selectedImage.name = name
+        // }
         this.selectedImage.name = name
       }
 
@@ -946,6 +1118,11 @@ class MediaManager {
     input.select()
 
     document.execCommand('copy')
+
+    this.alert({
+      message: "Le lien du fichier a bien été copié.",
+      type: 'success'
+    })
 
     button.parent().children().first().remove();
   }
@@ -1104,6 +1281,17 @@ class MediaManager {
 
   previewImage(image, event = false) {
 
+    // ajouter manuellement les attributs si nous sommes en phase de création
+    // if (this.isEmptyModel()) {
+    //     image.id = this.generateImageId()
+    //     image.order = this.images.length + 1
+    //     image.new_name = image.name
+    //     image.url = event.target.result
+    //     image.select = false
+    //     image.created_at = new Date()
+    //     image.date_for_humans = this.getCreatedDate()
+    //     image.thumb_url = event.target.result
+    // }
 
     // Prévisualisation des différentes images
 
@@ -1192,7 +1380,7 @@ class MediaManager {
     // }
 
     return `
-                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${ (image.select) ? this.config.chooseimage : ''}" ${event ? '' : `data-id="${image.id}"`}>
+                <div class="imagebox  col-12 col-sm-12 col-md-6 col-lg-4 ${(image.select) ? this.config.chooseimage : ''}" ${event ? '' : `data-id="${image.id}"`}>
                     <div class="file-man-box">
                         <a href="#" class="file-close">
                             <i class="fa fa-check"></i>
@@ -1235,7 +1423,7 @@ class MediaManager {
                             `}
 
                             <button class="dropdown-item" type="button"  data-rename data-toggle="modal"
-                                data-target="${ this.config.renamemodal}" data-id='${image.id}' data-name='${image.name}'>
+                                data-target="${this.config.renamemodal}" data-id='${image.id}' data-name='${image.name}'>
                                 <i class="fa fa-edit"></i>
                                 Renommer
                             </button>
@@ -1310,7 +1498,11 @@ class MediaManager {
         return
       }
 
-
+      // if (this.isEmptyModel()) {
+      //     image.new_name = value
+      // } else {
+      //     axios.post(`/${this.config.prefix}/media/${id}/rename`, { name: value })
+      // }
       axios.post(`/${this.config.prefix}/media/${id}/rename`, { name: value })
 
       button.parents('.imagebox').find('.filename').text(value)
@@ -1367,7 +1559,61 @@ class MediaManager {
          * )
          */
         imageBox.replaceWith(this.getPreviewedModalImageTemplate(data.media))
+
+
       })
+
+
+    // if (this.isEmptyModel()) {
+    //     if (!this.isMultipleCollection()) {
+    //         // trouver l'ancienne box selectionne et retirer le deselectionner
+    //         this.renderOldImage()
+    //     }
+
+    //     /**
+    //      * On séletionne le nouveau modal
+    //      */
+    //     this.setSelectedModalImage(null, image)
+
+    //     /**
+    //      * remplacer le contenu de la box pour que les liens soient mis à jour (
+    //      * sélectionner en désélectionner
+    //      * )
+    //      */
+    //     imageBox.replaceWith(this.getPreviewedModalImageTemplate(image))
+
+    //     return
+    // } else {
+    //     // const imageBox = this.getOrderedImageBox(event.target)
+
+    //     // imageBox.addClass(this.config.chooseimage)
+    //     // const image = this.getImage(imageBox.data('id'))
+
+    //     // imageBox.addClass(this.config.chooseimage)
+
+    //     axios.post(`/${this.config.prefix}/media/${image.id}/select`)
+    //         .then(({ data }) => {
+
+
+    //             if (!this.isImagesCollection(this.collection)) {
+    //                 // trouver l'ancienne box selectionne et retirer le deselectionner
+    //                 this.renderOldImage()
+    //             }
+
+    //             /**
+    //              * On séletionne le nouveau modal
+    //              */
+    //             this.setSelectedModalImage(null, data.media)
+
+    //             /**
+    //              * remplacer le contenu de la box pour que les liens soient mis à jour (
+    //              * sélectionner en désélectionner
+    //              * )
+    //              */
+    //             imageBox.replaceWith(this.getPreviewedModalImageTemplate(data.media))
+    //         })
+
+    // }
 
   }
 
@@ -1398,6 +1644,19 @@ class MediaManager {
           .replaceWith(this.getPreviewedModalImageTemplate(data.media))
       })
 
+    // if (this.isEmptyModel()) {
+    //     // Désélectionner manuellement
+    //     const image = this.getImage(imageBox.data('id'))
+    //     image.select = false
+
+    //     imageBox.replaceWith(this.getPreviewedModalImageTemplate(image))
+    // } else {
+    //     axios.post(`/${this.config.prefix}/media/${imageBox.data('id')}/unselect`)
+    //         .then(({ data }) => {
+    //             imageBox
+    //                 .replaceWith(this.getPreviewedModalImageTemplate(data.media))
+    //         })
+    // }
 
 
   }
@@ -1446,6 +1705,24 @@ class MediaManager {
 
         if (isConfirm) {
 
+
+          // if (this.isEmptyModel()) {
+          //     imageBoxes.each((index, box) => {
+          //         $(box).fadeOut(600 * index, () => {
+          //             $(box).remove()
+          //         })
+          //     })
+          //     $(event.target).parent().addClass('d-none')
+
+          //     this.selectedImages = []
+          //     this.images = []
+          //     this.tempImages[this.collection] = this.images
+
+          //     this.addCheckUncheckAll();
+
+          //     this.renderHeaderButtons()
+
+          // } else {
           axios.delete(`${this.getUrl()}/${collection}/all`)
             .then((data) => {
 
@@ -1465,6 +1742,7 @@ class MediaManager {
 
               this.renderHeaderButtons()
             })
+          // }
         }
       })
 
@@ -1540,6 +1818,25 @@ class MediaManager {
       )
     }
     axios.post(`/${this.config.prefix}/media/order`, { ids })
+
+    // if (this.isEmptyModel()) {
+    //     for (let i = 0; i < items.length; i++) {
+
+    //         const id = parseInt(items[i].dataset.id, 10)
+    //         this.getImage(id).order = i + 1
+    //     }
+    // } else {
+    //     const ids = []
+    //     for (let i = 0; i < items.length; i++) {
+    //         ids.push(
+    //             {
+    //                 id: parseInt(items[i].dataset.id, 10),
+    //                 order: i + 1
+    //             }
+    //         )
+    //     }
+    //     axios.post(`/${this.config.prefix}/media/order`, { ids })
+    // }
   }
 
   handleSortable() {
@@ -1592,11 +1889,6 @@ class MediaManager {
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
 
-      if (image.size > this.limit_size) {
-        this.alert(this.alerts.size.error)
-        return
-      }
-
       const formData = new FormData()
       formData.append('image', image)
       formData.append('collection', collection)
@@ -1623,7 +1915,55 @@ class MediaManager {
 
         })
 
+      // if (this.isEmptyModel()) {
+      //     const reader = new FileReader()
 
+      //     /**
+      //      * Le continue permet de passer à l'élément suivant tandis que le return aurait stopper la fonction
+      //      * et les autres images ne seront pas envoyés au serveur
+      //      */
+      //     if (!this.validateFile(image)) {
+      //         continue
+      //     }
+
+      //     reader.readAsDataURL(image)
+
+      //     reader.onload = (e) => {
+
+      //         this.removeEmptyMesage()
+
+      //         this.previewImage(
+      //             image, e
+      //         )
+      //     };
+
+      // } else {
+      //     const formData = new FormData()
+      //     formData.append('image', image)
+      //     formData.append('collection', collection)
+      //     formData.append('order', this.getModalContainer().children().length + 1)
+
+      //     axios.post(this.getUrl(), formData, {
+      //         headers: {
+      //             'Content-Type': 'multipart/form-data'
+      //         }
+      //     })
+      //         .then(({ data }) => {
+      //             this.removeEmptyMesage()
+
+      //             this.previewImage(
+      //                 data.media
+      //             )
+
+      //             this.alert({
+      //                 message: "Le fichier " + image.name + ' a bien été téléversé!',
+      //                 type: 'success'
+      //             })
+
+
+
+      //         })
+      // }
 
     }
   }
@@ -1644,4 +1984,24 @@ class MediaManager {
       }
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

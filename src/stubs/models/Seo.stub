@@ -45,12 +45,13 @@ class Seo extends Model {
      * Generate html tags
      *
      * @param Model|array $model
+     * @param bool $force
      * @return string
      */
-    public static function getTags($model) :?string
+    public static function getTags($model, bool $force = false) :?string
     {
         if (is_object($model) && method_exists($model,'seo')) {
-            return optional($model->seo)->html;
+            return $force ? $model->generateTags() :  optional($model->seo)->html;
         }
 
         if (is_array($model)) {

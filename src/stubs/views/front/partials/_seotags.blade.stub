@@ -11,10 +11,11 @@
             }
         }
     }
+    $force ??= false;
 
 @endphp
 {!!
-    (\{{namespace}}\{{modelsFolder}}\Seo::getTags($seo_data))
+    (\{{namespace}}\{{modelsFolder}}\Seo::getTags($seo_data, $force))
 !!}
 
 @stop
