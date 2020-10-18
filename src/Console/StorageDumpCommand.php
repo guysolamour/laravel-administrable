@@ -40,25 +40,31 @@ class StorageDumpCommand extends BaseCommand
 
     public function handle()
     {
-
+        $this->info('Beginning task ...');
         $limit = (int) ($this->option('limit') ?? config('administrable.storage_dump.limit', self::DUMPS_TO_KEEP));
         $temporary_directory = config('administrable.storage_dump.temporary_directory', public_path());
 
+        $this->info('Get storage disk ...');
         $disks = config('administrable.storage_dump.disks',['ftp']);
         $dump_folder = config('administrable.storage_dump.dump_folder', 'storagedump');
 
         // create zip
+        $this->info('Zip folder ...');
         $filename = $this->getFileName();
         $file = create_zip_archive_from_folder($temporary_directory . '/' . $filename, storage_path());
 
+
         foreach ($disks as $disk) {
             // send to disk
+
+            $this->info('Sending zip file to {$disk}');
             Storage::disk($disk)->put(
                 $dump_folder . "/{$disk}/" . $filename,
                 $this->filesystem->get($file)
             );
 
             // delete previous backup
+            $this->info('Deleting {$disk} disk previous backup');
             $backup_files  = collect(Storage::disk($disk)->allFiles($dump_folder . '/' . $disk));
             if ($backup_files->count() > $limit) {
                 Storage::disk($disk)->delete($backup_files->first());
@@ -70,14 +76,18 @@ class StorageDumpCommand extends BaseCommand
 
                 $notification = config('administrable.storage_dump.notifications.mail.class', SuccessfulStorageFolderBackupNotification::class);
 
-                if ($notifiable){
+                if ($notifiable && class_exists($notification)){
+                    $this->info('Sending notification....');
                     $notifiable->notify(new $notification($filename, $disk));
                 }
             }
         }
 
         // delete local zip file
+        $this->info('Deleting local zip file');
         $this->filesystem->delete($file);
+
+        $this->info('Backup folder done!');
 
     }
 
