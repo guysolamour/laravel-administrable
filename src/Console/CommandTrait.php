@@ -348,7 +348,7 @@ trait CommandTrait
     {
         $model_path = sprintf("%s\%s\%s.", $this->getNamespace(), $this->getCrudConfiguration('folder', 'Models'), ucfirst($model));
 
-        if (!class_exists($model_path)) {
+        if (class_exists($model_path)) {
             $this->triggerError("The model [{$model}] crud has already been done.");
         }
 
@@ -637,7 +637,7 @@ trait CommandTrait
 
     protected function modelsExists(?string $model = null) :bool
     {
-        if(!$model){
+        if (!$model){
             $model = $this->model;
         }
 
@@ -653,17 +653,21 @@ trait CommandTrait
     protected function setGlobalConfigOption(array $options)
     {
         foreach ($options as $value) {
+            $option = $this->getCrudConfiguration($value);
 
-            if ($option = $this->getCrudConfiguration($value)) {
-
-                if (!is_bool($option)) {
-                    throw new \Exception(
-                        sprintf("The global [%s] option must be a boolean. Current value is [%s]", $value, $option)
-                    );
-                }
-                $this->$value = $option;
+            if (is_null($option)){
+                continue;
             }
+
+            if (!is_bool($option) || is_null($option)) {
+                throw new \Exception(
+                    sprintf("The global [%s] option must be a boolean. Current value is [%s]", $value, $option)
+                );
+            }
+
+            $this->$value = $option;
         }
+
     }
 
 
@@ -677,6 +681,8 @@ trait CommandTrait
                     "A field can not has [$option] for name. The [$option] word is reserved."
                 );
             }
+
+
 
             if (isset($this->fields[$option]) && (is_bool($this->fields[$option]) || !empty($this->fields[$option]))) {
                 if (array_key_exists($option, $this->fields)) {
@@ -758,7 +764,7 @@ trait CommandTrait
                     return trim($action);
                 }, array_filter($actions));
 
-                // We remove the actions from the list because already exists on the instance
+                // We remove the actions from the list because it's already exists on the instance
                 $this->fields  =  Arr::except($this->fields, 'actions');
             } else {
                 $this->actions = $this->ACTIONS;
@@ -767,9 +773,9 @@ trait CommandTrait
             // on gere le cas du edit slug ici avnt de faire la configuration des options globaux
             // on stocke la configuration globale si elle a été définie
             // celui ci pourra ecraser sur un modele en particulier
-            $this->setGlobalConfigOption(['clone', 'edit_slug']);
+            $this->setGlobalConfigOption(['clone', 'edit_slug', 'fillable']);
 
-            // tester le truc de icon si tableau et exception
+            // tester le truc de  si tableau et exception
             $this->setConfigOption();
 
             // Ajout du champ slug dans le formulaire
@@ -786,6 +792,7 @@ trait CommandTrait
             $this->setDefaultTypeAndRule();
 
             $this->sanitizeFields();
+
 
 
             foreach ($this->fields as $key => $field) {

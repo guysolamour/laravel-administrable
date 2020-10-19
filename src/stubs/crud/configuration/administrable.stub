@@ -1,11 +1,14 @@
 # Where to store models in app folder
 folder: {{modelsFolder}}
 
-# Activate or deactivate slug editing in form globally
+# activate or deactivate slug editing in form globally
 edit_slug: false
 
 # add clone model in index page
 clone: true
+
+# use fillable or guarder
+fillable: true
 
 # Models definitions
 

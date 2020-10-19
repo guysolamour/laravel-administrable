@@ -56,7 +56,6 @@ class StorageDumpCommand extends BaseCommand
 
         foreach ($disks as $disk) {
             // send to disk
-
             $this->info('Sending zip file to {$disk}');
             Storage::disk($disk)->put(
                 $dump_folder . "/{$disk}/" . $filename,
@@ -73,7 +72,6 @@ class StorageDumpCommand extends BaseCommand
             // send notifications
             if ($this->option('send')) {
                 $notifiable = $this->getNotifiable();
-
                 $notification = config('administrable.storage_dump.notifications.mail.class', SuccessfulStorageFolderBackupNotification::class);
 
                 if ($notifiable && class_exists($notification)){

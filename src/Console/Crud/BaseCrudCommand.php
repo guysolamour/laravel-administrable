@@ -11,12 +11,12 @@ class BaseCrudCommand extends BaseCommand
     /**
      * @var string[]
      */
-    protected const GLOBAL_OPTIONS = ['slug', 'edit_slug', 'clone', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans', 'icon'];
+    protected const GLOBAL_OPTIONS = ['slug', 'edit_slug', 'clone', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans', 'icon','fillable'];
 
     /**
      * @var string[]
      */
-    protected const RESERVED_WORDS = ['slug', 'icon', 'clone', 'edit_slug', 'breadcrumb', 'timestamps', 'seeder', 'trans'];
+    protected const RESERVED_WORDS = ['slug', 'icon', 'clone', 'edit_slug', 'breadcrumb', 'timestamps', 'seeder', 'trans','fillable'];
 
 
     /**
@@ -57,6 +57,10 @@ class BaseCrudCommand extends BaseCommand
      * @var bool
      */
     protected $edit_slug = false;
+    /**
+     * @var bool
+     */
+    protected $fillable = true;
     /**
      * @var bool
      */

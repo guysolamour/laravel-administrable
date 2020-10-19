@@ -53,7 +53,7 @@ class MakeCrudCommand extends BaseCrudCommand
 
         $this->migrate = $this->option('migrate') == 'true' ? true : false;
 
-        $this->theme = config('administrable.theme');
+        $this->theme = config('administrable.theme', 'adminlte');
 
 
         $this->checkIfCrudHasAlreadyBeenDoneForModel($this->model);
@@ -73,7 +73,8 @@ class MakeCrudCommand extends BaseCrudCommand
             $this->breadcrumb,
             $this->theme,
             $this->slug,
-            $this->timestamps
+            $this->timestamps,
+            $this->fillable,
         );
         $this->displayResult($result, $model_path);
         $progress->advance();
@@ -104,8 +105,6 @@ class MakeCrudCommand extends BaseCrudCommand
             $this->call('migrate');
             $progress->advance();
         }
-
-
 
 
         if (!$this->entity) {

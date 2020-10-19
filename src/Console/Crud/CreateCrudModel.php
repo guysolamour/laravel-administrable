@@ -38,7 +38,7 @@ class CreateCrudModel
 
 
 
-    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false, bool $fillable)
     {
         $this->model         = $model;
         $this->fields        = $fields;
@@ -47,6 +47,7 @@ class CreateCrudModel
         $this->slug          = $slug;
         $this->breadcrumb    = $breadcrumb;
         $this->theme         = $theme;
+        $this->fillable      = $fillable;
 
         $this->filesystem    = new Filesystem;
     }
@@ -60,10 +61,9 @@ class CreateCrudModel
      * @param bool $polymorphic
      * @return array
      */
-    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false, bool $fillable)
     {
-
-        return (new CreateCrudModel($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps))
+        return (new CreateCrudModel($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $fillable))
             ->createModel();
     }
 
@@ -89,11 +89,11 @@ class CreateCrudModel
 
         $model = $this->loadSluggableTrait($model, $data_map);
 
-
         $this->createDirectoryIfNotExists($model_path, false);
 
 
         $this->addRelations($model, $model_path);
+
 
         if (!$this->filesystem->exists($model_path)) {
             $this->writeFile(
@@ -147,6 +147,11 @@ class CreateCrudModel
      */
     private function getFillables(): string
     {
+        if (!$this->fillable){
+            return 'protected $guarded = [];';
+        }
+
+
         $fillable = '';
         foreach ($this->fields as $field) {
             if ($this->isPolymorphicOneToOneRelation($field)) {
@@ -172,7 +177,8 @@ class CreateCrudModel
         // remove the comma at the end of the string
         $fillable = rtrim($fillable, ',');
 
-        return $fillable;
+
+        return "public \$fillable = [$fillable];";
     }
 
     /**

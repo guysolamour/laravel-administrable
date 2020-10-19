@@ -89,7 +89,7 @@ return [
             'mail' => [
                 'from' => [
                     'address' => 'from@administrable.com',
-                    'name' => 'storage_backup',
+                    'name' => config('app.name'),
                 ],
                 /**
                  * Notification to use

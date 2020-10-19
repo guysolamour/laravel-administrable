@@ -502,10 +502,30 @@ Post:
   clone: true
 ```
 
-ou bien le passer globalement. Celui affectera alors tous les modèles
+ou bien le passer globalement. Cela affectera alors tous les modèles
 
 ```yaml
 clone: true
+```
+
+**NB:**
+
+- La valeur par défaut est *true*.
+
+### Fillable
+
+Pour utiliser la propriété fillable ou guarded dans le modèle
+
+```yaml
+Post:
+  name: {slug: true }
+  fillable: true
+```
+
+ou bien le passer globalement. Cela affectera alors tous les modèles
+
+```yaml
+fillable: true
 ```
 
 **NB:**
