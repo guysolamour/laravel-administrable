@@ -8,13 +8,14 @@ use {{namespace}}\Traits\CommenterTrait;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Notifications\Notifiable;
 use Creativeorange\Gravatar\Facades\Gravatar;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use {{namespace}}\Notifications\{{backNamespace}}\Auth\VerifyEmail;
 use {{namespace}}\Notifications\{{backNamespace}}\Auth\ResetPassword;
 
 class {{singularClass}} extends Authenticatable implements HasMedia
 {
-    use Notifiable, MediaableTrait, ModelTrait, CommenterTrait;
+    use  HasFactory, Notifiable, MediaableTrait, ModelTrait, CommenterTrait;
 
     /**
      * The attributes that are mass assignable.

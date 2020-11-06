@@ -199,7 +199,7 @@ class AddCrudCommand extends BaseCrudCommand
 
     protected function addFieldToSeeder()
     {
-        $seeder_path = database_path("/seeds/" . $this->data_map['{{pluralClass}}'] . 'TableSeeder.php');
+        $seeder_path = database_path("/seeders/" . $this->data_map['{{pluralClass}}'] . 'TableSeeder.php');
 
         if ($this->filesystem->exists($seeder_path)){
             $seeder = $this->generateSeederFields($this->filesystem->get($seeder_path), $this->fields_to_create);

@@ -2,7 +2,7 @@
 
 namespace {{namespace}}\Traits;
 
-use {{namespace}}\Models\Seo;
+use {{namespace}}\{{modelsFolder}}\Seo;
 use Illuminate\Database\Eloquent\Model;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\SEOMeta;

@@ -8,11 +8,12 @@ use {{namespace}}\Traits\ModelTrait;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
-    use Notifiable, CommenterTrait, MediaableTrait, ModelTrait;
+    use HasFactory, Notifiable, CommenterTrait, MediaableTrait, ModelTrait;
 
     /**
      * The attributes that are mass assignable.

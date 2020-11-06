@@ -221,6 +221,7 @@ class AdminInstallCommand extends BaseCommand
         $factory_path = $this->loadFactory();
         $this->info('Factory created at ' . $factory_path);
 
+
         // Traits
         $this->info(PHP_EOL . 'Creating Traits...');
         $traits_path = $this->loadTraits();
@@ -257,10 +258,13 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Seed created at ' . $seed_path);
 
 
+
+
         // Registering seeder
         $this->info(PHP_EOL . 'Registering seeder...');
         $database_seeder_path = $this->registerSeed();
         $this->info('Seed registered in ' . $database_seeder_path);
+
 
 
         // Controllers
@@ -269,10 +273,12 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Controllers created at ' . $controllers_path);
 
 
+
         // Middleware
         $this->info(PHP_EOL . 'Creating Middleware...');
         $middleware_path = $this->loadMiddleware();
         $this->info('Middleware created at ' . $middleware_path);
+
 
 
         // Route Middleware
@@ -281,10 +287,12 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Route middleware registered in ' . $kernel_path);
 
 
+
         // Policies
         $this->info(PHP_EOL . 'Creating Policies...');
         $policies_path = $this->loadPolicies();
         $this->info('Policies created at ' . $policies_path);
+
 
 
         // Forms
@@ -293,15 +301,18 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Forms created at ' . $forms_path);
 
 
+
         // routes
         $this->info(PHP_EOL . 'Creating Routes...');
         $routes_path = $this->loadRoutes();
         $this->info('Routes created at ' . $routes_path);
 
+
         // Views
         $this->info(PHP_EOL . 'Creating Views...');
         $admin_views_path = $this->loadViews();
         $this->info('Views created at ' . $admin_views_path);
+
 
 
         // Locales
@@ -310,10 +321,12 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Locale added at ' . $config_path);
 
 
+
         // Emails
         $this->info(PHP_EOL . 'Adding email');
         $email_path = $this->loadEmails();
         $this->info('emails created ' . $email_path);
+
 
 
         // Notifications
@@ -321,16 +334,19 @@ class AdminInstallCommand extends BaseCommand
         $notification_path = $this->loadNotifications();
         $this->info('notifications created ' . $notification_path);
 
+
         // Utils packages
         $this->info(PHP_EOL . 'Load utils package');
         $this->loadUtilPackage();
         $this->info('Packages loaded successfuly');
 
 
+
         // Commands
         $this->info(PHP_EOL . 'Load commands');
         $kernel_path = $this->loadCommands();
         $this->info('Commands loaded successfuly at ' . $kernel_path);
+
 
 
         // Config
@@ -474,7 +490,7 @@ class AdminInstallCommand extends BaseCommand
 
     protected function loadModel(): string
     {
-        // We add the Category model if the Post is in the list
+        // We add the Category and Tag model if the Post is in the list
         if (in_array('Post', $this->crud_models)) {
             $this->crud_models[] = 'Category';
             $this->crud_models[] = 'Tag';
@@ -495,6 +511,10 @@ class AdminInstallCommand extends BaseCommand
 
 
         $model_path =  app_path($this->models_folder_name);
+
+        if ($this->filesystem->exists(app_path('/Models'))){
+            $this->filesystem->deleteDirectory(app_path('/Models'));
+        }
 
 
         $this->compliedAndWriteFile(
@@ -519,23 +539,9 @@ class AdminInstallCommand extends BaseCommand
                 $this->filesystem->get($model_path . '/Model.php'),
                 $search,
                 $relation,
-                $model_path . '/Model.php'
+                $model_path . "/$guard.php"
             );
         }
-
-
-        // Rename the model and move it to the root of the app folder
-        $this->filesystem->move(
-            $model_path . '/Model.php',
-            app_path($guard . '.php')
-        );
-
-
-        // Rename the model user and move it to the root of the app folder
-        $this->filesystem->move(
-            $model_path . '/User.php',
-            app_path('User.php')
-        );
 
         return $model_path;
     }
@@ -550,8 +556,7 @@ class AdminInstallCommand extends BaseCommand
         $guard = $data_map['{{singularClass}}'];
 
         foreach (['User', $guard] as $model) {
-            if ($this->filesystem->exists($userPath = app_path("$model.php"))) {
-                $this->filesystem->move($userPath, $targetPath = app_path("{$this->models_folder_name}/$model.php"));
+            if ($this->filesystem->exists($targetPath = app_path("{$this->models_folder_name}/$model.php"))) {
                 $this->filesystem->put(
                     $targetPath,
                     strtr($this->filesystem->get($targetPath), [
@@ -571,7 +576,7 @@ class AdminInstallCommand extends BaseCommand
      */
     protected function changeNamespaceEverywhereItUses(string $model)
     {
-        $this->info("Changing $model uses and imports from {$this->getNamespace()}\\$model to {$this->getNamespace()}\\{$this->models_folder_name}\\$model");
+        $this->info("Changing $model uses and imports  to {$this->getNamespace()}\\{$this->models_folder_name}\\$model");
 
         $files = Finder::create()
             ->in(base_path())
@@ -583,7 +588,7 @@ class AdminInstallCommand extends BaseCommand
             $path = $file->getRealPath();
             if ($this->filesystem->exists($path)) {
                 $this->filesystem->put($path, strtr($this->filesystem->get($path), [
-                    "{$this->getNamespace()}\\$model" => "{$this->getNamespace()}\\{$this->models_folder_name}\\$model",
+                    "{$this->getNamespace()}\Models\$model" => "{$this->getNamespace()}\\{$this->models_folder_name}\\$model",
                 ]));
             }
         }
@@ -597,7 +602,7 @@ class AdminInstallCommand extends BaseCommand
 
         $seeds = $this->getFilesFromDirectory(self::TPL_PATH . '/seeds', false);
 
-        $seed_path = database_path('seeds');
+        $seed_path = database_path('seeders');
 
 
         $seeds = $this->filterSeeds($seeds);
@@ -641,7 +646,7 @@ class AdminInstallCommand extends BaseCommand
     {
 
         $data_map = $this->parseName();
-        $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
+        $database_seeder_path = database_path('seeders/DatabaseSeeder.php');
         $seeds = $this->getFilesFromDirectory(self::TPL_PATH . '/seeds', false);
 
         $seeds = $this->filterSeeds($seeds);
@@ -682,8 +687,8 @@ class AdminInstallCommand extends BaseCommand
         $path = database_path('factories/UserFactory.php');
         $user_factory = $this->filesystem->get($path);
 
-        $search = '\'name\' => $faker->name,';
-        $replace = '        \'pseudo\' => $faker->userName,';
+        $search = '\'name\' => $this->faker->name,';
+        $replace = '            \'pseudo\' => $this->faker->userName,';
 
         $this->replaceAndWriteFile(
             $user_factory,
@@ -809,13 +814,6 @@ class AdminInstallCommand extends BaseCommand
             $controllers_stub = array_merge($controllers_stub, $theadmin_controllers);
         }
 
-
-
-        // if ($this->isTheAdminTheme()) {
-        //     $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/' . $this->theme);
-        // } else {
-        //     $controllers_stub = $this->getFilesFromDirectory(self::TPL_PATH . '/controllers/back');
-        // }
         $controllers_stub = array_filter($controllers_stub, function ($controller) use ($controllers_to_create) {
             $name = (string) Str::of($controller->getFilenameWithoutExtension())->before('Controller');
             return in_array($name, $controllers_to_create);
@@ -1512,7 +1510,6 @@ class AdminInstallCommand extends BaseCommand
 
     protected function loadNotifications()
     {
-
         // move the auth notifications to the back folder
         $data_map = $this->parseName();
         $notification_path = app_path('Notifications/');
@@ -1562,6 +1559,15 @@ class AdminInstallCommand extends BaseCommand
         $this->compliedAndWriteFile(
             $config_stub,
             $config_path
+        );
+
+        $auth_config_path = config_path('auth.php');
+
+        $this->replaceAndWriteFile(
+        $this->filesystem->get($auth_config_path),
+        $this->getNamespace() . "\Models",
+        $this->getNamespace() . "\\" . $this->models_folder_name,
+        $auth_config_path
         );
 
         return $config_path;

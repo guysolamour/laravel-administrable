@@ -198,11 +198,11 @@ class RollbackCrudCommand extends BaseCommand
     {
         $this->info(PHP_EOL . 'Removing seed...');
 
-        $path = database_path("/seeds/" . $this->data_map['{{pluralClass}}'] . 'TableSeeder.php');
+        $path = database_path("/seeders/" . $this->data_map['{{pluralClass}}'] . 'TableSeeder.php');
         $this->filesystem->delete($path);
 
         // remove entry in database seeder file
-        $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
+        $database_seeder_path = database_path('seeders/DatabaseSeeder.php');
         $database_seeder = $this->filesystem->get($database_seeder_path);
         $search = ' $this->call(' .  $this->data_map['{{pluralClass}}'] . 'TableSeeder::class' . ");";
         $database_seeder = str_replace($search, "", $database_seeder);

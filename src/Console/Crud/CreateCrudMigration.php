@@ -103,7 +103,7 @@ class CreateCrudMigration
 
         if ($this->seeder) {
             $seeder_stub = $this->TPL_PATH . '/migrations/seed.stub';
-            $seeder_path = database_path("/seeds/" . $data_map['{{pluralClass}}'] . 'TableSeeder.php');
+            $seeder_path = database_path("/seeders/" . $data_map['{{pluralClass}}'] . 'TableSeeder.php');
             $seeder = $this->compliedFile($seeder_stub, true, $data_map);
 
             $seeder = $this->generateSeederFields($seeder);
@@ -122,7 +122,7 @@ class CreateCrudMigration
     protected function registerSeederInDatabaseSeeder(array $data_map)
     {
 
-        $database_seeder_path = database_path('seeds/DatabaseSeeder.php');
+        $database_seeder_path = database_path('seeders/DatabaseSeeder.php');
 
         $search = "    {";
 

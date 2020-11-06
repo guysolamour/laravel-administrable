@@ -181,7 +181,7 @@ trait MakeCrudTrait
 
             if ($this->isRelationField($this->getNonRelationType($field))) {
                 if ($this->isSimpleRelation($field)) {
-                    $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement(' . $this->getRelatedModel($field) . '::pluck(\'id\')' . '),';
+                    $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement(\\' . $this->getRelatedModel($field) . '::pluck(\'id\')' . '),';
                 }
             }
         }
