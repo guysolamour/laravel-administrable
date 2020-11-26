@@ -7,6 +7,7 @@ use Guysolamour\Administrable\Console\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Crud\AddCrudCommand;
 use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
+use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
 use Guysolamour\Administrable\Console\Administrable\CreateAdministrableCommand;
 
@@ -25,10 +26,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             self::CONFIG_PATH => config_path('administrable.php'),
         ], 'administrable-config');
 
-        // $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
 
         $this->loadHelperFile();
-
 
     }
 
@@ -48,6 +48,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 CreateAdministrableCommand::class,
                 DeployCommand::class,
                 StorageDumpCommand::class,
+                NotPaidCommand::class,
             ]);
         }
 

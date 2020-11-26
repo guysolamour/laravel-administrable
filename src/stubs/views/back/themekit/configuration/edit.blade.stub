@@ -10,97 +10,136 @@
 
 
 <div class="main-content">
-    <div class="container-fluid">
-        <div class="page-header">
-            <div class="row align-items-end">
-                <div class="col-lg-8">
-                </div>
-                <div class="col-lg-4">
-                    <nav class="breadcrumb-container" aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ik ik-home"></i></a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page"><a href="#">Configuration</a></li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+  <div class="container-fluid">
+    <div class="page-header">
+      <div class="row align-items-end">
+        <div class="col-lg-8">
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between">
-                        <h3 class="card-title">Modification des paramètres généraux du site</h3>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card-body p-0">
-                                    {!! form_start($form) !!}
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {!! form_row($form->email) !!}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {!! form_row($form->postal) !!}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {!! form_row($form->area) !!}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {!! form_row($form->cell) !!}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {!! form_row($form->phone) !!}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {!! form_row($form->youtube) !!}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {!! form_row($form->facebook) !!}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {!! form_row($form->twitter) !!}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            {!! form_row($form->linkedin) !!}
-                                        </div>
-
-                                        {{-- add fields here --}}
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            {!! form_row($form->about) !!}
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-edit"></i>
-                                                    Enregistrer</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    {!! form_end($form) !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="col-lg-4">
+          <nav class="breadcrumb-container" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ik ik-home"></i></a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page"><a href="#">Configuration</a></li>
+            </ol>
+          </nav>
         </div>
+      </div>
     </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Modification des paramètres généraux du site</h3>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="card-body p-0">
+                  <form action="{{ route('{{backLowerNamespace}}.configuration.store') }}" method="post">
+                    @csrf
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_email">Email du site</label>
+                          <input type="email" name="app_email" id="app_email" class="form-control"
+                            value="{{ configuration('app_email') }}">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_postal">Code postal</label>
+                          <input type="text" name="app_postal" id="app_postal" class="form-control"
+                            value="{{ configuration('app_postal') }}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_area">Localisation</label>
+                          <input type="text" name="app_area" id="app_area" class="form-control"
+                            value="{{ configuration('app_area') }}">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_cell">Numéro céllulaire</label>
+                          <input type="text" name="app_cell" id="app_cell" class="form-control"
+                            value="{{ configuration('app_cell') }}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_phone">Numéro de téléphone</label>
+                          <input type="text" name="app_phone" id="app_phone" class="form-control"
+                            value="{{ configuration('app_phone') }}">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_youtube">Lien de la page youtube</label>
+                          <input type="text" name="app_youtube" id="app_youtube" class="form-control"
+                            value="{{ configuration('app_youtube') }}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_facebook">Lien de la page facebook</label>
+                          <input type="text" name="app_facebook" id="app_facebook" class="form-control"
+                            value="{{ configuration('app_facebook') }}">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_twitter">Lien de la page twitter</label>
+                          <input type="text" name="app_twitter" id="app_twitter" class="form-control"
+                            value="{{ configuration('app_twitter') }}">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="app_linkedin">Lien de la page linkedin</label>
+                          <input type="text" name="app_linkedin" id="app_linkedin" class="form-control"
+                            value="{{ configuration('app_linkedin') }}">
+                        </div>
+                      </div>
+
+                      {{-- add fields here --}}
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="app_about">La section à propos située en pied de page</label>
+                          <textarea name="app_about" id="app_about" cols="30" rows="10"
+                            class="form-control">{{ configuration('app_about') }}</textarea>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-edit"></i>
+                            Enregistrer</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 @endsection

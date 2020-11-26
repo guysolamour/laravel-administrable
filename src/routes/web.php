@@ -2,6 +2,5 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/test',function(){
-//     return 'salut';
-// });
+Route::view('notpaid', 'front.home.notpaid')->name('front.notpaid');
+

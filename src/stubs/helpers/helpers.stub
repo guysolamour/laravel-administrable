@@ -71,13 +71,10 @@ if (!function_exists('get_month')) {
 }
 
 if (!function_exists('configuration')) {
-    function configuration(?string $field = null)
+    function configuration(string $name, string $default = null)
     {
-        if (is_null($field)) {
-            return Configuration::first();
-        }
-
-        return Configuration::first()->$field;
+        $name = Str::startsWith($name, 'app_') ? $name : "app_$name";
+        return option_get($name, $default);
     }
 }
 

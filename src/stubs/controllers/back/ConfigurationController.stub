@@ -2,34 +2,28 @@
 
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
-
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
-use {{namespace}}\{{modelsFolder}}\Configuration;
-use {{namespace}}\Traits\FormBuilderTrait;
-use {{namespace}}\Forms\{{backNamespace}}\ConfigurationForm;
+
 
 
 class ConfigurationController extends Controller
 {
-    use FormBuilderTrait;
 
     public function edit()
     {
-        $configuration = Configuration::first();
-        $form = $this->getForm( $configuration, ConfigurationForm::class );
-
-        return view('{{backLowerNamespace}}.configuration.edit', compact('form'));
+        return view('{{backLowerNamespace}}.configuration.edit');
     }
 
 
     public function store(Request $request)
     {
-        $configuration = Configuration::first();
-        $form = $this->getForm( $configuration, ConfigurationForm::class );
-        $form->redirectIfNotValid();
-
-        $configuration->update($request->all());
+        foreach ($request->all() as $key => $value) {
+            if (Str::startsWith($key, 'app')){
+                option_edit($key, $value);
+            }
+        }
 
         flashy('La configuration a été mise à jour');
 

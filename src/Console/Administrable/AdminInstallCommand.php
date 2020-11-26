@@ -20,8 +20,8 @@ class AdminInstallCommand extends BaseCommand
      * @var array
      */
     protected const DEFAULTS = [
-        'models'          => ['BaseModel', 'Configuration', 'Media', 'User', 'Model', 'Seo', 'Comment', 'Page', 'PageMeta'],
-        'migrations'      => ['User', 'Administrable', 'Media', 'Provider', 'Seo_meta_tag', 'Comment','Page', 'Page_meta'],
+        'models'          => ['BaseModel', 'Media', 'User', 'Model', 'Seo', 'Comment', 'Page', 'PageMeta'],
+        'migrations'      => ['User', 'Option', 'Media', 'Provider', 'Seo_meta_tag', 'Comment','Page', 'Page_meta'],
         'seeds'           => ['Configuration', 'Seeder', 'User', 'Page'],
         'controllers'     => [
             'front'       => ['Comment', 'ConfirmPassword', 'ForgotPassword', 'Login', 'Register', 'ResetPassword', 'Verification', 'Home', 'Front', 'Redirect'],
@@ -29,7 +29,7 @@ class AdminInstallCommand extends BaseCommand
         ],
         'forms'     => [
             'front' => [],
-            'back'  => ['User', 'Comment', 'Configuration', 'Create', 'Guard', 'ResetPassword', 'Page']
+            'back'  => ['User', 'Comment', 'Create', 'Guard', 'ResetPassword', 'Page']
         ],
         'routes'    => [
             'front' => ['Auth', 'Default', 'Social', 'Comment', 'Rickroll'],
@@ -1193,6 +1193,15 @@ class AdminInstallCommand extends BaseCommand
         );
 
         // Addition of RedirectIfNotSuper middleware
+        $redirect_middleware_stub = self::TPL_PATH . '/middleware/RedirectIfNotPaid.stub';
+        $redirect_middleware = $this->filesystem->get($redirect_middleware_stub);
+
+        $this->compliedAndWriteFile(
+            $redirect_middleware,
+            $middleware_path . '/RedirectIfNotPaid.php'
+        );
+
+        // Addition of RedirectIfNotSuper middleware
         $redirect_authenticated_middleware_stub = self::TPL_PATH . '/middleware/RedirectIfAuthenticated.stub';
         $redirect_authenticated_middleware = $this->filesystem->get($redirect_authenticated_middleware_stub);
 
@@ -1246,6 +1255,19 @@ class AdminInstallCommand extends BaseCommand
             $kernel,
             $search,
             $search . $kernel_stub,
+            $kernel_path
+        );
+
+        $search = 'protected $middleware = [';
+        $namespace = $data_map['{{namespace}}'];
+
+        $this->replaceAndWriteFile(
+            $kernel,
+            $search,
+            <<<HTML
+            {$search}
+                    \\$namespace\Http\Middleware\RedirectIfNotPaid::class,
+            HTML,
             $kernel_path
         );
 

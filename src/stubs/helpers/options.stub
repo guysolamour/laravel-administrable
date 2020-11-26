@@ -1,0 +1,114 @@
+<?php
+
+use Illuminate\Support\Facades\DB;
+
+if (!function_exists('option_create')) {
+    /**
+     *
+     * @param string|array $name
+     * @param string $value
+     * @return stdClass
+     */
+    function option_create(string $name,string $value)
+    {
+        $values = (is_string($name) && $value) ? ['name' => $name, 'value' => $value] : $name;
+        $id = DB::table('options')->insertGetId($values);
+
+        return DB::table('options')->find($id);
+    }
+}
+
+if (!function_exists('option_create_many')) {
+    /**
+     *
+     * @param string|array $name
+     * @param string $value
+     * @return void
+     */
+    function option_create_many(array $data)
+    {
+        foreach ($data as $key => $value) {
+            option_create($key, $value);
+        }
+    }
+}
+
+if (!function_exists('option_set')) {
+    /**
+     *
+     * @param string|array $name
+     * @param string|null $value
+     * @return stdClass
+     */
+    function option_set($name, $value = null)
+    {
+        return option_create($name, $value);
+    }
+}
+
+if (!function_exists('option_get')) {
+    /**
+     *
+     * @param string $name
+     * @param string|null $value
+     * @return string
+     */
+    function option_get(string $name,?string $default = null)
+    {
+        $option = option_fetch($name);
+        return is_null($option) ? $default : $option->value;
+    }
+}
+
+if (!function_exists('option_fetch')) {
+    /**
+     * @param string $name
+     * @return stdClass|null
+     */
+    function option_fetch(string $name)
+    {
+       return DB::table('options')->where('name', $name)->first();
+    }
+}
+
+if (!function_exists('option_edit')) {
+    /**
+     * @param string $name
+     * @param string $value
+     * @return stdClass|null
+     */
+    function option_edit(string $name, string $value) :string
+    {
+        if (is_array($name)) {
+            $index = array_key_first($name);
+            $value = $name[$index];
+            $name  = $index;
+        }
+
+        DB::table('options')->updateOrInsert( ['name' => $name], ['value' => $value]);
+
+        return option_get($name);
+    }
+}
+
+if (!function_exists('option_remove')) {
+    /**
+     * @param string $name
+     * @return int
+     */
+    function option_remove(string $name)
+    {
+        return DB::table('options')->where('name', $name)->delete();
+    }
+}
+
+if (!function_exists('option_delete')) {
+    /**
+     * @param string $name
+     * @return int
+     */
+    function option_delete(string $name)
+    {
+        return option_remove($name);
+    }
+}
