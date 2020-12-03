@@ -2,11 +2,12 @@
 
 namespace {{namespace}}\{{modelsFolder}};
 
+use {{namespace}}\Traits\CommentableTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
 
 class Mailbox extends BaseModel
 {
-    use Sluggable;
+    use Sluggable, CommentableTrait;
 
     /**
     * The attributes that are mass assignable.
@@ -24,6 +25,12 @@ class Mailbox extends BaseModel
     protected $casts = [
         'read' => 'boolean',
     ];
+
+
+    public function notes()
+    {
+        return $this->comments();
+    }
 
 
     // Attributes

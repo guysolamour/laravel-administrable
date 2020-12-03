@@ -33,6 +33,14 @@ class Comment extends BaseModel
     }
 
     /**
+     * The user who posted the comment.
+     */
+    public function author()
+    {
+        return $this->commenter();
+    }
+
+    /**
      * The model that was commented upon.
      */
     public function commentable()

@@ -56,14 +56,14 @@ class StorageDumpCommand extends BaseCommand
 
         foreach ($disks as $disk) {
             // send to disk
-            $this->info('Sending zip file to {$disk}');
+            $this->info("Sending zip file to {$disk}");
             Storage::disk($disk)->put(
                 $dump_folder . "/{$disk}/" . $filename,
                 $this->filesystem->get($file)
             );
 
             // delete previous backup
-            $this->info('Deleting {$disk} disk previous backup');
+            $this->info("Deleting {$disk} disk previous backup");
             $backup_files  = collect(Storage::disk($disk)->allFiles($dump_folder . '/' . $disk));
             if ($backup_files->count() > $limit) {
                 Storage::disk($disk)->delete($backup_files->first());

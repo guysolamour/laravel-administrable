@@ -42,11 +42,11 @@ class AdminInstallCommand extends BaseCommand
         ],
         'emails'    => [
             'front' => ['Replycomment'],
-            'back'  => ['Comment']
+            'back'  => ['Comment','Note']
         ],
         'mails'     => [
             'front' => ['ReplyComment'],
-            'back'  => ['Comment']
+            'back'  => ['Comment', 'NoteAnswer']
         ],
         'notifications' => [
             'front'     => [],
@@ -542,6 +542,9 @@ class AdminInstallCommand extends BaseCommand
                 $model_path . "/$guard.php"
             );
         }
+
+        // delete model
+        $this->filesystem->delete($model_path . '/Model.php');
 
         return $model_path;
     }

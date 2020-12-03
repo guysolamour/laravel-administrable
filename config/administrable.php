@@ -13,7 +13,7 @@ return [
      * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
      * The theme should not be changed once the installation has been done
      */
-    'theme' => 'adminlte',
+    'theme' => 'theadmin',
 
     /**
      * The guard used for the installation. By default the value is admin.
@@ -48,6 +48,16 @@ return [
     'back_namespace' => 'Back',
 
     /**
+     * Use PHP callable syntax...
+     * use App\Http\Controllers\UserController;
+     * Route::get('/users', [UserController::class, 'index']);
+
+     * Use string syntax...
+     * Route::get('/users', 'App\Http\Controllers\UserController@index');
+     */
+    'route_controller_callable_syntax' => true,
+
+    /**
      * Redirect when attempting to access some routes or files
      */
     'rickroll' => [
@@ -67,7 +77,13 @@ return [
         ],
     ],
     'storage_dump' => [
+        /**
+         * Dump filename
+         */
         'filename' => config('app.name','storage_dump'),
+        /**
+         * Dumps to keep
+         */
         'limit' => 5,
         /*
          * The directory where the temporary files will be stored.
@@ -88,7 +104,7 @@ return [
         'notifications' => [
             'mail' => [
                 'from' => [
-                    'address' => 'from@administrable.com',
+                    'address' => 'backup@administrable.com',
                     'name' => config('app.name'),
                 ],
                 /**

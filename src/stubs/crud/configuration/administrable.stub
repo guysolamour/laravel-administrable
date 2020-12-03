@@ -7,7 +7,7 @@ edit_slug: false
 # add clone model in index page
 clone: true
 
-# use fillable or guarder
+# use fillable or guarded
 fillable: true
 
 # Models definitions
