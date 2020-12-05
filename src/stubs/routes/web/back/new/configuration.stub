@@ -1,0 +1,9 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\ConfigurationController;
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::get('configuration', [ConfigurationController::class, 'edit'])->name('{{backLowerNamespace}}.configuration.edit');
+    Route::post('configuration', [ConfigurationController::class, 'store'])->name('{{backLowerNamespace}}.configuration.store');
+});

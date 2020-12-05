@@ -1,0 +1,18 @@
+<?php
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
+        Route::resource('users','UserController')->names([
+            'index'      => '{{backLowerNamespace}}.user.index',
+            'show'       => '{{backLowerNamespace}}.user.show',
+            'create'     => '{{backLowerNamespace}}.user.create',
+            'store'      => '{{backLowerNamespace}}.user.store',
+            'edit'       => '{{backLowerNamespace}}.user.edit',
+            'update'     => '{{backLowerNamespace}}.user.update',
+            'destroy'    => '{{backLowerNamespace}}.user.destroy',
+        ]);
+
+        Route::put('users/change-password/{user}', 'UserController@changePassword')->name('{{backLowerNamespace}}.user.changepassword');
+    });
+});

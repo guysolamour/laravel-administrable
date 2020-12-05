@@ -1153,4 +1153,12 @@ trait CommandTrait
         // Sanitize data
         return array_map(fn ($field) => Str::lower(trim($field)), $fields);
     }
+
+
+    protected function getRoutesStubsFolderPrefix() :string
+    {
+        $prefix = $this->route_controller_callable_syntax ?? config('administrable.route_controller_callable_syntax', true);
+
+        return $prefix ? 'new' :  'old';
+    }
 }

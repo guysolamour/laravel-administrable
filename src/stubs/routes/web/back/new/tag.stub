@@ -1,0 +1,16 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\TagController;
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::resource('tags', TagController::class)->names([
+            'index'      => '{{backLowerNamespace}}.tag.index',
+            'show'       => '{{backLowerNamespace}}.tag.show',
+            'create'     => '{{backLowerNamespace}}.tag.create',
+            'store'      => '{{backLowerNamespace}}.tag.store',
+            'edit'       => '{{backLowerNamespace}}.tag.edit',
+            'update'     => '{{backLowerNamespace}}.tag.update',
+            'destroy'    => '{{backLowerNamespace}}.tag.destroy',
+    ]);
+});

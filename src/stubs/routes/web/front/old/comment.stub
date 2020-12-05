@@ -1,0 +1,11 @@
+<?php
+use Illuminate\Support\Facades\Route;
+
+Route::namespace('{{frontNamespace}}')->group(function () {
+    Route::middleware([Spatie\Honeypot\ProtectAgainstSpam::class])->group(function () {
+        Route::post('comments','CommentController@store')->name('{{frontLowerNamespace}}.comments.store');
+        Route::delete('comments/{comment}','CommentController@destroy')->name('{{frontLowerNamespace}}.comments.destroy');
+        Route::put('comments/{comment}','CommentController@update')->name('{{frontLowerNamespace}}.comments.update');
+        Route::post('comments/{comment}','CommentController@reply')->name('{{frontLowerNamespace}}.comments.reply');
+    });
+});

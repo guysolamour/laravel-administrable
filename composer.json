@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "php": ">=7.3",
+    "php": ">=7.4",
     "artesaos/seotools": "^0.19",
     "bmatovu/multi-auth": "^10.0",
     "creativeorange/gravatar": "^1.0.20",

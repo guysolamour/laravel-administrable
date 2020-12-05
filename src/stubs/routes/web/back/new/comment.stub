@@ -1,0 +1,20 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\CommentController;
+
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::resource('comments', CommentController::class)->names([
+        'index'      => '{{backLowerNamespace}}.comment.index',
+        'show'       => '{{backLowerNamespace}}.comment.show',
+        'create'     => '{{backLowerNamespace}}.comment.create',
+        'store'      => '{{backLowerNamespace}}.comment.store',
+        'edit'       => '{{backLowerNamespace}}.comment.edit',
+        'update'     => '{{backLowerNamespace}}.comment.update',
+        'destroy'    => '{{backLowerNamespace}}.comment.destroy',
+    ])->except(['create','store']);
+
+    Route::post('comments/{comment}/reply', [CommentController::class, 'reply'])->name('{{backLowerNamespace}}.comment.reply');
+    Route::get('comments/{comment}/approved', [CommentController::class, 'approved'])->name('{{backLowerNamespace}}.comment.approved');
+});

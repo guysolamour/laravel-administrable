@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\MediaController;
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    // Js
+    Route::post('media/order', [MediaController::class, 'order'])->name('{{backLowerNamespace}}.media.order.store');
+    Route::get('media/order', [MediaController::class, 'order'])->name('{{backLowerNamespace}}.media.order.index');
+
+    Route::get('media/{model}/{id}/tinymce', [MediaController::class, 'tinymce'])->name('{{backLowerNamespace}}.media.tinymce');
+
+    Route::post('media/{media}/rename', [MediaController::class, 'rename'])->name('{{backLowerNamespace}}.media.rename');
+    Route::post('media/{media}/select', [MediaController::class, 'select'])->name('{{backLowerNamespace}}.media.select');
+    Route::post('media/{media}/unselect', [MediaController::class, 'unselect'])->name('{{backLowerNamespace}}.media.unselect');
+    // Route::post('media/{model}/{id}/{collection}/select', [MediaController::class, 'select'])->name('{{backLowerNamespace}}.media.select');
+
+    Route::get('media/{model}/{id}/{collection}',[MediaController::class, 'index'])->name('{{backLowerNamespace}}.media.index');
+    Route::post('media/{model}/{id}', [MediaController::class, 'store'])->name('{{backLowerNamespace}}.media.store');
+    Route::delete('media/{model}/{id}', [MediaController::class, 'destroy'])->name('{{backLowerNamespace}}.media.destroy');
+    Route::delete('media/seo/{model}/{id}', [MediaController::class, 'destroySeo'])->name('{{backLowerNamespace}}.media.seodestroy');
+    Route::delete('media/{model}/{id}/{collection}/all', [MediaController::class, 'destroyAll'])->name('{{backLowerNamespace}}.media.destroy.all');
+});
+
+

@@ -1,0 +1,16 @@
+<?php
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
+        Route::resource('posts','PostController')->names([
+            'index'      => '{{backLowerNamespace}}.post.index',
+            'show'       => '{{backLowerNamespace}}.post.show',
+            'create'     => '{{backLowerNamespace}}.post.create',
+            'store'      => '{{backLowerNamespace}}.post.store',
+            'edit'       => '{{backLowerNamespace}}.post.edit',
+            'update'     => '{{backLowerNamespace}}.post.update',
+            'destroy'    => '{{backLowerNamespace}}.post.destroy',
+        ]);
+    });
+});

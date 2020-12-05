@@ -1,0 +1,17 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{frontNamespace}}\PostController;
+
+
+Route::get('posts', [PostController::class, 'index'])->name('{{frontLowerNamespace}}.post.index');
+
+Route::get('posts/search', [PostController::class, 'search'])->name('{{frontLowerNamespace}}.post.search');
+Route::get('posts/{post}', [PostController::class, 'show'])->name('{{frontLowerNamespace}}.post.show');
+
+Route::get('posts/categories/{category}', [PostController::class, 'category'])->name('{{frontLowerNamespace}}.post.category');
+Route::get('posts/tags/{tag}', [PostController::class, 'tag'])->name('{{frontLowerNamespace}}.post.tag');
+
+
+
+

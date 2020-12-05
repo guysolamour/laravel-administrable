@@ -1,0 +1,9 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{frontNamespace}}\FrontController;
+
+
+Route::get('/', [FrontController::class, 'home'])->name('home');
+Route::get('legal-mentions', [FrontController::class, 'legalMentions'])->name('{{frontLowerNamespace}}.legalmention.index');
+Route::get('about', [FrontController::class, 'about'])->name('{{frontLowerNamespace}}.about.index');

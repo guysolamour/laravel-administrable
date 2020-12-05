@@ -1,0 +1,8 @@
+<?php
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
+        Route::get('notifications/markread', 'NotificationController@markAsRead')->name('{{backLowerNamespace}}.notification.markasread');
+    });
+});

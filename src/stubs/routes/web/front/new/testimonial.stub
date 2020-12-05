@@ -1,0 +1,10 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{frontNamespace}}\TestimonialController;
+
+
+Route::get('testimonials', [TestimonialController::class, 'index'])->name('{{frontLowerNamespace}}.testimonial.index');
+
+
+

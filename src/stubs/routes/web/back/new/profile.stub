@@ -1,0 +1,17 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\{{singularClass}}Controller;
+
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    // Profile
+    Route::get( 'profile/{{{singularSlug}}}', [{{singularClass}}Controller::class, 'profile'])->name('{{backLowerNamespace}}.{{singularSlug}}.profile');
+    Route::put('profile/{{{singularSlug}}}', [{{singularClass}}Controller::class, 'update'])->name('{{backLowerNamespace}}.{{singularSlug}}.update');
+    Route::get('{{pluralSlug}}', [{{singularClass}}Controller::class, 'index'])->name('{{backLowerNamespace}}.{{singularSlug}}.index');
+    Route::post('/update-{{singularSlug}}-avatar', [{{singularClass}}Controller::class, 'updateAvatar'])->name('{{backLowerNamespace}}.{{singularSlug}}.update-avatar');
+    Route::get('{{pluralSlug}}/create', [{{singularClass}}Controller::class, 'create'])->name('{{backLowerNamespace}}.{{singularSlug}}.create')->middleware('{{singularSlug}}.super');
+    Route::post('{{pluralSlug}}/store', [{{singularClass}}Controller::class, 'store'])->name('{{backLowerNamespace}}.{{singularSlug}}.store')->middleware('{{singularSlug}}.super');
+    Route::delete('{{singularSlug}}/{{{singularSlug}}}', [{{singularClass}}Controller::class, 'delete'])->name('{{backLowerNamespace}}.{{singularSlug}}.delete')->middleware('{{singularSlug}}.super');
+    Route::put('change-password/{{{singularSlug}}}', [{{singularClass}}Controller::class, 'changePassword'])->name('{{backLowerNamespace}}.{{singularSlug}}.change.password');
+});

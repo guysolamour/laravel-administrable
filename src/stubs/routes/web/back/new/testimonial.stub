@@ -1,0 +1,16 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\TestimonialController;
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::resource('testimonials', TestimonialController::class)->names([
+        'index'      => '{{backLowerNamespace}}.testimonial.index',
+        'show'       => '{{backLowerNamespace}}.testimonial.show',
+        'create'     => '{{backLowerNamespace}}.testimonial.create',
+        'store'      => '{{backLowerNamespace}}.testimonial.store',
+        'edit'       => '{{backLowerNamespace}}.testimonial.edit',
+        'update'     => '{{backLowerNamespace}}.testimonial.update',
+        'destroy'    => '{{backLowerNamespace}}.testimonial.destroy',
+    ]);
+});

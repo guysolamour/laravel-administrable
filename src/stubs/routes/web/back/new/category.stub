@@ -1,0 +1,17 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\CategoryController;
+
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::resource('categories', CategoryController::class)->names([
+        'index'      => '{{backLowerNamespace}}.category.index',
+        'show'       => '{{backLowerNamespace}}.category.show',
+        'create'     => '{{backLowerNamespace}}.category.create',
+        'store'      => '{{backLowerNamespace}}.category.store',
+        'edit'       => '{{backLowerNamespace}}.category.edit',
+        'update'     => '{{backLowerNamespace}}.category.update',
+        'destroy'    => '{{backLowerNamespace}}.category.destroy',
+    ]);
+});
+

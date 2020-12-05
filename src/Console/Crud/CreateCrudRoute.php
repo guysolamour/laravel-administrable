@@ -107,7 +107,7 @@ class CreateCrudRoute
 
 
         $routes_path = base_path('/routes/web/' . $data_map['{{backLowerNamespace}}'] . "/{$data_map['{{singularSlug}}']}.php");
-        $routes_stub = $this->TPL_PATH . '/routes/routes.stub';
+        $routes_stub = $this->TPL_PATH . "/routes/{$this->getRoutesStubsFolderPrefix()}.stub";
 
         $complied = $this->compliedFile($routes_stub, true, $data_map);
 

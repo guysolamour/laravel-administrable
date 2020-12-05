@@ -1,0 +1,16 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\{{singularClass}}Controller;
+
+Route::middleware(['{{guard}}.auth'])->group(function () {
+    Route::resource('{{pluralSlug}}', {{singularClass}}Controller::class)->names([
+        'index'      => '{{backLowerNamespace}}.{{singularSlug}}.index',
+        'create'     => '{{backLowerNamespace}}.{{singularSlug}}.create',
+        'show'       => '{{backLowerNamespace}}.{{singularSlug}}.show',
+        'store'      => '{{backLowerNamespace}}.{{singularSlug}}.store',
+        'edit'       => '{{backLowerNamespace}}.{{singularSlug}}.edit',
+        'update'     => '{{backLowerNamespace}}.{{singularSlug}}.update',
+        'destroy'    => '{{backLowerNamespace}}.{{singularSlug}}.destroy',
+    ]){{exceptActions}};
+});

@@ -1,0 +1,11 @@
+<?php
+use Illuminate\Support\Facades\Route;
+
+Route::namespace('{{frontNamespace}}')->group(function () {
+
+    Route::get('testimonials','TestimonialController@index')->name('{{frontLowerNamespace}}.testimonial.index');
+
+});
+
+
+
