@@ -37,7 +37,7 @@ class RollbackCrudCommand extends BaseCommand
      * @var string
      */
     protected $signature = 'administrable:rollback:crud
-                             {model : Model name }
+                             {model? : Model name }
                              {--r|rollback=true : Run artisan rollback command }
                              ';
     /**
@@ -53,7 +53,17 @@ class RollbackCrudCommand extends BaseCommand
     {
         $this->info('Rollback...');
 
-        $this->model    = $this->argument('model');
+        $this->model = $this->argument('model');
+
+        if (!$this->model) {
+            $models = $this->getAllCrudConfigModels();
+            if (empty($models)) {
+                $this->triggerError("You must defined a model in configuration yaml file");
+            }
+
+            $this->model = $this->choice('Which model will be used ?', $this->getAllCrudConfigModels(), 0);
+        }
+
         $this->theme    = config('administrable.theme', 'adminlte');
         $this->guard    = $this->getGuard();
         $this->rollback = $this->option('rollback') == 'true' ? true : false;

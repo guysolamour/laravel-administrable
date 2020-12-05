@@ -87,16 +87,47 @@ trait CommandTrait
         return rtrim($namespace, '\\');
     }
 
+    protected function parseConfigurationYamlFile()
+    {
+        if (!$this->models_config) {
+            $this->models_config = Yaml::parseFile(base_path('administrable.yaml'));
+        }
+
+        return $this->models_config;
+    }
+
 
     protected function getCrudConfiguration(string $key, $default = null)
     {
-        if (!$this->models_config) {
-            $models_config_file_path = base_path('administrable.yaml');
-            $this->models_config = Yaml::parseFile($models_config_file_path);
-        }
-
-        return  Arr::get($this->models_config, $key, $default);
+        return  Arr::get($this->parseConfigurationYamlFile(), $key, $default);
     }
+
+    protected function getAllCrudConfigModels()
+    {
+        $models = [];
+
+        foreach ($this->parseConfigurationYamlFile() as $key => $value) {
+            if (!is_array($value) || !Arr::isAssoc($value)) continue;
+
+            $models[] = $key;
+        }
+        return $models;
+    }
+
+    protected function getUnusedCrudConfigModels()
+    {
+        $models = [];
+
+        foreach ($this->getAllCrudConfigModels() as $value) {
+            $path = app_path($this->getCrudConfiguration('folder', 'Models') . '/' . ucfirst($value) . '.php');
+            if ($this->filesystem->exists($path)) continue;
+
+            $models[] = $value;
+        }
+        return $models;
+    }
+
+
 
     /**
      *

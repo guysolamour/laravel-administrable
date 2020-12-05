@@ -3,6 +3,7 @@
 namespace Guysolamour\Administrable\Console\Crud;
 
 
+use Illuminate\Support\Arr;
 use Guysolamour\Administrable\Console\CommandTrait;
 use Guysolamour\Administrable\Console\Crud\CreateCrudForm;
 use Guysolamour\Administrable\Console\Crud\CreateCrudView;
@@ -30,8 +31,8 @@ class MakeCrudCommand extends BaseCrudCommand
      * @var string
      */
     protected $signature = 'administrable:make:crud
-                             {model : Model name }
-                             {--m|migrate=true : Run artisan migrate command }
+                             {model? : Model name}
+                             {--m|migrate=true : Run artisan migrate command}
                              ';
     /**
      * The console command description.
@@ -50,6 +51,16 @@ class MakeCrudCommand extends BaseCrudCommand
         $progress = $this->output->createProgressBar(10);
 
         $this->model = $this->argument('model');
+
+        if (!$this->model){
+            $models = $this->getUnusedCrudConfigModels();
+            if (empty($models)){
+                $this->triggerError("You must defined a model in configuration yaml file");
+            }
+
+            $this->model = $this->choice('Which model will be used ?', $this->getUnusedCrudConfigModels(), 0);
+        }
+
 
         $this->migrate = $this->option('migrate') == 'true' ? true : false;
 
