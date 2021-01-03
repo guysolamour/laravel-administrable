@@ -2,28 +2,23 @@
 
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\Settings\ConfigurationSettings;
 
 
 
 class ConfigurationController extends Controller
 {
-
-    public function edit()
+    public function edit(ConfigurationSettings $configuration)
     {
-        return view('{{backLowerNamespace}}.configuration.edit');
+        return view('{{backLowerNamespace}}.configuration.edit', compact('configuration'));
     }
 
 
-    public function store(Request $request)
+    public function store(Request $request, ConfigurationSettings $configuration)
     {
-        foreach ($request->all() as $key => $value) {
-            if (Str::startsWith($key, 'app')){
-                option_edit($key, $value);
-            }
-        }
+        $configuration->update($request->all());
 
         flashy('La configuration a été mise à jour');
 

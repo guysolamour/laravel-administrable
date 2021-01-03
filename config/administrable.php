@@ -13,7 +13,7 @@ return [
      * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
      * The theme should not be changed once the installation has been done
      */
-    'theme' => 'themekit',
+    'theme' => 'adminlte',
 
     /**
      * The guard used for the installation. By default the value is admin.
@@ -76,6 +76,7 @@ return [
             '.htaccess',
         ],
     ],
+
     'storage_dump' => [
         /**
          * Dump filename

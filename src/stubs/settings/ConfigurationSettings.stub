@@ -1,0 +1,25 @@
+<?php
+
+namespace {{namespace}}\Settings;
+
+class ConfigurationSettings extends BaseSettings
+{
+    public const PREFIX = 'configuration';
+
+    public ?string $email;
+    public ?string $postal;
+    public ?string $area;
+    public ?string $cell;
+    public ?string $phone;
+    public ?string $about;
+    public ?string $youtube;
+    public ?string $twitter;
+    public ?string $facebook;
+    public ?string $linkedin;
+
+
+    public static function group(): string
+    {
+        return static::PREFIX;
+    }
+}

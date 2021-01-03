@@ -49,12 +49,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 DeployCommand::class,
                 StorageDumpCommand::class,
                 NotPaidCommand::class,
+                AddExtensionCommand::class,
             ]);
         }
 
-        // $this->app->bind('admin', function () {
-        //     return new Admin();
-        // });
     }
 
     private function loadHelperFile()

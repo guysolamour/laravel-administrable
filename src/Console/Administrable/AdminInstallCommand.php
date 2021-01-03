@@ -222,6 +222,12 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Model created at ' . $model_path);
 
 
+        // Settings
+        $setting_path = $this->info(PHP_EOL . 'Creating Setting...');
+        $this->loadSetting();
+        $this->info('Setting created at ' . $setting_path);
+
+
         // Factories
         $this->info(PHP_EOL . 'Creating Factory...');
         $factory_path = $this->loadFactory();
@@ -621,6 +627,22 @@ class AdminInstallCommand extends BaseCommand
     }
 
 
+    protected function loadSetting()
+    {
+        // $data_map = $this->parseName();
+
+        $settings = $this->getFilesFromDirectory(self::TPL_PATH . '/settings', false);
+
+        $setting_path = app_path('Settings');
+
+
+        $this->compliedAndWriteFile(
+            $settings,
+            $setting_path
+        );
+
+        return $setting_path;
+    }
 
     protected function loadSeed()
     {
@@ -791,6 +813,34 @@ class AdminInstallCommand extends BaseCommand
             $guard_reset_password_migration,
             $migrations_path . '/2014_07_25_092010_create_'. $data_map['{{singularSlug}}'] . '_password_resets_table.php',
         );
+
+        // load setting migrations
+        $this->call('vendor:publish', [
+            '--provider' => 'Spatie\LaravelSettings\LaravelSettingsServiceProvider',
+            '--tag'      => 'migrations',
+        ]);
+
+        // load media library migrations
+        $this->call('vendor:publish', [
+            '--provider' => 'Spatie\MediaLibrary\MediaLibraryServiceProvider',
+            '--tag'      => 'migrations',
+        ]);
+
+        // load configuration settings
+        $setting_migrations_stubs = $this->getFilesFromDirectory(self::TPL_PATH . '/migrations/settings', false);
+        $signature = now();
+        $settings_path = database_path('settings');
+        $this->createDirectoryIfNotExists($settings_path);
+
+        foreach ($setting_migrations_stubs as $setting_stub) {
+            $signature = $signature->addMinutes(rand(5, 60));
+            $filename_prefix = $signature->format('Y_m_d_His') . '_';
+
+            $this->writeFile(
+                $this->compliedFile($setting_stub, true, $data_map),
+                $settings_path . '/' . $filename_prefix . $setting_stub->getFilenameWithoutExtension() . '.php'
+            );
+        }
 
         // add notifications table migration
         $this->callSilent('notifications:table');

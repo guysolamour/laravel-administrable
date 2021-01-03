@@ -149,12 +149,12 @@ trait CommandTrait
      * @param string $path
      * @return void
      */
-    protected function compliedAndWriteFile($files, string $path): void
+    protected function compliedAndWriteFile($files, string $path, string $filename_prefix = ''): void
     {
-
+        
         if (is_array($files)) {
             foreach ($files as $file) {
-                $this->compliedAndWriteFile($file, $path);
+                $this->compliedAndWriteFile($file, $path, $filename_prefix);
             }
             return;
         }
@@ -171,7 +171,7 @@ trait CommandTrait
 
         $this->writeFile(
             $complied,
-            $this->isSingleFile($files) ? $path : $path . '/' . $files->getFilenameWithoutExtension() . '.php'
+            $this->isSingleFile($files) ? $path : $path . '/' . $filename_prefix . $files->getFilenameWithoutExtension() . '.php'
         );
     }
 

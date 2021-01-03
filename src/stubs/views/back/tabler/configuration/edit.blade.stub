@@ -1,13 +1,8 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
-
 @section('title','Configuration')
 
-
-
 @section('content')
-
-
 <div class="row mb-5">
   <div class="col-12">
     <div class="d-flex justify-content-between">
@@ -30,73 +25,73 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="app_email">Email du site</label>
-              <input type="email" name="app_email" id="app_email" class="form-control"
-                value="{{ configuration('app_email') }}">
+              <label for="email">Email du site</label>
+              <input type="email" name="email" id="email" class="form-control"
+                value="{{ $configuration->email }}">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="app_postal">Code postal</label>
-              <input type="text" name="app_postal" id="app_postal" class="form-control"
-                value="{{ configuration('app_postal') }}">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="app_area">Localisation</label>
-              <input type="text" name="app_area" id="app_area" class="form-control"
-                value="{{ configuration('app_area') }}">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="app_cell">Numéro céllulaire</label>
-              <input type="text" name="app_cell" id="app_cell" class="form-control"
-                value="{{ configuration('app_cell') }}">
+              <label for="postal">Code postal</label>
+              <input type="text" name="postal" id="postal" class="form-control"
+                value="{{ $configuration->postal }}">
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="app_phone">Numéro de téléphone</label>
-              <input type="text" name="app_phone" id="app_phone" class="form-control"
-                value="{{ configuration('app_phone') }}">
+              <label for="area">Localisation</label>
+              <input type="text" name="area" id="area" class="form-control"
+                value="{{ $configuration->area }}">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="app_youtube">Lien de la page youtube</label>
-              <input type="text" name="app_youtube" id="app_youtube" class="form-control"
-                value="{{ configuration('app_youtube') }}">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="app_facebook">Lien de la page facebook</label>
-              <input type="text" name="app_facebook" id="app_facebook" class="form-control"
-                value="{{ configuration('app_facebook') }}">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="app_twitter">Lien de la page twitter</label>
-              <input type="text" name="app_twitter" id="app_twitter" class="form-control"
-                value="{{ configuration('app_twitter') }}">
+              <label for="cell">Numéro céllulaire</label>
+              <input type="text" name="cell" id="cell" class="form-control"
+                value="{{ $configuration->cell }}">
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="app_linkedin">Lien de la page linkedin</label>
-              <input type="text" name="app_linkedin" id="app_linkedin" class="form-control"
-                value="{{ configuration('app_linkedin') }}">
+              <label for="phone">Numéro de téléphone</label>
+              <input type="text" name="phone" id="phone" class="form-control"
+                value="{{ $configuration->phone }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="youtube">Lien de la page youtube</label>
+              <input type="text" name="youtube" id="youtube" class="form-control"
+                value="{{ $configuration->youtube }}">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="facebook">Lien de la page facebook</label>
+              <input type="text" name="facebook" id="facebook" class="form-control"
+                value="{{ $configuration->facebook }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="twitter">Lien de la page twitter</label>
+              <input type="text" name="twitter" id="twitter" class="form-control"
+                value="{{ $configuration->twitter }}">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="linkedin">Lien de la page linkedin</label>
+              <input type="text" name="linkedin" id="linkedin" class="form-control"
+                value="{{ $configuration->linkedin }}">
             </div>
           </div>
 
@@ -105,9 +100,9 @@
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              <label for="app_about">La section à propos située en pied de page</label>
-              <textarea name="app_about" id="app_about" cols="30" rows="10"
-                class="form-control">{{ configuration('app_about') }}</textarea>
+              <label for="about">La section à propos située en pied de page</label>
+              <textarea name="about" id="about" cols="30" rows="10"
+                class="form-control">{{ $configuration->about }}</textarea>
             </div>
           </div>
 

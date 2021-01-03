@@ -3,7 +3,7 @@ namespace Database\Seeders;
 
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use {{namespace}}\{{modelsFolder}}\Configuration;
+use {{namespace}}\Settings\ConfigurationSettings;
 
 class ConfigurationsTableSeeder extends Seeder
 {
@@ -16,20 +16,24 @@ class ConfigurationsTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-       option_create_many([
-            'app_about'    => $faker->realText(150),
-            'app_email'    => $faker->safeEmail,
-            'app_postal'   => $faker->postcode,
-            'app_area'     => $faker->city,
-            'app_cell'     => $faker->phoneNumber,
-            'app_phone'    => $faker->phoneNumber,
-            'app_youtube'  => $faker->url,
-            'app_facebook' => $faker->url,
-            'app_twitter'  => $faker->url,
-            'app_linkedin' => $faker->url,
+        $configuration = ConfigurationSettings::get();
+
+        $configuration->update([
+            'about'    => $faker->realText(150),
+            'email'    => $faker->safeEmail,
+            'postal'   => $faker->postcode,
+            'area'     => $faker->city,
+            'cell'     => $faker->phoneNumber,
+            'phone'    => $faker->phoneNumber,
+            'youtube'  => $faker->url,
+            'facebook' => $faker->url,
+            'twitter'  => $faker->url,
+            'linkedin' => $faker->url,
+        ]);
+
+        option_create_many([
             'app_paid'     => '1',
             'app_notpaid_default_message' => "Votre site a été mis hors service pour cause de non paiement. Si vous êtes le propriétaire, prière de contacter le concepteur pour régulariser la situation.",
         ]);
-
     }
 }

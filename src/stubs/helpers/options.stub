@@ -28,7 +28,7 @@ if (!function_exists('option_create_many')) {
     function option_create_many(array $data)
     {
         foreach ($data as $key => $value) {
-            option_create($key, $value);
+            option_edit($key, $value);
         }
     }
 }

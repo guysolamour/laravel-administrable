@@ -1,11 +1,11 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use Spatie\Honeypot\ProtectAgainstSpam;
 use {{namespace}}\Http\Controllers\{{backNamespace}}\HomeController;
 use {{namespace}}\Http\Controllers\{{backNamespace}}\Auth\LoginController;
 // use {{namespace}}\Http\Controllers\{{backNamespace}}\Auth\RegisterController;
 use {{namespace}}\Http\Controllers\{{backNamespace}}\Auth\VerificationController;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\Auth\ResetPasswordController;
 use {{namespace}}\Http\Controllers\{{backNamespace}}\Auth\ForgotPasswordController;
 use {{namespace}}\Http\Controllers\{{backNamespace}}\Auth\ConfirmPasswordController;
 

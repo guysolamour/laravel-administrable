@@ -1,16 +1,12 @@
 <?php
 
-use {{namespace}}\{{modelsFolder}}\Page;
-use {{namespace}}\{{modelsFolder}}\Admin;
-use {{namespace}}\{{modelsFolder}}\BaseModel;
-use {{namespace}}\{{modelsFolder}}\Configuration;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 
 
 if (!function_exists('get_base64encode_class')) {
     /**
-     * @param BaseModel $model
+     * @param {{namespace}}\{{modelsFolder}}\BaseModel $model
      * @return string
      */
     function get_base64encode_class($model) :string
@@ -22,7 +18,7 @@ if (!function_exists('get_base64encode_class')) {
 
 if (!function_exists('get_clone_model_params')) {
     /**
-     * @param BaseModel $model
+     * @param {{namespace}}\{{modelsFolder}}\BaseModel $model
      * @return array
      */
     function get_clone_model_params($model) :array
@@ -36,7 +32,7 @@ if (!function_exists('get_clone_model_params')) {
 
 if (!function_exists('get_form_class_name')) {
     /**
-     * @param BaseModel $model
+     * @param {{namespace}}\{{modelsFolder}}\BaseModel $model
      * @return string
      */
     function get_form_class_name($model) :string
@@ -71,17 +67,22 @@ if (!function_exists('get_month')) {
 }
 
 if (!function_exists('configuration')) {
-    function configuration(string $name, string $default = null)
+    function configuration(string $attribute, string $default = null)
     {
-        $name = Str::startsWith($name, 'app_') ? $name : "app_$name";
-        return option_get($name, $default);
+        $configuration = \{{namespace}}\Settings\ConfigurationSettings::get();
+
+        if (property_exists($configuration, $attribute)) {
+            $default = $configuration->$attribute;
+        }
+
+        return $default;
     }
 }
 
 if (!function_exists('get_meta_page')) {
     function get_meta_page(string $name)
     {
-        return Page::firstWhere('code', $name);
+        return \{{namespace}}\{{modelsFolder}}\Page::firstWhere('code', $name);
     }
 }
 

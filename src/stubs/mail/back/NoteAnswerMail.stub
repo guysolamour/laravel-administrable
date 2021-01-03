@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\Mail\{{backLowerNamespace}};
+namespace {{namespace}}\Mail\{{backNamespace}};
 
 use {{namespace}}\Models\Comment;
 use Illuminate\Bus\Queueable;

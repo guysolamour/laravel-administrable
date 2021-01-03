@@ -9,13 +9,13 @@ use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 
 
-
 class BaseCommand extends Command
 {
 
     protected  const TPL_PATH = __DIR__ . '/../stubs';
 
     protected  const BASE_PATH = __DIR__ . '/../..';
+
 
 
     protected $filesystem;

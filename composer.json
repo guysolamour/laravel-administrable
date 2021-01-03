@@ -31,6 +31,7 @@
     "spatie/laravel-cookie-consent": "^2.12.9",
     "spatie/laravel-honeypot": "^2.3",
     "spatie/laravel-medialibrary": "^9.0.0",
+    "spatie/laravel-settings": "^1.0",
     "symfony/yaml": "^5.0"
   },
   "require-dev": {
