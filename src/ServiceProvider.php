@@ -8,6 +8,7 @@ use Guysolamour\Administrable\Console\Crud\AddCrudCommand;
 use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
+use Guysolamour\Administrable\Console\Extension\AddExtensionCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
 use Guysolamour\Administrable\Console\Administrable\CreateAdministrableCommand;
 

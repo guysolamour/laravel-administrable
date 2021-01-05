@@ -1,0 +1,1 @@
+                    <a href="{{ route('{{backLowerNamespace}}.extension.livenews.index') }}" class="menu-item">Livenews</a>

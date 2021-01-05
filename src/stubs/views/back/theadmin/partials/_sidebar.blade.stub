@@ -55,6 +55,19 @@
                 </a>
             </li>
 
+            <li class="menu-item">
+                <a class="menu-link" href="#">
+                    <span class="icon fa fa-angle-right"></span>
+                    <span class="title">Extensions</span>
+                    <span class="arrow"></span>
+                </a>
+
+                <ul class="menu-submenu">
+                    {{--  insert extensions links here  --}}
+                    
+                </ul>
+            </li>
+
             <li class="menu-item {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index','{{backLowerNamespace}}.{{singularSlug}}.profile','{{backLowerNamespace}}.client.create') }}">
                 <a class="menu-link" href="#">
                     <span class="icon fa fa-user"></span>

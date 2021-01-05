@@ -1,0 +1,17 @@
+@php
+    $livenews = \{{namespace}}\Settings\LivenewsSettings::get();
+@endphp
+
+@if($livenews->online)
+<marquee style="
+        position: fixed; bottom: 0; right: 0;
+        left: 0; z-index: 9000;
+        font-size: {{ $livenews->size }}px;
+        background-color: {{ $livenews->background_color }};
+        color: {{ $livenews->text_color }}; padding: 5px; text-align: center;"
+">
+    {!!
+        \{{namespace}}\Settings\LivenewsSettings::parse($livenews)
+    !!}
+</marquee>
+@endif

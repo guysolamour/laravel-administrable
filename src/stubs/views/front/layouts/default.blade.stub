@@ -49,5 +49,7 @@
 
 @include('cookieConsent::index')
 
+{{-- add livenews extension here --}}
+
 </body>
 </html>

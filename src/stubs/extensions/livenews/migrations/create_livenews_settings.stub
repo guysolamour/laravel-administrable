@@ -1,0 +1,29 @@
+<?php
+
+use {{namespace}}\Settings\LivenewsSettings;
+use Spatie\LaravelSettings\Migrations\SettingsMigration;
+
+
+class CreateLivenewsSettings extends SettingsMigration
+{
+    public function up(): void
+    {
+        $this->migrator->add(LivenewsSettings::PREFIX . '.content', 'Enter livenews text here');
+        $this->migrator->add(LivenewsSettings::PREFIX . '.text_color', '#FFFFFF');
+        $this->migrator->add(LivenewsSettings::PREFIX . '.background_color', '#FF0000');
+        $this->migrator->add(LivenewsSettings::PREFIX . '.size', 30);
+        $this->migrator->add(LivenewsSettings::PREFIX . '.online', true);
+        $this->migrator->add(LivenewsSettings::PREFIX . '.uppercase', false);
+    }
+
+
+    public function down(): void
+    {
+        $this->migrator->delete(LivenewsSettings::PREFIX . '.content');
+        $this->migrator->delete(LivenewsSettings::PREFIX . '.text_color');
+        $this->migrator->delete(LivenewsSettings::PREFIX . '.background_color');
+        $this->migrator->delete(LivenewsSettings::PREFIX . '.size');
+        $this->migrator->delete(LivenewsSettings::PREFIX . '.online');
+        $this->migrator->delete(LivenewsSettings::PREFIX . '.uppercase');
+    }
+}

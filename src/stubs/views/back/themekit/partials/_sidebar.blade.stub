@@ -37,6 +37,13 @@
                     </a>
                 </div>
 
+                 <div class="nav-item has-sub">
+                    <a href="javascript:void(0)"><i class="fa fa-angle-right"></i><span>Extensions</span></a>
+                    <div class="submenu-content">
+                        {{--  insert extensions links here  --}}
+                    </div>
+                </div>
+
                 <div class="nav-item">
                     <a href="{{ route('{{backLowerNamespace}}.user.index') }}">
                         <i class="fa fa-user"></i><span>Utilisateurs</span>

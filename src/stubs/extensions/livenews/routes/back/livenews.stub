@@ -1,0 +1,11 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\Extension\LivenewsController;
+
+Route::prefix('extensions')->middleware(['admin.auth'])->group(function () {
+    Route::name('{{backLowerNamespace}}.extension.livenews.')->group(function () {
+        Route::get('livenews', [LivenewsController::class, 'index'])->name('index');
+        Route::put('live-news', [LivenewsController::class, 'update'])->name('update');
+    });
+});

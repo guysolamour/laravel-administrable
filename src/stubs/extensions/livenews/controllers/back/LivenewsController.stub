@@ -1,0 +1,34 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}}\Extension;
+
+use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\Settings\LivenewsSettings;
+use Illuminate\Http\Request;
+
+class LivenewsController extends Controller
+{
+
+
+    public function index(LivenewsSettings $settings)
+    {
+        return view('{{backLowerNamespace}}.extensions.livenews.index', compact('settings'));
+    }
+
+    public function update(Request $request, LivenewsSettings $settings)
+    {
+        $request->validate([
+            'content'          => 'required|string',
+            'text_color'       => 'required|string',
+            'background_color' => 'required|string',
+            'size'             => 'required|integer',
+            'online'           => 'required',
+        ]);
+
+        $settings->update($request->all());
+
+        flashy("Le ruban d'actualité a bien été mise à jour");
+
+        return back();
+    }
+}

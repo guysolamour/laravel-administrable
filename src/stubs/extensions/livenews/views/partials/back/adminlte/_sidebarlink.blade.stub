@@ -1,0 +1,6 @@
+                <li class="nav-item ">
+                    <a href="{{ route('{{backLowerNamespace}}.extension.livenews.index') }}" class="nav-link">
+                        <i class="far fa-angle-right nav-icon"></i>
+                        <p>Livenews</p>
+                    </a>
+                </li>

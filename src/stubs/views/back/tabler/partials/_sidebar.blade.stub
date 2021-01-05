@@ -45,6 +45,22 @@
                         </a>
                     </li>
 
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#navbar-extra" data-toggle="dropdown" role="button"
+                            aria-expanded="false">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="fa fa-swatchbook icon"></i>&nbsp;
+                            </span>
+                            <span class="nav-link-title">
+                                Extensions
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            {{--  insert extensions links here  --}}
+                            
+                        </ul>
+                    </li>
+
 
                     {{-- insert sidebar links here --}}
                 </ul>

@@ -1,0 +1,45 @@
+<?php
+
+namespace {{namespace}}\Settings;
+
+use Illuminate\Support\Str;
+
+class LivenewsSettings extends BaseSettings
+{
+  public const PREFIX = 'livenews';
+
+    public ?int     $size;
+    public bool     $online;
+    public bool     $uppercase;
+    public ?string  $content;
+    public ?string  $text_color;
+    public ?string  $background_color;
+
+
+    public static function group(): string
+    {
+        return static::PREFIX;
+    }
+
+    /**
+     * @param string $string
+     * @param array $tags
+     * @return string
+     */
+    public static function parse(self $settings, array $tags = ['p', 'h', 'code']) :string
+    {
+        $string = Str::lower($settings->content);
+
+        foreach($tags as $tag){
+           if ($tag == 'h'){
+                foreach([1,2,3,4,5,6] as $h){
+                    $string =  str_replace(["<h$h>", "</h$h>"], '', $string);
+                }
+           }else {
+               $string =  str_replace(["<$tag>", "</$tag>"], '', $string);
+           }
+        }
+
+        return $settings->uppercase ? Str::upper($string) : $string;
+    }
+}

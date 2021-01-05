@@ -397,12 +397,13 @@ trait CommandTrait
     protected function getRelatedModelTableName(array $field): string
     {
         $related_model = $this->getRelatedModel($field);
+        return (new $related_model)->getTable();
 
-        if (Str::contains($related_model, '\\')) {
-            $related_model = class_basename($related_model);
-        }
+        // if (Str::contains($related_model, '\\')) {
+        //     $related_model = class_basename($related_model);
+        // }
 
-        return Str::plural(Str::slug($related_model));
+        // return Str::plural(Str::slug($related_model));
     }
 
     protected function getRelatedModel(array $field): string
@@ -964,7 +965,7 @@ trait CommandTrait
 
                     $this->checkIfRelatedModelExists($related);
 
-                    if (!$this->getRelatedModelProperty($this->fields[$key])) {
+                    if (empty($this->getRelatedModelProperty($this->fields[$key]))) {
                         $this->triggerError(
                             sprintf(
                                 'The [%s] relation field must have a property key who exists on the related table.',
