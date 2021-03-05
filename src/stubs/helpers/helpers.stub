@@ -1,58 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Route;
 
-
-if (!function_exists('get_base64encode_class')) {
-    /**
-     * @param {{namespace}}\{{modelsFolder}}\BaseModel $model
-     * @return string
-     */
-    function get_base64encode_class($model) :string
-    {
-       return base64_encode(get_class($model));
-    }
-}
-
-
-if (!function_exists('get_clone_model_params')) {
-    /**
-     * @param {{namespace}}\{{modelsFolder}}\BaseModel $model
-     * @return array
-     */
-    function get_clone_model_params($model) :array
-    {
-       return [
-           get_base64encode_class($model),
-           $model,
-       ];
-    }
-}
-
-if (!function_exists('get_form_class_name')) {
-    /**
-     * @param {{namespace}}\{{modelsFolder}}\BaseModel $model
-     * @return string
-     */
-    function get_form_class_name($model) :string
-    {
-        $name = class_basename(get_class($model));
-
-        return sprintf('\{{namespace}}\Forms\{{backNamespace}}\%sForm', Str::singular(Str::studly($name)));
-    }
-}
-
-if (!function_exists('guest_views_folder_name')) {
-    /**
-     * @param BaseModel $model
-     * @return string
-     */
-    function guest_views_folder_name($model) :string
-    {
-        return Str::plural(Str::slug(class_basename($model)));
-    }
-}
 
 
 if (!function_exists('get_month')) {
@@ -112,7 +61,7 @@ if (!function_exists('get_meta_type')) {
 
 
 if (!function_exists('isConceptor{{singularClass}}')) {
-    function isConceptor{{singularClass}}({{singularClass}} ${{singularSlug}}) :bool
+    function isConceptor{{singularClass}}(\{{namespace}}\{{modelsFolder}}\{{singularClass}} ${{singularSlug}}) :bool
     {
         return ${{singularSlug}}->isConceptor{{singularClass}}();
     }
@@ -159,116 +108,58 @@ if (!function_exists('get_full_date')) {
 }
 
 
-if (!function_exists('get_form_name')) {
-    function get_form_name($model) :string
-    {
-        return 'entity-'.  strtolower(class_basename(($model)));
-    }
-}
-
-
 if (!function_exists('format_price')) {
-    function format_price($price)
-    {
-        return number_format($price, 0, ',', ' ');
-    }
-}
-
-if (!function_exists('random_element')) {
-    function random_element($model, int $limit = 9)
-    {
-        $count = $model->count();
-
-        // if count is 0 return because there are no elements to random
-        if (!$count) {
-            return collect();
-        }
-
-        if ($count < $limit) {
-            return $model->random($count);
-        }
-        return $model->random($limit);
-    }
-}
-
-if (!function_exists('merge_collections')) {
-    function merge_collections( ...$collections)
-    {
-        $collect = collect();
-
-        foreach ($collections as $collection){
-            if (is_collection($collection)) {
-                foreach ($collection as $model){
-                    $collect->push($model);
-                }
-            }else {
-                $collect->push($collection);
-            }
-        }
-        return $collect;
-    }
-}
-
-if (!function_exists('is_collection')) {
-    function is_collection( $data ) :bool
-    {
-        return $data instanceof Illuminate\Database\Eloquent\Collection || $data instanceof Illuminate\Support\Collection;
-    }
-}
-
-if (!function_exists('previous_route')) {
     /**
-     * Generate a route name for the previous request.
-     *
-     * @return string|null
+     * @param string $price
+     * @param string $suffix
+     * @return void
      */
-    function previous_route()
+    function format_price($price, string $suffix = "FCFA")
     {
-        $previousRequest = app('request')->create(app('url')->previous());
-
-        try {
-            $routeName = app('router')->getRoutes()->match($previousRequest)->getName();
-        } catch (Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
-            return null;
-        }
-
-        return $routeName;
+        return number_format($price, 0, ',', ' ') . " " . $suffix;
     }
 }
+
+
 
 if (!function_exists('set_active_link')) {
     function set_active_link(...$routes)
     {
         foreach ($routes as $route) {
-            if (Route::is($route)) return 'active';
+            if (\Illuminate\Support\Facades\Route::is($route)) return 'active';
         }
         return '';
     }
 }
 
-if (!function_exists('array_remove_by_value')) {
-    function array_remove_by_value(array $array, $value, bool $return = false)
-    {
-        if(($key = array_search($value, $array)) !== false){
-          unset($array[$key]);
-        }
-
-        if($return){
-          return $array;
-        }
-    }
-}
-
-
 
 
 if (!function_exists('get_{{singularSlug}}')) {
+   /**
+     * @param string|null $field
+     * @return \{{namespace}}\{{modelsFolder}}\{{singularClass}}|mixed
+     */
     function get_{{singularSlug}}(?string $field = null) {
         if ( is_null( $field ) ) {
-            return auth()->guard( '{{singularSlug}}' )->user();
+            return auth('{{singularSlug}}')->user();
         }
 
-        return auth()->guard( '{{singularSlug}}' )->user()->$field;
+        return auth('{{singularSlug}}')->user()->$field;
+    }
+
+}
+
+if (!function_exists('get_user')) {
+   /**
+     * @param string|null $field
+     * @return \{{namespace}}\{{modelsFolder}}\User|mixed
+     */
+    function get_user(?string $field = null) {
+        if ( is_null( $field ) ) {
+            return auth()->user();
+        }
+
+        return auth()->user()->$field;
     }
 
 }

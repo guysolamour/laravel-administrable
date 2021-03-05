@@ -69,3 +69,162 @@ if (!function_exists('create_zip_archive_from_folder')) {
         return $filePath;
     }
 }
+
+
+if (!function_exists('get_base64encode_class')) {
+    /**
+     * @param \Illuminate\Foundation\Auth\User $model
+     * @return string
+     */
+    function get_base64encode_class($model): string
+    {
+        return base64_encode(get_class($model));
+    }
+}
+
+
+if (!function_exists('get_clone_model_params')) {
+    /**
+     * @param \Illuminate\Foundation\Auth\User $model
+     * @return array
+     */
+    function get_clone_model_params($model): array
+    {
+        return [
+            get_base64encode_class($model),
+            $model,
+        ];
+    }
+}
+
+if (!function_exists('get_form_class_name')) {
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @return string
+     */
+    function get_form_class_name($model): string
+    {
+        $name = class_basename(get_class($model));
+
+        return sprintf('\%s\Forms\Back\%sForm', get_app_namespace() ,\Illuminate\Support\Str::singular(\Illuminate\Support\Str::studly($name)));
+    }
+}
+
+if (!function_exists('get_form_name')) {
+    function get_form_name($model): string
+    {
+        return 'entity-' .  strtolower(class_basename(($model)));
+    }
+}
+
+if (!function_exists('random_element')) {
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param integer $limit
+     * @return void
+     */
+    function random_element($model, int $limit = 9)
+    {
+        $count = $model->count();
+
+        // if count is 0 return because there are no elements to random
+        if (!$count) {
+            return collect();
+        }
+
+        if ($count < $limit) {
+            return $model->random($count);
+        }
+        return $model->random($limit);
+    }
+}
+
+if (!function_exists('merge_collections')) {
+    function merge_collections(...$collections)
+    {
+        $collect = collect();
+
+        foreach ($collections as $collection) {
+            if (is_collection($collection)) {
+                foreach ($collection as $model) {
+                    $collect->push($model);
+                }
+            } else {
+                $collect->push($collection);
+            }
+        }
+        return $collect;
+    }
+}
+
+if (!function_exists('is_collection')) {
+    function is_collection($data): bool
+    {
+        return $data instanceof Illuminate\Database\Eloquent\Collection || $data instanceof Illuminate\Support\Collection;
+    }
+}
+
+if (!function_exists('previous_route')) {
+    /**
+     * Generate a route name for the previous request.
+     *
+     * @return string|null
+     */
+    function previous_route()
+    {
+        $previousRequest = app('request')->create(app('url')->previous());
+
+        try {
+            $routeName = app('router')->getRoutes()->match($previousRequest)->getName();
+        } catch (Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+            return null;
+        }
+
+        return $routeName;
+    }
+}
+
+if (!function_exists('array_remove_by_value')) {
+    function array_remove_by_value(array $array, $value, bool $return = false)
+    {
+        if (($key = array_search($value, $array)) !== false) {
+            unset($array[$key]);
+        }
+
+        if ($return) {
+            return $array;
+        }
+    }
+}
+
+
+
+
+if (!function_exists('guest_views_folder_name')) {
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @return string
+     */
+    function guest_views_folder_name($model): string
+    {
+        return \Illuminate\Support\Str::plural(\Illuminate\Support\Str::slug(class_basename($model)));
+    }
+}
+
+
+
+
+if (!function_exists('get_app_namespace')) {
+
+    /**
+     * Get project namespace
+     * Default: App
+     * @return string
+     */
+    function get_app_namespace() :string
+    {
+        $namespace = \Illuminate\Container\Container::getInstance()->getNamespace();
+        return rtrim($namespace, '\\');
+    }
+}
+

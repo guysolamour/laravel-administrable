@@ -81,10 +81,9 @@ trait CommandTrait
      * Default: App
      * @return string
      */
-    protected function getNamespace()
+    protected function getNamespace() :string
     {
-        $namespace = Container::getInstance()->getNamespace();
-        return rtrim($namespace, '\\');
+        return get_app_namespace();
     }
 
     protected function parseConfigurationYamlFile()
@@ -151,7 +150,7 @@ trait CommandTrait
      */
     protected function compliedAndWriteFile($files, string $path, string $filename_prefix = ''): void
     {
-        
+
         if (is_array($files)) {
             foreach ($files as $file) {
                 $this->compliedAndWriteFile($file, $path, $filename_prefix);
