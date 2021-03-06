@@ -2,7 +2,7 @@
 
 namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
-use {{namespace}}\{{singularClass}};
+use {{namespace}}\{{modelsFolder}}\{{singularClass}};
 use Illuminate\Http\Request;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\{{modelsFolder}}\Mailbox;

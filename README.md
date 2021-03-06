@@ -29,7 +29,18 @@ composer require guysolamour/laravel-administrable
 
 ## Use
 
-### 1. Administration installation
+### 1. Create database
+
+Open ***.env*** file and fill database credentials
+next run
+
+```php
+php artisan cmd:db:create
+```
+
+This command will create your database according to your ***.env*** file
+
+### 2. Administration installation
 
 ```php
 php artisan administrable:install
@@ -39,16 +50,8 @@ The ***--debug_packages*** option is used to add some development packages
 such as (the debugbar and others). The default value is *false*
 
 ```php
-php artisan administrable:make:crud {Model} --debug_packages="true"
+php artisan administrable:make:crud {Model} --debug_packages
 ```
-
-or
-
-```php
-php artisan administrable:make:crud {Model} --debug_packages="false"
-```
-
-Par défaut le ***guard*** utilisé est ***admin*** et peut être changé en passant en argument de la commande le nom du ***guard*** à utiliser.
 
 By default the **guard** used is **admin** and can be changed by passing in argument of the command the name of the **guard** to use.
 
@@ -124,32 +127,6 @@ or with the short version
 php artisan administrable:install {guard=admin} -m "Models"
 ```
 
-- **create_db**
-
-To create database.
-
-The *--create_db* with this ***db_connection://db_user:db_password@127.0.0.1:db_port/db_name***
-
-To create database *administrable* for mysql.
-
-```php
-php artisan administrable:install {guard=admin} --create_db="mysql://root:root@127.0.0.1:3306/administrable"
-```
-
-To create database *administrable* for sqlite.
-
-```php
-php artisan administrable:install {guard=admin} --create_db="sqlite://administrable"
-```
-
-ou avec la version courte
-
-```php
-php artisan administrable:install {guard=admin} -d "mysql://root:root@127.0.0.1:3306/administrable"``
-```
-
-**NB:** Only *mysql* and *sqlite* are supported.
-
 **seed**
 To automatically seed the database, you must first configure the database access in the ***.env*** file.
 
@@ -172,8 +149,6 @@ To change the administration theme (template). The available themes are: **admin
 **adminlte**
 ![adminlte](docs/img/adminlte.png?raw=true)
 
-**cooladmin**
-![cooladmin](docs/img/cooladmin.png?raw=true)
 
 **tabler**
 ![tabler](docs/img/tabler.png?raw=true)
@@ -208,7 +183,7 @@ You need to publish the service provider first (explain in step 2) and create gu
 'auth_prefix_path' => 'administrable',
 ```
 
-### 2. Publication of config and assets (css and js)
+### 3. Publication of config and assets (css and js)
 
 Necessary for the theme.
 
@@ -216,19 +191,19 @@ Necessary for the theme.
 php artisan vendor:publish --provider="Guysolamour\Administrable\ServiceProvider"
 ```
 
-### 3. Empty the cache
+### 4. Empty the cache
 
 ```php
 php artisan route:clear && php artisan config:clear
 ```
 
-### 4. Create the symbolic link for the media
+### 5. Create the symbolic link for the media
 
 ```php
 php artisan storage:link
 ```
 
-### 5. Create guard
+### 6. Create guard
 
 You need to create a guard entry in database before log in.
 
@@ -249,7 +224,7 @@ php artisan administrable:create -u johndoe -e john@doe.fr -p 12345678
 - You will be prompt if a option is not passed.
 - available options are: *username*, *email* and *password*
 
-### 6. Seed  the database
+### 7. Seed  the database
 
 ```php
 php artisan db:seed --class ConfigurationsTableSeeder

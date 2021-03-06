@@ -121,7 +121,6 @@ class AdminInstallCommand extends BaseCommand
                                 {--c|route_callable_syntax=true : Use route controller callable syntax }
                                 {--r|migrate=true : Run migrations }
                                 {--k|debug_packages : Add debug packages (debugbar, pretty routes ..) }
-                                {--d|create_db= : Create database  }
                                 {--t|theme= : Theme to use }
                                 {--l|locale=fr : Locale to use }
                             ';
@@ -1357,57 +1356,6 @@ class AdminInstallCommand extends BaseCommand
         return $kernel_path;
     }
 
-    protected function createDatabase()
-    {
-        // Create database
-        $create_db = $this->option('create_db');
-
-        if (!$create_db) return;
-
-        $db_connection = Str::lower(Str::before($create_db, "://"));
-
-        if (!in_array($db_connection, self::DB_CONNECTIONS)) {
-            $this->triggerError(
-                sprintf("The [%s] database connection is not alowed. Allowed connections are [%s]", $db_connection, join(',', self::DB_CONNECTIONS))
-            );
-        }
-
-        if (!empty($create_db)) {
-
-            if ($db_connection === self::DB_CONNECTIONS['mysql']) {
-                $db_user = Str::of($create_db)->after('://')->before(':')->__toString();
-                $db_port = Str::of($create_db)->after('127.0.0.1:')->before('/')->__toString();
-                $db_password = Str::of($create_db)->after($db_user . ':')->before('@')->__toString();
-                $db_database = Str::lower(Str::of($create_db)->after($db_port . '/')->__toString());
-            } else if ($db_connection === self::DB_CONNECTIONS['sqlite']) {
-                $db_database = Str::after($create_db, '://');
-            }
-
-            $params = [
-                '--connection' => $db_connection,
-                'database'     => $db_database
-            ];
-
-            if ($db_connection === self::DB_CONNECTIONS['mysql']) {
-                if ($db_user) {
-                    $params['--username'] = $db_user;
-                }
-
-                if ($db_password) {
-                    $params['--password'] = $db_password;
-                }
-
-                if ($db_port) {
-                    $params['--port'] = $db_port;
-                }
-            }
-
-            $this->call('cmd:db:create', $params);
-
-        }
-    }
-
-
     protected function addEnvVariables()
     {
         $env_path = base_path('.env');
@@ -1487,9 +1435,6 @@ class AdminInstallCommand extends BaseCommand
 
         // generate a new key
         $this->call('key:generate');
-
-
-        $this->createDatabase();
 
         return $env_path;
     }
@@ -1800,7 +1745,7 @@ class AdminInstallCommand extends BaseCommand
             $search = '"require": {',
             <<<TEXT
             $search
-                    "simonschaufi/laravel-dkim": "^1.0"
+                    "simonschaufi/laravel-dkim": "^1.0",
             TEXT,
             $composer_path
         );

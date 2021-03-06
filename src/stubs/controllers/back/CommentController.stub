@@ -6,6 +6,8 @@ use {{namespace}}\{{modelsFolder}}\Comment;
 use Illuminate\Http\Request;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\Mail\{{frontNamespace}}\ReplyCommentMail;
+use Illuminate\Support\Facades\Mail;
 
 class CommentController extends Controller
 {

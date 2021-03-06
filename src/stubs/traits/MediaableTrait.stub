@@ -42,6 +42,11 @@ trait MediaableTrait
         return $this->sortImages($medias);
     }
 
+    public function getImageAttribute()
+    {
+        return $this->getFrontImageUrl();
+    }
+
 
     public function registerMediaCollections(Media $media = null): void
     {

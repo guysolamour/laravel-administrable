@@ -139,12 +139,12 @@
 <script>
     ImageManager.init({
         model                        : @json($model),
-        model_name                   : @json($model_name),
+        model_name                   : @json($model_name ?? get_class($model)),
         form_name                    : @json($form_name),
         prefix                       : '{{ config('administrable.auth_prefix_path') }}',
-        'front-image'                : @json($front_image),
-        'back-image'                 : @json($back_image),
-        images                       : @json($images),
+        'front-image'                : @json($front_image ?? false),
+        'back-image'                 : @json($back_image ?? false),
+        images                       : @json($images ?? false),
         @if(isset($front_image_label))
         'front-image-label'          : @json($front_image_label),
         @endif
@@ -160,8 +160,6 @@
         renamemodal                  : '#renameModal',
         images_sortable_container    : '.images-box',
     });
-
-
 </script>
 
 @endpush

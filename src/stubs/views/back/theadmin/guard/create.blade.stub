@@ -9,7 +9,7 @@
     <div class="card ">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
             <ol class="breadcrumb breadcrumb-arrow">
-                <li class="breadcrumb-item"><a class="text-primary" href="{{ route('{{singularClass}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item"><a class="text-primary" href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
                 <li class="breadcrumb-item"><a class="text-primary" href="{{ route('{{backLowerNamespace}}.{{singularClass}}.index') }}">{{pluralClass}}</a></li>
                 <li class="breadcrumb-item active">Ajout</li>
             </ol>

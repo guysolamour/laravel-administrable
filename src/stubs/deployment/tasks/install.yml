@@ -35,6 +35,9 @@
   - name: Include php file
     include_tasks: "{{ playbooks_directory_path }}/install/php.yml"
 
+  - name: Include composer file
+    include_tasks: "{{ playbooks_directory_path }}/install/composer.yml"
+
   - name: Include mysql file
     include_tasks: "{{ playbooks_directory_path }}/install/mysql.yml"
 

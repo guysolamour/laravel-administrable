@@ -40,14 +40,9 @@ L'option ***--debug_packages*** sert à rajouter des packages de développement 
 (la debugbar et autres). La valeur par défaut est *false*
 
 ```php
-php artisan administrable:make:crud {Model} --debug_packages="true"
+php artisan administrable:make:crud {Model} --debug_packages
 ```
 
-ou
-
-```php
-php artisan administrable:make:crud {Model} --debug_packages="false"
-```
 
 Par défaut le ***guard*** utilisé est ***admin*** et peut être changé en passant en argument de la commande le nom du ***guard*** à utiliser.
 
