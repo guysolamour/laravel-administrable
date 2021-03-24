@@ -1,0 +1,40 @@
+header:
+  - title:      Home
+    url:        /
+  - title:      Docs
+    url:        /docs/en/quick-start
+    key:        docs
+  - title:      GitHub
+    url:        https://github.com/guysolamour/administrable
+
+
+docs-en:
+  - title:      Start
+    children:
+      - title:  Installation
+        url:    /docs/en/installation
+      - title:  Configuration
+        url:    /docs/en/configuration
+      - title:  Quick Start
+        url:    /docs/en/quick-start
+  # - title:      Customization
+  #   children:
+  #     - title:  Navigation
+  #       url:    /docs/en/navigation
+  #     - title:  Layouts
+  #       url:    /docs/en/layouts
+  #     - title:  Logo and Favicon
+  #       url:    /docs/en/logo-and-favicon
+  #     - title:  Authors
+  #       url:    /docs/en/authors
+  #     - title:  Internationalization
+  #       url:    /docs/en/i18n
+  - title:      Crud
+    children:
+      - title:  Generate
+        url:    /docs/en/generate-crud
+      - title:  Append
+        url:    /docs/en/append-crud
+      - title:  Rollback
+        url:    /docs/en/rollback-crud
+
