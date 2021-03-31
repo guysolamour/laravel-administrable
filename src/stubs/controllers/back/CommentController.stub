@@ -20,7 +20,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::last()->get();
+        $comments = Comment::notes(false)->last()->get();
 
         return view('{{backLowerNamespace}}.comments.index', compact('comments'));
     }

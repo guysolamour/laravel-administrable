@@ -1,1 +1,1 @@
-Sitemap: /administrable/sitemap.xml
+Sitemap: /laravel-administrable/sitemap.xml

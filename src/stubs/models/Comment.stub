@@ -20,7 +20,7 @@ class Comment extends BaseModel
      * @var array
      */
     protected $casts = [
-        'approved' => 'boolean',
+        'approved'           => 'boolean',
         'reply_notification' => 'boolean',
     ];
 
@@ -62,6 +62,13 @@ class Comment extends BaseModel
     public function parent()
     {
         return $this->belongsTo(Comment::class, 'child_id');
+    }
+
+    public function scopeNotes($query, bool $type = true)
+    {
+        $comparaison = $type ? '=' : '!=';
+
+        return $query->where('commentable_type', $comparaison, Mailbox::class);
     }
 
 

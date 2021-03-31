@@ -3,18 +3,30 @@
     <div class="container">
        <div class="col-12">
             <ul class="nav justify-content-center">
+
+                @if (Route::has('{{frontLowerNamespace}}.about.index'))
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.about.index') }}">A propos</a>
                 </li>
+                @endif
+
+                @if (Route::has('{{frontLowerNamespace}}.post.index'))
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.post.index') }}">Articles</a>
                 </li>
+                @endif
+
+                @if (Route::has('{{frontLowerNamespace}}.testimonial.index'))
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.testimonial.index') }}">Témoignages</a>
                 </li>
+                @endif
+
+                @if (Route::has('{{frontLowerNamespace}}.legalmention.index'))
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.legalmention.index') }}">Politique de confidentialité</a>
                 </li>
+                @endif
 
             </ul>
             <p class="text-center mt-5">

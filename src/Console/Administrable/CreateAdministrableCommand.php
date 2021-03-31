@@ -72,7 +72,7 @@ class CreateAdministrableCommand extends BaseCommand
 
         $password = $this->option('password');
         if (!$password) {
-            $password = $this->secret("Give guard password");
+            $password = $this->secret(sprintf("Give guard password (%d digits)", self::PASSWORD_MIN_LENGTH));
         }
 
         // Validate data

@@ -197,6 +197,7 @@ class AdminInstallCommand extends BaseCommand
             'name'    => $this->guard,
         ]);
 
+
         // Manage authentication
         $this->call("ui", [
             'type'   => $this->preset,
@@ -269,13 +270,10 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Seed created at ' . $seed_path);
 
 
-
-
         // Registering seeder
         $this->info(PHP_EOL . 'Registering seeder...');
         $database_seeder_path = $this->registerSeed();
         $this->info('Seed registered in ' . $database_seeder_path);
-
 
 
         // Controllers
@@ -325,12 +323,10 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Views created at ' . $admin_views_path);
 
 
-
         // Locales
         $this->info(PHP_EOL . 'Adding locale...');
         $config_path = $this->loadLocale();
         $this->info('Locale added at ' . $config_path);
-
 
 
         // Emails
@@ -359,16 +355,11 @@ class AdminInstallCommand extends BaseCommand
         $this->info('Commands loaded successfuly at ' . $kernel_path);
 
 
-
         // Config
         $this->info(PHP_EOL . 'Load config');
         $config_path = $this->loadConfigs();
         $this->info('Config loaded successfuly at ' . $config_path);
 
-
-        // Move User|Guard={admin} To Models Directory
-        $this->info("Moving User.php and " . ucfirst($this->guard) . ".php to app/{$this->models_folder_name} folder");
-        $this->moveDefaultModelsToNewModelsDirectory();
 
 
         // Publish assets
@@ -540,8 +531,8 @@ class AdminInstallCommand extends BaseCommand
 
         $model_path =  app_path($this->models_folder_name);
 
-        if ($this->filesystem->exists(app_path('/Models'))){
-            $this->filesystem->deleteDirectory(app_path('/Models'));
+        if ($this->filesystem->exists($model_path)){
+            $this->filesystem->deleteDirectory($model_path);
         }
 
 
@@ -571,58 +562,10 @@ class AdminInstallCommand extends BaseCommand
             );
         }
 
-        // delete model
+        // delete custom model
         $this->filesystem->delete($model_path . '/Model.php');
 
         return $model_path;
-    }
-
-    /**
-     * Move User|Guard={admin} To Models Directory
-     */
-    protected function moveDefaultModelsToNewModelsDirectory()
-    {
-
-        $data_map = $this->parseName();
-        $guard = $data_map['{{singularClass}}'];
-
-        foreach (['User', $guard] as $model) {
-            if ($this->filesystem->exists($targetPath = app_path("{$this->models_folder_name}/$model.php"))) {
-                $this->filesystem->put(
-                    $targetPath,
-                    strtr($this->filesystem->get($targetPath), [
-                        "{$this->getNamespace()};" => "{$this->getNamespace()}\\{$this->models_folder_name};",
-                    ])
-                );
-
-                $this->changeNamespaceEverywhereItUses($model);
-            }
-        }
-    }
-
-
-    /**
-     * Change User|Guard={admin} Namespace Everywhere It Uses
-     *
-     */
-    protected function changeNamespaceEverywhereItUses(string $model)
-    {
-        $this->info("Changing $model uses and imports  to {$this->getNamespace()}\\{$this->models_folder_name}\\$model");
-
-        $files = Finder::create()
-            ->in(base_path())
-            ->contains("{$this->getNamespace()}\\$model")
-            ->exclude('vendor')
-            ->name('*.php');
-
-        foreach ($files as $file) {
-            $path = $file->getRealPath();
-            if ($this->filesystem->exists($path)) {
-                $this->filesystem->put($path, strtr($this->filesystem->get($path), [
-                    "{$this->getNamespace()}\Models\$model" => "{$this->getNamespace()}\\{$this->models_folder_name}\\$model",
-                ]));
-            }
-        }
     }
 
 
@@ -1333,12 +1276,9 @@ class AdminInstallCommand extends BaseCommand
 
         $search = 'protected $routeMiddleware = [';
 
-        $this->replaceAndWriteFile(
-            $kernel,
-            $search,
-            $search . $kernel_stub,
-            $kernel_path
-        );
+
+        $kernel = str_replace($search, $search . $kernel_stub,  $kernel);
+
 
         $search = 'protected $middleware = [';
         $namespace = $data_map['{{namespace}}'];

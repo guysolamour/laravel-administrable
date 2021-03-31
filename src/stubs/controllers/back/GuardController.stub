@@ -5,7 +5,7 @@ namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 use Illuminate\Http\Request;
 use MercurySeries\Flashy\Flashy;
 use Kris\LaravelFormBuilder\Form;
-use {{namespace}}\{{singularClass}};
+use {{namespace}}\{{modelsFolder}}\{{singularClass}};
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Forms\{{backNamespace}}\Create{{singularClass}}Form;

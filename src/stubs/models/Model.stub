@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}};
+namespace {{namespace}}\{{modelsFolder}};
 
 use {{namespace}}\Traits\ModelTrait;
 use {{namespace}}\Traits\MediaableTrait;

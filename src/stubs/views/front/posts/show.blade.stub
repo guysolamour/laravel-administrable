@@ -17,7 +17,7 @@
              </p>
              <p>
                 @if($post->tag)
-                 Catégorie : <a href="{{ route('{{frontLowerNamespace}}.post.tag',$post->tag) }}" class="btn btn-link">{{ $post->category->name }}</a>
+                 Etiquette : <a href="{{ route('{{frontLowerNamespace}}.post.tag',$post->tag) }}" class="btn btn-link">{{ $post->category->name }}</a>
                 @endif
              </p>
              <p>

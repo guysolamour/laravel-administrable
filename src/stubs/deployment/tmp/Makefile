@@ -192,7 +192,7 @@ SHOW_DKIM_PUBLIC_KEY=yes
 
 
 ZSH_THEME=random
-ZSH_PLUGINS="git composer npm sudo"
+ZSH_PLUGINS=git composer npm sudo
 
 ###################################################################################################################
 ##########                                                                                            #############

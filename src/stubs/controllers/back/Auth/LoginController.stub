@@ -119,4 +119,15 @@ class LoginController extends Controller
         return $this->loggedOut($request) ?: redirect()->route('{{singularSlug}}.dashboard');
     }
 
+    /**
+    * The user has logged out of the application.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return mixed
+    */
+    protected function loggedOut(Request $request)
+    {
+        return redirect()->home();
+    }
+
 }

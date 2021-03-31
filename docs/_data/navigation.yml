@@ -9,7 +9,7 @@ header:
 
 
 docs-en:
-  - title:      Start
+  - title:      Setup
     children:
       - title:  Installation
         url:    /docs/en/installation
@@ -17,6 +17,8 @@ docs-en:
         url:    /docs/en/configuration
       - title:  Quick Start
         url:    /docs/en/quick-start
+      - title:  Changelog
+        url:    /docs/en/changelog
   # - title:      Customization
   #   children:
   #     - title:  Navigation
