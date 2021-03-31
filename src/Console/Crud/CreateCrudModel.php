@@ -38,7 +38,7 @@ class CreateCrudModel
 
 
 
-    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false, bool $fillable)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, bool $fillable, ?string $slug = null, bool $timestamps = false)
     {
         $this->model         = $model;
         $this->fields        = $fields;
@@ -61,9 +61,9 @@ class CreateCrudModel
      * @param bool $polymorphic
      * @return array
      */
-    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug = null, bool $timestamps = false, bool $fillable)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme,  bool $fillable, ?string $slug = null, bool $timestamps = false)
     {
-        return (new CreateCrudModel($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $fillable))
+        return (new CreateCrudModel($model, $fields, $actions, $breadcrumb, $theme, $fillable, $slug, $timestamps ))
             ->createModel();
     }
 

@@ -581,6 +581,8 @@ trait CommandTrait
                 return $this->getFieldName($field);
             }
         }
+
+        return '';
     }
 
     /**
@@ -1152,6 +1154,13 @@ trait CommandTrait
                 if (!$this->breadcrumb && Arr::exists($field, 'breadcrumb') && $field['breadcrumb'] == true) {
                     $this->breadcrumb =  $this->getFieldName($field);
                 }
+
+                // validate breadcrumb
+                if (!Arr::get($this->fields, $this->breadcrumb)) {
+                    $this->triggerError(
+                        sprintf("The field [%s] used for the breadcrumb is not present in [%s] model's fields. ", $this->breadcrumb, $this->model)
+                    );
+                }
             }
 
             return $this->fields;
@@ -1161,12 +1170,6 @@ trait CommandTrait
             );
         }
 
-        // validate breadcrumb
-        if (!Arr::get($this->fields, $this->breadcrumb)) {
-            $this->triggerError(
-                sprintf("The field [%s] used for the breadcrumb is not present in [%s] model's fields.", $this->breadcrumb, $this->model)
-            );
-        }
     }
 
     protected function getOptionsFilteredData($option) :array

@@ -3,7 +3,6 @@
 namespace Guysolamour\Administrable\Console\Crud;
 
 
-use Illuminate\Support\Arr;
 use Guysolamour\Administrable\Console\CommandTrait;
 use Guysolamour\Administrable\Console\Crud\CreateCrudForm;
 use Guysolamour\Administrable\Console\Crud\CreateCrudView;
@@ -54,6 +53,7 @@ class MakeCrudCommand extends BaseCrudCommand
 
         if (!$this->model){
             $models = $this->getUnusedCrudConfigModels();
+
             if (empty($models)){
                 $this->triggerError("You must defined a model in configuration yaml file");
             }
@@ -83,9 +83,9 @@ class MakeCrudCommand extends BaseCrudCommand
             $this->actions,
             $this->breadcrumb,
             $this->theme,
+            $this->fillable,
             $this->slug,
             $this->timestamps,
-            $this->fillable,
         );
         $this->displayResult($result, $model_path);
         $progress->advance();
