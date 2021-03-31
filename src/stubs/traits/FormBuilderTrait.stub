@@ -2,10 +2,12 @@
 
 namespace {{namespace}}\Traits;
 
+use Kris\LaravelFormBuilder\FormBuilderTrait as FormBuilder;
 
 
-trait FormBuilderTrait {
-    use \Kris\LaravelFormBuilder\FormBuilderTrait;
+trait FormBuilderTrait
+{
+    use FormBuilder;
 
     /**
      *
@@ -18,12 +20,12 @@ trait FormBuilderTrait {
      *
      * @return \Kris\LaravelFormBuilder\Form
      */
-    protected function getForm($model = null, $form = null ,bool $withModel = true,bool $withNamespace = true  )
+    protected function getForm($model = null, $form = null, bool $withModel = true, bool $withNamespace = true)
     {
-
 
         $form = $form ?: $this->getFormName($withNamespace);
         $modelName = $this->getModelClassName();
+
 
         if ($withModel) {
             $model = $model ?: new $modelName();
@@ -32,8 +34,7 @@ trait FormBuilderTrait {
             ]);
         }
 
-        return $this->form($form, [
-        ]);
+        return $this->form($form, []);
     }
 
     /**
@@ -41,29 +42,42 @@ trait FormBuilderTrait {
      *
      * @return string
      */
-    private function getModelClassName() :string
+    private function getModelClassName(): string
     {
-        return sprintf("{{namespace}}\{{modelsFolder}}\%s",$this->getModelName(false));
-    }
+        $model = $this->getModelName(true);
 
-    /**
-     * @param bool $withNamespace
-     *
-     * @return string
-     */
-    private function getModelName(bool $withNamespace = true  ) :string
-    {
-        $controller = explode('Controllers\\',get_called_class())[1];
+        $parts = explode('\\', $model);
 
-        $modelNamespace = explode('Controller',$controller)[0];
+        $parts_count = count($parts);
 
-        if ( $withNamespace ) {
-            return $modelNamespace;
-        }else {
-            return explode('\\', $modelNamespace)[1];
+        // we have a sub namespace folder
+        if ($parts_count > 2) {
+            // get the two element of the array
+            $model_name = $parts[$parts_count - 2] . '\\' .  $parts[$parts_count - 1];
+        } else {
+            $model_name = last($parts);
         }
 
-        //return  explode('Controller',explode('\\',explode('\\Controllers\\',get_called_class())[1])[1])[0];
+        return sprintf("{{namespace}}\{{modelsFolder}}\%s", $model_name);
+    }
+
+    /**
+     * @param bool $withNamespace
+     *
+     * @return string
+     */
+    private function getModelName(bool $withNamespace = true): string
+    {
+        $controller = last(explode('Controllers\\', get_called_class()));
+
+        $modelNamespace = head(explode('Controller', $controller));
+
+
+        if ($withNamespace) {
+            return $modelNamespace;
+        } else {
+            return last(explode('\\', $modelNamespace));
+        }
 
     }
 
@@ -73,10 +87,8 @@ trait FormBuilderTrait {
      *
      * @return string
      */
-    private function getFormName(bool $withNamespace = true ) :string
+    private function getFormName(bool $withNamespace = true): string
     {
-        return sprintf("{{namespace}}\Forms\%sForm",$this->getModelName($withNamespace));
+        return sprintf("{{namespace}}\Forms\%sForm", $this->getModelName($withNamespace));
     }
-
-
 }

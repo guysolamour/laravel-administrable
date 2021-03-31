@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\Forms\{{backNamespace}};
+namespace {{namespace}}\Forms\Back;
 
 use Kris\LaravelFormBuilder\Form;
 
@@ -10,10 +10,10 @@ class CategoryForm extends Form
     {
         if ($this->getModel() && $this->getModel()->getKey()) {
             $method = 'PUT';
-            $url    = route('{{backLowerNamespace}}.page.update', $this->getModel());
+            $url    = route('{{backLowerNamespace}}.category.update', $this->getModel());
         } else {
             $method = 'POST';
-            $url    = route('{{backLowerNamespace}}.page.store');
+            $url    = route('{{backLowerNamespace}}.category.store');
         }
 
         $this->formOptions = [
@@ -22,16 +22,12 @@ class CategoryForm extends Form
             'name'   => get_form_name($this->getModel()),
         ];
 
-	    $this
-        // add fields here
-		   ->add('name','text', [
-			    'label' => 'Nom',
-			    'rules' => 'required',
-        ])
-		    ->add('route','text', [
-			    'label' => 'Route',
-			    'rules' => 'required|route_exists',
-        ])
+	      $this
+            ->add('name', 'text', [
+                'label'  => 'Nom',
+
+                'rules' => ['required', 'string',],
+            ])
         ;
     }
 }
