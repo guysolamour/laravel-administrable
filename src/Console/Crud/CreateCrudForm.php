@@ -75,7 +75,7 @@ class CreateCrudForm
         $this->seeder      = $seeder;
         $this->edit_slug   = $edit_slug;
 
-        $this->filesystem   = new Filesystem;
+        $this->filesystem  = new Filesystem;
     }
 
     /**

@@ -201,6 +201,8 @@ trait MakeCrudTrait
 
         $fields_to_create = empty($fields_to_create) ? $this->fields : $fields_to_create;
 
+
+
         foreach ($fields_to_create as $field) {
             if ($this->isRelationField($this->getNonRelationType($field))) {
                 // polymorphic fields are ignored
@@ -218,29 +220,42 @@ trait MakeCrudTrait
                                 ])
                     TEXT;
                 }
-                # code...
             } else {
                 // polymorphic fields are ignored
                 if (!$this->isPolymorphicField($field)) {
-                    $fields .= <<<TEXT
 
-                                    ->add('{$this->getFieldName($field)}', '{$this->getFormType($field)}', [
-                                        'label'  => '{$this->getFieldLabel($field)}',
-                                        {$this->getFormFieldChoices($field)}
-                                        {$this->getFormFieldRules($field)}
-
-                        TEXT;
-
-
-                    if (Arr::get($field, 'tinymce')) {
+                    if ($this->isBooleanField($field)){
+                        $choices = "['1' => '". __('Yes') ."', '2' => '". __('No') ."']";
                         $fields .= <<<TEXT
-                                        'attr' => [
-                                            'data-tinymce',
-                                        ],
-                        TEXT;
-                    }
 
-                    $fields .= '            ])';
+                                        ->add('{$this->getFieldName($field)}', 'select', [
+                                            'label'   => '{$this->getFieldLabel($field)}',
+                                            'choices' => {$choices},
+                                            'rules'   => 'required|in:0,1',
+
+                            TEXT;
+                        $fields .= '            ])';
+                    }else {
+                        $fields .= <<<TEXT
+
+                                        ->add('{$this->getFieldName($field)}', '{$this->getFormType($field)}', [
+                                            'label'  => '{$this->getFieldLabel($field)}',
+                                            {$this->getFormFieldChoices($field)}
+                                            {$this->getFormFieldRules($field)}
+
+                            TEXT;
+
+
+                        if (Arr::get($field, 'tinymce')) {
+                            $fields .= <<<TEXT
+                                            'attr' => [
+                                                'data-tinymce',
+                                            ],
+                            TEXT;
+                        }
+
+                        $fields .= '            ])';
+                    }
                 }
             }
         }

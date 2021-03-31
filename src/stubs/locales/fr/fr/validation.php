@@ -147,5 +147,6 @@ return [
         'time' => 'heure',
         'available' => 'disponible',
         'size' => 'taille',
+        'online' => 'en ligne',
     ],
 ];

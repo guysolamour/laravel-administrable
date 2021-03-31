@@ -75,6 +75,7 @@ class MakeCrudCommand extends BaseCrudCommand
         $this->fields = $this->getCleanFields($config_fields);
 
 
+
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
         [$result, $model_path] = CreateCrudModel::generate(
