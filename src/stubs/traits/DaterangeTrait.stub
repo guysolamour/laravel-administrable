@@ -1,0 +1,79 @@
+<?php
+
+namespace {{namespace}}\Traits;
+
+use Carbon\Carbon;
+
+
+trait DaterangeTrait
+{
+    /**
+     * @param string $dates
+     * @return array
+     */
+    private function parseRangeDates(string $dates): array
+    {
+        return  array_map(fn($date) => $this->sanitizeDaterangeDate($date), explode(' - ', $dates));
+    }
+
+    /**
+     * @param string $date
+     * @return string
+     */
+    private function sanitizeDaterangeDate(string $date) :string
+    {
+        return Carbon::parse(str_replace('/', '-', str_replace(['AM', 'am', 'PM', 'pm'], '', $date)))->toDateTimeString();
+    }
+
+    /**
+     * @return void
+     */
+    private function proccesDateranges()
+    {
+        $attributes = $this->dateranges;
+
+        if (!empty($attributes)){
+
+            foreach ($attributes as $attribute ) {
+                if ($dates = request($attribute)){
+                    [$start_at, $end_at] = $this->parseRangeDates($dates);
+
+                    $this->attributes["{$attribute}_". config('administrable.daterange.start')] = $start_at;
+                    $this->attributes["{$attribute}_". config('administrable.daterange.end')]   = $end_at;
+                }
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function proccesDatepickers()
+    {
+        $attributes = $this->datepickers;
+
+        if (!empty($attributes)) {
+            foreach ($attributes as $attribute) {
+                if ($date = request($attribute)) {
+                    $this->attributes[$attribute] = $this->sanitizeDaterangeDate($date);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @return void
+     */
+    public static function bootDaterangeTrait()
+    {
+        /**
+         * @param \Illuminate\Database\Eloquent\Model $model
+         */
+        static::saving(function ($model) {
+            // daterange
+            $model->proccesDateranges();
+            $model->proccesDatepickers();
+        });
+    }
+}

@@ -4,7 +4,6 @@ namespace Guysolamour\Administrable\Console\Administrable;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Symfony\Component\Finder\Finder;
 use Guysolamour\Administrable\Console\BaseCommand;
 use Guysolamour\Administrable\Console\CommandTrait;
 

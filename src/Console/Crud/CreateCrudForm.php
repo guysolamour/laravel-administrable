@@ -2,6 +2,7 @@
 
 namespace Guysolamour\Administrable\Console\Crud;
 
+use Illuminate\Support\Arr;
 use Illuminate\Filesystem\Filesystem;
 
 class CreateCrudForm
@@ -89,7 +90,7 @@ class CreateCrudForm
      * @param boolean $entity
      * @param boolean $seeder
      * @param boolean $edit_slug
-     * @return void
+     * @return string
      */
     public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder, bool $edit_slug)
     {
@@ -127,13 +128,6 @@ class CreateCrudForm
     }
 
 
-
-
-
-
-
-
-
     /**
      * @param $form_name
      * @param $data_map
@@ -148,7 +142,7 @@ class CreateCrudForm
 
         $complied = $this->compliedFile($form_stub,  true, $data_map);
 
-        return array($form_path, $complied);
+        return [$form_path, $complied];
     }
 
 

@@ -288,7 +288,7 @@
           <a class="edit-on-github"
             title="Edit on Github"
             href="https://github.com/guysolamour/administrable/tree/master/_docs/en/2.1-generate-crud.md">
-            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Crud"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-03-30T14:09:22+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
+            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Crud"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-04-06T13:41:38+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
 
 <!-- end custom article top snippet -->
 <div class="article__content" itemprop="articleBody"><p>This command generates the crud (<strong><em>model</em></strong>, <strong><em>controller</em></strong>, <strong><em>migration</em></strong>, <strong><em>form</em></strong>, <strong><em>views</em></strong>, <strong><em>seed</em></strong>) for a particular model.</p>
@@ -388,6 +388,35 @@
 </code></pre></div></div>
 
 <p>The <em>model_id</em> must have the suffix <strong><em>_ id</em></strong> and the <em>model_type</em> must have the suffix <strong><em>_ type</em></strong></p>
+
+<h2 id="cast">Cast</h2>
+
+<p>Attribute casting allow you to transform Eloquent attribute values when you retrieve or set them on models instances.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
+  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">integer</span><span class="pi">,</span> <span class="nv">cast</span><span class="pi">:</span> <span class="nv">integer</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">boolean and datetime types are automatically cast</p>
+
+<h2 id="datepicker">Datepicker</h2>
+
+<p>Add datepicker for date type fields.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
+  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">datepicker</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">only date type fields can have a datepicker</p>
+<h2 id="daterange">Daterange</h2>
+
+<p>For a date range type field, two fields will be created to represent the start field and the end field respectively with the suffix <strong><em>start_at</em></strong> and <strong><em>end_at</em></strong>. Suffixes can be changed in the configuration file.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
+  <span class="na">promotion</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">datetime</span><span class="pi">,</span>  <span class="nv">daterange</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">only date type fields can have a datepicker</p>
 
 <h2 id="validation">Validation</h2>
 
@@ -696,7 +725,7 @@ To deactivate it you can proceed as follows:</p>
   <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">constraints</span><span class="pi">:</span> <span class="nv">default</span><span class="pi">:</span><span class="nv">18</span> <span class="pi">}</span>
 </code></pre></div></div>
 
-<h2 id="seeder">seeder</h2>
+<h2 id="seeder">Seeder</h2>
 
 <p>To avoid generating a seeder file</p>
 
@@ -952,7 +981,7 @@ or the namespace.</li>
 <p>The <strong><em>many to many</em></strong> polymorphic relationship is not yet established. I haven’t had to use it in my various projects yet.
 Maybe soon.</p>
 
-</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-03-30T14:09:22+00:00"><!-- start custom article footer snippet -->
+</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-04-06T13:41:38+00:00"><!-- start custom article footer snippet -->
 
 <!-- end custom article footer snippet -->
 <div class="article__license"><div class="license">
@@ -1036,6 +1065,7 @@ Maybe soon.</p>
 </div>
     </div><div class="site-info mt-2">
       <div>© Administrable 2021,
+        Created by <a title="fullstack web developper" href="//roland-assale.info">Guy-roland ASSALE</a> and
         Powered by <a title="Jekyll is a simple, blog-aware, static site generator." href="http://jekyllrb.com/">Jekyll</a> & <a
         title="TeXt is a super customizable Jekyll theme." href="https://github.com/kitian616/jekyll-TeXt-theme">TeXt Theme</a>.
       </div>

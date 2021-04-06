@@ -13,8 +13,6 @@ use Guysolamour\Administrable\Console\Crud\CreateCrudController;
 
 class MakeCrudCommand extends BaseCrudCommand
 {
-
-
     use CommandTrait;
 
 
@@ -22,6 +20,11 @@ class MakeCrudCommand extends BaseCrudCommand
      * @var bool
      */
     protected $migrate;
+
+    /**
+     * @var array
+     */
+    protected $actions;
 
 
     /**
@@ -61,7 +64,6 @@ class MakeCrudCommand extends BaseCrudCommand
             $this->model = $this->choice('Which model will be used ?', $this->getUnusedCrudConfigModels(), 0);
         }
 
-
         $this->migrate = $this->option('migrate') == 'true' ? true : false;
 
         $this->theme = config('administrable.theme', 'adminlte');
@@ -73,8 +75,6 @@ class MakeCrudCommand extends BaseCrudCommand
         $config_fields = $this->getCrudConfiguration(ucfirst($this->model));
 
         $this->fields = $this->getCleanFields($config_fields);
-
-
 
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
@@ -216,5 +216,4 @@ class MakeCrudCommand extends BaseCrudCommand
                 $this->info('File ' . $path . ' already exists');
         }
     }
-
 }

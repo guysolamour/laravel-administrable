@@ -185,6 +185,7 @@ class CreateCrudView
 
         $views_path = resource_path("views/{$data_map['{{backLowerNamespace}}']}");
 
+
         if ($this->hasAction('index')) {
             $this->loadIndexView($guard, $views_path, $data_map);
 
@@ -225,16 +226,6 @@ class CreateCrudView
         return $complied;
     }
 
-    // protected function loadIndexLinkFor(string $key, string $complied, array $data_map): string
-    // {
-    //     if ($this->breadcrumb) {
-    //         $breadcrumb_stub = $this->TPL_PATH . '/views/' . $this->theme . "/breadcrumbs/{$key}.blade.stub";
-    //         $replace = $this->compliedFile($breadcrumb_stub, true, $data_map);
-    //         return  str_replace('{{-- breadcrumb --}}', $replace, $complied);
-    //     }
-
-    //     return $complied;
-    // }
 
     private function loadIndexView($guard, $views_path, $data_map)
     {
@@ -317,7 +308,6 @@ class CreateCrudView
         $complied =  $this->compliedFile($stub);
 
 
-
         $complied =  $this->loadBreadcrumbFor('show', $complied, $data_map);
         $complied =  $this->loadLinkButtonFor('edit', $complied, $data_map);
         $complied =  $this->loadLinkButtonFor('delete', $complied, $data_map);
@@ -328,7 +318,6 @@ class CreateCrudView
         $show_views = $this->getShowViewFields($this->fields, $data_map, $this->timestamps);
 
         $complied = $this->loadImagemanagerViewsAndAssets($data_map, $complied, 'show');
-
 
         $view = $this->insertFieldToViewSHow($show_views, $complied);
 
@@ -343,6 +332,7 @@ class CreateCrudView
         $path =  $views_path . '/' . $guard . '/_form.blade.php';
 
         $complied =  $this->compliedFile($stub);
+
 
         $this->createDirectoryIfNotExists($path, false);
 
@@ -364,11 +354,11 @@ class CreateCrudView
 
         if ($this->hasAction('edit')) {
             $edit_button = <<<'TEXT'
-                @if (isset($edit) && $edit)
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
-                </div>
-                @endif
+            @if (isset($edit) && $edit)
+            <div class="form-group">
+                <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
+            </div>
+            @endif
             TEXT;
             $complied =  str_replace('{{-- form edit button --}}', $edit_button, $complied);
         } else {
@@ -377,19 +367,30 @@ class CreateCrudView
 
         if ($this->hasAction('create')) {
             $create_button = <<<'TEXT'
-                @if (!isset($edit))
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
-                </div>
-                @endif
+            @if (!isset($edit))
+            <div class="form-group">
+                <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
+            </div>
+            @endif
             TEXT;
             $complied =  str_replace('{{-- form create button --}}', $create_button, $complied);
         } else {
             $complied =  str_replace('{{-- form create button --}}', '', $complied);
         }
 
+        $complied = $this->addDatepickerAndDaterange($complied);
+
         $this->writeFile($complied, $path, false);
     }
+
+   
+
+    /**
+     * @param string $guard
+     * @param string $views_path
+     * @param array $data_map
+     * @return void
+     */
     private function loadCreateView($guard, $views_path, $data_map)
     {
         $stub  =  $this->TPL_PATH . '/views/' . $this->theme . '/create.blade.stub';
@@ -448,9 +449,6 @@ class CreateCrudView
 
 
 
-
-
-
     /**
      * @param $show_views
      * @param $view
@@ -463,13 +461,6 @@ class CreateCrudView
         return $view;
     }
 
-    // private  function insertFieldToViewEdit($show_views, $view)
-    // {
-    //     $search = '{{morphImagesEdit}}';
-    //     $view = str_replace($search, $show_views, $view);
-    //     return $view;
-    // }
-
     /**
      * @param string $var_name
      * @return array
@@ -481,13 +472,9 @@ class CreateCrudView
 
         $fields = '';
 
-        // $guard = $data_map['{{backLowerNamespace}}'];
-
-
         $stub  =  $this->TPL_PATH . '/views/' . $this->theme . '/partials/_checkbox.blade.stub';
 
         $complied =  $this->compliedFile($stub);
-
 
         // added multiple deletion checkbox
         $values = <<<TEXT
@@ -507,14 +494,14 @@ class CreateCrudView
             $fields .= '                                    <th>Date création</th>' . "\n";
             $values = <<<TEXT
                 $values
-                            <td>{{ \${$var_name}->formated_date }}</td>
+                            <td>{{ format_date(\${$var_name}) }}</td>
             TEXT;
-            // $values .= '                                        <td>{{ $' . $var_name . '->created_at->format(\'d/m/Y h:i\') }}</td>' . "\n";
         }
-
 
         return [$fields, $values];
     }
+
+
     /**
      * @param string $var_name
      * @return string
@@ -608,8 +595,6 @@ class CreateCrudView
     }
 
 
-
-
     /**
      * @param $fields
      * @param $complied
@@ -624,8 +609,6 @@ class CreateCrudView
 
         $search = '{{values}}';
         $form = str_replace($search, $values, $form);
-
-
 
 
         $search = '{{quickViewValues}}';
@@ -670,8 +653,6 @@ class CreateCrudView
             $field === 'text' || $field === 'mediumText' ||
             $field === 'longText';
     }
-
-
 
 
 

@@ -199,8 +199,6 @@ if (!function_exists('array_remove_by_value')) {
 }
 
 
-
-
 if (!function_exists('guest_views_folder_name')) {
     /**
      * @param \Illuminate\Database\Eloquent\Model $model
@@ -211,8 +209,6 @@ if (!function_exists('guest_views_folder_name')) {
         return \Illuminate\Support\Str::plural(\Illuminate\Support\Str::slug(class_basename($model)));
     }
 }
-
-
 
 
 if (!function_exists('get_app_namespace')) {

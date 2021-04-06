@@ -1,0 +1,41 @@
+@push('css')
+<link rel="stylesheet" href="{{ asset('vendor/{{theme}}/plugins/daterangepicker/daterangepicker.css') }}">
+@endpush
+
+@push('js')
+<script src="{{ asset('vendor/{{theme}}/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script>
+    $('input[name={{ $datepicker_field_name }}]').daterangepicker({
+        timePicker: @json($datepicker_time_picker ?? true),
+        showDropdowns: @json($datepicker_show_drop_downs ?? true),
+        timePicker24Hour: @json($datepicker_time_picker_24_hour ?? true),
+        singleDatePicker: @json($datepicker_single_date_picker ?? false),
+        startDate: "{{  isset($datepicker_start_date) && $datepicker_start_date ? $datepicker_start_date->format('d/m/Y H:i') :  now()->format('d/m/Y H:i')  }}",
+        endDate: "{{  isset($datepicker_end_date) && $datepicker_end_date ? $datepicker_end_date->format('d/m/Y H:i') :  now()->format('d/m/Y H:i') }}",
+        "opens": @json($datepicker_opens ?? 'center'),
+        drops: @json($datepicker_drops ?? 'up'),
+        locale: {
+            format: 'DD/MM/YYYY HH:mm',
+            daysOfWeek: [
+                'Di','Lu','Ma','Me','Je','Ve','Sa'
+            ],
+            applyLabel: 'Appliquer',
+            cancelLabel: 'Annuler',
+            monthNames: [
+                'Janvier',
+                'Février',
+                'Mars',
+                'Avril',
+                'Mai',
+                'Juin',
+                'Juillet',
+                'Août',
+                'Septembre',
+                'Octobre',
+                'Novembre',
+                'Décembre'
+            ]
+         }
+    });
+</script>
+@endpush

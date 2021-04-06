@@ -12,9 +12,6 @@ trait MakeCrudTrait
     use CommandTrait;
 
 
-
-
-
     /**
      * Parse guard name
      * Get the guard name in different cases
@@ -47,280 +44,6 @@ trait MakeCrudTrait
         ];
     }
 
-    /**
-     * @param string $migration
-     * @param array  $data_map
-     * @param array  $fields_to_create
-     * @param string|null $file_name
-     * @param boolean $down
-     * @return string
-     */
-    protected function generateMigrationFields(string $migration, array $data_map, array $fields_to_create = [], ?string $file_name = null, bool $down = false): string
-    {
-
-        $fields_to_create = empty($fields_to_create) ? $this->fields : $fields_to_create;
-
-        $fields = "\n\n";
-        $drop_fields = "\n\n";
-
-        foreach ($fields_to_create as $field) {
-            if ($this->isRelationField($this->getNonRelationType($field))) {
-
-                if ($this->isSimpleRelation($field)) {
-                    $fields .= <<<TEXT
-                               \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)}->constrained('{$this->getModelTableName($this->getRelatedModel($field))}','{$this->getFieldReferences($field)}')->onDelete('{$this->getFieldOnDelete($field)}');
-
-                    TEXT;
-                    $drop_fields .= <<<TEXT
-                               \$table->dropColumn('{$this->getFieldName($field)}');
-
-                    TEXT;
-                }
-            } else if ($this->isPolymorphicField($field)) {
-                $fields .= <<<TEXT
-                           \$table->morphs('{$this->getMorphRelationableName($field)}');
-
-                TEXT;
-                $drop_fields .= <<<TEXT
-                            \$table->dropColumn('{$this->getMorphRelationableName($field)}');
-
-                TEXT;
-            } else {
-
-                $fields .= <<<TEXT
-                               \$table->{$this->getMigrationFieldType($field)}('{$this->getFieldName($field)}'{$this->getMigrationFieldLength($field)}){$this->getFieldAttributes($field)};
-
-                    TEXT;
-                $drop_fields .= <<<TEXT
-                           \$table->dropColumn('{$this->getFieldName($field)}');
-
-                TEXT;
-            }
-        }
-
-
-        // add slug field and the linked field
-        if ($this->slug && !$file_name) {
-            $fields .= '           $table->string(' . "'slug'" . ')->unique();';
-        }
-        //
-
-        //add timestamps
-        if ($this->timestamps && !$file_name) {
-            $fields .= "\n" . '           $table->timestamps();';
-        }
-
-        // Pivot tables must be created before migration due to foreign customers
-        $this->createManyToManyRelationPivotTable();
-
-
-        // compiled and write migration
-        if ($file_name){
-            $search = '// add up field here';
-            $replace = $fields;
-        }else {
-            $search = '$table->id();';
-            $replace = $search . $fields;
-        }
-
-
-        $signature = date('Y_m_d_His');
-
-        if ($file_name) {
-            $migration_path = database_path('migrations/' . $signature . '_' . $file_name . '_table.php');
-        } else {
-            $migration_path = database_path('migrations/' . $signature . '_create_' . $data_map['{{pluralSnake}}'] . '_table.php');
-        }
-
-        if ($down){
-            $migration = str_replace('// add down field here', $drop_fields, $migration);
-        }
-
-        $this->writeFile(
-            str_replace($search, $replace, $migration),
-            $migration_path
-        );
-
-        return $migration_path;
-    }
-
-    /**
-     * @param string $seeder
-     * @param array $fields
-     * @return string
-     */
-    protected function generateSeederFields(string $seeder, array $fields = []): string
-    {
-        $seed_fields = "\n";
-        $fields = empty($fields) ? $this->fields : $fields;
-
-        foreach ($fields as $field) {
-            if ($field['type'] === "string") {
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->text(50),';
-            }
-
-            if ($field['type'] === "json") {
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . 'json_encode($faker->text(50)),';
-            }
-
-            if ($field['type'] === 'image') {
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->imageUrl,';
-            }
-
-            if ($field['type'] === 'text') {
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->realText(150),';
-            }
-
-            if ($field['type'] === 'integer' || $field['type'] === 'mediumInteger'  || $field['type'] === 'bigInteger') {
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomNumber(),';
-            }
-
-            if ($field['type'] === 'boolean') {
-                $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement([true,false]),';
-            }
-
-            if ($this->isRelationField($this->getNonRelationType($field))) {
-                if ($this->isSimpleRelation($field)) {
-                    $seed_fields .= "\n" . "                '{$field['name']}'  => " . '$faker->randomElement(\\' . $this->getRelatedModel($field) . '::pluck(\'id\')' . '),';
-                }
-            }
-        }
-
-        // compiled and write migration
-        $search = 'create([';
-        return str_replace($search, $search . $seed_fields, $seeder);
-    }
-
-    /**
-     * @param array $fields_to_create
-     * @return string
-     */
-    protected function getFormFields(array $fields_to_create = []): string
-    {
-        $fields = "";
-
-        $fields_to_create = empty($fields_to_create) ? $this->fields : $fields_to_create;
-
-
-
-        foreach ($fields_to_create as $field) {
-            if ($this->isRelationField($this->getNonRelationType($field))) {
-                // polymorphic fields are ignored
-                if (!$this->isPolymorphicField($field)) {
-                    $fields .= <<<TEXT
-
-                                ->add('{$this->getFieldName($field)}', '{$this->getFormType($field)}', [
-                                    'class'  => \\{$this->getRelatedModel($field)}::class,
-                                    'property' => '{$this->getRelatedModelProperty($field)}',
-                                    'label'  => '{$this->getFieldLabel($field)}',
-                                    {$this->getFormFieldRules($field)}
-                                    // 'query_builder => function(\\{$this->getRelatedModel($field)} {$this->getRelatedModelFormVariable($field)}) {
-                                        // return {$this->getRelatedModelFormVariable($field)};
-                                    // }
-                                ])
-                    TEXT;
-                }
-            } else {
-                // polymorphic fields are ignored
-                if (!$this->isPolymorphicField($field)) {
-
-                    if ($this->isBooleanField($field)){
-                        $choices = "['1' => '". __('Yes') ."', '2' => '". __('No') ."']";
-                        $fields .= <<<TEXT
-
-                                        ->add('{$this->getFieldName($field)}', 'select', [
-                                            'label'   => '{$this->getFieldLabel($field)}',
-                                            'choices' => {$choices},
-                                            'rules'   => 'required|in:0,1',
-
-                            TEXT;
-                        $fields .= '            ])';
-                    }else {
-                        $fields .= <<<TEXT
-
-                                        ->add('{$this->getFieldName($field)}', '{$this->getFormType($field)}', [
-                                            'label'  => '{$this->getFieldLabel($field)}',
-                                            {$this->getFormFieldChoices($field)}
-                                            {$this->getFormFieldRules($field)}
-
-                            TEXT;
-
-
-                        if (Arr::get($field, 'tinymce')) {
-                            $fields .= <<<TEXT
-                                            'attr' => [
-                                                'data-tinymce',
-                                            ],
-                            TEXT;
-                        }
-
-                        $fields .= '            ])';
-                    }
-                }
-            }
-        }
-
-
-
-        // add slug field
-        if ($this->slug && $this->edit_slug) {
-            $data_map = $this->parseName($this->model);
-
-            $table_name = $data_map['{{pluralSnake}}'];
-
-            $fields .= <<<TEXT
-
-                        ->add('slug', 'text', [
-                            'label' => 'Slug',
-                            'rules'  => [
-                                'required',
-                                \Illuminate\Validation\Rule::unique('{$table_name}')->ignore(\$this->getModel())
-                            ],
-                        ])
-
-            TEXT;
-        }
-
-        return $fields;
-    }
-
-    /**
-     * @param string $type
-     * @return string
-     */
-    protected function getFormType(array $field): string
-    {
-        $type = $this->getNonRelationType($field);
-
-        if (
-            $type === 'string' || $type === 'decimal' || $type === 'double' ||
-            $type === 'float' || $type === 'json'
-        ) {
-            return 'text';
-        } elseif (
-            $type === 'image' || $type === 'file'
-        ) {
-            return 'file';
-        } elseif (
-            $type === 'integer' || $type === 'mediumInteger'
-        ) {
-            return 'number';
-        } elseif ($type === 'text' || $type === 'mediumText' || $type === 'longText') {
-            return 'textarea';
-        } elseif ($type === 'email') {
-            return 'email';
-        } elseif ($type === 'boolean' || $type === 'enum') {
-            return 'select';
-        } elseif ($type === 'date') {
-            return 'date';
-        } elseif ($type === 'datetime') {
-            return 'datetime';
-        } elseif ($this->isRelationField($this->getNonRelationType($field)) || $this->isPolymorphicField($field)) {
-            return 'entity';
-        } else {
-            return 'text';
-        }
-    }
 
     /**
      * @param array $fields_to_create
@@ -342,20 +65,30 @@ trait MakeCrudTrait
             }
 
             // if the field is of type image we skip it because we do not want to display it on the index page
-            if ($field['type'] == 'image') {
+            if ($this->getFieldType($field, false) == 'image') {
                 continue;
             };
 
 
 
-            if ($this->isRelationField($field['type'])) {
-                $value = ucfirst(translate_model_field($this->getRelationModelWithoutId($field['name']), $field['trans'] ?? null));
+            if ($this->isRelationField($this->getFieldType($field, false))) {
+                $value = ucfirst(translate_model_field($this->getRelationModelWithoutId($this->getFieldName($field)), $this->getFieldTrans($field)));
                 $fields = <<<TEXT
                     $fields
                                     <th>$value</th>
                     TEXT;
-            } else {
-                $value = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
+            }
+            else if ($this->isDaterangeField($field)){
+                $start_value = ucfirst(translate_model_field($this->getFieldName($field), $this->getDateRangeStartTrans($field)));
+                $end_value = ucfirst(translate_model_field($this->getFieldName($field), $this->getDateRangeEndTrans($field)));
+                $fields = <<<TEXT
+                    $fields
+                                    <th>$start_value</th>
+                                    <th>$end_value</th>
+                    TEXT;
+            }
+            else {
+                $value = ucfirst(translate_model_field($this->getFieldName($field), $this->getFieldTrans($field)));
                 $fields = <<<TEXT
                     $fields
                                     <th>$value</th>
@@ -363,7 +96,7 @@ trait MakeCrudTrait
             }
 
 
-            if (!$this->isRelationField($field['type']) && $this->isTextField($this->getFieldType($field))) {
+            if (!$this->isRelationField($this->getFieldType($field, false)) && $this->isTextField($this->getFieldType($field))) {
 
                 if ($this->isTheadminTheme() && ($this->getFieldName($field) === $this->guestBreadcrumbFieldNane())) {
                     $values = <<<TEXT
@@ -382,7 +115,7 @@ trait MakeCrudTrait
                                     <td>{{ Str::limit(\${$var_name}->{$this->getFieldName($field)},50) }}</td>
                     TEXT;
                 }
-            } else if ($this->isRelationField($field['type'])) {
+            } else if ($this->isRelationField($this->getFieldType($field, false))) {
 
                 if ($this->isSimpleRelation($field)) {
                     if ($this->isSimpleOneToOneRelation($field) || $this->isSimpleOneToManyRelation($field)) {
@@ -425,6 +158,34 @@ trait MakeCrudTrait
                         TEXT;
                     }
                 }
+            } else if ($this->isBooleanField($field)){
+
+                $values = <<<TEXT
+                        $values
+                                    <td>{{ \${$var_name}->{$this->getFieldName($field)} ? __('Yes')  : __('No') }}</td>
+                    TEXT;
+            }
+            else if ($this->isDaterangeField($field)){
+
+                $values = <<<TEXT
+                        $values
+                                    <td>{{ format_date(\${$var_name}->{$this->getRangeStartFieldName($field)}) }}</td>
+                                    <td>{{ format_date(\${$var_name}->{$this->getRangeEndFieldName($field)}) }}</td>
+                    TEXT;
+            }
+            else if ($this->isDatetimeField($field)){
+
+                $values = <<<TEXT
+                        $values
+                                    <td>{{ format_date(\${$var_name}->{$this->getFieldName($field)}) }}</td>
+                    TEXT;
+            }
+
+            else {
+                $values = <<<TEXT
+                        $values
+                                    <td>{{ \${$var_name}->{$this->getFieldName($field)} }}</td>
+                    TEXT;
             }
         }
 
@@ -451,7 +212,6 @@ trait MakeCrudTrait
 
         $guard = $data_map['{{backLowerNamespace}}'];
 
-
         foreach ($fields_to_create as $key =>  $field) {
             /**
              * If the field is of type imagemanager we skip it
@@ -462,7 +222,7 @@ trait MakeCrudTrait
 
                 if ($this->isSimpleRelation($field)) {
                     if ($this->isSimpleOneToOneRelation($field) || $this->isSimpleOneToManyRelation($field)) {
-                        $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
+                        $model = ucfirst(translate_model_field($this->getFieldName($field), $this->getFieldTrans($field)));
                         $show_views = <<<TEXT
                             $show_views
                                         <p class="pb-2">
@@ -473,7 +233,7 @@ trait MakeCrudTrait
                                         </p>
                         TEXT;
                     } else {
-                        $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
+                        $model = ucfirst(translate_model_field($this->getFieldName($field), $this->getFieldTrans($field)));
                         $show_views = <<<TEXT
                             $show_views
                                         <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0]->{$this->getRelatedModelProperty($field)} }}</p>
@@ -481,21 +241,48 @@ trait MakeCrudTrait
                     }
                 } else if ($this->isPolymorphicField($field)) {
                     if ($this->isPolymorphicOneToOneRelation($field)) {
-                        $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
+                        $model = ucfirst(translate_model_field($this->getFieldName($field), $this->getFieldTrans($field)));
                         $show_views = <<<TEXT
                             $show_views
                                         <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}->{$this->getRelatedModelProperty($field)} }}</p>
                         TEXT;
                     } else {
-                        $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
+                        $model = ucfirst(translate_model_field($this->getFieldName($field), $this->getFieldTrans($field)));
                         $show_views = <<<TEXT
                             $show_views
                                         <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getRelationModelWithoutId($this->getFieldName($field))}[0]->{$this->getRelatedModelProperty($field)} }}</p>
                         TEXT;
                     }
                 }
-            } else {
-                $model = ucfirst(translate_model_field($this->getFieldName($field), $field['trans'] ?? null));
+            }
+            else if ($this->isDaterangeField($field)){
+                $start_model = ucfirst(translate_model_field($this->getFieldName($field), $this->getDateRangeStartTrans($field)));
+                $end_model   = ucfirst(translate_model_field($this->getFieldName($field), $this->getDateRangeEndTrans($field)));
+
+                $show_views = <<<TEXT
+                            $show_views
+                                    <p class="pb-2"><b>$start_model: </b>{{ format_date(\${$field_name}->{$this->getRangeStartFieldName($field)}) }}</p>
+                                    <p class="pb-2"><b>$end_model: </b>{{ format_date(\${$field_name}->{$this->getRangeEndFieldName($field)}) }}</p>
+                        TEXT;
+            }
+            else if ($this->isDatetimeField($field)){
+                $model = ucfirst(translate_model_field($this->getFieldName($field), $this->getFieldTrans($field)));
+
+                $show_views = <<<TEXT
+                            $show_views
+                                    <p class="pb-2"><b>$model: </b>{{ format_date(\${$field_name}->{$this->getFieldName($field)}) }}</p>
+                        TEXT;
+            }
+            else if ($this->isBooleanField($field)){
+                $model = ucfirst(translate_model_field($this->getFieldName($field), $this->getFieldTrans($field)));
+
+                $show_views = <<<TEXT
+                            $show_views
+                                    <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getFieldName($field)} ? __('Yes') : __('No') }}</p>
+                        TEXT;
+            }
+            else {
+                $model = ucfirst(translate_model_field($this->getFieldName($field), $this->getFieldTrans($field)));
                 $show_views = <<<TEXT
                     $show_views
                             <p class="pb-2"><b>$model: </b>{{ \${$field_name}->{$this->getFieldName($field)} }}</p>
@@ -506,7 +293,7 @@ trait MakeCrudTrait
         if ($withTimestamp) {
             $show_views = <<<TEXT
                 $show_views
-                            <p class="pb-2"><b>Date ajout: </b>{{ \${$field_name}->created_at->format('d/m/Y h:i') }}</p>
+                        <p class="pb-2"><b>Date ajout: </b>{{ format_date(\${$field_name}->created_at) }}</p>
             TEXT;
             // $show_views .= '                <p class="pb-2"><b>Date ajout:</b> {{ $' . $field_name . '->created_at->format(\'d/m/Y h:i\') }}</p>' . "\n";
         }
@@ -614,6 +401,27 @@ trait MakeCrudTrait
 
         return $choices_text;
     }
+
+
+
+    /**
+     * @param array $field
+     * @return string
+     */
+    private function getRangeStartFieldName(array $field): string
+    {
+        return $this->getFieldName($field) . '_' .  config('administrable.daterange.start', 'start_at');
+    }
+
+    /**
+     * @param array $field
+     * @return string
+     */
+    private function getRangeEndFieldName(array $field): string
+    {
+        return $this->getFieldName($field) . '_' . config('administrable.daterange.end', 'end_at');
+    }
+
 
     /**
      * @param array $field
@@ -734,51 +542,18 @@ trait MakeCrudTrait
 
     }
 
-
     /**
+     *
      * @param array $field
-     * @return string
+     * @return string|null
      */
-    protected function getFieldAttributes(array $field): string
+    public function getFieldCast(array $field) :?string
     {
-        $constraints = $this->getFieldConstraints($field);
-
-        $attr = '';
-
-        if ($default = Arr::get($field, 'default')) {
-            if (is_bool($default)) {
-
-                $attr .= sprintf("->default(%s)", $default ? 'true' : 'false');
-            } else {
-                $attr .= sprintf("->default('%s')", $default);
-            }
-        }
-
-
-        if (empty($constraints)) {
-            return $attr;
-        }
-
-        foreach ($constraints as $constraint) {
-            if (is_array($constraint)) {
-                if ($constraint['value'] === true) {
-                    $value = 'true';
-                } else if ($constraint['value'] === false) {
-                    $value = 'false';
-                } else if (is_string($constraint['value'])) {
-                    $value = "'{$constraint['value']}'";
-                } else {
-                    $value = $constraint['value'];
-                }
-                $attr .= sprintf("->%s(%s)", $constraint['name'], $value);
-            } else {
-                $attr .=  "->$constraint()";
-            }
-        }
-
-
-        return $attr;
+        return Arr::get($field, 'cast');
     }
+
+
+
 
     /**
      * @param string $model
@@ -897,6 +672,10 @@ trait MakeCrudTrait
         if ($type === 'image') {
             return 'string';
         }
+
+        if ($type === 'datetime'){
+            return 'timestamp';
+        }
         return Str::lower($type);
     }
 
@@ -910,7 +689,7 @@ trait MakeCrudTrait
     }
 
     /**
-     * @param [type] $field
+     * @param array $field
      * @return void
      */
     protected function getSingularMorphFieldName($field)
@@ -919,7 +698,7 @@ trait MakeCrudTrait
     }
 
     /**
-     * @param [type] $field
+     * @param array $field
      * @return boolean
      */
     protected function isImageFIeld($field): bool
@@ -927,6 +706,7 @@ trait MakeCrudTrait
         return $field['name'] === 'image';
     }
 
+   
     /**
      * @param array $field
      * @return string
@@ -1271,5 +1051,535 @@ trait MakeCrudTrait
 
         return (new $class())->getTable();
     }
+
+    /**
+     * @param string $type
+     * @return string
+     */
+    protected function getFormType(array $field): string
+    {
+        $type = $this->getNonRelationType($field);
+
+        if (
+            $type === 'string' || $type === 'decimal' || $type === 'double' ||
+            $type === 'float' || $type === 'json'
+        ) {
+            return 'text';
+        } elseif (
+            $type === 'image' || $type === 'file'
+        ) {
+            return 'file';
+        } elseif (
+            $type === 'integer' || $type === 'mediumInteger'
+        ) {
+            return 'number';
+        } elseif ($type === 'text' || $type === 'mediumText' || $type === 'longText') {
+            return 'textarea';
+        } elseif ($type === 'email') {
+            return 'email';
+        } elseif ($type === 'boolean' || $type === 'enum') {
+            return 'select';
+        } elseif ($this->isDaterangeField($field) || $this->isDatepickerField($field)) {
+            return 'text';
+        } elseif ($type === 'date' || $type === 'datetime') {
+
+            return 'date';
+        } elseif ($this->isRelationField($this->getNonRelationType($field)) || $this->isPolymorphicField($field)) {
+            return 'entity';
+        } else {
+            return 'text';
+        }
+    }
+
+    /**
+     *
+     * @param array $field
+     * @return string
+     */
+    protected function getRelationFormField(array $field): string
+    {
+        return <<<TEXT
+
+                                ->add('{$this->getFieldName($field)}', '{$this->getFormType($field)}', [
+                                    'class'  => \\{$this->getRelatedModel($field)}::class,
+                                    'property' => '{$this->getRelatedModelProperty($field)}',
+                                    'label'  => '{$this->getFieldLabel($field)}',
+                                    {$this->getFormFieldRules($field)}
+                                    // 'query_builder => function(\\{$this->getRelatedModel($field)} {$this->getRelatedModelFormVariable($field)}) {
+                                        // return {$this->getRelatedModelFormVariable($field)};
+                                    // }
+                                ])
+                    TEXT;
+    }
+
+    /**
+     *
+     * @param array $field
+     * @return string
+     */
+    protected function getBooleanFormField(array $field): string
+    {
+        $choices = "['1' => '" . __('Yes') . "', '0' => '" . __('No') . "']";
+        return  <<<TEXT
+
+                                        ->add('{$this->getFieldName($field)}', 'select', [
+                                            'label'   => '{$this->getFieldLabel($field)}',
+                                            'choices' => {$choices},
+                                            'rules'   => 'required|in:0,1',
+                                        ])
+                            TEXT;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    protected function getFormFieldTinymce(): string
+    {
+        return <<<TEXT
+                                            'attr' => [
+                                                'data-tinymce',
+                                            ],
+                            TEXT;
+    }
+
+    /**
+     *
+     * @param string $table_name
+     * @return string
+     */
+    protected function getFormFieldSlug(string $table_name): string
+    {
+        return <<<TEXT
+
+                        ->add('slug', 'text', [
+                            'label'  => 'Slug',
+                            'rules'  => [
+                                'required',
+                                \Illuminate\Validation\Rule::unique('{$table_name}')->ignore(\$this->getModel())
+                            ],
+                        ])
+
+            TEXT;
+    }
+
+    /**
+     *
+     * @param array $field
+     * @return string
+     */
+    protected function getFormField(array $field): string
+    {
+        $fields = <<<TEXT
+
+                                        ->add('{$this->getFieldName($field)}', '{$this->getFormType($field)}', [
+                                            'label'  => '{$this->getFieldLabel($field)}',
+                                            {$this->getFormFieldChoices($field)}
+                                            {$this->getFormFieldRules($field)}
+
+                            TEXT;
+
+
+        if (Arr::get($field, 'tinymce')) {
+            $fields .= $this->getFormFieldTinymce();
+        }
+
+        $fields .= '            ])';
+
+        return $fields;
+    }
+
+    /**
+     * @param array $fields_to_create
+     * @return string
+     */
+    protected function getFormFields(array $fields_to_create = []): string
+    {
+        $fields = "";
+
+        $fields_to_create = empty($fields_to_create) ? $this->fields : $fields_to_create;
+
+
+        foreach ($fields_to_create as $field) {
+            if ($this->isRelationField($this->getNonRelationType($field))) {
+                // polymorphic fields are ignored
+                if ($this->isPolymorphicField($field)) {
+                    continue;
+                }
+
+                $fields .= $this->getRelationFormField($field);
+            } else {
+                // polymorphic fields are ignored
+                if ($this->isPolymorphicField($field)) {
+                    continue;
+                }
+
+                if ($this->isBooleanField($field)) {
+                    $fields .= $this->getBooleanFormField($field);
+                } else {
+                    $fields .= $this->getFormField($field);
+                }
+            }
+        }
+
+
+        // add slug field
+        if ($this->slug && $this->edit_slug) {
+            $data_map = $this->parseName($this->model);
+
+            $fields .= $this->getFormFieldSlug($data_map['{{pluralSnake}}']);
+        }
+
+
+        return $fields;
+    }
+
+
+    /**
+     * @param string $migration
+     * @param array  $data_map
+     * @param array  $fields_to_create
+     * @param string|null $file_name
+     * @param boolean $down
+     * @return string
+     */
+    protected function generateMigrationFields(string $migration, array $data_map, array $fields_to_create = [], ?string $file_name = null, bool $down = false): string
+    {
+
+        $fields_to_create = empty($fields_to_create) ? $this->fields : $fields_to_create;
+
+        $fields = "\n\n";
+        $drop_fields = "\n\n";
+
+        foreach ($fields_to_create as $field) {
+            if ($this->isRelationField($this->getNonRelationType($field))) {
+
+                if ($this->isSimpleRelation($field)) {
+                    $fields .= <<<TEXT
+                               \$table->foreignId('{$this->getFieldName($field)}'){$this->getFieldAttributes($field)}->constrained('{$this->getModelTableName($this->getRelatedModel($field))}','{$this->getFieldReferences($field)}')->onDelete('{$this->getFieldOnDelete($field)}');
+
+                    TEXT;
+                    $drop_fields .= <<<TEXT
+                               \$table->dropColumn('{$this->getFieldName($field)}');
+
+                    TEXT;
+                }
+            } else if ($this->isPolymorphicField($field)) {
+                $fields .= <<<TEXT
+                           \$table->morphs('{$this->getMorphRelationableName($field)}');
+
+                TEXT;
+                $drop_fields .= <<<TEXT
+                            \$table->dropColumn('{$this->getMorphRelationableName($field)}');
+
+                TEXT;
+            } else if ($this->isDaterangeField($field)) {
+                $fields .= <<<TEXT
+                           \$table->timestamp('{$this->getRangeStartFieldName($field)}'){$this->getFieldAttributes($field)};
+                           \$table->timestamp('{$this->getRangeEndFieldName($field)}'){$this->getFieldAttributes($field)};
+
+                TEXT;
+                $drop_fields .= <<<TEXT
+                            \$table->dropColumn('{$this->getRangeStartFieldName($field)}');
+                            \$table->dropColumn('{$this->getRangeEndFieldName($field)}');
+
+                TEXT;
+            } else {
+
+                $fields .= <<<TEXT
+                               \$table->{$this->getMigrationFieldType($field)}('{$this->getFieldName($field)}'{$this->getMigrationFieldLength($field)}){$this->getFieldAttributes($field)};
+
+                    TEXT;
+                $drop_fields .= <<<TEXT
+                           \$table->dropColumn('{$this->getFieldName($field)}');
+
+                TEXT;
+            }
+        }
+
+
+        // add slug field and the linked field
+        if ($this->slug && !$file_name) {
+            $fields .= '           $table->string(' . "'slug'" . ')->unique();';
+        }
+        //
+
+        //add timestamps
+        if ($this->timestamps && !$file_name) {
+            $fields .= "\n" . '           $table->timestamps();';
+        }
+
+        // Pivot tables must be created before migration due to foreign customers
+        $this->createManyToManyRelationPivotTable();
+
+
+        // compiled and write migration
+        if ($file_name) {
+            $search = '// add up field here';
+            $replace = $fields;
+        } else {
+            $search = '$table->id();';
+            $replace = $search . $fields;
+        }
+
+
+        $signature = date('Y_m_d_His');
+
+        if ($file_name) {
+            $migration_path = database_path('migrations/' . $signature . '_' . $file_name . '.php');
+        } else {
+            $migration_path = database_path('migrations/' . $signature . '_create_' . $data_map['{{pluralSnake}}'] . '_table.php');
+        }
+
+        if ($down) {
+            $migration = str_replace('// add down field here', $drop_fields, $migration);
+        }
+
+        $this->writeFile(
+            str_replace($search, $replace, $migration),
+            $migration_path
+        );
+
+        return $migration_path;
+    }
+
+    /**
+     * @param string $seeder
+     * @param array $fields
+     * @return string
+     */
+    protected function generateSeederFields(string $seeder, array $fields = []): string
+    {
+        $seed_fields = "\n";
+        $fields = empty($fields) ? $this->fields : $fields;
+
+        foreach ($fields as $field) {
+
+            if ($this->isDaterangeField($field)) {
+                $seed_fields .= $this->getDaterangeFakerType($field);
+            } else {
+                $seed_fields .= $this->getSeederFieldStub($field);
+            }
+        }
+
+        // compiled and write migration
+        $search = 'create([';
+        return str_replace($search, $search . $seed_fields, $seeder);
+    }
+
+    /**
+     * @param string $complied
+     * @return string
+     */
+    public function addDatepickerAndDaterange(string $complied, ?array $fields = null, ?array $data_map = null): string
+    {
+        $search = '{{-- add daterange here --}}';
+
+        $back = $data_map ? $data_map['{{backLowerNamespace}}'] : $this->parseName()['{{backLowerNamespace}}'];
+
+        $fields ??= $this->fields;
+
+        foreach ($fields as  $field) {
+            if ($this->isDatepickerField($field)) {
+                $replace = <<<HTML
+                @include('{$back}.partials._daterangepicker', [
+                    'datepicker_field_name'          =>  '{$this->getFieldName($field)}',
+                    'datepicker_time_picker'         =>  true, // false, true
+                    'datepicker_time_picker_24_hour' =>  true, // false, true
+                    'datepicker_single_date_picker'  =>  true, // false, true
+                    'datepicker_drops'               =>  'down', // up, down
+                    'datepicker_opens'               =>  'right', // left, center, right
+                    "datepicker_start_date"          =>  \$form->getModel()->{$this->getFieldName($field)}, // carbon instance
+                ])
+                HTML;
+                $complied =  str_replace($search, $search . PHP_EOL . PHP_EOL . $replace, $complied);
+            } else if ($this->isDaterangeField($field)) {
+                $replace = <<<HTML
+                @include('{$back}.partials._daterangepicker', [
+                    'datepicker_field_name'          =>  '{$this->getFieldName($field)}',
+                    'datepicker_time_picker'         =>  true, // false, true
+                    'datepicker_time_picker_24_hour' =>  true, // false, true
+                    'datepicker_single_date_picker'  =>  false, // false, true
+                    'datepicker_drops'               =>  'down', // up, down
+                    'datepicker_opens'               =>  'right', // left, center, right
+                    "datepicker_start_date"          =>  \$form->getModel()->{$this->getRangeStartFieldName($field)}, // carbon instance
+                    "datepicker_end_date"            =>  \$form->getModel()->{$this->getRangeEndFieldName($field)}, // carbon instance
+                ])
+                HTML;
+                $complied =  str_replace($search, $search . PHP_EOL . PHP_EOL . $replace, $complied);
+            }
+        }
+
+        return $complied;
+    }
+
+    /**
+     *
+     * @param array $field
+     * @return string
+     */
+    protected function getSeederFieldStub(array $field): string
+    {
+        $faker_type = $this->getSeederFieldFakerType($this->getFieldType($field, false), $this->getFieldLength($field));
+
+        if (empty($faker_type)) {
+            $faker_type = $this->getSeederFieldFakerType($this->getFieldName($field), $this->getFieldLength($field));
+        }
+        // default value
+        if (empty($faker_type)) {
+            $faker_type = '$faker->text()';
+        }
+
+        return $this->getSeederFieldStubTemplate($this->getFieldName($field), $faker_type);
+    }
+
+    /**
+     * @param string $name
+     * @param string $faker_type
+     * @return string
+     */
+    protected function getSeederFieldStubTemplate(string $name, string $faker_type): string
+    {
+        return PHP_EOL . "                '{$name}'  => " . "{$faker_type},";
+    }
+
+    /**
+     *
+     * @param array $field
+     * @return string
+     */
+    protected function getDaterangeFakerType(array $field): string
+    {
+        return <<<HTML
+            {$this->getSeederFieldStubTemplate($this->getRangeStartFieldName($field), 'now()')}{$this->getSeederFieldStubTemplate($this->getRangeEndFieldName($field), 'now()->addMonth()')}
+        HTML;
+    }
+
+    /**
+     * @param array $field
+     * @return string
+     */
+    protected function getFieldAttributes(array $field): string
+    {
+        $constraints = $this->getFieldConstraints($field);
+
+        $attr = '';
+
+        if ($default = Arr::get($field, 'default')) {
+            if (is_bool($default)) {
+
+                $attr .= sprintf("->default(%s)", $default ? 'true' : 'false');
+            } else {
+                $attr .= sprintf("->default('%s')", $default);
+            }
+        }
+
+
+        if (empty($constraints)) {
+            return $attr;
+        }
+
+        foreach ($constraints as $constraint) {
+            if (is_array($constraint)) {
+                if ($constraint['value'] === true) {
+                    $value = 'true';
+                } else if ($constraint['value'] === false) {
+                    $value = 'false';
+                } else if (is_string($constraint['value'])) {
+                    $value = "'{$constraint['value']}'";
+                } else {
+                    $value = $constraint['value'];
+                }
+                $attr .= sprintf("->%s(%s)", $constraint['name'], $value);
+            } else {
+                $attr .=  "->$constraint()";
+            }
+        }
+
+
+        return $attr;
+    }
+
+    /**
+     *
+     * @param string $key
+     * @param integer|null $length
+     * @return string
+     */
+    protected function getSeederFieldFakerType(string $key, ?int $length = null): string
+    {
+        switch ($key) {
+            case 'string':
+                $type = $length ? '$faker->text(' . $length . ')' : '$faker->text(50)';
+                break;
+            case 'json':
+                $type = $length ? 'json_encode($faker->text(' . $length . ')' : 'json_encode($faker->text(150)';
+                break;
+            case 'image':
+                $type = '$faker->imageUrl';
+                break;
+            case 'date':
+                $type = '$faker->datetime';
+                break;
+            case 'datetime':
+                $type = '$faker->datetime';
+                break;
+            case 'integer':
+                $type = $length ? '$faker->numberBetween(0, ' . $length . ')' : '$faker->randomNumber()';
+                break;
+            case 'mediumInteger':
+                $type = $length ? '$faker->numberBetween(0, ' . $length . ')' : '$faker->randomNumber()';
+                break;
+            case 'bigInteger':
+                $type = $length ? '$faker->numberBetween(0, ' . $length . ')' : '$faker->randomNumber()';
+                break;
+            case 'text':
+                $type = $length ? '$faker->realText(' . $length  . ')' : '$faker->realText(150)';
+                break;
+            case 'name':
+                $type = '$faker->name';
+                break;
+            case 'city':
+                $type = '$faker->city';
+                break;
+            case 'bool':
+                $type = '$faker->randomElement([true, false])';
+                break;
+            case 'boolean':
+                $type = '$faker->randomElement([true, false])';
+                break;
+            case 'phone_number':
+                $type = '$faker->e164PhoneNumber';
+                break;
+            case 'country':
+                $type = '$faker->country';
+                break;
+            case 'address':
+                $type = '$faker->address';
+                break;
+            case 'first_name':
+                $type = '$faker->firstName';
+                break;
+            case 'last_name':
+                $type = '$faker->lastName';
+                break;
+            case 'job':
+                $type = '$faker->jobTitle';
+                break;
+            case 'url':
+                $type = '$faker->url';
+                break;
+            case 'color':
+                $type = '$faker->hexColor';
+                break;
+            default:
+                $type = ''; // important de le laisser vide
+                break;
+        }
+
+        return $type;
+    }
+
+
 
 }

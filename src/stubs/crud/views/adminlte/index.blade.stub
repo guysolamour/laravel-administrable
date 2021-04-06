@@ -67,6 +67,7 @@
                                                         </th>
                                                         <th>#</th>
 {{fields}}
+                                                        {{-- add fields here --}}
                                                         <th>Actions</th>
 
                                                     </tr>
@@ -75,6 +76,7 @@
                                                     @foreach(${{pluralSlug}} as ${{singularSlug}})
                                                     <tr>
 {{values}}
+                                                        {{-- add values here --}}
                                                         <td>
                                                             <div class="btn-group" role="group">
                                                                 {{-- index show link --}}

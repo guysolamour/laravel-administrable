@@ -15,6 +15,7 @@ class AddCrudCommand extends BaseCrudCommand
      * @var array
      */
     protected $field_to_create = [];
+
     /**
      * @var boolean
      */
@@ -61,13 +62,14 @@ class AddCrudCommand extends BaseCrudCommand
         $this->fields_names_to_create = $this->getOptionsFilteredData($this->option('fields'));
 
         if (empty($this->fields_names_to_create)) {
-            $this->triggerError("The --field option  is required");
+            $this->triggerError("The --fields option  is required");
         }
 
         $this->checkIfFieldHasAlreadyBeenAddedd();
 
 
         $this->fields_to_create = $this->getFieldsToCreate();
+
 
         $this->addFieldToModel();
 
@@ -81,6 +83,150 @@ class AddCrudCommand extends BaseCrudCommand
 
     }
 
+    protected function getModelInstance()
+    {
+        $model =  sprintf("%s\%s\%s", $this->data_map['{{namespace}}'], $this->data_map['{{modelsFolder}}'], $this->data_map['{{singularClass}}']);
+
+        return new $model;
+    }
+
+    /**
+     *
+     * @param string $path
+     * @return boolean
+     */
+    protected function checkIfCastsAttributeExistsOnModel(string $path) :bool
+    {
+        return preg_match('#protected \$casts = \[#', $this->filesystem->get($path));
+    }
+
+    /**
+     *
+     * @param string $path
+     * @return boolean
+     */
+    protected function checkIfDaterangeTraitHasBeenImported(string $path) :bool
+    {
+        return preg_match('#\\DaterangeTrait#', $this->filesystem->get($path));
+    }
+
+    protected function appendFieldToFillable(string $model_stub, array $field, string $key) :string
+    {
+        // gerer le cas du fillable
+        $search = 'public $fillable = [';
+
+        if ($this->isDaterangeField($field)) {
+            $model_stub = str_replace($search, $search . "'{$this->getRangeStartFieldName($field)}'," . "'{$this->getRangeEndFieldName($field)}',", $model_stub);
+        } else {
+            $model_stub = str_replace($search, $search . "'{$this->getFieldName($field)}',", $model_stub);
+        }
+
+        return $model_stub;
+    }
+
+    protected function appendFieldInDaterangesPickersArray(string $model_stub, array $field, string $key) :string
+    {
+        $search = "protected $key = [";
+
+        $replace = "          '{$this->getFieldName($field)}',";
+
+        return  str_replace($search, $search . PHP_EOL . '  ' . $replace, $model_stub);
+    }
+
+    protected function addFieldInDaterangesPickersArray(string $model_stub, array $field, string $key) :string
+    {
+        $replace = <<<TEXT
+                        // The date {$key} configuration array for this model.
+                            protected $key = [
+
+                        TEXT;
+
+        $replace .= <<<TEXT
+                                '{$this->getFieldName($field)}',
+                        TEXT;
+
+        $replace .= <<<TEXT
+
+                            ];
+                        TEXT;
+
+        $search = "// add relation methods below";
+
+        return  str_replace($search, $replace . PHP_EOL . PHP_EOL . '  ' . $search, $model_stub);
+    }
+
+
+    protected function importDaterangeTraitAndAttributes(string $model_stub, array $field, string $path) :string
+    {
+        // dd($this->checkIfDaterangeTraitHasBeenImported($path));
+        if ($this->isDatepickerField($field) || $this->isDaterangeField($field)) {
+            if ($this->checkIfDaterangeTraitHasBeenImported($path)) {
+                if ($this->isDatepickerField($field)) {
+                    $model_stub = $this->appendFieldInDaterangesPickersArray($model_stub, $field, '$datepickers');
+                } else {
+                    $model_stub = $this->appendFieldInDaterangesPickersArray($model_stub, $field, '$dateranges');
+                }
+            } else {
+                // add trait
+                $search = '// The attributes that are mass assignable.';
+                $model_stub = str_replace($search, 'use DaterangeTrait;' . PHP_EOL . PHP_EOL . '    ' . $search, $model_stub);
+
+                // add namespace on the top
+                $search = "use {$this->data_map['{{namespace}}']}\Traits\ModelTrait;";
+                $replace = "use {$this->data_map['{{namespace}}']}\Traits\DaterangeTrait;";
+                $model_stub = str_replace($search, $search . PHP_EOL .  $replace, $model_stub);
+
+                // add attributes
+                if ($this->isDatepickerField($field)) {
+                    $model_stub = $this->addFieldInDaterangesPickersArray($model_stub, $field, '$datepickers');
+                } else {
+                    $model_stub = $this->addFieldInDaterangesPickersArray($model_stub, $field, '$dateranges');
+                }
+            }
+        }
+
+        return $model_stub;
+    }
+
+    protected function addCastableField(string $model_stub, array $field, string $path) :string
+    {
+        if ($cast = $this->getFieldCast($field)) {
+            if ($this->checkIfCastsAttributeExistsOnModel($path)) {
+                $search = 'protected $casts = [';
+
+                if ($this->isDaterangeField($field)) {
+                    $replace = "'{$this->getRangeStartFieldName($field)}' => '{$cast}',
+        '{$this->getRangeEndFieldName($field)}' => '{$cast}', ";
+                } else {
+                    $replace = "'{$this->getFieldName($field)}' => '{$cast}',";
+                }
+                // gerer le cas du boolean plus tars
+                $model_stub = str_replace($search, $search . PHP_EOL . "        {$replace}", $model_stub);
+            } else {
+
+                $search = '// add relation methods below';
+                $template = <<<TEXT
+                        // The attributes that should be cast to native types.
+                            protected \$casts = [
+                        TEXT;
+                if ($this->isDatepickerField($field)) {
+                    $template .= "
+            '{$this->getFieldName($field)}' => '{$cast}',";
+                } else if ($this->isDaterangeField($field)) {
+                    $template .= "
+            '{$this->getRangeStartFieldName($field)}' => '{$cast}',
+            '{$this->getRangeEndFieldName($field)}' => '{$cast}',";
+                }
+                $template .= "
+    ];";
+
+                $model_stub = str_replace($search, $template . PHP_EOL . '    ' .  $search, $model_stub);
+            }
+
+            return $model_stub;
+        }
+    }
+
     protected function addFieldToModel()
     {
 
@@ -90,19 +236,23 @@ class AddCrudCommand extends BaseCrudCommand
 
             if ($this->isRelationField($this->getNonRelationType($field))){
                 $this->triggerError(
-                    sprintf("The [%s] model can not have a relation [%s] field",$this->model, $this->getFieldName($field))
+                    sprintf("The [%s] model can not have a relation [%s] field", $this->model, $this->getFieldName($field))
                 );
             }
-            // add field in fillable property
-            $this->replaceAndWriteFile(
-                $this->filesystem->get($path),
-                $search = "public \$fillable = [",
-                $search . "'$field[name]',",
-                $path
-            );
+
+            $model_stub = $this->filesystem->get($path);
+
+            // on ajoute le cast
+            $model_stub = $this->addCastableField($model_stub, $field, $path);
+
+            $model_stub = $this->importDaterangeTraitAndAttributes($model_stub, $field, $path);
+
+            $model_stub = $this->appendFieldToFillable($model_stub, $field, $path);
+
+            $this->writeFile($model_stub, $path);
         }
 
-        $this->addRelations($this->filesystem->get($path), $path, $this->fields_to_create);
+        $this->addRelations($model_stub, $path, $this->fields_to_create);
 
         $this->triggerSuccess('Fields added to model' . $path);
     }
@@ -116,7 +266,7 @@ class AddCrudCommand extends BaseCrudCommand
             '{{migrationFileName}}' => ucfirst($this->getMigrationFileName() . 'Table')
         ]);
         $migration = $this->compliedFile($migration_stub, true, $data_map);
-        $path = $this->generateMigrationFields($migration, $data_map, $this->fields_to_create, $this->getMigrationFileName(), true);
+        $path = $this->generateMigrationFields($migration, $data_map, $this->fields_to_create, $data_map['{{migrationFileName}}'], true);
 
         $this->triggerSuccess('Fields added to migration' . $path);
 
@@ -139,62 +289,89 @@ class AddCrudCommand extends BaseCrudCommand
         }
     }
 
+    /**
+     * @param string $path
+     * @return void
+     */
+    protected function appendFieldToIndexView(string $path) :void
+    {
+        $index_view_path = $path . 'index.blade.php';
+
+        if (!$this->filesystem->exists($index_view_path)){
+            return;
+        }
+
+        $index_view = $this->filesystem->get($index_view_path);
+        [$fields, $values] = $this->getIndexViewFields($this->fields_to_create, $this->data_map);
+
+        $search = '{{-- add fields here --}}';
+        $index_view = str_replace($search, $fields . PHP_EOL . $search, $index_view);
+
+        $search = '{{-- add values here --}}';
+        $index_view = str_replace($search, $values . PHP_EOL . $search, $index_view);
+
+        if ($this->isTheadminTheme()) {
+            $values = str_replace('<td>', '<p>', $values);
+            $values = str_replace('</td>', '</p>', $values);
+            $search = '{{-- add quick values here --}}';
+            $index_view = str_replace($search, $values . PHP_EOL . $search, $index_view);
+        }
+
+        $this->writeFile($index_view, $index_view_path);
+
+        $this->triggerSuccess('Fields added to view' . $index_view_path);
+    }
+    /**
+     * @param string $path
+     * @return void
+     */
+    protected function appendFieldToShowView(string $path) :void
+    {
+        $show_view_path = $path . 'show.blade.php';
+
+        if (!$this->filesystem->exists($show_view_path)){
+            return;
+        }
+
+        $show_view = $this->filesystem->get($show_view_path);
+
+        $fields = $this->getShowViewFields($this->fields_to_create, $this->data_map, false);
+
+        $search = '{{-- add fields here --}}';
+        $show_view = str_replace($search, $fields . PHP_EOL . $search, $show_view);
+
+
+        $this->writeFile($show_view, $show_view_path);
+        $this->triggerSuccess('Fields added to view' . $show_view_path);
+    }
+
+    protected function appendDatepickerToFormView(string $path)
+    {
+        $show_view_path = $path . '_form.blade.php';
+
+        if (!$this->filesystem->exists($show_view_path)){
+            return;
+        }
+
+        $show_view = $this->addDatepickerAndDaterange($this->filesystem->get($show_view_path), $this->fields_to_create, $this->data_map);
+    
+        $this->writeFile($show_view, $show_view_path);
+        $this->triggerSuccess('Fields added to view' . $show_view_path);
+    }
+
     protected function addFieldToViews()
     {
         $path = resource_path("views/{$this->data_map['{{backLowerNamespace}}']}/{$this->data_map['{{pluralSlug}}']}/");
 
-        if ($this->filesystem->exists($index_view_path = $path . 'index.blade.php')) {
-            $index_view = $this->filesystem->get($index_view_path);
-            [$fields, $values] = $this->getIndexViewFields($this->fields_to_create, $this->data_map);
+        // index view
+        $this->appendFieldToIndexView($path);
 
-            $search = '{{-- add fields here --}}';
-            $index_view = str_replace($search, $fields. PHP_EOL . $search, $index_view);
-
-
-            $search = '{{-- add values here --}}';
-            $index_view = str_replace($search, $values . PHP_EOL . $search, $index_view);
-
-            if ($this->isTheadminTheme()){
-                $values = str_replace('<td>', '<p>', $values);
-                $values = str_replace('</td>', '</p>', $values);
-                $search = '{{-- add quick values here --}}';
-                $index_view = str_replace($search, $values . PHP_EOL . $search, $index_view);
-            }
-
-
-            $this->writeFile($index_view, $index_view_path);
-
-            $this->triggerSuccess('Fields added to view' . $index_view_path);
-        }
-        if ($this->filesystem->exists($show_view_path = $path . 'show.blade.php')) {
-            $show_view = $this->filesystem->get($show_view_path);
-
-            $fields = $this->getShowViewFields($this->fields_to_create, $this->data_map, false);
-
-            $search = '{{-- add fields here --}}';
-            $show_view = str_replace($search, $fields. PHP_EOL . $search, $show_view);
-
-            $this->writeFile($show_view, $show_view_path);
-            $this->triggerSuccess('Fields added to view' . $show_view_path);
-        }
-
-        $configuration_edit_view_path = resource_path("views/{$this->data_map['{{backLowerNamespace}}']}/{$this->data_map['{{singularSlug}}']}/");
-
-        if (
-            $this->isConfigurationModel() &&
-            $this->filesystem->exists($edit_view_path = $configuration_edit_view_path . 'edit.blade.php')){
-
-            $configuration_edit_view = $this->filesystem->get($edit_view_path);
-
-            $fields = $this->getEditViewFields($this->fields_to_create, $this->data_map);
-
-            $search = '{{-- add fields here --}}';
-            $configuration_edit_view = str_replace($search, $fields . PHP_EOL . $search, $configuration_edit_view);
-
-            $this->writeFile($configuration_edit_view, $edit_view_path);
-            $this->triggerSuccess('Fields added to view' . $edit_view_path);
-        }
-
+        // show view
+        $this->appendFieldToShowView($path);
+     
+        // update form if datepicker or daterange field
+        $this->appendDatepickerToFormView($path);
+        
     }
 
     protected function addFieldToSeeder()
@@ -203,6 +380,7 @@ class AddCrudCommand extends BaseCrudCommand
 
         if ($this->filesystem->exists($seeder_path)){
             $seeder = $this->generateSeederFields($this->filesystem->get($seeder_path), $this->fields_to_create);
+
             $this->writeFile(
                 $seeder,
                 $seeder_path
@@ -258,12 +436,9 @@ class AddCrudCommand extends BaseCrudCommand
 
     protected function isConfigurationModel(?string $model = null) :bool
     {
-        if (is_null($model)){
-            $model = $this->data_map['{{singularSlug}}'];
-        }
+        $model ??= $this->data_map['{{singularSlug}}'];
 
         return Str::lower($model) == 'configuration';
-
     }
 
 

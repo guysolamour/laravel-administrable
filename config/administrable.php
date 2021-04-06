@@ -13,7 +13,7 @@ return [
      * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
      * The theme should not be changed once the installation has been done
      */
-    'theme' => 'themekit',
+    'theme' => 'adminlte',
 
     /**
      * The guard used for the installation. By default the value is admin.
@@ -76,6 +76,18 @@ return [
             '.htaccess',
         ],
     ],
+    /**
+     * Lorsqu'on utiliser un daterage deux champs seront crér avec le nom du champ
+     * et chacun aura un suffix pour le début et fin. Ces suffixes peuvent etre changés ici
+     */
+    'daterange' => [
+        'start' => 'start_at',
+        'end'   => 'end_at',
+    ],
+    /**
+     * Le format utilisé pour afficher les dates dans les vues
+     */
+    'format_date' => 'd/m/Y H:i',
 
     'storage_dump' => [
         /**

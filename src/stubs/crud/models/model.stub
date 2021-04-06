@@ -10,6 +10,8 @@ class {{singularClass}} extends BaseModel
 
     {{fillable}}
 
+    {{cast}}
+
     // add relation methods below
 
 
@@ -18,4 +20,7 @@ class {{singularClass}} extends BaseModel
     // add sluggable methods below
 
 
+    {{daterange}}
+
+    {{datepicker}}
 }

@@ -112,11 +112,25 @@ if (!function_exists('format_price')) {
     /**
      * @param string $price
      * @param string $suffix
-     * @return void
+     * @return string
      */
     function format_price($price, string $suffix = "FCFA")
     {
         return number_format($price, 0, ',', ' ') . " " . $suffix;
+    }
+}
+
+if (!function_exists('format_date')) {
+    /**
+     * @param \Carbon\Carbon $date
+     * @param null|string $format
+     * @return string
+     */
+    function format_date(\Carbon\Carbon $date, ?string $format = null)
+    {
+        $format ??= config('administrable.format_date', 'd/m/Y H:i');
+
+        return $date->format($format);
     }
 }
 

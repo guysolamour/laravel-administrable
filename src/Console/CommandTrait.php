@@ -278,9 +278,65 @@ trait CommandTrait
         return false;
     }
 
+    /**
+     *
+     * @param array $field
+     * @return string|null
+     */
+    protected function getFieldTrans(array $field): ?string
+    {
+        return Arr::get($field, 'trans');
+    }
+
+    /**
+     * @param array $field
+     * @return string|null
+     */
+    protected function getDateRangeStartTrans(array $field) :?string
+    {
+        $trans = $this->getFieldTrans($field);
+
+        if (!Str::contains($trans, '|')){
+            return $trans;
+        }
+
+        $parts = array_map(fn($part) => trim($part), array_filter(explode('|', $trans)));
+
+        return Arr::first($parts);
+    }
+
+    /**
+     * @param array $field
+     * @return string|null
+     */
+    protected function getDateRangeEndTrans(array $field) :?string
+    {
+        $trans = $this->getFieldTrans($field);
+
+        if (!Str::contains($trans, '|')){
+            return $trans;
+        }
+
+        $parts = array_map(fn ($part) => trim($part), array_filter(explode('|', $trans)));
+
+        return Arr::last($parts);
+    }
+
+
+    /**
+     *
+     * @param array $field
+     * @return string|null
+     */
     protected function getFieldName(array $field): ?string
     {
         return Str::lower(Arr::get($field, 'name'));
+    }
+
+
+    protected function getFieldLength(array $field): ?int
+    {
+        return Arr::get($field, 'length');
     }
 
     protected function getFieldRules(array $field): ?string
@@ -288,10 +344,19 @@ trait CommandTrait
         return Arr::get($field, 'rules');
     }
 
-
-    protected function getFieldType($type): string
+    /**
+     *
+     * @param array|string $type
+     * @param boolean $transform
+     * @return string
+     */
+    protected function getFieldType($type, bool $transform = true): string
     {
         $type = is_array($type) ? $type['type'] : $type;
+
+        if (!$transform){
+            return $type;
+        }
 
         if ($type === 'string' || $type === 'text' || $type === 'mediumText' || $type === 'json' || $type === 'longText') {
             return 'text';
@@ -299,6 +364,8 @@ trait CommandTrait
             return 'int';
         } else if ($type === 'boolean' || $type === 'enum') {
             return 'bool';
+        } else if ($type === 'datetime') {
+            return 'date';
         } else if (is_array($type)) {
             return 'relation';
         }
@@ -310,13 +377,17 @@ trait CommandTrait
     {
         return 'bool' === $this->getFieldType($this->getNonRelationType($field));
     }
+    protected function isDatetimeField(array $field): bool
+    {
+        return 'date' === $this->getFieldType($this->getNonRelationType($field));
+    }
 
     protected function getFieldReferences(array $field): ?string
     {
         return Str::lower(Arr::get($field['type'], 'references'));
     }
 
-    public function addFielsCustomProperty(array $field, string $key, $value, string $name, bool $force = false)
+    public function addFieldsCustomProperty(array $field, string $key, $value, string $name, bool $force = false)
     {
 
         if ($force || !Arr::exists($field, $name)) {
@@ -644,13 +715,6 @@ trait CommandTrait
     }
 
 
-    // protected function getFileContent(string $path) :string
-    // {
-    //     if (!$this->filesystem->exists($path)) {
-    //         return $this->filesystem->get($path);
-    //     }
-
-    // }
 
     protected function triggerError(string $error)
     {
@@ -673,6 +737,25 @@ trait CommandTrait
         $path = app_path($data_map['{{modelsFolder}}'] . '/' . $data_map['{{singularClass}}']) . '.php';
 
         return $this->filesystem->exists($path);
+    }
+
+
+    /**
+     * @param array $field
+     * @return boolean
+     */
+    protected function isDaterangeField($field): bool
+    {
+        return Arr::get($field, 'daterange', false);
+    }
+
+    /**
+     * @param array $field
+     * @return boolean
+     */
+    protected function isDatepickerField($field): bool
+    {
+        return Arr::get($field, 'datepicker', false);
     }
 
 
@@ -724,7 +807,9 @@ trait CommandTrait
             }
         }
     }
-
+    /**
+     * Retrait des champs de config comme breadcrumb, edit_slug, trans ...
+     */
     protected function sanitizeFields()
     {
         foreach ($this->fields as $key =>  $field) {
@@ -758,418 +843,449 @@ trait CommandTrait
 
     protected function getCleanFields($config_fields)
     {
-        if (!empty($config_fields)) {
-            $this->fields = $config_fields;
-
-
-            if (Arr::exists($this->fields, 'actions')) {
-                $actions = Arr::get($this->fields, 'actions');
-
-                if (!is_array($actions)) {
-                    if (is_string($actions)) {
-                        if (Str::contains($actions, '|')) {
-                            $delimiter = '|';
-                        } else if (Str::contains($actions, ',')) {
-                            $delimiter = ',';
-                        } else {
-                            $delimiter = ',';
-                        }
-
-                        $actions = explode($delimiter, $actions);
-                    } else {
-                        $this->triggerError("The actions must be an array or string separated with [|] or [,]. Only one can be used.");
-                    }
-                }
-
-
-                $this->actions = array_map(function ($action) {
-                    if (!in_array($action, $this->ACTIONS)) {
-                        $this->triggerError(
-                            sprintf("[%s] action is not allowed. Allowed actions are [%s].", $action, join(',', $this->ACTIONS))
-                        );
-                    }
-
-                    return trim($action);
-                }, array_filter($actions));
-
-                // We remove the actions from the list because it's already exists on the instance
-                $this->fields  =  Arr::except($this->fields, 'actions');
-            } else {
-                $this->actions = $this->ACTIONS;
-            }
-
-            // on gere le cas du edit slug ici avnt de faire la configuration des options globaux
-            // on stocke la configuration globale si elle a été définie
-            // celui ci pourra ecraser sur un modele en particulier
-            $this->setGlobalConfigOption(['clone', 'edit_slug', 'fillable']);
-
-            // tester le truc de  si tableau et exception
-            $this->setConfigOption();
-
-            // Ajout du champ slug dans le formulaire
-            // Il faut avoir un champ slug avant d'utiliser le edit_slug
-
-            if ($this->edit_slug && !$this->slug) {
-                $this->triggerError(
-                    sprintf(
-                        'You have to use edit_slug when the model is sluggable'
-                    )
-                );
-            }
-
-            $this->setDefaultTypeAndRule();
-
-            $this->sanitizeFields();
-
-
-
-            foreach ($this->fields as $key => $field) {
-                if (!is_array($field)) {
-                    continue;
-                }
-                // Adding the name key using the key if not provided
-                $field = $this->addFielsCustomProperty($field, $key, $key, 'name');
-
-
-                // allow req to be used for the required rule
-                // be able to test if two rules are used in the same rule and thwow an exception
-                // If the field is just req because it can also be in required dou the && of the condition
-                $field_rule = $this->getFieldRules($field);
-                if (!Str::contains($field_rule, 'required') && Str::contains($field_rule, 'req')) {
-                    $this->fields[$key]['rules'] = Str::replaceFirst('req', 'required', $field_rule);
-                }
-
-                // Add length if passed in type
-                $type = $field['type'];
-                $delimiter = ':';
-
-
-                if (!$this->isRelationField($field['type'])) {
-                    if (Str::contains($type, $delimiter)) {
-
-                        [$type, $length] = explode($delimiter, $field['type']);
-
-                        if (!($this->isTextField($type) || $this->isIntegerField($type))) {
-                            $this->triggerError(
-                                sprintf(
-                                    'The [%s] delimiter must only be used to specify text or integer field length. Occured in field [%s]',
-                                    $delimiter,
-                                    $field['name']
-                                )
-                            );
-                        }
-
-                        $field = $this->addFielsCustomProperty($field, $key, (int) $length, 'length');
-                        $field = $this->addFielsCustomProperty($field, $key, $type, 'type', true);
-                    }
-                }
-
-                if ($this->isPolymorphicField($field)) {
-
-
-                    $poly_model_id = $this->getPolymorphicModelId($field);
-                    $poly_model_type = $this->getPolymorphicModelType($field);
-
-                    // add ---able_id et ....able_type fields
-                    if (
-                        !empty($poly_model_id) && !empty($poly_model_type)
-                    ) {
-
-                        if (!Str::endsWith($poly_model_id, 'able_id')) {
-                            $this->triggerError(
-                                sprintf(
-                                    'The [%s] model_id must end with [able_id]',
-                                    $poly_model_id
-                                )
-                            );
-                        }
-
-                        if (!Str::endsWith($poly_model_type, 'able_type')) {
-                            $this->triggerError(
-                                sprintf(
-                                    'The [%s] model_type must end with [able_type]',
-                                    $poly_model_type
-                                )
-                            );
-                        }
-                    } else {
-                        $this->fields[$key]['model_id'] =  $this->getFieldName($field) . 'able_id';
-                        $this->fields[$key]['model_type'] =  $this->getFieldName($field) . 'able_type';
-                    }
-                }
-
-
-                if ($this->isRelationField($field['type'])) {
-
-                    $type = $this->getRelationType($field);
-                    if (!in_array($type, $this->RELATION_TYPES)) {
-                        $this->triggerError(
-                            sprintf(
-                                'The [%s] relation type is not allowed. Allowed types are [%s]',
-                                $type,
-                                join(',', $this->RELATION_TYPES)
-                            )
-                        );
-                    }
-
-                    if ($constraint = $this->getFieldOnDelete($field)) {
-                        if (!in_array($constraint, $this->RELATION_CONSTRAINTS)) {
-                            $this->triggerError(
-                                sprintf(
-                                    'The [%s] relation constraint is not allowed. Allowed constraint are [%s]',
-                                    $constraint,
-                                    join(',', $this->RELATION_CONSTRAINTS)
-                                )
-                            );
-                        }
-                    }
-
-                    if (!in_array($this->getRelationName($field), $this->RELATION_NAMES[$type])) {
-                        $this->triggerError(
-                            sprintf(
-                                'The [%s] relation name is not allowed. Allowed names for the  [%s] type are [%s]',
-                                $this->getRelationName($field),
-                                $type,
-                                join(',', $this->RELATION_NAMES[$type])
-                            )
-                        );
-                    }
-
-                    $related = $this->getRelatedModel($field);
-
-
-
-                    if (empty($related)) {
-                        $related = $this->guestRelatedModelName($field);
-
-                        $this->fields[$key]['type']['related'] = $related;
-                    } else {
-                        // Add the full namespace to the related model
-                        if (Str::contains($related, '\\')) {
-                            // Put the first letter in uppercase of each word after a \ and combine them later
-                            $related = join('\\', array_map(fn ($item) => ucfirst($item), explode('\\', $related)));
-                        } else {
-                            $related = sprintf("%s\%s\%s", $this->getNamespace(), $this->getModelsFolder(), ucfirst($related));
-                        }
-
-                        $this->fields[$key]['type']['related'] = $related;
-                    }
-
-                    // remove the | end in case the user forgot it
-                    $this->fields[$key]['rules'] = rtrim($this->fields[$key]['rules'], '|');
-
-
-                    $this->checkIfRelatedModelExists($related);
-
-                    if (empty($this->getRelatedModelProperty($this->fields[$key]))) {
-                        $this->triggerError(
-                            sprintf(
-                                'The [%s] relation field must have a property key who exists on the related table.',
-                                $this->getFieldName($this->fields[$key]),
-                            )
-                        );
-                    }
-
-                    if (!$this->checkIfRelatedModelPropertyExists($this->fields[$key])) {
-                        $this->triggerError(
-                            sprintf(
-                                'The [%s] related property does not exists on [%s] model.',
-                                $this->getRelatedModelProperty($this->fields[$key]),
-                                $related,
-                            )
-                        );
-                    }
-
-
-                    // Add exists rule
-                    if (!$this->isPolymorphicField($this->fields[$key])) {
-
-                        if (!Str::contains($field['rules'], 'exists')) {
-                            if (empty($field['rules'])) {
-                                $this->fields[$key]['rules'] = "exists:$related,id";
-                            } else {
-                                $this->fields[$key]['rules'] .= "|exists:$related,id";
-                            }
-                        } else {
-                            $search = (string) Str::of($field['rules'])->after('exists:')->before(',');
-                            if (!Str::contains($search, '\\')) {
-                                $this->fields[$key]['rules'] = Str::replaceFirst($search, $related, $field['rules']);
-                            }
-                        }
-
-                        // Add the onDelete if provided in the default yaml file it will be cascade
-                        if ($onDelete = $this->getFieldOnDelete($field)) {
-                            // validation of the onDelete field
-                            if (!in_array($onDelete, $this->ONDELETERULES)) {
-                                $this->triggerError(
-                                    sprintf(
-                                        'The [%s] onDelete constraint is not allowed. Allowed constraints are [%s]',
-                                        $onDelete,
-                                        join(',', $this->ONDELETERULES)
-                                    )
-                                );
-                            }
-
-                            if ($onDelete === $this->ONDELETERULES['setnull']) {
-                                if (empty($this->fields[$key]['rules'])) {
-                                    if (!Str::contains($this->fields[$key]['rules'], 'nullable')) {
-                                        $this->fields[$key]['rules'] = 'nullable|' . $this->fields[$key]['rules'];
-                                    }
-                                } else {
-                                    // a required field cannot be nullable
-                                    if (Str::contains($field['rules'], 'required')) {
-                                        $this->triggerError(
-                                            sprintf(
-                                                'The [%s] field can not be required and nullable. Please remove set null  constraint on the relation field or remove required rule.',
-                                                $this->getFieldName($field),
-                                            )
-                                        );
-                                    }
-                                    // we cannot do. = because in redefining the variable
-                                    if (!Str::contains($this->fields[$key]['rules'], 'nullable')) {
-                                        $this->fields[$key]['rules'] = 'nullable|' . $this->fields[$key]['rules'];
-                                    }
-                                }
-                            }
-
-                            // if the value is set null is that the field is not nullable then we add it
-                        } else {
-                            $this->fields[$key]['type']['onDelete'] = 'cascade';
-                        }
-                        if (!$this->getFieldReferences($field)) {
-                            $this->fields[$key]['type']['references'] = 'id';
-                        }
-                    }
-                }
-
-                if (!$this->isRelationField($field['type'])) {
-                    if (!in_array($field['type'], $this->TYPES)) {
-                        $this->triggerError(
-                            sprintf("The [%s] field type is not available. Available types are [%s]", $field['type'], join(',', $this->TYPES))
-                        );
-                    }
-                }
-
-
-                // apply the constraints on the spot
-                // standardize the constraints
-                if ($constraints = Arr::get($field, 'constraints')) {
-                    if (is_string($constraints)) {
-                        $this->fields[$key]['constraints'] =  array_map(fn ($item) => Str::lower(trim($item)), array_filter(explode(',', $constraints)));
-                    } else if (is_array($constraints)) {
-                        $items = array_map(function ($item) {
-                            if (is_string($item)) {
-                                $item =  Str::lower(trim($item));
-                            }
-
-                            // The unique will be treated later not here
-                            if (Str::contains($item, ':') && !Str::contains($item, 'unique')) {
-                                [$constraint_name, $constraint_value] = array_filter(explode(':', $item));
-
-                                // convert elements
-                                if ('true' === $constraint_value) {
-                                    $constraint_value = true;
-                                } else if ('false' === $constraint_value) {
-                                    $constraint_value = false;
-                                } else if (is_numeric($constraint_value)) {
-                                    $constraint_value = intval($constraint_value); // permet de le convertie en chiffre
-                                }
-
-                                // handle the case of the unique
-                                $item = ['name' => $constraint_name, 'value' => $constraint_value];
-                            }
-
-                            return $item;
-                        }, $constraints);
-
-                        $this->fields[$key]['constraints'] =  $items;
-                    }
-                }
-
-
-                // the nullable must be defined only once in the nullable: true | rule: nullable
-                if (
-                    (Arr::get($field, 'nullable') &&  Str::contains($field['rules'], 'nullable')) ||
-                    (Arr::get($field, 'nullable') && in_array('nullable', Arr::get($this->fields[$key], 'constraints', []))) ||
-                    (Str::contains($field['rules'], 'nullable') && in_array('nullable', Arr::get($this->fields[$key], 'constraints', [])))
-                ) {
-                    $this->triggerError(
-                        sprintf(
-                            'The  field [%s] nullable constraint must be defined one time',
-                            $this->getFieldName($field)
-                        )
-                    );
-                }
-
-                /**
-                 * Addition of nullable constraint
-                 */
-                if (in_array('nullable', Arr::get($this->fields[$key], 'constraints', []))) {
-                    if (!Arr::exists($field, 'nullable')) {
-                        $this->fields[$key]['nullable'] = true;
-                    }
-
-                    if (empty($this->fields[$key]['rules'])) {
-                        $this->fields[$key]['rules'] = 'nullable';
-                    } else {
-                        $this->fields[$key]['rules'] = $this->fields[$key]['rules'] . '|nullable';
-                    }
-                } else if (Arr::exists($this->fields[$key], 'nullable') && $this->fields[$key]['nullable'] == true) {
-                    if (!Str::contains($field['rules'], 'nullable')) {
-                        if (empty($this->fields[$key]['rules'])) {
-                            $this->fields[$key]['rules'] = 'nullable';
-                        } else {
-                            $this->fields[$key]['rules'] = $this->fields[$key]['rules'] . '|nullable';
-                        }
-                        $this->fields[$key]['constraints'][] = 'nullable';
-                    }
-                } else if (Str::contains($this->fields[$key]['rules'], 'nullable')) {
-                    if (!Arr::exists($field, 'nullable')) {
-                        // $field = $this->addFielsCustomProperty($field, $key, true, 'nullable', true);
-                        $this->fields[$key]['nullable'] = true;
-                        $this->fields[$key]['constraints'][] = 'nullable';
-                    }
-                }
-
-
-
-                // Slug
-                if ($this->slug && Arr::exists($field, 'slug')) {
-                    $this->triggerError(
-                        sprintf('The slug must be used on only one field and once. Ocurred on field [%s]. You have to remove the global slug with the [%s] value', $this->getFieldName($field), $this->slug)
-                    );
-                }
-
-                if (!$this->slug && Arr::exists($field, 'slug') && $field['slug'] == true) {
-                    $this->slug =  $this->getFieldName($field);
-                }
-
-                // Breadcrumb
-                if ($this->breadcrumb && Arr::exists($field, 'breadcrumb')) {
-                    $this->triggerError(
-                        sprintf('The breadcrumb must be used on only one field and once. Ocurred on field [%s]. You have to remove the global breadcrumb with the [%s] value', $this->getFieldName($field), $this->breadcrumb)
-                    );
-                }
-
-                if (!$this->breadcrumb && Arr::exists($field, 'breadcrumb') && $field['breadcrumb'] == true) {
-                    $this->breadcrumb =  $this->getFieldName($field);
-                }
-
-                // validate breadcrumb
-                if (!Arr::get($this->fields, $this->breadcrumb)) {
-                    $this->triggerError(
-                        sprintf("The field [%s] used for the breadcrumb is not present in [%s] model's fields. ", $this->breadcrumb, $this->model)
-                    );
-                }
-            }
-
-            return $this->fields;
-        } else {
+        if (empty($config_fields)){
             $this->triggerError(
                 sprintf("The model [%s] is not defined in the [%s] file.", $this->model, base_path('administrable.yaml'))
             );
         }
 
+        $this->fields = $config_fields;
+
+        // on format les actions
+        if (Arr::exists($this->fields, 'actions')) {
+            $actions = Arr::get($this->fields, 'actions');
+
+            if (!is_array($actions)) {
+                if (is_string($actions)) {
+                    if (Str::contains($actions, '|')) {
+                        $delimiter = '|';
+                    } else if (Str::contains($actions, ',')) {
+                        $delimiter = ',';
+                    } else {
+                        $delimiter = ',';
+                    }
+
+                    $actions = explode($delimiter, $actions);
+                } else {
+                    $this->triggerError("The actions must be an array or string separated with [|] or [,]. Only one can be used.");
+                }
+            }
+
+            // on renregistre les actions dans cette propriété afin d'y avoir access dans
+            // le make crud command
+            $this->actions = array_map(function ($action) {
+                if (!in_array($action, $this->ACTIONS)) {
+                    $this->triggerError(
+                        sprintf("[%s] action is not allowed. Allowed actions are [%s].", $action, join(',', $this->ACTIONS))
+                    );
+                }
+
+                return trim($action);
+            }, array_filter($actions));
+
+            // We remove the actions from the list because it's already exists on the instance
+            $this->fields  =  Arr::except($this->fields, 'actions');
+        } else {
+            $this->actions = $this->ACTIONS;
+        }
+
+        // on gere le cas du edit slug ici avnt de faire la configuration des options globaux
+        // on stocke la configuration globale si elle a été définie
+        // celui ci pourra ecraser sur un modele en particulier
+        $this->setGlobalConfigOption(['clone', 'edit_slug', 'fillable']);
+
+        // tester le truc de  si tableau et exception
+        $this->setConfigOption();
+
+        // Ajout du champ slug dans le formulaire
+        // Il faut avoir un champ slug avant d'utiliser le edit_slug
+
+        if ($this->edit_slug && !$this->slug) {
+            $this->triggerError(
+                sprintf(
+                    'You have to use edit_slug when the model is sluggable'
+                )
+            );
+        }
+
+        $this->setDefaultTypeAndRule();
+
+        $this->sanitizeFields();
+
+
+        foreach ($this->fields as $key => $field) {
+            if (!is_array($field)) {
+                continue;
+            }
+            // Adding the name key using the key if not provided
+            $field = $this->addFieldsCustomProperty($field, $key, $key, 'name');
+
+
+            // allow req to be used for the required rule
+            // be able to test if two rules are used in the same rule and thwow an exception
+            // If the field is just req because it can also be in required dou the && of the condition
+            $field_rule = $this->getFieldRules($field);
+            if (!Str::contains($field_rule, 'required') && Str::contains($field_rule, 'req')) {
+                $this->fields[$key]['rules'] = Str::replaceFirst('req', 'required', $field_rule);
+            }
+
+            // seul les champs de type datetime peuvent être daterange ou  datepicker
+            
+            if (
+                ($this->isDaterangeField($field) || $this->isDatepickerField($field)) &&
+                !$this->isDatetimeField($field))
+            {
+                $this->triggerError(
+                    sprintf(
+                        'only datetime fields can have [datepicker] or [daterange] attributes. The [%s] field is not a datetime field',
+                        $this->getFieldName($field)
+                    )
+                );
+            }
+
+            // Si le champ est de type boolean ou datetime on ajoute automatiquement le casting
+            if (!Arr::get($field, 'cast')){
+                if ($this->isDatetimeField($field)){
+                    $this->fields[$key]['cast'] = 'datetime';
+                }
+                if ($this->isBooleanField($field)){
+                    $this->fields[$key]['cast'] = 'boolean';
+                }
+            }
+
+
+            // datepicker
+            // un champ ne peut avoir datepicker et daterange
+            if (Arr::get($field, 'datepicker') && Arr::get($field, 'daterange')){
+                $this->triggerError(
+                    sprintf(
+                        'The [%s] field can not have [datepicker] or [daterange] attributes.',
+                        $field['name']
+                    )
+                );
+            }
+
+            // Add length if passed in type
+            $type = $field['type'];
+            $delimiter = ':';
+            if (!$this->isRelationField($field['type'])) {
+                if (Str::contains($type, $delimiter)) {
+
+                    [$type, $length] = explode($delimiter, $field['type']);
+
+                    if (!($this->isTextField($type) || $this->isIntegerField($type))) {
+                        $this->triggerError(
+                            sprintf(
+                                'The [%s] delimiter must only be used to specify text or integer field length. Occured in field [%s]',
+                                $delimiter,
+                                $field['name']
+                            )
+                        );
+                    }
+
+                    $field = $this->addFieldsCustomProperty($this->fields[$key], $key, (int) $length, 'length');
+                    $field = $this->addFieldsCustomProperty($this->fields[$key], $key, $type, 'type', true);
+                }
+            }
+
+            if ($this->isPolymorphicField($field)) {
+
+
+                $poly_model_id = $this->getPolymorphicModelId($field);
+                $poly_model_type = $this->getPolymorphicModelType($field);
+
+                // add ---able_id et ....able_type fields
+                if (
+                    !empty($poly_model_id) && !empty($poly_model_type)
+                ) {
+
+                    if (!Str::endsWith($poly_model_id, 'able_id')) {
+                        $this->triggerError(
+                            sprintf(
+                                'The [%s] model_id must end with [able_id]',
+                                $poly_model_id
+                            )
+                        );
+                    }
+
+                    if (!Str::endsWith($poly_model_type, 'able_type')) {
+                        $this->triggerError(
+                            sprintf(
+                                'The [%s] model_type must end with [able_type]',
+                                $poly_model_type
+                            )
+                        );
+                    }
+                } else {
+                    $this->fields[$key]['model_id'] =  $this->getFieldName($field) . 'able_id';
+                    $this->fields[$key]['model_type'] =  $this->getFieldName($field) . 'able_type';
+                }
+            }
+
+
+            if ($this->isRelationField($field['type'])) {
+
+                $type = $this->getRelationType($field);
+                if (!in_array($type, $this->RELATION_TYPES)) {
+                    $this->triggerError(
+                        sprintf(
+                            'The [%s] relation type is not allowed. Allowed types are [%s]',
+                            $type,
+                            join(',', $this->RELATION_TYPES)
+                        )
+                    );
+                }
+
+                if ($constraint = $this->getFieldOnDelete($field)) {
+                    if (!in_array($constraint, $this->RELATION_CONSTRAINTS)) {
+                        $this->triggerError(
+                            sprintf(
+                                'The [%s] relation constraint is not allowed. Allowed constraint are [%s]',
+                                $constraint,
+                                join(',', $this->RELATION_CONSTRAINTS)
+                            )
+                        );
+                    }
+                }
+
+                if (!in_array($this->getRelationName($field), $this->RELATION_NAMES[$type])) {
+                    $this->triggerError(
+                        sprintf(
+                            'The [%s] relation name is not allowed. Allowed names for the  [%s] type are [%s]',
+                            $this->getRelationName($field),
+                            $type,
+                            join(',', $this->RELATION_NAMES[$type])
+                        )
+                    );
+                }
+
+                $related = $this->getRelatedModel($field);
+
+
+
+                if (empty($related)) {
+                    $related = $this->guestRelatedModelName($field);
+
+                    $this->fields[$key]['type']['related'] = $related;
+                } else {
+                    // Add the full namespace to the related model
+                    if (Str::contains($related, '\\')) {
+                        // Put the first letter in uppercase of each word after a \ and combine them later
+                        $related = join('\\', array_map(fn ($item) => ucfirst($item), explode('\\', $related)));
+                    } else {
+                        $related = sprintf("%s\%s\%s", $this->getNamespace(), $this->getModelsFolder(), ucfirst($related));
+                    }
+
+                    $this->fields[$key]['type']['related'] = $related;
+                }
+
+                // remove the | end in case the user forgot it
+                $this->fields[$key]['rules'] = rtrim($this->fields[$key]['rules'], '|');
+
+
+                $this->checkIfRelatedModelExists($related);
+
+                if (empty($this->getRelatedModelProperty($this->fields[$key]))) {
+                    $this->triggerError(
+                        sprintf(
+                            'The [%s] relation field must have a property key who exists on the related table.',
+                            $this->getFieldName($this->fields[$key]),
+                        )
+                    );
+                }
+
+                if (!$this->checkIfRelatedModelPropertyExists($this->fields[$key])) {
+                    $this->triggerError(
+                        sprintf(
+                            'The [%s] related property does not exists on [%s] model.',
+                            $this->getRelatedModelProperty($this->fields[$key]),
+                            $related,
+                        )
+                    );
+                }
+
+
+                // Add exists rule
+                if (!$this->isPolymorphicField($this->fields[$key])) {
+
+                    if (!Str::contains($field['rules'], 'exists')) {
+                        if (empty($field['rules'])) {
+                            $this->fields[$key]['rules'] = "exists:$related,id";
+                        } else {
+                            $this->fields[$key]['rules'] .= "|exists:$related,id";
+                        }
+                    } else {
+                        $search = (string) Str::of($field['rules'])->after('exists:')->before(',');
+                        if (!Str::contains($search, '\\')) {
+                            $this->fields[$key]['rules'] = Str::replaceFirst($search, $related, $field['rules']);
+                        }
+                    }
+
+                    // Add the onDelete if provided in the default yaml file it will be cascade
+                    if ($onDelete = $this->getFieldOnDelete($field)) {
+                        // validation of the onDelete field
+                        if (!in_array($onDelete, $this->ONDELETERULES)) {
+                            $this->triggerError(
+                                sprintf(
+                                    'The [%s] onDelete constraint is not allowed. Allowed constraints are [%s]',
+                                    $onDelete,
+                                    join(',', $this->ONDELETERULES)
+                                )
+                            );
+                        }
+
+                        if ($onDelete === $this->ONDELETERULES['setnull']) {
+                            if (empty($this->fields[$key]['rules'])) {
+                                if (!Str::contains($this->fields[$key]['rules'], 'nullable')) {
+                                    $this->fields[$key]['rules'] = 'nullable|' . $this->fields[$key]['rules'];
+                                }
+                            } else {
+                                // a required field cannot be nullable
+                                if (Str::contains($field['rules'], 'required')) {
+                                    $this->triggerError(
+                                        sprintf(
+                                            'The [%s] field can not be required and nullable. Please remove set null  constraint on the relation field or remove required rule.',
+                                            $this->getFieldName($field),
+                                        )
+                                    );
+                                }
+                                // we cannot do. = because in redefining the variable
+                                if (!Str::contains($this->fields[$key]['rules'], 'nullable')) {
+                                    $this->fields[$key]['rules'] = 'nullable|' . $this->fields[$key]['rules'];
+                                }
+                            }
+                        }
+
+                        // if the value is set null is that the field is not nullable then we add it
+                    } else {
+                        $this->fields[$key]['type']['onDelete'] = 'cascade';
+                    }
+                    if (!$this->getFieldReferences($field)) {
+                        $this->fields[$key]['type']['references'] = 'id';
+                    }
+                }
+            }
+
+            if (!$this->isRelationField($field['type'])) {
+                if (!in_array($field['type'], $this->TYPES)) {
+                    $this->triggerError(
+                        sprintf("The [%s] field type is not available. Available types are [%s]", $field['type'], join(',', $this->TYPES))
+                    );
+                }
+            }
+
+
+            // apply the constraints on the spot
+            // standardize the constraints
+            if ($constraints = Arr::get($field, 'constraints')) {
+                if (is_string($constraints)) {
+                    $this->fields[$key]['constraints'] =  array_map(fn ($item) => Str::lower(trim($item)), array_filter(explode(',', $constraints)));
+                } else if (is_array($constraints)) {
+                    $items = array_map(function ($item) {
+                        if (is_string($item)) {
+                            $item =  Str::lower(trim($item));
+                        }
+
+                        // The unique will be treated later not here
+                        if (Str::contains($item, ':') && !Str::contains($item, 'unique')) {
+                            [$constraint_name, $constraint_value] = array_filter(explode(':', $item));
+
+                            // convert elements
+                            if ('true' === $constraint_value) {
+                                $constraint_value = true;
+                            } else if ('false' === $constraint_value) {
+                                $constraint_value = false;
+                            } else if (is_numeric($constraint_value)) {
+                                $constraint_value = intval($constraint_value); // permet de le convertie en chiffre
+                            }
+
+                            // handle the case of the unique
+                            $item = ['name' => $constraint_name, 'value' => $constraint_value];
+                        }
+
+                        return $item;
+                    }, $constraints);
+
+                    $this->fields[$key]['constraints'] =  $items;
+                }
+            }
+
+
+            // the nullable must be defined only once in the nullable: true | rule: nullable
+            if (
+                (Arr::get($field, 'nullable') &&  Str::contains($field['rules'], 'nullable')) ||
+                (Arr::get($field, 'nullable') && in_array('nullable', Arr::get($this->fields[$key], 'constraints', []))) ||
+                (Str::contains($field['rules'], 'nullable') && in_array('nullable', Arr::get($this->fields[$key], 'constraints', [])))
+            ) {
+                $this->triggerError(
+                    sprintf(
+                        'The  field [%s] nullable constraint must be defined one time',
+                        $this->getFieldName($field)
+                    )
+                );
+            }
+
+            /**
+             * Addition of nullable constraint
+             */
+            if (in_array('nullable', Arr::get($this->fields[$key], 'constraints', []))) {
+                if (!Arr::exists($field, 'nullable')) {
+                    $this->fields[$key]['nullable'] = true;
+                }
+
+                if (empty($this->fields[$key]['rules'])) {
+                    $this->fields[$key]['rules'] = 'nullable';
+                } else {
+                    $this->fields[$key]['rules'] = $this->fields[$key]['rules'] . '|nullable';
+                }
+            } else if (Arr::exists($this->fields[$key], 'nullable') && $this->fields[$key]['nullable'] == true) {
+                if (!Str::contains($field['rules'], 'nullable')) {
+                    if (empty($this->fields[$key]['rules'])) {
+                        $this->fields[$key]['rules'] = 'nullable';
+                    } else {
+                        $this->fields[$key]['rules'] = $this->fields[$key]['rules'] . '|nullable';
+                    }
+                    $this->fields[$key]['constraints'][] = 'nullable';
+                }
+            } else if (Str::contains($this->fields[$key]['rules'], 'nullable')) {
+                if (!Arr::exists($field, 'nullable')) {
+                    // $field = $this->addFieldsCustomProperty($field, $key, true, 'nullable', true);
+                    $this->fields[$key]['nullable'] = true;
+                    $this->fields[$key]['constraints'][] = 'nullable';
+                }
+            }
+
+            // Slug
+            if ($this->slug && Arr::exists($field, 'slug')) {
+                $this->triggerError(
+                    sprintf('The slug must be used on only one field and once. Ocurred on field [%s]. You have to remove the global slug with the [%s] value', $this->getFieldName($field), $this->slug)
+                );
+            }
+
+            if (!$this->slug && Arr::exists($field, 'slug') && $field['slug'] == true) {
+                $this->slug =  $this->getFieldName($field);
+            }
+
+            // Breadcrumb
+            if ($this->breadcrumb && Arr::exists($field, 'breadcrumb')) {
+                $this->triggerError(
+                    sprintf('The breadcrumb must be used on only one field and once. Ocurred on field [%s]. You have to remove the global breadcrumb with the [%s] value', $this->getFieldName($field), $this->breadcrumb)
+                );
+            }
+
+            if (!$this->breadcrumb && Arr::exists($field, 'breadcrumb') && $field['breadcrumb'] == true) {
+                $this->breadcrumb =  $this->getFieldName($field);
+            }
+
+            // validate breadcrumb
+            if (!Arr::get($this->fields, $this->breadcrumb)) {
+                $this->triggerError(
+                    sprintf("The field [%s] used for the breadcrumb is not present in [%s] model's fields. ", $this->breadcrumb, $this->model)
+                );
+            }
+        }
+
+        return $this->fields;
     }
 
     protected function getOptionsFilteredData($option) :array

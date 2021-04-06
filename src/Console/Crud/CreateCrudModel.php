@@ -2,6 +2,7 @@
 
 namespace Guysolamour\Administrable\Console\Crud;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 
@@ -86,14 +87,21 @@ class CreateCrudModel
 
         $model = $this->addTimestampProperty($model);
 
+        $model = $this->addCastsProperty($model);
+
+        $model = $this->addDaterangeTrait($model);
+
+        $model = $this->addDaterangeTraitMethod($model);
+        $model = $this->addDatepickerTraitMethod($model);
+
 
         $model = $this->loadSluggableTrait($model, $data_map);
+
 
         $this->createDirectoryIfNotExists($model_path, false);
 
 
         $this->addRelations($model, $model_path);
-
 
         if (!$this->filesystem->exists($model_path)) {
             $this->writeFile(
@@ -148,7 +156,10 @@ class CreateCrudModel
     private function getFillables(): string
     {
         if (!$this->fillable){
-            return 'protected $guarded = [];';
+            return <<<TEXT
+            // The attributes that aren't mass assignable.
+                public \$guarded = [];
+            TEXT;
         }
 
 
@@ -159,14 +170,19 @@ class CreateCrudModel
             }
 
             if (
-                ($field['name'] !== 'morphs' || $field['name'] !== 'guest') &&
-                !$this->isPolymorphicField($field)
+                ($this->getFieldName($field) !== 'morphs' || $this->getFieldName($field) !== 'guest') &&
+                !$this->isPolymorphicField($field) && !$this->isDaterangeField($field)
             ) {
 
-                $fillable .= "'{$field['name']}'" . ',';
+                $fillable .= "'{$this->getFieldName($field)}'" . ',';
+
             } else if ($this->isPolymorphicField($field)) {
                 $fillable .= "'" . $this->getPolymorphicModelType($field) . "',";
                 $fillable .= "'" . $this->getPolymorphicModelId($field) . "',";
+
+            }else if($this->isDaterangeField($field)){
+                $fillable .= "'{$this->getRangeStartFieldName($field)}'" . ',';
+                $fillable .= "'{$this->getRangeEndFieldName($field)}'" . ',';
             }
         }
 
@@ -178,7 +194,10 @@ class CreateCrudModel
         $fillable = rtrim($fillable, ',');
 
 
-        return "public \$fillable = [$fillable];";
+        return <<<TEXT
+        // The attributes that are mass assignable.
+            public \$fillable = [$fillable];
+        TEXT;
     }
 
     /**
@@ -195,7 +214,7 @@ class CreateCrudModel
         // the namespace
         $namespace = 'use Cviebrock\EloquentSluggable\Sluggable;';
         $search = sprintf("namespace %s\%s;", $data_map['{{namespace}}'], $data_map['{{modelsFolder}}']);
-        $model = str_replace($search, $search . "\n\n" . $namespace, $model);
+        $model = str_replace($search, $search . PHP_EOL . PHP_EOL . $namespace, $model);
 
 
         $sluggable_trait = '    use Sluggable;';
@@ -209,7 +228,7 @@ class CreateCrudModel
         $sluggable = strtr($sluggable_stub, $data_map);
 
         // insert in the model
-        $search = '// add sluggable methods below' . "\n\n";
+        $search = '// add sluggable methods below' .  PHP_EOL . PHP_EOL;
 
         return str_replace($search, $search . $sluggable, $model);
     }
@@ -225,7 +244,7 @@ class CreateCrudModel
     {
         if (!$this->timestamps) {
             $search = 'public $fillable';
-            $replace = ' public $timestamps = false;' . "\n\n";
+            $replace = ' public $timestamps = false;' . PHP_EOL . PHP_EOL;
 
             $model = str_replace($search,  $replace . '     ' .  $search, $model);
 
@@ -233,5 +252,163 @@ class CreateCrudModel
         }
 
         return $model;
+    }
+
+
+    /**
+     * @param string $model
+     * @return string
+     */
+    private function addCastsProperty(string $model_stub): string
+    {
+        // si vide alors on return
+        if (!$this->checkIfThereAreCastableFields()){
+            // si pas de cast retirer le pseudo code dans le model
+            return  str_replace('{{cast}}', '', $model_stub);
+        }
+
+        $template = <<<TEXT
+        // The attributes that should be cast to native types.
+            protected \$casts = [
+        TEXT;
+
+        foreach($this->fields as $field){
+            if ($cast = $this->getFieldCast($field)){
+                // la non indentation est importante c'est pour mieux formater le texte
+                if ($this->isDaterangeField($field)){
+                    $template .= "
+        '{$this->getRangeStartFieldName($field)}' => '{$cast}',
+        '{$this->getRangeEndFieldName($field)}'   => '{$cast}',";
+                }else {
+                    $template .= "
+        '{$this->getFieldName($field)}' => '{$cast}',";
+                }
+            }
+        }
+
+        $template .= "
+    ];";
+
+        $model_stub = str_replace('{{cast}}', $template, $model_stub);
+
+
+
+       return $model_stub;
+
+    }
+
+    public function checkIfFieldsContainsAdaterangeField() :bool
+    {
+        foreach ($this->fields as $field) {
+            if ($this->isDaterangeField($field)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public function checkIfFieldsContainsAdatepickerField() :bool
+    {
+        foreach ($this->fields as $field) {
+            if ($this->isDatepickerField($field)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function addDaterangeTrait(string $model_stub) :string
+    {
+        if ($this->checkIfFieldsContainsAdaterangeField() || $this->checkIfFieldsContainsAdatepickerField()){
+            $search = "use ModelTrait";
+            $model_stub = str_replace($search , $search . ', DaterangeTrait', $model_stub);
+
+            $search = "use {$this->parsename()['{{namespace}}']}\Traits\ModelTrait;";
+            $model_stub = str_replace($search , $search . PHP_EOL ."use {$this->parsename()['{{namespace}}']}\Traits\DaterangeTrait;", $model_stub);
+        }
+
+        return $model_stub;
+    }
+
+    /**
+     *
+     * @param string $model_stub
+     * @return string
+     */
+    private function addDatepickerTraitMethod(string $model_stub) :string
+    {
+        if (!$this->checkIfFieldsContainsAdaterangeField()) {
+            return str_replace('{{datepicker}}', '', $model_stub);
+        }
+
+        $replace = <<<TEXT
+        // The date pickers configuration array for this model.
+            protected \$datepickers = [
+        TEXT;
+
+        foreach ($this->fields as $field) {
+            if ($this->isDatepickerField($field)) {
+
+                $replace .= <<<TEXT
+
+                            '{$this->getFieldName($field)}',
+                TEXT;
+            }
+        }
+
+        $replace .= <<<TEXT
+
+                ];
+        TEXT;
+
+        return str_replace('{{datepicker}}', $replace, $model_stub);
+    }
+    /**
+     *
+     * @param string $model_stub
+     * @return string
+     */
+    private function addDaterangeTraitMethod(string $model_stub) :string
+    {
+        if (!$this->checkIfFieldsContainsAdaterangeField()) {
+            return str_replace('{{daterange}}', '', $model_stub);
+        }
+
+        $replace = <<<TEXT
+        // The date ranges configuration array for this model.
+            protected \$dateranges = [
+
+        TEXT;
+
+        foreach ($this->fields as $field) {
+            if ($this->isDaterangeField($field)) {
+
+                $replace .= <<<TEXT
+
+                            '{$this->getFieldName($field)}',
+                TEXT;
+            }
+        }
+
+        $replace .= <<<TEXT
+
+                ];
+        TEXT;
+
+        return str_replace('{{daterange}}', $replace, $model_stub);
+    }
+
+    /**
+     * on recupere les casts sur tous les champs
+     * si vide alors on return
+     *
+     * @return bool
+     */
+    private function checkIfThereAreCastableFields() :bool
+    {
+        $casts = array_filter(Arr::pluck($this->fields, 'cast', 'name'));
+
+        return !empty($casts);
     }
 }
