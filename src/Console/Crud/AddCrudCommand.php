@@ -54,7 +54,6 @@ class AddCrudCommand extends BaseCrudCommand
             );
         }
 
-
         $this->data_map = $this->parseName($this->model);
 
 
@@ -62,11 +61,20 @@ class AddCrudCommand extends BaseCrudCommand
         $this->fields_names_to_create = $this->getOptionsFilteredData($this->option('fields'));
 
         if (empty($this->fields_names_to_create)) {
-            $this->triggerError("The --fields option  is required");
+            $fields_names_to_create = array_values($this->guestFieldsToCreate());
+
+            if (empty($fields_names_to_create)){
+                $this->triggerError("You have to defined new fields in config file before. You can --fields option to specify which field you want to append");
+            }
+
+            $this->fields_names_to_create = $this->choice(
+                'Wich field do you want to append ? (fields can be separated with comma)',
+                $fields_names_to_create,
+                array_key_first($fields_names_to_create), null, true
+            );
         }
 
         $this->checkIfFieldHasAlreadyBeenAddedd();
-
 
         $this->fields_to_create = $this->getFieldsToCreate();
 
@@ -83,11 +91,29 @@ class AddCrudCommand extends BaseCrudCommand
 
     }
 
-    protected function getModelInstance()
+    protected function getModelInstance() :\Illuminate\Database\Eloquent\Model
     {
         $model =  sprintf("%s\%s\%s", $this->data_map['{{namespace}}'], $this->data_map['{{modelsFolder}}'], $this->data_map['{{singularClass}}']);
 
         return new $model;
+    }
+
+    protected function guestFieldsToCreate() :array
+    {
+        $config_fields = $this->getCrudConfiguration(ucfirst($this->model));
+        $clean_field_names = Arr::pluck($this->getCleanFields($config_fields), 'name');
+
+
+        // remove daterange field
+        $persisted_field_names = $this->getPersistedFieldNames();
+
+        // remove persisted field
+        $field_to_create = array_filter($clean_field_names, fn ($field_name) => !in_array($field_name, $persisted_field_names));
+
+        // remove daterange field
+        $field_to_create = array_filter($field_to_create, fn ($field_name) => !$this->checkIfDaterangeFieldHasBeenAdded($field_name, $persisted_field_names));
+
+        return $field_to_create;
     }
 
     /**
@@ -124,6 +150,12 @@ class AddCrudCommand extends BaseCrudCommand
         return $model_stub;
     }
 
+    /**
+     * @param string $model_stub
+     * @param array $field
+     * @param string $key
+     * @return string
+     */
     protected function appendFieldInDaterangesPickersArray(string $model_stub, array $field, string $key) :string
     {
         $search = "protected $key = [";
@@ -133,6 +165,12 @@ class AddCrudCommand extends BaseCrudCommand
         return  str_replace($search, $search . PHP_EOL . '  ' . $replace, $model_stub);
     }
 
+    /**
+     * @param string $model_stub
+     * @param array $field
+     * @param string $key
+     * @return string
+     */
     protected function addFieldInDaterangesPickersArray(string $model_stub, array $field, string $key) :string
     {
         $replace = <<<TEXT
@@ -155,10 +193,14 @@ class AddCrudCommand extends BaseCrudCommand
         return  str_replace($search, $replace . PHP_EOL . PHP_EOL . '  ' . $search, $model_stub);
     }
 
-
+    /**
+     * @param string $model_stub
+     * @param array $field
+     * @param string $path
+     * @return string
+     */
     protected function importDaterangeTraitAndAttributes(string $model_stub, array $field, string $path) :string
     {
-        // dd($this->checkIfDaterangeTraitHasBeenImported($path));
         if ($this->isDatepickerField($field) || $this->isDaterangeField($field)) {
             if ($this->checkIfDaterangeTraitHasBeenImported($path)) {
                 if ($this->isDatepickerField($field)) {
@@ -188,6 +230,12 @@ class AddCrudCommand extends BaseCrudCommand
         return $model_stub;
     }
 
+    /**
+     * @param string $model_stub
+     * @param array $field
+     * @param string $path
+     * @return string
+     */
     protected function addCastableField(string $model_stub, array $field, string $path) :string
     {
         if ($cast = $this->getFieldCast($field)) {
@@ -223,8 +271,8 @@ class AddCrudCommand extends BaseCrudCommand
                 $model_stub = str_replace($search, $template . PHP_EOL . '    ' .  $search, $model_stub);
             }
 
-            return $model_stub;
         }
+        return $model_stub;
     }
 
     protected function addFieldToModel()
@@ -354,7 +402,7 @@ class AddCrudCommand extends BaseCrudCommand
         }
 
         $show_view = $this->addDatepickerAndDaterange($this->filesystem->get($show_view_path), $this->fields_to_create, $this->data_map);
-    
+
         $this->writeFile($show_view, $show_view_path);
         $this->triggerSuccess('Fields added to view' . $show_view_path);
     }
@@ -368,10 +416,10 @@ class AddCrudCommand extends BaseCrudCommand
 
         // show view
         $this->appendFieldToShowView($path);
-     
+
         // update form if datepicker or daterange field
         $this->appendDatepickerToFormView($path);
-        
+
     }
 
     protected function addFieldToSeeder()
@@ -420,17 +468,43 @@ class AddCrudCommand extends BaseCrudCommand
             }
         }
 
-        return array_filter($this->fields, fn ($item) => in_array($item['name'] ?? '', $this->fields_names_to_create));
+        return array_filter($this->fields, fn ($field) => in_array($this->getFieldName($field) ?? '', $this->fields_names_to_create));
+    }
+
+    protected function checkIfDaterangeFieldHasBeenAdded(string $field_name, ?array $persisted_field_names = null) :bool
+    {
+        $persisted_field_names ??= $this->getPersistedFieldNames();
+
+        foreach ($persisted_field_names as $persisted_field_name) {
+            // si le champ se termine par start_at ou _end_at et qu'il commence par le nom du champ en cours
+            // cela signifie qu'il a déjà été ajouté
+            if (
+                (Str::endsWith($persisted_field_name, config('administrable.daterange.start')) ||
+                Str::endsWith($persisted_field_name, config('administrable.daterange.end'))) &&
+                Str::startsWith($persisted_field_name, $field_name)
+            ){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    protected function getPersistedFieldNames() :array
+    {
+        return Schema::getColumnListing($this->getCurrentModelTableName());
     }
 
     protected function checkIfFieldHasAlreadyBeenAddedd()
     {
-        $existed_field_names = Schema::getColumnListing($this->getCurrentModelTableName());
+        $persisted_field_names = $this->getPersistedFieldNames();
 
         foreach($this->fields_names_to_create as $field_name){
-            if (in_array($field_name, $existed_field_names)){
+            if (in_array($field_name, $persisted_field_names) || $this->checkIfDaterangeFieldHasBeenAdded($field_name, $persisted_field_names)){
                 $this->triggerError("The {$field_name} field has already been defined in {$this->model} model.");
             }
+
         }
     }
 
