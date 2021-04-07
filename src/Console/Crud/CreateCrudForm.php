@@ -2,7 +2,6 @@
 
 namespace Guysolamour\Administrable\Console\Crud;
 
-use Illuminate\Support\Arr;
 use Illuminate\Filesystem\Filesystem;
 
 class CreateCrudForm

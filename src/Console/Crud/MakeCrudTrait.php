@@ -552,7 +552,15 @@ trait MakeCrudTrait
         return Arr::get($field, 'cast');
     }
 
-
+    /**
+     *
+     * @param array $field
+     * @return array|null
+     */
+    public function getFieldForm(array $field) :?array
+    {
+        return Arr::get($field, 'form');
+    }
 
 
     /**
@@ -706,7 +714,7 @@ trait MakeCrudTrait
         return $field['name'] === 'image';
     }
 
-   
+
     /**
      * @param array $field
      * @return string
@@ -1060,6 +1068,12 @@ trait MakeCrudTrait
     {
         $type = $this->getNonRelationType($field);
 
+        $attrs = $this->getFieldForm($field);
+
+        if ($attrs && $form_type = Arr::get($attrs, 'type')){
+            return $form_type;
+        }
+
         if (
             $type === 'string' || $type === 'decimal' || $type === 'double' ||
             $type === 'float' || $type === 'json'
@@ -1134,13 +1148,48 @@ trait MakeCrudTrait
      *
      * @return string
      */
-    protected function getFormFieldTinymce(): string
+    protected function getFormFieldTinymce(array $field): string
     {
-        return <<<TEXT
-                                            'attr' => [
-                                                'data-tinymce',
-                                            ],
-                            TEXT;
+        $tinymce = "";
+
+        if (Arr::get($field, 'tinymce')) {
+           return "'data-tinymce',"; 
+        }
+
+        return $tinymce;
+    }
+    /**
+     *
+     * @return string
+     */
+    protected function getFormFieldAttributes(array $field): string
+    {
+        $attributes = "";
+
+        if ($form = $this->getFieldForm($field)) {
+
+            if ($id = Arr::get($form, 'id')) {
+                $attributes .= "'id' => '{$id}',\n";
+            }
+
+            if ($class = Arr::get($form, 'class')) {
+                $attributes .= "                    'class' => '{$class}',\n";
+            }
+            
+            if ($pattern = Arr::get($form, 'pattern')) {
+                $attributes .= "                    'pattern' => '{$pattern}',\n";
+            }
+
+            if (Arr::get($form, 'readonly')) {
+                $attributes .= "                    'readonly',\n";
+            }
+
+            if (Arr::get($form, 'disabled')) {
+                $attributes .= "                    'disabled',\n";
+            }
+        }
+      
+        return $attributes;
     }
 
     /**
@@ -1176,15 +1225,21 @@ trait MakeCrudTrait
                                             'label'  => '{$this->getFieldLabel($field)}',
                                             {$this->getFormFieldChoices($field)}
                                             {$this->getFormFieldRules($field)}
-
                             TEXT;
 
+        $fields = <<<TEXT
+            $fields
+                        'attr' => [
+                            {$this->getFormFieldTinymce($field)}
+                            {$this->getFormFieldAttributes($field)}
+                        ],
 
-        if (Arr::get($field, 'tinymce')) {
-            $fields .= $this->getFormFieldTinymce();
-        }
+        TEXT;
 
-        $fields .= '            ])';
+        
+
+        $fields .= '            
+            ])';
 
         return $fields;
     }
@@ -1220,6 +1275,8 @@ trait MakeCrudTrait
                     $fields .= $this->getFormField($field);
                 }
             }
+
+
         }
 
 

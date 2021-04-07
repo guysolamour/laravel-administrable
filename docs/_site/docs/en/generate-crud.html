@@ -288,7 +288,7 @@
           <a class="edit-on-github"
             title="Edit on Github"
             href="https://github.com/guysolamour/administrable/tree/master/_docs/en/2.1-generate-crud.md">
-            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Crud"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-04-07T11:07:37+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
+            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Crud"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-04-07T14:40:04+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
 
 <!-- end custom article top snippet -->
 <div class="article__content" itemprop="articleBody"><p>This command generates the crud (<strong><em>model</em></strong>, <strong><em>controller</em></strong>, <strong><em>migration</em></strong>, <strong><em>form</em></strong>, <strong><em>views</em></strong>, <strong><em>seed</em></strong>) for a particular model.</p>
@@ -388,6 +388,16 @@
 </code></pre></div></div>
 
 <p>The <em>model_id</em> must have the suffix <strong><em>_ id</em></strong> and the <em>model_type</em> must have the suffix <strong><em>_ type</em></strong></p>
+
+<h2 id="form">Form</h2>
+
+<p>You can pass valid html5 attributes to the form that will be generated</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
+  <span class="na">facebook</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">,</span> <span class="nv">form</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">id</span><span class="pi">:</span> <span class="nv">form_id</span><span class="pi">,</span> <span class="nv">class</span><span class="pi">:</span> <span class="nv">class_name</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">url</span> <span class="pi">}</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">supported attributes are <em>id</em>, <em>class</em> , <em>pattern</em>, <em>type</em>, <em>readonly</em>, <em>disabled</em></p>
 
 <h2 id="cast">Cast</h2>
 
@@ -551,7 +561,7 @@ No need to specify it twice.</p>
 
 <p class="info">The default value is <em>true</em></p>
 
-<h2 id="trans">Trans</h2>
+<h2 id="tranlation">Tranlation</h2>
 
 <p>The model can be translated with the <em>trans</em> option</p>
 
@@ -565,6 +575,12 @@ No need to specify it twice.</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
   <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">trans</span><span class="pi">:</span> <span class="nv">nom</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>For date range field, you must separate the translation field with the <strong>|</strong> (pipe) character.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
+  <span class="na">promotion</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">datetime</span><span class="pi">,</span> <span class="nv">daterange</span><span class="pi">:</span> <span class="nv">true</span><span class="pi">,</span> <span class="nv">trans</span><span class="pi">:</span> <span class="nv">promotion start | promotion end</span> <span class="pi">}</span>
 </code></pre></div></div>
 
 <p class="info">This translation is only used for displaying in views.
@@ -981,7 +997,7 @@ or the namespace.</li>
 <p>The <strong><em>many to many</em></strong> polymorphic relationship is not yet established. I haven’t had to use it in my various projects yet.
 Maybe soon.</p>
 
-</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-04-07T11:07:37+00:00"><!-- start custom article footer snippet -->
+</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-04-07T14:40:04+00:00"><!-- start custom article footer snippet -->
 
 <!-- end custom article footer snippet -->
 <div class="article__license"><div class="license">
