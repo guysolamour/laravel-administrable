@@ -76,7 +76,6 @@ class MakeCrudCommand extends BaseCrudCommand
 
         $this->fields = $this->getCleanFields($config_fields);
 
-
         // Models
         $this->info(PHP_EOL . 'Creating Model...');
         [$result, $model_path] = CreateCrudModel::generate(
@@ -86,6 +85,7 @@ class MakeCrudCommand extends BaseCrudCommand
             $this->breadcrumb,
             $this->theme,
             $this->fillable,
+            $this->table_name ?? null,
             $this->slug,
             $this->timestamps,
         );
@@ -104,7 +104,8 @@ class MakeCrudCommand extends BaseCrudCommand
             $this->slug,
             $this->timestamps,
             $this->entity,
-            $this->seeder
+            $this->seeder,
+            $this->table_name ?? null,
         );
 
         $this->info('Migration file created at ' . $migration_path);
@@ -200,14 +201,21 @@ class MakeCrudCommand extends BaseCrudCommand
     }
 
 
-
+    /**
+     * @param string $file
+     * @return string
+     */
     private function removeFileExtension(string $file): string
     {
         return pathinfo($file, PATHINFO_FILENAME);
     }
 
 
-
+    /**
+     * @param boolean $result
+     * @param string $path
+     * @return void
+     */
     private function displayResult(bool $result, string $path): void
     {
         if ($result) {

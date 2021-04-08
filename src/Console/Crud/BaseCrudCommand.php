@@ -11,12 +11,17 @@ class BaseCrudCommand extends BaseCommand
     /**
      * @var string[]
      */
-    protected const GLOBAL_OPTIONS = ['slug', 'edit_slug', 'clone', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb', 'imagemanager', 'trans', 'icon','fillable'];
+    protected const GLOBAL_OPTIONS = [
+        'slug', 'edit_slug', 'clone', 'seeder', 'entity', 'polymorphic', 'timestamps', 'breadcrumb',
+        'imagemanager', 'trans', 'icon','fillable', 'table_name'
+    ];
 
     /**
      * @var string[]
      */
-    protected const RESERVED_WORDS = ['slug', 'icon', 'clone', 'edit_slug', 'breadcrumb', 'timestamps', 'seeder', 'trans','fillable'];
+    protected const RESERVED_WORDS = [
+        'slug', 'icon', 'clone', 'edit_slug', 'breadcrumb', 'timestamps', 'seeder', 'trans','fillable'
+    ];
 
 
     /**

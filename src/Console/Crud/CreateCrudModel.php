@@ -16,6 +16,10 @@ class CreateCrudModel
      * @var string
      */
     private $model;
+    /**
+     * @var string
+     */
+    private $table_name;
 
     /**
      * @var array
@@ -34,12 +38,14 @@ class CreateCrudModel
      * @var bool
      */
     private $polymorphic;
-
+    /**
+     * @var string
+     */
     private $new_model_stub = '';
 
 
 
-    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, bool $fillable, ?string $slug = null, bool $timestamps = false)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, bool $fillable, ?string $table_name, ?string $slug = null, bool $timestamps = false)
     {
         $this->model         = $model;
         $this->fields        = $fields;
@@ -49,6 +55,7 @@ class CreateCrudModel
         $this->breadcrumb    = $breadcrumb;
         $this->theme         = $theme;
         $this->fillable      = $fillable;
+        $this->table_name    = $table_name;
 
         $this->filesystem    = new Filesystem;
     }
@@ -62,9 +69,9 @@ class CreateCrudModel
      * @param bool $polymorphic
      * @return array
      */
-    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme,  bool $fillable, ?string $slug = null, bool $timestamps = false)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme,  bool $fillable, ?string $table_name, ?string $slug = null, bool $timestamps = false)
     {
-        return (new CreateCrudModel($model, $fields, $actions, $breadcrumb, $theme, $fillable, $slug, $timestamps ))
+        return (new CreateCrudModel($model, $fields, $actions, $breadcrumb, $theme, $fillable, $table_name, $slug, $timestamps ))
             ->createModel();
     }
 
@@ -74,16 +81,16 @@ class CreateCrudModel
      */
     private function createModel(): array
     {
-
         $stub = $this->filesystem->get($this->TPL_PATH . '/models/model.stub');
 
-
         $data_map = $this->parseName($this->model);
+
 
         $model_path = app_path(sprintf("%s/%s.php", $data_map['{{modelsFolder}}'], $data_map['{{singularClass}}']));
 
         $model = $this->compliedFile($stub, false, $data_map);
 
+        $model = $this->addTableNameProperty($model);
 
         $model = $this->addTimestampProperty($model);
 
@@ -97,9 +104,7 @@ class CreateCrudModel
 
         $model = $this->loadSluggableTrait($model, $data_map);
 
-
         $this->createDirectoryIfNotExists($model_path, false);
-
 
         $this->addRelations($model, $model_path);
 
@@ -234,7 +239,27 @@ class CreateCrudModel
     }
 
 
+    /**
+     * @param string $model
+     * @return string
+     */
+    private function addTableNameProperty(string $model): string
+    {
+        $search = "{{tablename}}";
 
+        if (!$this->table_name) {
+            return str_replace($search, '', $model);
+        }
+
+        $replace = <<<TEXT
+        // The table associated with the model
+            protected \$table = '{$this->table_name}';
+        TEXT;
+
+        $model = str_replace($search,  $replace . PHP_EOL, $model);
+
+        return $model;
+    }
 
     /**
      * @param string $model

@@ -17,7 +17,6 @@ class BaseCommand extends Command
     protected  const BASE_PATH = __DIR__ . '/../..';
 
 
-
     protected $filesystem;
 
 
@@ -72,7 +71,12 @@ class BaseCommand extends Command
     }
 
 
-
+    /**
+     *
+     * @param string|string[] $files
+     * @param string $path
+     * @return void
+     */
     protected function compliedAndWriteFileRecursively($files, string $path)
     {
         if (is_array($files)) {
@@ -89,7 +93,11 @@ class BaseCommand extends Command
     }
 
 
-
+    /**
+     *
+     * @param string $dir
+     * @return void
+     */
     protected function recurseRmdir($dir)
     {
         $files = array_diff(scandir($dir), array('.', '..'));

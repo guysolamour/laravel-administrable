@@ -3,15 +3,14 @@
 namespace Guysolamour\Administrable\Console\Crud;
 
 
-
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 
 class CreateCrudMigration
 {
-
     use MakeCrudTrait;
+
     /**
      * @var string
      */
@@ -46,6 +45,11 @@ class CreateCrudMigration
      */
     private $timestamps;
 
+    /**
+     * @var string
+     */
+    private $table_name;
+
 
     /**
      * CreateCrudMigration constructor.
@@ -57,8 +61,9 @@ class CreateCrudMigration
      * @param string $theme
      * @param string|null $slug
      * @param boolean $timestamps
+     * @param string $table_name
      */
-    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder)
+    public function __construct(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder, ?string $table_name)
     {
         $this->model        = $model;
         $this->fields       = $fields;
@@ -69,6 +74,7 @@ class CreateCrudMigration
         $this->timestamps   = $timestamps;
         $this->entity       = $entity;
         $this->seeder       = $seeder;
+        $this->table_name   = $table_name;
 
         $this->filesystem   = new Filesystem;
     }
@@ -81,9 +87,9 @@ class CreateCrudMigration
      * @param bool $polymorphic
      * @return array|string
      */
-    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder)
+    public static function generate(string $model, array $fields, array $actions, ?string $breadcrumb, string $theme, ?string $slug, bool $timestamps, bool $entity, bool $seeder, ?string $table_name)
     {
-        return (new CreateCrudMigration($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $entity, $seeder))
+        return (new CreateCrudMigration($model, $fields, $actions, $breadcrumb, $theme, $slug, $timestamps, $entity, $seeder, $table_name))
             ->loadMigrations();
     }
 
@@ -92,12 +98,16 @@ class CreateCrudMigration
      */
     protected function loadMigrations()
     {
-
         $data_map = $this->parseName($this->model);
-
 
         $migration_stub = $this->TPL_PATH . '/migrations/provider.stub';
         $migration = $this->compliedFile($migration_stub, true, $data_map);
+
+        // on change le nom de la table
+        if ($this->table_name){
+            $migration = str_replace($data_map['{{pluralSnake}}'], $this->table_name, $migration);
+        }
+
         $migration_path = $this->generateMigrationFields($migration, $data_map);
 
 
@@ -118,7 +128,10 @@ class CreateCrudMigration
         return [$migration_path, $seeder_path ?? ''];
     }
 
-
+    /**
+     * @param array $data_map
+     * @return void
+     */
     protected function registerSeederInDatabaseSeeder(array $data_map)
     {
 
@@ -153,8 +166,5 @@ class CreateCrudMigration
 
         return $database_seeder_path;
     }
-
-
-
 
 }

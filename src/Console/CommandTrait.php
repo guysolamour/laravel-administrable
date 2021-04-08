@@ -12,8 +12,7 @@ use Symfony\Component\Process\Process;
 
 trait CommandTrait
 {
-
-
+    
     protected $models_config = null;
 
     /**
@@ -892,7 +891,7 @@ trait CommandTrait
         // on gere le cas du edit slug ici avnt de faire la configuration des options globaux
         // on stocke la configuration globale si elle a été définie
         // celui ci pourra ecraser sur un modele en particulier
-        $this->setGlobalConfigOption(['clone', 'edit_slug', 'fillable']);
+        $this->setGlobalConfigOption(['clone', 'edit_slug', 'fillable', 'table_name']);
 
         // tester le truc de  si tableau et exception
         $this->setConfigOption();
@@ -930,7 +929,7 @@ trait CommandTrait
             }
 
             // seul les champs de type datetime peuvent être daterange ou  datepicker
-            
+
             if (
                 ($this->isDaterangeField($field) || $this->isDatepickerField($field)) &&
                 !$this->isDatetimeField($field))

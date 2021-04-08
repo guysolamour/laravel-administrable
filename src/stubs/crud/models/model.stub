@@ -8,6 +8,8 @@ class {{singularClass}} extends BaseModel
 {
     use ModelTrait;
 
+    {{tablename}}
+
     {{fillable}}
 
     {{cast}}
