@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['{{guard}}.auth'])->group(function () {
     Route::namespace('{{backNamespace}}')->group(function () {
         Route::resource('{{pluralSlug}}','{{singularClass}}Controller')->names([
-            'index'      => '{{backLowerNamespace}}.{{singularSlug}}.index',
-            'create'     => '{{backLowerNamespace}}.{{singularSlug}}.create',
-            'show'       => '{{backLowerNamespace}}.{{singularSlug}}.show',
-            'store'      => '{{backLowerNamespace}}.{{singularSlug}}.store',
-            'edit'       => '{{backLowerNamespace}}.{{singularSlug}}.edit',
-            'update'     => '{{backLowerNamespace}}.{{singularSlug}}.update',
-            'destroy'    => '{{backLowerNamespace}}.{{singularSlug}}.destroy',
+            'index'      => '{{indexRoute}},
+            'create'     => '{{createRoute}}',
+            'show'       => '{{showRoute}}',
+            'store'      => '{{storeRoute}}',
+            'edit'       => '{{editRoute}}',
+            'update'     => '{{updateRoute}}',
+            'destroy'    => '{{deleteRoute}}',
         ]){{exceptActions}};
     });
 });

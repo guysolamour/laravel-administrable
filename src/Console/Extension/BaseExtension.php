@@ -2,250 +2,128 @@
 
 namespace Guysolamour\Administrable\Console\Extension;
 
-use RuntimeException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Console\Command;
-use Illuminate\Container\Container;
-use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
+use Guysolamour\Administrable\Console\Filesystem;
+use Guysolamour\Administrable\Console\BaseCommand;
+use Guysolamour\Administrable\Console\CommandTrait;
 
 
 
 abstract class BaseExtension
 {
-    protected  const TPL_PATH = __DIR__ . '/../../stubs/extensions';
+    use CommandTrait;
+    use ExtensionTrait;
 
-    /**
-     * @var string
-     */
-    protected string $extension_name;
-    /**
-     * @var Filesystem
-     */
+    /** @var string */
+    protected $name;
+
+    /** @var Filesystem */
     protected $filesystem;
-    /**
-     * @var Command
-     */
-    protected $baseCommand;
+
+    /** @var BaseCommand */
+    protected $extension;
+
+    /** @var array */
+    protected $data_map;
+
+    /** @var string */
+    protected const SUBFOLDER = 'extensions';
 
 
-    public function __construct(string $extension_name, Command $base_command)
+    public function __construct(BaseCommand $extension, string $name)
     {
-        $this->filesystem = new Filesystem;
-        $this->extension_name = $extension_name;
-        $this->base_command = $base_command;
 
+        $this->name       = $name;
+        $this->extension  = $extension;
+
+        $this->data_map   = method_exists($this, 'getParsedName') ?
+                            call_user_func([$this, 'getParsedName']) :
+                            $this->extension->getParsedName();
+
+        $this->filesystem = new Filesystem($this->data_map);
+
+    }
+
+    /**  @return mixed  */
+    abstract public function run();
+
+
+    protected function checkifExtensionHasBeenInstalled(): bool
+    {
+        return $this->filesystem->exists(app_path($this->data_map['{{modelsFolder}}'] . "/{$this->getSubfolder()}" . Str::ucfirst($this->name)  . '/' . Str::ucfirst($this->name) .".php"));
+    }
+
+
+    protected function getUcfirstName() :string
+    {
+        return Str::ucfirst($this->name);
+    }
+
+    protected function getUcfirstSubfolder() :string
+    {
+        return Str::ucfirst(self::SUBFOLDER);
+    }
+    protected function getSubfolder() :string
+    {
+        return self::SUBFOLDER;
+    }
+
+    protected function triggerError(string $message)
+    {
+        $this->extension->error($message);
+        exit();
     }
 
     protected function getExtensionStubsPath(string $path = '') :string
     {
-        return self::TPL_PATH . '/' . $this->extension_name . '/'. $path;
+        return $this->getExtensionsStubsBasePath($this->name . '/' . $path);
     }
 
     /**
-     * Get project namespace
-     * Default: App
-     * @return string
-     */
-    protected function getNamespace()
-    {
-        $namespace = Container::getInstance()->getNamespace();
-        return rtrim($namespace, '\\');
-    }
-
-    /**
-     * Parse guard name
-     * Get the guard name in different cases
-     * @return array
-     */
-    protected function parseName(?string $name = null): array
-    {
-
-        if (!$name)
-            $name = config('administrable.guard', 'admin');
-
-        return [
-            '{{namespace}}'           =>  $this->getNamespace(),
-            '{{pluralCamel}}'         =>  Str::plural(Str::camel($name)),
-            '{{pluralSlug}}'          =>  Str::plural(Str::slug($name)),
-            '{{pluralSnake}}'         =>  Str::plural(Str::snake($name)),
-            '{{pluralClass}}'         =>  Str::plural(Str::studly($name)),
-            '{{singularCamel}}'       =>  Str::singular(Str::camel($name)),
-            '{{singularSlug}}'        =>  Str::singular(Str::slug($name)),
-            '{{singularSnake}}'       =>  Str::singular(Str::snake($name)),
-            '{{singularClass}}'       =>  Str::singular(Str::studly($name)),
-            '{{theme}}'               =>  Str::lower(config('administrable.theme')),
-            '{{frontNamespace}}'      =>  ucfirst(config('administrable.front_namespace')),
-            '{{frontLowerNamespace}}' =>  Str::lower(config('administrable.front_namespace')),
-            '{{backNamespace}}'       =>  ucfirst(config('administrable.back_namespace')),
-            '{{backLowerNamespace}}'  =>  Str::lower(config('administrable.back_namespace')),
-            '{{administrableLogo}}'   =>  config('administrable.logo_url'),
-        ];
-    }
-
-    /**
-     * Get an array of all files in a directory.
-     *
      * @param string $path
-     * @param boolean $all
-     * @return array
+     *
+     * @return \Symfony\Component\Finder\SplFileInfo[]
      */
-    protected function getFilesFromDirectory(string $path, bool $all = true)
+    protected function getExtensionStubs(string $path = '')
     {
-        if (!$this->filesystem->exists($path)) {
+        $path = $this->getExtensionStubsPath($path);
+
+        if (!$this->filesystem->exists($path)){
             return [];
         }
 
-        return $all ? $this->filesystem->allFiles($path) : $this->filesystem->files($path);
+        return $this->filesystem->allFiles($path);
+    }
+
+    protected function getExtensionsStubsBasePath(string $path = '')
+    {
+        return $this->extension->getTemplatePath('extensions' . '/' . $path);
     }
 
 
-
-    protected function compliedAndWriteFileRecursively($files, string $path)
+    public function getParsedName(?string $name = null): array
     {
-        if (is_array($files)) {
-            foreach ($files as $file) {
-                $this->compliedAndWriteFileRecursively($file, $path);
-            }
-            return;
-        }
-
-        $this->compliedAndWriteFile(
-            $this->filesystem->get($files),
-            $path . '/' . $files->getRelativePath() .  '/' . $files->getFilenameWithoutExtension() . '.php'
-        );
+        return array_merge($this->parseName($name), [
+            '{{modelsFolder}}'  => $this->getCrudModelsFolder(),
+            '{{extensionName}}'  => Arr::get($this->getExtension(), 'name', $this->name),
+            '{{extensionLabel}}' => Arr::get($this->getExtension(), 'label', $this->name),
+            '{{extensionsFolder}}' => $this->getSubfolder(),
+            '{{extensionsFolderClass}}' => Str::ucfirst($this->getSubfolder()),
+            '{{extensionClass}}' => Str::ucfirst($this->name),
+            '{{extensionPluralClass}}' => Str::ucfirst($this->getExtensionPlural($this->name)),
+            '{{extensionPluralSlug}}' => $this->getExtensionPlural($this->name),
+            '{{extensionSingularSlug}}' => Str::lower($this->name),
+            '{{extensionTableName}}' => $this->getSubfolder()  . '_' . $this->getExtensionPlural($this->name),
+        ]);
     }
 
-    protected function recurseRmdir($dir)
+    protected function getExtensionPlural(?string $name = null) :string
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->recurseRmdir("$dir/$file") : unlink("$dir/$file");
-        }
-        return rmdir($dir);
-    }
+        $name ??= $this->name;
 
-    /**
-     *
-     * @param string $file // Must be the path or the file content
-     * @param boolean $get_content
-     * @return string
-     */
-    protected function compliedFile(string $file, bool $get_content = true, ?array $data_map = null): string
-    {
-        $file = $get_content ? $this->filesystem->get($file) : $file;
-        $data_map = $data_map ?: $this->parseName();
-
-        return strtr($file, $data_map);
-    }
-
-    /**
-     * @param string|object|array $files
-     * @param string $path
-     * @return void
-     */
-    protected function compliedAndWriteFile($files, string $path, string $filename_prefix = ''): void
-    {
-
-        if (is_array($files)) {
-            foreach ($files as $file) {
-                $this->compliedAndWriteFile($file, $path, $filename_prefix);
-            }
-            return;
-        }
-
-        $data_map = $this->parseName();
-
-        $stub = $this->isSingleFile($files) ? $files : $this->filesystem->get($files->getRealPath());
-
-        $this->createDirectoryIfNotExists(
-            $path,
-            !$this->isSingleFile($files)
-        );
-        $complied = strtr($stub, $data_map);
-
-        $this->writeFile(
-            $complied,
-            $this->isSingleFile($files) ? $path : $path . '/' . $filename_prefix . $files->getFilenameWithoutExtension() . '.php'
-        );
-    }
-
-    protected function isSingleFile($file): bool
-    {
-        return is_string($file);
-    }
-
-    /**
-     * @param mixte $complied
-     * @param string $path
-     * @return void
-     */
-    protected function writeFile($complied, string $path, bool $overwrite = true): bool
-    {
-
-        if ($overwrite) {
-            $this->filesystem->put(
-                $path,
-                $complied
-            );
-            return true;
-        }
-
-        if (!$this->filesystem->exists($path)) {
-            $this->filesystem->put(
-                $path,
-                $complied
-            );
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Create a folder
-     * @param string $path
-     * @param boolean $folder Used to find out if the path passed is a folder or file
-     * @return void
-     */
-    protected function createDirectoryIfNotExists(string $path, bool $folder = true): void
-    {
-
-        $dir = $folder ? $path : $this->filesystem->dirname($path);
-
-        if ($this->filesystem->missing($dir)) {
-            $this->filesystem->makeDirectory($dir, 0755, true);
-        }
-    }
-
-    /**
-     * @param string|object|array $files
-     * @param string $search
-     * @param string $path
-     * @return void
-     */
-    protected function replaceAndWriteFile($files, string $search, $replace, string $path)
-    {
-        if (is_array($files)) {
-            foreach ($files as $file) {
-                $this->replaceAndWriteFile($file, $search, $replace, $path);
-            }
-            return;
-        }
-
-        $stub = $this->isSingleFile($files) ? $files : $this->filesystem->get($files->getRealPath());
-        // $stub = $this->filesystem->get($files->getRealPath());
-        $this->createDirectoryIfNotExists(
-            $path,
-            !$this->isSingleFile($files)
-        );
-        $complied = str_replace($search, $replace,  $stub);
-
-        $this->writeFile(
-            $complied,
-            $this->isSingleFile($files) ? $path : $path . '/' . $files->getFilenameWithoutExtension() . '.php'
-        );
+        return Str::plural($name);
     }
 
     protected function runProcess(string $command)
@@ -257,11 +135,57 @@ abstract class BaseExtension
         });
 
         if (!$process->isSuccessful()) {
-            throw new RuntimeException($process->getErrorOutput());
+            throw new \RuntimeException($process->getErrorOutput());
         }
     }
 
+    protected function getExtension(?string $name = null) :array
+    {
+        $name ??= $this->name;
 
+        return Arr::get($this->extension->getExtensions(), $name, []);
+    }
 
+    protected function runMigrateArtisanCommand(): void
+    {
+        $this->runProcess("composer dump-autoload --no-scripts");
+        $this->extension->call('migrate');
+    }
+
+    /**
+     * Parse guard name
+     * Get the guard name in different cases
+     * @return array
+     */
+    protected function parseName(?string $name = null): array
+    {
+        if (!$name)
+            $name = config('administrable.guard', 'admin');
+
+        return [
+            '{{namespace}}'           =>  $this->extension->getAppNamespace(),
+            '{{pluralCamel}}'         =>  Str::plural(Str::camel($name)),
+            '{{pluralSlug}}'          =>  Str::plural(Str::slug($name)),
+            '{{pluralSnake}}'         =>  Str::plural(Str::snake($name)),
+            '{{pluralClass}}'         =>  Str::plural(Str::studly($name)),
+            '{{singularCamel}}'       =>  Str::singular(Str::camel($name)),
+            '{{singularSlug}}'        =>  Str::singular(Str::slug($name)),
+            '{{singularSnake}}'       =>  Str::singular(Str::snake($name)),
+            '{{singularClass}}'       =>  Str::singular(Str::studly($name)),
+            '{{theme}}'               =>  Str::lower(config('administrable.theme')),
+            '{{frontNamespace}}'      =>  Str::ucfirst(config('administrable.front_namespace')),
+            '{{frontLowerNamespace}}' =>  Str::lower(config('administrable.front_namespace')),
+            '{{backNamespace}}'       =>  Str::ucfirst(config('administrable.back_namespace')),
+            '{{backLowerNamespace}}'  =>  Str::lower(config('administrable.back_namespace')),
+            '{{administrableLogo}}'   =>  config('administrable.logo_url'),
+        ];
+    }
+
+    /**
+     *
+     * loadViews()
+     *      loadFrontViews()
+     *      loadBackViews()
+     */
 
 }

@@ -1,0 +1,118 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
+
+use Illuminate\Http\Request;
+use {{namespace}}\Traits\FormBuilderTrait;
+use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}};
+use {{namespace}}\Forms\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Form;
+
+
+class {{extensionClass}}Controller extends Controller
+{
+    use FormBuilderTrait;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        ${{extensionPluralSlug}} = {{extensionClass}}::last()->get();
+        $form = $this->getForm(new {{extensionClass}}, {{extensionClass}}Form::class);
+
+        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.index', compact('{{extensionPluralSlug}}','form'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $form = $this->getForm(new {{extensionClass}}, {{extensionClass}}Form::class);
+
+        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.create', compact('form'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $form = $this->getForm(new {{extensionClass}}, {{extensionClass}}Form::class);
+
+        $form->redirectIfNotValid();
+
+        {{extensionClass}}::create($request->all());
+
+        flashy('L\' élément a bien été ajouté');
+
+        return redirect()->route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}  ${{extensionSingularSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function show({{extensionClass}} ${{extensionSingularSlug}})
+    {
+        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.show', compact('{{extensionSingularSlug}}'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}  ${{extensionSingularSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function edit({{extensionClass}} ${{extensionSingularSlug}})
+    {
+        $form = $this->getForm(${{extensionSingularSlug}}, {{extensionClass}}Form::class);
+
+        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.edit', compact('{{extensionSingularSlug}}', 'form'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}  ${{extensionSingularSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, {{extensionClass}} ${{extensionSingularSlug}})
+    {
+        $form = $this->getForm(${{extensionSingularSlug}}, {{extensionClass}}Form::class);
+        $form->redirectIfNotValid();
+
+        ${{extensionSingularSlug}}->update($request->all());
+
+        flashy('L\' élément a bien été modifié');
+
+        return redirect()->route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index');
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}  ${{extensionSingularSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy({{extensionClass}} ${{extensionSingularSlug}})
+    {
+        ${{extensionSingularSlug}}->delete();
+        flashy('L\' élément a bien été supprimé');
+
+        return redirect()->route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index');
+    }
+
+}

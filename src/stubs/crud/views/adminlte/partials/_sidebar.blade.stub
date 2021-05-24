@@ -1,10 +1,10 @@
-                     <!-- {{singularSlug}} link -->
+                     <!-- {{sidebarViewModelWithSubfolder}} link -->
                      <li class="nav-item">
-                        <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
+                        <a href="{{ route('{{indexRoute}}') }}" class="nav-link {{ set_active_link('{{indexRoute}}') }}">
                           <i class="nav-icon fa {{icon}} icon"></i>
                           <p>
                             {{translateModelUcfirst}}
                           </p>
                         </a>
                     </li>
-                    <!-- end {{singularSlug}} link -->
+                    <!-- end{{sidebarViewModelWithSubfolder}} link -->

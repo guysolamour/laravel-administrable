@@ -6,5 +6,5 @@
     public function index()
     {
         ${{pluralSlug}} = {{singularClass}}::last()->get();
-        return view('{{backLowerNamespace}}.{{pluralSlug}}.index', compact('{{pluralSlug}}'));
+        return view('{{indexView}}', compact('{{pluralSlug}}'));
     }

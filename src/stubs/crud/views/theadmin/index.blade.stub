@@ -24,7 +24,7 @@
                     </h5>
                     <div class="btn-group">
                         {{-- create link --}}
-                        <a href="#" class="btn btn-sm btn-label btn-round btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\{{singularClass}}"
+                        <a href="#" class="btn btn-sm btn-label btn-round btn-danger d-none" data-model="\{{namespace}}\{{modelsNamespace}}\{{singularClass}}"
                             id="delete-all"><label><i class="fa fa-trash"></i></label> Tous supprimer</a>
 
                     </div>

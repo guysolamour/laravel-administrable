@@ -1,5 +1,5 @@
-    public function {{morphFieldName}}()
+    public function {{pluralMorphFieldName}}()
     {
-        return $this->morphMany({{relatedSingularClass}}::class,'{{morphRelationableName}}');
+        return $this->morphMany({{relatedSingularClass}}::class, '{{morphRelationableName}}');
     }
 

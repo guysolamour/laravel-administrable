@@ -1,0 +1,5 @@
+    public function {{modelPluralSlug}}()
+    {
+        return $this->morphedByMany({{modelSingularClass}}::class, '{{morphRelationableName}}');
+    }
+

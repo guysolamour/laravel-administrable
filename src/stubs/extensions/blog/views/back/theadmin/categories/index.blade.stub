@@ -1,0 +1,176 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title','Catégories')
+
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item active">Catégories</li>
+            </ol>
+        </nav>
+
+    </div>
+
+    <div class="card">
+        {{-- <h4 class="card-title">
+                Catégories
+            </h4> --}}
+
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title h3">
+                        Catégories
+                    </h5>
+                    <div class="btn-group">
+                        <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.category.create') }}"
+                            class="btn btn-sm btn-label btn-round btn-primary"><label><i class="fa fa-plus"></i></label>
+                            Ajouter</a>
+                        <a href="#" data-model="\{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\Category" id="delete-all" class="btn btn-sm btn-label btn-round btn-danger d-none"><label><i
+                                    class="fa fa-trash"></i></label> Tous Supprimer</a>
+
+                    </div>
+                </div>
+
+                <table class="table table-hover table-has-action" id='list'>
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="check-all">
+                                    <label class="form-check-label" for="check-all"></label>
+                                </div>
+                            </th>
+                            <th></th>
+                            <th>Nom</th>
+                            <th>Date ajout</th>
+                            {{-- add fields here --}}
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($categories as $category)
+                        <tr>
+                            <td>
+                                 <div class="form-check">
+                                    <input type="checkbox" data-check class="form-check-input" data-id="{{ $category->id }}"
+                                        id="check-{{ $category->id }}">
+                                    <label class="form-check-label" for="check-{{ $category->id }}"></label>
+                                </div>
+                            </td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td><a class="text-dark" data-provide="tooltip" title="Apercu rapide"   href="#qv-categories-details-{{ $category->id }}" data-toggle="quickview">{{ $category->name }}</a></td>
+                            <td>{{ $category->created_at->format('d/m/Y h:i') }}</td>
+                            {{-- add values here --}}
+
+                            <td>
+                                <nav class="nav no-gutters gap-2 fs-16">
+                                    <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.category.show', $category) }}"
+                                        data-provide="tooltip" title="Afficher"><i
+                                            class="ti-eye"></i></a>
+
+                                    <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params($category)) }}" data-provide="tooltip"
+                                        title="Cloner"><i class="ti-layers"></i></a>
+
+                                    <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.category.edit', $category) }}"
+                                        data-provide="tooltip" title="Editer"><i
+                                            class="ti-pencil"></i></a>
+                                    <a class="nav-link hover-danger" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.category.destroy', $category) }}" data-provide="tooltip" title=""
+                                        data-method="delete"
+                                        data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                        title='Supprimer'
+                                        data-original-title="Supprimer"><i class="ti-close"></i></a>
+                                </nav>
+                            </td>
+                            <div id="qv-categories-details-{{ $category->id }}" class="quickview quickview-lg">
+                                <div class="quickview-body">
+
+                                    <div class="card card-inverse bg-img"
+                                        style="background-image: url(/vendor/theadmin/assets/img/gallery/thumb/2.jpg);">
+                                        <div class="flexbox px-20 pt-20">
+
+                                          <a class="text-white fs-20 lh-1" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.category.show', $category) }}"><i class="fa fa-eye"></i></a>                                        </div>
+
+                                        </div>
+
+                                        <div class="card-body text-center pb-50">
+
+                                            <h4 class="mt-2 mb-0"><a class="hover-primary text-white" href="#">Catégorie</a></h4>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="quickview-block form-type-material">
+                                          {{-- add quick values here --}}
+                                         <div>
+                                            <p><span class="font-weight-bold">Nom:</span></p>
+                                            <p>
+                                                {{ $category->name }}
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <p><span class="font-weight-bold">Date ajout:</span></p>
+                                            <p>
+                                                {{ $category->created_at->format('d/m/Y h:i') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                <footer class="p-12 text-right">
+                                    <button class="btn btn-flat btn-secondary" type="button" data-toggle="quickview">Annuler</button>
+                                </footer>
+                            </div>
+                        </tr>
+                       @endforeach
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="fab fab-fixed">
+    <a class="btn btn-float btn-primary" href="#dock-new-category" title="Nouvelle catégorie" data-provide="tooltip"
+        data-toggle="dock"><i class="fa fa-plus"></i></a>
+</div>
+
+<!-- Dock - Add user -->
+<div class="dock-list">
+
+    <!-- Dock - Compose an email -->
+    <div id="dock-new-category" class="dock dock-sm">
+        <header class="dock-header dock-header-inverse bg-info">
+            <div class="dock-title">
+                <span><i class="fa fa-plus"></i></span>
+                <span>Nouvelle catégorie</span>
+            </div>
+
+            <div class="dock-actions">
+                <span title="Close" data-provide="tooltip" data-dock="close"></span>
+                <span title="Réduire" data-provide="tooltip" data-dock="minimize"></span>
+            </div>
+        </header>
+
+        <div class="dock-body dock-block form-type-material">
+          {!! form($form) !!}
+        </div>
+
+        <footer class="dock-footer text-right">
+            <button class="btn btn-flat btn-secondary" type="button" data-dock="close">Annuler</button>
+            <button class="btn btn-flat btn-primary" type="submit" onclick="$('#dock-new-category form[name={{ $category->form_name }}]').submit()">Enregistrer</button>
+        </footer>
+    </div>
+
+</div>
+
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+@endsection

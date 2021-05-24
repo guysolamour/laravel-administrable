@@ -1,0 +1,75 @@
+{!! form_start($form) !!}
+<div class="row">
+    <div class="col-md-8">
+        {!! form_row($form->title) !!}
+        <div class="form-row">
+            <div class="col">
+                {!! form_row($form->getField("categories[]")) !!}
+            </div>
+            <div class="col">
+                {!! form_row($form->getField("tags[]")) !!}
+            </div>
+        </div>
+        {!! form_row($form->content) !!}
+
+        @seoForm([
+        'model' => $form->getModel()
+        ])
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-secondary ">
+                <h3 class="card-title text-white">Publication</h3>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <a href=""
+                        onclick="event.preventDefault();document.querySelector('form[name={{$form->getModel()->form_name}}]').submit()"
+                        class="btn btn-success">Publier</a>
+                </div>
+                {!! form_row($form->online) !!}
+                {!! form_row($form->allow_comment) !!}
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="created_at">Date et heure de publication:</label>
+                    <input type="text" name="created_at" id="created_at" class="form-control">
+                </div>
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                {!! form_row($form->author_id) !!}
+            </div>
+        </div>
+        @imagemanager([
+            'front_image_label' => 'Image à la une',
+            'model'             => $form->getModel(),
+            'front_image'       => true,
+        ])
+    </div>
+</div>
+{!! form_end($form) !!}
+
+
+@tinymce([
+    'selector' => "form[name={$form->getModel()->form_name}] textarea[data-tinymce]",
+    'model' => $form->getModel(),
+])
+
+@select2()
+
+@daterangepicker([
+    'drp_fieldname'        => 'created_at',
+    'drp_model'            => $form->getModel(),
+    'drp_singledatepicker' => true,
+    'drp_opens'            => 'left',
+    'drp_drops'            => 'bottom',
+])

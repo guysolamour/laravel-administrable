@@ -1,0 +1,7 @@
+ <?php
+
+use Spatie\Honeypot\ProtectAgainstSpam;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/contact', '{{frontNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\ContactController@create')->name('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.create');
+Route::post('/contact', '{{frontNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\ContactController@store')->name('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.store')->middleware(ProtectAgainstSpam::class);

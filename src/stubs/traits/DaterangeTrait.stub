@@ -7,19 +7,25 @@ use Carbon\Carbon;
 
 trait DaterangeTrait
 {
-    /**
-     * @param string $dates
-     * @return array
-     */
+
+    public function getDateranges() :array
+    {
+        return $this->dateranges ?? [];
+    }
+
+
+    public function getDatepickers() :array
+    {
+        return $this->datepickers ?? [];
+    }
+
+
     private function parseRangeDates(string $dates): array
     {
         return  array_map(fn($date) => $this->sanitizeDaterangeDate($date), explode(' - ', $dates));
     }
 
-    /**
-     * @param string $date
-     * @return string
-     */
+
     private function sanitizeDaterangeDate(string $date) :string
     {
         return Carbon::parse(str_replace('/', '-', str_replace(['AM', 'am', 'PM', 'pm'], '', $date)))->toDateTimeString();
@@ -33,7 +39,6 @@ trait DaterangeTrait
         $attributes = $this->dateranges;
 
         if (!empty($attributes)){
-
             foreach ($attributes as $attribute ) {
                 if ($dates = request($attribute)){
                     [$start_at, $end_at] = $this->parseRangeDates($dates);

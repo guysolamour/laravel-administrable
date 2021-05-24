@@ -1,2 +1,2 @@
-  <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.edit', ${{singularSlug}}) }}" class="btn btn-info"
+  <a href="{{ route('{{editRoute}}', ${{singularSlug}}) }}" class="btn btn-info"
                                             title="Editer"><i class="fas fa-edit"></i></a>

@@ -1,6 +1,5 @@
 <?php
 
-use {{namespace}}\Settings\ConfigurationSettings;
 use Spatie\LaravelSettings\Migrations\SettingsMigration;
 
 class CreateConfigurationSettings extends SettingsMigration
@@ -8,29 +7,29 @@ class CreateConfigurationSettings extends SettingsMigration
 
     public function up(): void
     {
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.email', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.postal', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.area', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.cell', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.phone', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.about', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.youtube', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.twitter', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.facebook', null);
-        $this->migrator->add(ConfigurationSettings::PREFIX . '.linkedin', null);
+        $this->migrator->add('configuration.email', null);
+        $this->migrator->add('configuration.postal', null);
+        $this->migrator->add('configuration.area', null);
+        $this->migrator->add('configuration.cell', null);
+        $this->migrator->add('configuration.phone', null);
+        $this->migrator->add('configuration.about', null);
+        $this->migrator->add('configuration.youtube', null);
+        $this->migrator->add('configuration.twitter', null);
+        $this->migrator->add('configuration.facebook', null);
+        $this->migrator->add('configuration.linkedin', null);
     }
 
     public function down(): void
     {
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.email');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.postal');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.area');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.cell');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.phone');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.about');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.youtube');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.twitter');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.facebook');
-        $this->migrator->delete(ConfigurationSettings::PREFIX . '.linkedin');
+        $this->migrator->delete('configuration.email');
+        $this->migrator->delete('configuration.postal');
+        $this->migrator->delete('configuration.area');
+        $this->migrator->delete('configuration.cell');
+        $this->migrator->delete('configuration.phone');
+        $this->migrator->delete('configuration.about');
+        $this->migrator->delete('configuration.youtube');
+        $this->migrator->delete('configuration.twitter');
+        $this->migrator->delete('configuration.facebook');
+        $this->migrator->delete('configuration.linkedin');
     }
 }

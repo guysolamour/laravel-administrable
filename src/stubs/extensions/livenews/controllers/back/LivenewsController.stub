@@ -1,21 +1,19 @@
 <?php
 
-namespace {{namespace}}\Http\Controllers\{{backNamespace}}\Extension;
+namespace {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
 
 use {{namespace}}\Http\Controllers\Controller;
-use {{namespace}}\Settings\LivenewsSettings;
+use {{namespace}}\Settings\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Settings;
 use Illuminate\Http\Request;
 
 class LivenewsController extends Controller
 {
-
-
-    public function index(LivenewsSettings $settings)
+    public function index({{extensionClass}}Settings $settings)
     {
-        return view('{{backLowerNamespace}}.extensions.livenews.index', compact('settings'));
+        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.index', compact('settings'));
     }
 
-    public function update(Request $request, LivenewsSettings $settings)
+    public function update(Request $request, {{extensionClass}}Settings $settings)
     {
         $request->validate([
             'content'          => 'required|string',

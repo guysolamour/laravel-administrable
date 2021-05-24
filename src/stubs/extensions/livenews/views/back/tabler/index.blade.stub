@@ -1,6 +1,6 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
-@section('title', "Ruban d'actualités")
+@section('title', "{{extensionLabel}}")
 
 
 
@@ -10,7 +10,7 @@
         <div class="d-flex justify-content-between">
             <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
                 <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Ruban d'actualités</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{extensionLabel}}</a></li>
             </ol>
         </div>
     </div>
@@ -20,10 +20,10 @@
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between mb-3">
-            <h3> Ruban d'actualités </h3>
+            <h3> {{extensionLabel}} </h3>
         </div>
 
-         <form action="{{ route('{{backLowerNamespace}}.extension.livenews.update') }}" method="POST" novalidate>
+         <form action="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.update') }}" method="POST" novalidate>
             @csrf
             @method('put')
             <div class="row">

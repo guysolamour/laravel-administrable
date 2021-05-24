@@ -10,16 +10,14 @@
         <li class="nav-item {{ set_active_link('home')  }}">
           <a class="nav-link" href="{{ route('home') }}">Accueil <span class="sr-only">(current)</span></a>
         </li>
+        @if (Route::has('{{frontLowerNamespace}}.about.index'))
         <li class="nav-item {{ set_active_link('{{frontLowerNamespace}}.about.index')  }}">
           <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.about.index') }}">A propos</a>
         </li>
-        <li class="nav-item {{ set_active_link('{{frontLowerNamespace}}.post.index','{{frontLowerNamespace}}.post.show')  }}">
-          <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.post.index') }}">Articles</a>
-        </li>
-        <li class="nav-item {{ set_active_link('{{frontLowerNamespace}}.contact.create')  }}">
-          <a class="nav-link" href="{{ route('{{frontLowerNamespace}}.contact.create') }}">Contact</a>
-        </li>
-         <!-- Authentication Links -->
+        @endif
+
+        {{-- insert extensions links here --}}
+
         @guest
         <li class="nav-item">
             <a class="nav-link" href="{{ route('login') }}">Connexion</a>

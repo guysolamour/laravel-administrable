@@ -1,0 +1,18 @@
+@component('mail::message')
+Bonjour {{ ${{singularSlug}}->full_name }},
+un message de contact vient d'être envoyé
+sur la plateforme par {{ ${{extensionSingularSlug}}->name }} chez {{ ${{extensionSingularSlug}}->email }}
+
+@slot('title')
+Message de contact  {{ config('app.name') }}
+@endslot
+
+@component('mail::panel')
+{{ Str::limit(${{extensionSingularSlug}}->content, 500) }}
+@endcomponent
+
+
+Merci, de bien vouloir traiter ce message <br>
+{{ config('app.name') }}
+@endcomponent
+

@@ -1,6 +1,0 @@
-          <li class="nav-item">
-            <a href="{{ route('{{backLowerNamespace}}.testimonial.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.testimonial.index') }}">
-              <i class="nav-icon far  fa-comments-alt"></i>
-              <p>Témoignages </p>
-            </a>
-          </li>

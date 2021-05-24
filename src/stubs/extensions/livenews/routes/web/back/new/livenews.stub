@@ -1,0 +1,11 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller;
+
+Route::prefix('{{extensionsFolder}}/')->middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::name('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.')->group(function () {
+        Route::get('{{extensionPluralSlug}}', [{{extensionClass}}Controller::class, 'index'])->name('index');
+        Route::put('{{extensionPluralSlug}}', [{{extensionClass}}Controller::class, 'update'])->name('update');
+    });
+});

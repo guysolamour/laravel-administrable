@@ -39,7 +39,7 @@
             <div class="card-body">
                 <div class='row'>
                     <div class='col-md-8'>
-                        @include('{{backLowerNamespace}}.{{pluralSlug}}._form')
+                        @include('{{formPath}}')
                     </div>
                     <div class='col-md-4'>
                         {{-- add imagemanager here --}}

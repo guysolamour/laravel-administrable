@@ -13,7 +13,7 @@ return [
      * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
      * The theme should not be changed once the installation has been done
      */
-    'theme' => 'adminlte',
+    'theme' => 'themekit',
 
     /**
      * The guard used for the installation. By default the value is admin.
@@ -56,6 +56,12 @@ return [
      * Route::get('/users', 'App\Http\Controllers\UserController@index');
      */
     'route_controller_callable_syntax' => true,
+
+    /*
+     * When you create a new settings migration via the `make:settings-migration`
+     * command the package will store these migrations in this directory.
+     */
+    'migrations_path' => database_path('extensions'),
 
     /**
      * Redirect when attempting to access some routes or files
@@ -156,12 +162,8 @@ return [
     ],
 
     /**
-     * These mails are used by the conceptor to maintain the application
+     * This mail is used by the conceptor to maintain the application
      */
-    'emails' => [
-        'rolandassale@gmail.com',
-        'rolandassale@aswebagency.com',
-        'contact@aswebagency.com',
-    ],
+    'email' => env('CONCEPTOR_EMAIL'),
 
 ];

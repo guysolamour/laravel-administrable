@@ -3,6 +3,7 @@ namespace Database\Seeders;
 
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use {{namespace}}\Settings\ConfigurationSettings;
 
 class ConfigurationsTableSeeder extends Seeder
@@ -31,9 +32,14 @@ class ConfigurationsTableSeeder extends Seeder
             'linkedin' => $faker->url,
         ]);
 
-        option_create_many([
-            'app_paid'     => '1',
-            'app_notpaid_default_message' => "Votre site a été mis hors service pour cause de non paiement. Si vous êtes le propriétaire, prière de contacter le concepteur pour régulariser la situation.",
+        DB::table('options')->insert([
+            'name'  => 'app_paid',
+            'value' =>  '1',
+        ]);
+
+        DB::table('options')->insert([
+            'name'  => 'app_notpaid_default_message',
+            'value' => "Votre site a été mis hors service pour cause de non paiement. Si vous êtes le propriétaire, prière de contacter le concepteur pour régulariser la situation.",
         ]);
     }
 }

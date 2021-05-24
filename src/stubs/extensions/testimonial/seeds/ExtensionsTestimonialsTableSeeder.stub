@@ -1,0 +1,30 @@
+<?php
+namespace Database\Seeders\{{extensionsFolderClass}}\{{extensionClass}};
+
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}};
+
+class {{extensionsFolderClass}}{{extensionPluralClass}}TableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Faker::create();
+         for ($i = 0; $i < 15; $i++) {
+            {{extensionClass}}::create([
+                'name'    => $faker->firstname,
+                'email'   => $faker->safeEmail(),
+                'job'     => $faker->title,
+                'content' => $faker->realText(500),
+                'online'  => $faker->randomElement([true,false]),
+            ]);
+        }
+
+    }
+}

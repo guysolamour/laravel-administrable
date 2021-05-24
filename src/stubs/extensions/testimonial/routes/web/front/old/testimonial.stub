@@ -1,0 +1,9 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+
+Route::get('{{extensionPluralSlug}}','{{frontNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller@index')->name('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index');
+
+
+

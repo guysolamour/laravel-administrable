@@ -1,4 +1,4 @@
-@if($front_image)
+@if(isset($front_image) && $front_image)
 <div class="card card-secondary front-image-collection">
     <div class="card-header">
         <h3 class="card-title">
@@ -36,7 +36,7 @@
 </div>
 @endif
 
-@if($back_image)
+@if(isset($back_image) && $back_image)
 <div class="card card-secondary back-image-collection">
     <div class="card-header">
         <h3 class="card-title">
@@ -75,7 +75,7 @@
 @endif
 
 
-@if($images)
+@if(isset($images) && $images)
 <div class="card card-secondary images-collection">
     <div class="card-header">
         <h3 class="card-title">
@@ -140,7 +140,7 @@
     ImageManager.init({
         model                        : @json($model),
         model_name                   : @json($model_name ?? get_class($model)),
-        form_name                    : @json($form_name),
+        form_name                    : @json($form_name ?? $model->form_name),
         prefix                       : '{{ config('administrable.auth_prefix_path') }}',
         'front-image'                : @json($front_image ?? false),
         'back-image'                 : @json($back_image ?? false),

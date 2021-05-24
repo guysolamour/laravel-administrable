@@ -1,0 +1,14 @@
+           <li class="nav-item">
+             <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}">
+               <i class="nav-icon far fa-envelope"></i>
+                 Messagerie
+               <p>
+                   @php
+                       $new_mailboxes =  \{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}::unread()->count()
+                   @endphp
+                   @if($new_mailboxes)
+                      <span class="badge badge-success right">{{ $new_mailboxes  }}</span>
+                   @endif
+               </p>
+             </a>
+           </li>

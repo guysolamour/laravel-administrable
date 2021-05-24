@@ -1,8 +1,9 @@
 <?php
 
-namespace {{namespace}}\{{modelsFolder}};
+namespace {{namespace}}\{{modelsNamespace}};
 
 use {{namespace}}\Traits\ModelTrait;
+
 
 class {{singularClass}} extends BaseModel
 {
@@ -14,6 +15,10 @@ class {{singularClass}} extends BaseModel
 
     {{cast}}
 
+    {{daterange}}
+
+    {{datepicker}}
+
     // add relation methods below
 
 
@@ -22,7 +27,5 @@ class {{singularClass}} extends BaseModel
     // add sluggable methods below
 
 
-    {{daterange}}
 
-    {{datepicker}}
 }

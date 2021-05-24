@@ -266,7 +266,7 @@
 
     <div class="grid page__grid">
 
-      <div class="page__sidebar d-print-none"><div class="sidebar-toc"><ul class="toc toc--navigator"><li class="toc-h1">Setup</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/installation">Installation</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/configuration">Configuration</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/quick-start">Quick Start</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/changelog">Changelog</a></li><li class="toc-h1">Crud</li><li class="toc-h2 active"><a href="/laravel-administrable/docs/en/generate-crud">Generate</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/append-crud">Append</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/rollback-crud">Rollback</a></li></ul></div></div><div class="page__main js-page-main has-aside cell cell--auto">
+      <div class="page__sidebar d-print-none"><div class="sidebar-toc"><ul class="toc toc--navigator"><li class="toc-h1">Setup</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/installation">Installation</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/configuration">Configuration</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/quick-start">Quick Start</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/changelog">Changelog</a></li><li class="toc-h1">Crud</li><li class="toc-h2 active"><a href="/laravel-administrable/docs/en/generate-crud">Generate</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/append-crud">Append</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/rollback-crud">Rollback</a></li><li class="toc-h1">Components</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/daterangepicker-component">daterangepicker</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/select2-component">select2</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/tinymce-component">tinymce</a></li><li class="toc-h1">Extensions</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/daterange-component">Livenews</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/datepicker-component">blog</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/select2-component">testimonial</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/select2-component">contact</a></li><li class="toc-h1">Deployment</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/daterange-component">Install</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/datepicker-component">Deploy</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/select2-component">Rollback</a></li></ul></div></div><div class="page__main js-page-main has-aside cell cell--auto">
 
       <div class="page__main-inner"><div class="page__header d-print-none"><header class="header"><div class="main">
       <div class="header__title">
@@ -288,7 +288,7 @@
           <a class="edit-on-github"
             title="Edit on Github"
             href="https://github.com/guysolamour/administrable/tree/master/_docs/en/2.1-generate-crud.md">
-            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Crud"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-04-08T11:07:15+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
+            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Crud"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-05-25T15:14:19+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
 
 <!-- end custom article top snippet -->
 <div class="article__content" itemprop="articleBody"><p>This command generates the crud (<strong><em>model</em></strong>, <strong><em>controller</em></strong>, <strong><em>migration</em></strong>, <strong><em>form</em></strong>, <strong><em>views</em></strong>, <strong><em>seed</em></strong>) for a particular model.</p>
@@ -298,314 +298,173 @@
 
 <p>The <strong><em>–migrate</em></strong> or <strong><em>-m</em></strong> option is used to run artisan migrate command</p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">make</span><span class="o">:</span><span class="n">crud</span> <span class="p">{</span><span class="nc">Model</span><span class="p">}</span> <span class="o">--</span><span class="n">migrate</span><span class="o">=</span><span class="s2">"true"</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">make</span><span class="o">:</span><span class="n">crud</span> <span class="p">{</span><span class="nc">Model</span><span class="p">}</span> <span class="o">--</span><span class="n">migrate</span><span class="o">=</span><span class="s2">"true"</span> <span class="c1"># or --migrate="false"</span>
 </code></pre></div></div>
 
-<p>or</p>
+<p class="info">The default value is <strong><em>true</em></strong></p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">make</span><span class="o">:</span><span class="n">crud</span> <span class="p">{</span><span class="nc">Model</span><span class="p">}</span> <span class="o">--</span><span class="n">migrate</span><span class="o">=</span><span class="s2">"false"</span>
+<p>To customize the generation, a configuration file <strong><em>administrable.yaml</em></strong> located at the root of the project is used. This file uses the <strong>Yaml</strong> language. If you do not know this syntax you can go <a href="https://yaml.org" target="_blank">to the official website</a> to learn more. Je vous assure ce n’est pas tres compliqué à apprendre.</p>
+
+<h2 id="le-fichier-de-définition">Le fichier de définition</h2>
+
+<p>Le fichier de personnalisation est composé de deux blocs, le block <code class="language-plaintext highlighter-rouge">globals</code> qui permet de définir des actions qui affecteront tous les crud qui seront generes plus tard.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">globals</span><span class="pi">:</span>
+  <span class="c1"># Where to store models in app folder</span>
+  <span class="na">folder</span><span class="pi">:</span> <span class="s">Models</span>
+
+  <span class="c1"># activate or deactivate slug editing in form globally</span>
+  <span class="na">edit_slug</span><span class="pi">:</span> <span class="no">false</span>
+
+  <span class="c1"># Permet d'ajouter un bouton clone sur la page index pour accélerer la creation</span>
+  <span class="c1"># de nouveaux eleemts en se basant sur un element.</span>
+  <span class="na">clone</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="c1"># use fillable or guarded. You can not use both fillable and guarded property</span>
+  <span class="na">fillable</span><span class="pi">:</span> <span class="no">true</span> <span class="c1"># guarded: false</span>
+
+  <span class="c1"># Cette option permet de générer un seeder pour populer le modele.</span>
+  <span class="c1"># Elle accepte un boolean ou un integer qui sera le nombre d'eléments à enregistrer en bdd.</span>
+  <span class="c1"># Si c'est la valeur est `true` alors le nombre sera 15 par défaut.</span>
+  <span class="na">seeder</span><span class="pi">:</span> <span class="no">true</span>
+
 </code></pre></div></div>
 
-<p><strong>NB:</strong></p>
-
-<p class="info">The default value is <em>true</em></p>
-
-<p>To customize the generation, a configuration file <strong><em>administrable.yaml</em></strong> located at the root of the project is used. This file uses the <strong>Yaml</strong> language. If you do not know this syntax you can go <a href="https://www.yaml.org">to the official website</a> to learn more.</p>
+<p>Le second block est <code class="language-plaintext highlighter-rouge">models</code> qui sera la partie reserver à la définition des futurs modèles à générer</p>
 
 <p>Example of model declaration: <strong><em>Post</em></strong></p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">nullable</span><span class="pi">,</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
-  <span class="na">image</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">image</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">image</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
-  <span class="na">breadcrumb</span><span class="pi">:</span> <span class="s">name</span>
-  <span class="na">imagemanager</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="s">front</span>
-    <span class="pi">-</span> <span class="s">back</span>
-    <span class="pi">-</span> <span class="s">images</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">breadcrumb</span><span class="pi">:</span> <span class="s">name</span>
+    <span class="na">imagemanager</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">nullable</span><span class="pi">,</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+      <span class="pi">-</span> <span class="na">image</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">image</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">image</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
 </code></pre></div></div>
 
-<h2 id="overview">Overview</h2>
+<p class="info">Tous les champs doivent etre declares dans la partie <strong><em>fields</em></strong></p>
 
-<p>Only the name is required to declare a field (in some case).</p>
+<h2 id="définition-dun-modèle">Définition d’un modèle</h2>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">name</span> <span class="pi">}</span>
+<p>Nous allons voir toutes les options et possibilités disponibles pour définir un modele. Je vous conseille de voir toutes les options avant de vous lancer.</p>
+
+<h3 id="table-name">Table name</h3>
+
+<p>To change  database table name</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">table_name</span><span class="pi">:</span> <span class="s">posts</span>
+</code></pre></div></div>
+<h3 id="seeder">Seeder</h3>
+
+<p>To avoid generating a seeder file</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">seeder</span><span class="pi">:</span> <span class="no">false</span>
+</code></pre></div></div>
+<p class="info">The default value is <strong>true</strong></p>
+
+<h3 id="timestamps">Timestamps</h3>
+
+<p>By default for each model laravel manages the <em>created_at</em> and <em>updated_at</em> fields.
+To deactivate it you can proceed as follows:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">timestamps</span><span class="pi">:</span> <span class="no">false</span>
 </code></pre></div></div>
 
-<p>However it can be optional if other keys are passed.</p>
+<p>It will add on the model the attribute</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">protected</span> <span class="nv">$timestamps</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 </code></pre></div></div>
 
-<h2 id="field-types">Field types</h2>
+<p class="info">The default value is <strong><em>true</em></strong></p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span>  <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span> <span class="pi">}</span>
+<h3 id="imagemanger">Imagemanger</h3>
+
+<p>Pour utiliser le gestionnaire de fichier pour lier des images sur le modele.</p>
+
+<p>To use the image manager for a specific model.</p>
+
+<p class="info">A model can only use 03 collections (<strong><em>front</em></strong>, <strong><em>back</em></strong> and <strong><em>images</em></strong>)</p>
+
+<p>To use all collections and default labels</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">imagemanager</span><span class="pi">:</span> <span class="no">true</span>
 </code></pre></div></div>
 
-<p>The default type is: <strong><em>string</em></strong></p>
+<p>You can choose the collection(s) to use</p>
 
-<p>Available types are: <strong>string, text, mediumText, longText, date, datetime, boolean, enum, decimal, float, double, integer, mediumInteger, bigInteger, polymorphic, ipAdress, image, relation, file</strong></p>
-
-<p class="info">For file type  you can use either <em>file</em> or <em>image</em> (just an alias)</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">file</span> <span class="pi">}</span> <span class="c1"># or { type: image }</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+      <span class="na">imagemanager</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">front</span>
+        <span class="pi">-</span> <span class="s">back</span>
+        <span class="pi">-</span> <span class="s">images</span>
 </code></pre></div></div>
 
-<h2 id="polymorphic-type">Polymorphic type</h2>
+<p>Labels can be changed this way</p>
 
-<p>To create a polymorphic field</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">polymorphic</span> <span class="pi">}</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">imagemanager</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">front</span><span class="pi">:</span> <span class="nv">front image label</span><span class="pi">,</span> <span class="nv">back</span><span class="pi">:</span> <span class="nv">back image label</span><span class="pi">,</span> <span class="nv">images</span><span class="pi">:</span> <span class="nv">images label</span> <span class="pi">}</span>
 </code></pre></div></div>
 
 <p>or</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span><span class="pi">,</span> <span class="nv">polymorphic</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+      <span class="na">imagemanager</span><span class="pi">:</span>
+        <span class="na">front</span><span class="pi">:</span> <span class="s">front image label</span>
+        <span class="na">back</span><span class="pi">:</span> <span class="s">back image label</span>
+        <span class="na">images</span><span class="pi">:</span> <span class="s">images label</span>
 </code></pre></div></div>
 
-<p>The name of the polymorphic relation is the name of the field with the suffix <strong><em>able</em></strong> by default. This behavior can be modified with:</p>
+<h3 id="icon">Icon</h3>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">image</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span> <span class="s">image</span>
-    <span class="na">name</span><span class="pi">:</span> <span class="s">mediaable</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+<p>To change the icon used in the administration sidebar.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">icon</span><span class="pi">:</span> <span class="s">fa-folder</span>
 </code></pre></div></div>
 
-<p>Polymorphic field names can be changed with</p>
+<p class="info">The icon must be taken from the <a href="https://fontawesome.com" target="_blank">font awesome library</a> and
+the default value is <strong><em>fa-folder</em></strong></p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">image</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span> <span class="s">image</span>
-    <span class="na">model_id</span><span class="pi">:</span> <span class="s">imageable_id</span>
-    <span class="na">model_type</span><span class="pi">:</span> <span class="s">imageable_type</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+<h3 id="generate">Generate</h3>
+<p>il faudra retirer la partie entité car maintenant ont peut passer l’option generate pour choisir le ou les fichiers qu’on souhaite générer.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Note</span><span class="pi">:</span>
+  <span class="na">generate</span><span class="pi">:</span> <span class="s">model|migration|seed|form|controller|route|view</span>
+</code></pre></div></div>
+<p>ou</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Note</span><span class="pi">:</span>
+  <span class="na">generate</span><span class="pi">:</span> <span class="s">model,migration,seed,form,controller,route,view</span>
+</code></pre></div></div>
+<p>ou</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Note</span><span class="pi">:</span>
+  <span class="na">generate</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">model</span>
+    <span class="pi">-</span> <span class="s">migration</span>
+    <span class="pi">-</span> <span class="s">seed</span>
+    <span class="pi">-</span> <span class="s">form</span>
+    <span class="pi">-</span> <span class="s">controller</span>
+    <span class="pi">-</span> <span class="s">route</span>
+    <span class="pi">-</span> <span class="s">view</span>
 </code></pre></div></div>
 
-<p>The <em>model_id</em> must have the suffix <strong><em>_ id</em></strong> and the <em>model_type</em> must have the suffix <strong><em>_ type</em></strong></p>
-
-<h2 id="form">Form</h2>
-
-<p>You can pass valid html5 attributes to the form that will be generated</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
-  <span class="na">facebook</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">,</span> <span class="nv">form</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">id</span><span class="pi">:</span> <span class="nv">form_id</span><span class="pi">,</span> <span class="nv">class</span><span class="pi">:</span> <span class="nv">class_name</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">url</span> <span class="pi">}</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p class="info">supported attributes are <em>id</em>, <em>class</em> , <em>pattern</em>, <em>type</em>, <em>readonly</em>, <em>disabled</em></p>
-
-<h2 id="cast">Cast</h2>
-
-<p>Attribute casting allow you to transform Eloquent attribute values when you retrieve or set them on models instances.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">integer</span><span class="pi">,</span> <span class="nv">cast</span><span class="pi">:</span> <span class="nv">integer</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p class="info">boolean and datetime types are automatically cast</p>
-
-<h2 id="datepicker">Datepicker</h2>
-
-<p>Add datepicker for date type fields.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">datepicker</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p class="info">only date type fields can have a datepicker</p>
-<h2 id="daterange">Daterange</h2>
-
-<p>For a date range type field, two fields will be created to represent the start field and the end field respectively with the suffix <strong><em>start_at</em></strong> and <strong><em>end_at</em></strong>. Suffixes can be changed in the configuration file.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
-  <span class="na">promotion</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">datetime</span><span class="pi">,</span>  <span class="nv">daterange</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p class="info">only date type fields can have a datepicker</p>
-
-<h2 id="validation">Validation</h2>
-
-<p>The validation rules are passed by the key <strong><em>rules</em></strong> and by default is an empty string.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p>It uses the default validation rules of <a href="https://laravel.com/docs/validation">laravel validation</a>.</p>
-
-<p class="info">Several rules must be separated by the pipe  <strong>|</strong> character</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required|string|min</span><span class="pi">:</span><span class="nv">2</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p class="info">for  <strong><em>required</em></strong> rule we can use the diminutive <strong><em>req</em></strong> (just an alias)</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">req|string|min</span><span class="pi">:</span><span class="nv">2</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<h2 id="nullable">Nullable</h2>
-
-<p>To make a field nullable</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span>  <span class="nv">nullable</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p>or use the nullable validation rule</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">nullable</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p class="info">If a field has the nullable validation rule, the field is automatically nullable.
-If a field is nullable then it automatically has the nullable validation rule.
-No need to specify it twice.</p>
-
-<h2 id="length">Length</h2>
-
-<p>To define the length of a field</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">length</span><span class="pi">:</span> <span class="nv">60</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p>For the <strong><em>string</em></strong> (<em>text</em>, <em>mediumText</em>, <em>longText</em>) or <strong><em>int</em></strong> (<em>int</em>, <em>smallInt</em>, <em>BigInt</em>)  types,  you can pass the size of the field to the type separate by <strong><em>:</em></strong></p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">:</span><span class="nv">60</span>  <span class="pi">}</span>
-</code></pre></div></div>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">User</span><span class="pi">:</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">int</span><span class="pi">:</span><span class="nv">18</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<h2 id="table-name">Table name</h2>
-
-<p>To change  database table name</p>
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">table_name</span><span class="pi">:</span> <span class="s">posts</span>
-</code></pre></div></div>
-
-<h2 id="slug">Slug</h2>
-
-<p>To sluggify a field and use slug instead of id for routes</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p>or pass the slug option at the model level with the name of the field to be sluggified which must be defined beforehand (<strong><em>important</em></strong>).</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">:</span><span class="nv">125</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">nullable</span> <span class="pi">}</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">int</span><span class="pi">:</span><span class="nv">3</span> <span class="pi">}</span>
-  <span class="na">slug</span><span class="pi">:</span> <span class="s">name</span>
-</code></pre></div></div>
-
-<p><strong>NB:</strong></p>
-<ul>
-  <li>one of the two options can  be used.</li>
-  <li>only one field can be sluggable</li>
-  <li>only  (<strong><em>text</em></strong>, <strong><em>longText</em></strong>, <strong><em>mediumText</em></strong>) fields can be sluggify</li>
-</ul>
-
-<h2 id="edit-slug">Edit slug</h2>
-
-<p>To have the slug field in form and edit it</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
-  <span class="na">edit_slug</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<p>Or use it globally. This will affect all models</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">edit_slug</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<p><strong>NB:</strong></p>
-<ul>
-  <li>The default value is <em>false</em>.</li>
-  <li>A slug field is required on the model</li>
-</ul>
-
-<h2 id="clone">Clone</h2>
-
-<p>To have a button in index view to clone or duplicate a field</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
-  <span class="na">clone</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<p>Or use it globally. This will affect all models</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">clone</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<p class="info">The default value is <em>true</em></p>
-
-<h2 id="fillable">Fillable</h2>
-
-<p>To use fillable or guarded property in the model</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
-  <span class="na">fillable</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<p>Or use it globally. This will affect all models</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">fillable</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<p class="info">The default value is <em>true</em></p>
-
-<h2 id="tranlation">Tranlation</h2>
-
-<p>The model can be translated with the <em>trans</em> option</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">:</span><span class="nv">125</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">nullable</span> <span class="pi">}</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">int</span><span class="pi">:</span><span class="nv">3</span> <span class="pi">}</span>
-  <span class="na">trans</span><span class="pi">:</span> <span class="s">article</span>
-</code></pre></div></div>
-
-<p>A field can be translated too.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">trans</span><span class="pi">:</span> <span class="nv">nom</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p>For date range field, you must separate the translation field with the <strong>|</strong> (pipe) character.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">promotion</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">datetime</span><span class="pi">,</span> <span class="nv">daterange</span><span class="pi">:</span> <span class="nv">true</span><span class="pi">,</span> <span class="nv">trans</span><span class="pi">:</span> <span class="nv">promotion start | promotion end</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p class="info">This translation is only used for displaying in views.
-If the option is not passed, the translation file in  <strong>resources/lang</strong>  in the current locale folder will be used.</p>
-
-<h2 id="default-value">Default value</h2>
-
-<p>Set default value</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">default</span><span class="pi">:</span> <span class="nv">john</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<h2 id="actions">Actions</h2>
+<h3 id="actions">Actions</h3>
 
 <p>Sometimes we do not want to generate all crud actions <em>(index, show, create, edit, delete)</em>.</p>
-
-<p class="info">The authorized values are: <strong><em>index</em></strong>, <strong><em>show</em></strong>, <strong><em>create</em></strong>, <strong><em>edit</em></strong> and <strong><em>delete</em></strong></p>
 
 <p>Actions can be separated by a , (<em>comma</em>)</p>
 
@@ -629,110 +488,382 @@ If the option is not passed, the translation file in  <strong>resources/lang</st
     <span class="pi">-</span> <span class="s">edit</span>
     <span class="pi">-</span> <span class="s">delete</span>
 </code></pre></div></div>
+<p class="info">The authorized values are: <strong><em>index</em></strong>, <strong><em>show</em></strong>, <strong><em>create</em></strong>, <strong><em>edit</em></strong> and <strong><em>delete</em></strong></p>
 
-<h2 id="tinymce">Tinymce</h2>
+<h3 id="slug">Slug</h3>
+
+<p>To sluggify a field and use slug instead of id for routes</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>or pass the slug option at the model level with the name of the field to be sluggified which must be defined beforehand (<strong><em>important</em></strong>).</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">slug</span><span class="pi">:</span> <span class="s">name</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">:</span><span class="nv">125</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">nullable</span> <span class="pi">}</span>
+      <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">int</span><span class="pi">:</span><span class="nv">3</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p><strong>NB:</strong></p>
+<ul>
+  <li>one of the two options can  be used.</li>
+  <li>only one field can be sluggable</li>
+  <li>only  (<strong><em>text</em></strong>, <strong><em>longText</em></strong>, <strong><em>mediumText</em></strong>) fields can be sluggify</li>
+</ul>
+
+<h3 id="edit-slug">Edit slug</h3>
+
+<p>To have the slug field in form and edit it</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">edit_slug</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>Or use it globally. This will affect all models</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">globals</span><span class="pi">:</span>
+  <span class="na">edit_slug</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<p class="info">The default value is <strong><em>false</em></strong> and slug field is required on the model</p>
+
+<h3 id="clone">Clone</h3>
+
+<p>To have a button in index view to clone or duplicate a field</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">clone</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<p>Or use it globally. This will affect all models</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">globals</span><span class="pi">:</span>
+  <span class="na">clone</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<p class="info">The default value is <strong><em>true</em></strong></p>
+
+<h3 id="fillable">Fillable</h3>
+
+<p>To use fillable or guarded property in the model</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fillable</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+<p>Avec cette syntaxe tous les champs seront fillable. Si vous voulez customiser les gens à filler</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fillable</span><span class="pi">:</span> <span class="s">name|age</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+      <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">integer</span> <span class="pi">}</span>
+</code></pre></div></div>
+<p>ou</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
+  <span class="na">fillable</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">name</span>
+    <span class="pi">-</span> <span class="s">age</span>
+  <span class="na">fields</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+    <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">integer</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>Or use it globally. This will affect all models</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">globals</span><span class="pi">:</span>
+  <span class="na">fillable</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<p class="info">The default value is <em>true</em></p>
+<h3 id="guarded">Guarded</h3>
+
+<p>To use  guarded property in the model</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">guarded</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+<p>Avec cette syntaxe tous les champs seront fillable. Si vous voulez customiser les gens à filler</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">guarded</span><span class="pi">:</span> <span class="s">name|age</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+      <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">integer</span> <span class="pi">}</span>
+</code></pre></div></div>
+<p>ou</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">guarded</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">name</span>
+      <span class="pi">-</span> <span class="s">age</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">slug</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+      <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">integer</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>Or use it globally. This will affect all models</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">globals</span><span class="pi">:</span>
+  <span class="na">guarded</span><span class="pi">:</span> <span class="no">false</span>
+</code></pre></div></div>
+
+<p class="info">The default value is <strong><em>false</em></strong></p>
+
+<p class="error"><strong>You can not use both fillable and guarded properties</strong></p>
+
+<h3 id="subfolder">Subfolder</h3>
+
+<p>Si vous voulez palcer les fichiers generes dans un sous dossier pour mieux organiser les fichiers.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">subfolder</span><span class="pi">:</span> <span class="s">shop</span>
+</code></pre></div></div>
+<p>Dans cet exemple tous les fichiers seront generes dans leurs dossiers specifiques et particulierement dans le sous dossier.</p>
+
+<h3 id="nom">Nom</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">name</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">Elle peut etre optionnel et ce sera la clé du champ qui sera utilise.</p>
+
+<h3 id="type">Type</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>Available types are: <strong>string, text, mediumText, longText, date, datetime, boolean, enum, decimal, float, double, integer, mediumInteger, bigInteger, polymorphic, ipAdress, image or file, relation, file</strong></p>
+
+<p class="info">The default type is: <strong><em>string</em></strong></p>
+
+<h3 id="form">Form</h3>
+
+<p>You can pass valid html5 attributes to the form that will be generated</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">online</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">boolean</span><span class="pi">,</span> <span class="nv">form</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">id</span><span class="pi">:</span> <span class="nv">online</span><span class="pi">,</span> <span class="nv">class</span><span class="pi">:</span> <span class="nv">form-control</span> <span class="pi">}</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">supported attributes are <strong><em>id</em></strong>, <strong><em>class</em></strong> , <strong><em>pattern</em></strong>, <strong><em>type</em></strong>, <strong><em>readonly</em></strong>, <strong><em>disabled</em></strong></p>
+
+<h3 id="choices">Choices</h3>
+<p>On peut passer l’option choice a un champ de type bool pour gerer ce qui va s’afficher dans le formulaire</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">online</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">boolean</span><span class="pi">,</span> <span class="nv">trans</span><span class="pi">:</span> <span class="nv">en ligne</span><span class="pi">,</span> <span class="nv">choices</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">choice1</span><span class="pi">:</span> <span class="nv">choice1</span><span class="pi">,</span> <span class="nv">choice2</span><span class="pi">:</span> <span class="nv">choice2</span> <span class="pi">}</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="cast">Cast</h3>
+
+<p>Attribute casting allow you to transform Eloquent attribute values when you retrieve or set them on models instances.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">User</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">integer</span><span class="pi">,</span> <span class="nv">cast</span><span class="pi">:</span> <span class="nv">integer</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">boolean, integer and datetime types are automatically cast</p>
+
+<h3 id="datepicker">Datepicker</h3>
+
+<p>Add datepicker for date type fields.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Event</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">start_at</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">datetime</span><span class="pi">,</span>  <span class="nv">datepicker</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">only date and datetime fields can have a datepicker.</p>
+<h3 id="daterange">Daterange</h3>
+
+<p>For a date range type field, two fields will be created to represent the start field and the end field respectively with the suffix <strong><em>start_at</em></strong> and <strong><em>end_at</em></strong>. Ces valeurs peuvent etre change dans le fichier de configuration.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Product</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">promotion</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">datetime</span><span class="pi">,</span>  <span class="nv">daterange</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">only date or datetime fields can have a datepicker</p>
+
+<h3 id="validation">Validation</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">title</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>It uses the default validation rules of <a href="https://laravel.com/docs/validation">laravel validation</a>.</p>
+
+<p class="info">Several rules must be separated by the pipe  <strong>|</strong> character</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">title</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required|string|min</span><span class="pi">:</span><span class="nv">2</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">for  <strong><em>required</em></strong> rule we can use the diminutive <strong><em>req</em></strong> (just an alias)</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">title</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">req|string|min</span><span class="pi">:</span><span class="nv">2</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="nullable">Nullable</h3>
+
+<p>To make a field nullable</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">title</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">nullable</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>or use the nullable validation rule</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">title</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">nullable</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">If a field has the nullable validation rule, the field is automatically nullable.
+If a field is nullable then it automatically has the nullable validation rule.
+No need to specify it twice.</p>
+
+<h3 id="length">Length</h3>
+
+<p>To define the length of a field</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">length</span><span class="pi">:</span> <span class="nv">60</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>For the <strong><em>string</em></strong> (<em>text</em>, <em>mediumText</em>, <em>longText</em>) or <strong><em>int</em></strong> (<em>int</em>, <em>smallInt</em>, <em>BigInt</em>)  types,  you can pass the size of the field to the type separate by <strong><em>:</em></strong></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">:</span><span class="nv">60</span>  <span class="pi">}</span>
+</code></pre></div></div>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">User</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">int</span><span class="pi">:</span><span class="nv">18</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="translation">Translation</h3>
+
+<p>The model can be translated with the <em>trans</em> option</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">trans</span><span class="pi">:</span> <span class="s">article</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">title</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">title</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span><span class="pi">:</span><span class="nv">125</span><span class="pi">,</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">nullable</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>A field can be translated too.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">trans</span><span class="pi">:</span> <span class="nv">nom</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>For date range field, you must separate the translation field with the <strong>|</strong> (pipe) character.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">promotion</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">datetime</span><span class="pi">,</span> <span class="nv">daterange</span><span class="pi">:</span> <span class="nv">true</span><span class="pi">,</span> <span class="nv">trans</span><span class="pi">:</span> <span class="nv">promotion start | promotion end</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p class="info">This translation is only used for displaying in views.
+If the option is not passed, the translation file in  <strong>resources/lang</strong>  in the current locale folder will be used.</p>
+
+<h3 id="default-value">Default value</h3>
+
+<p>Set default value</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">default</span><span class="pi">:</span> <span class="nv">john</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<h3 id="tinymce">Tinymce</h3>
 
 <p>To use the tinymce rich editor for a field</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">tinymce</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">text</span><span class="pi">,</span>  <span class="nv">tinymce</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+</code></pre></div></div>
+<p class="info">Only available on text fields</p>
+
+<h3 id="constraints">Constraints</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">title</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">constraints</span><span class="pi">:</span> <span class="nv">nullable</span> <span class="pi">}</span>
 </code></pre></div></div>
 
-<h2 id="timestamps">Timestamps</h2>
+<p>plusieurs contraintes peuvent etre séparées par un <strong>|</strong> ou <strong>,</strong></p>
 
-<p>By default for each model laravel manages the <em>created_at</em> and <em>updated_at</em> fields.
-To deactivate it you can proceed as follows:</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">timestamps</span><span class="pi">:</span> <span class="no">false</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">constraints</span><span class="pi">:</span> <span class="nv">nullable|unique|index</span> <span class="pi">}</span> <span class="c1"># or { constraints: nullable,unique,index }</span>
 </code></pre></div></div>
 
-<p>It will add on the model the attribute</p>
+<p>or</p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">protected</span> <span class="nv">$timestamps</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-</code></pre></div></div>
-
-<h2 id="imagemanger">Imagemanger</h2>
-
-<p>To use the image manager for a specific model.</p>
-
-<p class="info">A model can only use 03 collections (<em>front</em>, <em>back</em> and <em>images</em>)</p>
-
-<p>To use all collections and default labels</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">imagemanager</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<p>You can choose the collection (s) to use</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-    <span class="na">imagemanager</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">front</span>
-      <span class="pi">-</span> <span class="s">back</span>
-      <span class="pi">-</span> <span class="s">images</span>
-</code></pre></div></div>
-
-<p>Labels can be changed this way</p>
-
-<p>With the comma syntax</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">imagemanager</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">front</span><span class="pi">:</span> <span class="nv">front image label</span><span class="pi">,</span> <span class="nv">back</span><span class="pi">:</span> <span class="nv">back image label</span><span class="pi">,</span> <span class="nv">images</span><span class="pi">:</span> <span class="nv">images label</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p>or with the other syntax</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-    <span class="na">imagemanager</span><span class="pi">:</span>
-      <span class="na">front</span><span class="pi">:</span> <span class="s">front image label</span>
-      <span class="na">back</span><span class="pi">:</span> <span class="s">back image label</span>
-      <span class="na">images</span><span class="pi">:</span> <span class="s">images label</span>
-</code></pre></div></div>
-
-<h2 id="icon">Icon</h2>
-
-<p>To change the icon used in the administration sidebar.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span><span class="nv">trans</span><span class="pi">:</span> <span class="nv">nom</span><span class="pi">,</span> <span class="nv">default</span><span class="pi">:</span> <span class="nv">john</span> <span class="pi">}</span>
-  <span class="na">icon</span><span class="pi">:</span> <span class="s">fa-folder</span>
-</code></pre></div></div>
-
-<p><strong>NB</strong>:</p>
-<ul>
-  <li>The icon must be taken from the font awesome library.</li>
-  <li>The default value is fa-folder</li>
-</ul>
-
-<h2 id="entity">Entity</h2>
-<p>To generate only model and migration, you will have to use the <em>entity</em> tag on model’s definition.</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
-  <span class="na">entity</span><span class="pi">:</span> <span class="no">true</span>
-</code></pre></div></div>
-
-<h2 id="constraints">Constraints</h2>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">constraints</span><span class="pi">:</span> <span class="nv">nullable</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<p>Constraints can be separated by  a comma <em>,</em></p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">constraints</span><span class="pi">:</span> <span class="nv">nullable</span><span class="pi">,</span><span class="nv">unique</span><span class="pi">,</span><span class="nv">index</span><span class="pi">}</span>
-</code></pre></div></div>
-
-<p>or with the list syntax</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span>
-    <span class="na">constraints</span><span class="pi">:</span>
-       <span class="pi">-</span> <span class="no">null</span><span class="s">able</span>
-       <span class="pi">-</span> <span class="s">unique</span>
-       <span class="pi">-</span> <span class="s">index</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span>
+        <span class="na">constraints</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="no">null</span><span class="s">able</span>
+          <span class="pi">-</span> <span class="s">unique</span>
+          <span class="pi">-</span> <span class="s">index</span>
 </code></pre></div></div>
 
 <p><strong>NB</strong>:</p>
@@ -741,36 +872,27 @@ To deactivate it you can proceed as follows:</p>
   <li>For the constraint <strong><em>set null</em></strong>, no need to pass the field to <strong><em>nullable</em></strong>. It’s done automatically.</li>
   <li>On the other hand, do not forget to remove the validation rule <strong><em>required</em></strong> if it is present because a field cannot be both <strong><em>required</em></strong> and <strong><em>nullable</em></strong>.</li>
   <li>If the field is <strong><em>nullable</em></strong> no need to put it in the list of constraints and vice versa.</li>
-  <li>For the <strong><em>default</em></strong> constraint  the value can be passed with <strong>:</strong></li>
 </ul>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">constraints</span><span class="pi">:</span> <span class="nv">default</span><span class="pi">:</span><span class="nv">18</span> <span class="pi">}</span>
-</code></pre></div></div>
-
-<h2 id="seeder">Seeder</h2>
-
-<p>To avoid generating a seeder file</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">constraints</span><span class="pi">:</span> <span class="nv">default</span><span class="pi">:</span><span class="nv">18</span> <span class="pi">}</span>
-  <span class="na">seeder</span><span class="pi">:</span> <span class="no">false</span>
-</code></pre></div></div>
-
-<h2 id="breadcrumb">breadcrumb</h2>
+<h3 id="breadcrumb">Breadcrumb</h3>
 
 <p>For showing breadcrumb in views, the procedure is as follows:</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">breadcrumb</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">breadcrumb</span><span class="pi">:</span> <span class="nv">true</span> <span class="pi">}</span>
 </code></pre></div></div>
 
 <p>or pass the breadcrumb option at the model level with the name of the field to use</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">age</span><span class="pi">}</span>
-  <span class="na">breadcrumb</span><span class="pi">:</span> <span class="s">age</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">breadcrumb</span><span class="pi">:</span> <span class="s">age</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">age</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">integer</span> <span class="pi">}</span>
 </code></pre></div></div>
+<p class="info">Default value is <strong><em>true</em></strong></p>
 
 <p><strong>NB</strong></p>
 <ul>
@@ -779,40 +901,73 @@ To deactivate it you can proceed as follows:</p>
   <li>the breadcrumb is only used in administration panel</li>
 </ul>
 
+<h2 id="modèle-polymorphic">Modèle polymorphic</h2>
+
+<p>Le modele polymorphique consiste a geneerr un modele et une migration avec des champs polymorphic
+Lorsqu’on passe polymorphic true a um modele seul le modele et la migration sont generessi le morphname est null on utilise le nom du champ auquel on ajoute able si ce n’est pas le cas</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">polymorphic</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">url </span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">name</span><span class="pi">:</span> <span class="nv">url</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">string</span> <span class="pi">}</span>
+      <span class="pi">-</span> <span class="na">image</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">polymorphic</span><span class="pi">,</span> <span class="nv">morphname</span><span class="pi">:</span> <span class="nv">imageable</span> <span class="pi">}</span>
+</code></pre></div></div>
+
 <h2 id="relationships">Relationships</h2>
 
-<p>For relations the type <strong><em>relation</em></strong> is used</p>
+<h3 id="type-simple">Type simple</h3>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">relation</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span> <span class="pi">}</span>
+<h4 id="one-to-one">One to One</h4>
+
+<p>Nous allons partir du principe que nous sommes en train de generere un modele note <strong>(Note)</strong> et qu’il doit etre relie a un utilisateur <strong>(User)</strong></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to one</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">App\Models\User</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
 </code></pre></div></div>
 
 <p>The related is optional, we guest the name by remove the <em>_id</em>  on the field’s name.
-If the field doest not respect this convention, you have to use this option.</p>
+If the field doest not respect this convention, you have to use this option.
+pour les relations et pour l’attribut related si pas fourni et que le modele a un subfolder
+le related est devine en fonvtion de ce modele cad le related sera chercher dans ce dossier
+si ce n’est pas le cas il faudra passer le related soit avec le nom de la classe ou le namespace complet</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">relation</span> <span class="pi">}</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">relation</span> <span class="pi">}</span>
 </code></pre></div></div>
 
 <p>In this case, the related will be <strong>User</strong>.</p>
 
-<p>It is possible to use the full qualify model class name.</p>
+<p>It is possible to use the full qualify model class name <strong>App\Models\User</strong>.</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">relation</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">App\Models\User</span> <span class="pi">}</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">relation</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">App\Models\User</span> <span class="pi">}</span>
 </code></pre></div></div>
 <p>You can change the key used for the foreign key.</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to one</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">references</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to one</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">references</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
 </code></pre></div></div>
 <p class="info">By default id is used</p>
 
 <p>You can change the deletion policy.</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to one</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">onDelete</span><span class="pi">:</span> <span class="nv">cascade</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to one</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">onDelete</span><span class="pi">:</span> <span class="nv">cascade</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
 </code></pre></div></div>
+
+<p class="info">Pour les relations de type haseOne et hasMany, la regle de validation exists sera automatiquement ajouté dans ce sera
+<code class="language-plaintext highlighter-rouge">exists:users,id</code>. Le champ id peut etre change avec l’attribute references.</p>
 
 <p><strong>NB:</strong></p>
 <ul>
@@ -822,12 +977,52 @@ If the field doest not respect this convention, you have to use this option.</p>
   <li>for relationship type fields if the related is not passed it is the name of the field which is used</li>
 </ul>
 
-<h2 id="type-simple">Type simple</h2>
+<h5 id="foreign-keys">Foreign keys</h5>
+<p>dabord il faudra que les cles soient  les memes des deux cotés</p>
 
-<h3 id="one-to-one-simple">One to One (simple)</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span>
+          <span class="na">type</span><span class="pi">:</span>
+            <span class="na">relation</span><span class="pi">:</span> <span class="s">one to one</span>
+            <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
+            <span class="na">related</span><span class="pi">:</span> <span class="s">App\Models\User</span>
+            <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
+            <span class="na">related_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
+            <span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
+          <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+</code></pre></div></div>
+
+<p>La cle <code class="language-plaintext highlighter-rouge">local_keys</code> correspond au modele qui existe deja et qui subit la relation. Dans notre cas c’est le modele <strong>User</strong> et qui aura la methode <code class="language-plaintext highlighter-rouge">hasOne</code> ou <code class="language-plaintext highlighter-rouge">hasMany</code></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{}</span>
+</code></pre></div></div>
+<p>ensuite passé la cle etrangere</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>Pour changer la cle locale</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span><span class="pi">,</span> <span class="nv">local_key</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>pour le modele en train d’etre creer dans notre cas le modele <strong>Note</strong> et qui doit avoir la methode <code class="language-plaintext highlighter-rouge">belongsTo</code></p>
+
+<p>utiliser le</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">related_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
+</code></pre></div></div>
+<p>si le parent na pas de cchamp id pour la liaison utilisez le local key</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">related_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">owner_key</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<h4 id="one-to-many">One to Many</h4>
+
+<p>Nous allons partir du principe que nous sommes en train de generere un modele note <strong>(Note)</strong> et qu’il doit etre relie a un utilisateur <strong>(User)</strong></p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to one</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
+  <span class="na">fields</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to many</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">App\Models\User</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
 </code></pre></div></div>
 
 <p><strong>NB:</strong></p>
@@ -839,86 +1034,108 @@ or the namespace.</li>
   <li>The property is the field used only for display and must exist on the linked model.</li>
 </ul>
 
-<h3 id="foreign-keys">Foreign keys</h3>
+<p>The related is optional, we guest the name by remove the <em>_id</em>  on the field’s name.
+If the field doest not respect this convention, you have to use this option.
+pour les relations et pour l’attribut related si pas fourni et que le modele a un subfolder
+le related est devine en fonvtion de ce modele cad le related sera chercher dans ce dossier
+si ce n’est pas le cas il faudra passer le related soit avec le nom de la classe ou le namespace complet</p>
 
-<p>For the model we are going to create</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to many</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">App\Models\User</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span>
-      <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
-      <span class="na">related</span><span class="pi">:</span> <span class="s">user</span>
-      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
-      <span class="na">intermediate_table</span><span class="pi">:</span> <span class="s">post_user</span>
-      <span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">kguy_id</span><span class="pi">,</span> <span class="nv">local_key</span><span class="pi">:</span> <span class="nv">kid</span> <span class="pi">}</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
 </code></pre></div></div>
 
-<p>For the model to be linked</p>
+<p>In this case, the related will be <strong>User</strong>.</p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span>
-      <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
-      <span class="na">related</span><span class="pi">:</span> <span class="s">user</span>
-      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
-      <span class="na">intermediate_table</span><span class="pi">:</span> <span class="s">post_user</span>
-      <span class="na">related_keys</span><span class="pi">:</span>  <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">guy_id</span><span class="pi">,</span> <span class="nv">other_key</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">}</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+<p>It is possible to use the full qualify model class name <strong>App\Models\User</strong>.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">relation</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">App\Models\User</span> <span class="pi">}</span>
+</code></pre></div></div>
+<p>You can change the key used for the foreign key.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to one</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">references</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
+</code></pre></div></div>
+<p class="info">By default id is used</p>
+
+<p>You can change the deletion policy.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+       <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to one</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span><span class="pi">,</span> <span class="nv">onDelete</span><span class="pi">:</span> <span class="nv">cascade</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
 </code></pre></div></div>
 
-<h3 id="one-to-many-simple">One to Many (simple)</h3>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">one to many</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
-</code></pre></div></div>
+<p class="info">Pour les relations de type haseOne et hasMany, la regle de validation exists sera automatiquement ajouté dans ce sera
+<code class="language-plaintext highlighter-rouge">exists:users,id</code>. Le champ id peut etre change avec l’attribute references.</p>
 
 <p><strong>NB:</strong></p>
-
 <ul>
-  <li>the related is obligatory (we must know to which field the relation is linked)</li>
-  <li>the related is mandatory and is the linked model. We can just pass the name or the full namespace.</li>
-  <li>the property is the field used only for display and must exist on the linked model.</li>
+  <li>the authorized values are: <strong><em>cascade</em></strong> and <strong><em>set null</em></strong>.</li>
+  <li>no onDelete on a polymorphic type field.</li>
+  <li>if a field must be polymorphic it will be necessary to create the linked model first before making the connection</li>
+  <li>for relationship type fields if the related is not passed it is the name of the field which is used</li>
 </ul>
 
-<h3 id="foreign-keys-1">Foreign keys</h3>
-
-<p>For the model we are going to create</p>
+<h5 id="foreign-keys-1">Foreign keys</h5>
+<p>dabord il faudra que les cles soient  les memes des deux cotés</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span>
-      <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
-      <span class="na">related</span><span class="pi">:</span> <span class="s">user</span>
-      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
-      <span class="na">intermediate_table</span><span class="pi">:</span> <span class="s">post_user</span>
-      <span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">kguy_id</span><span class="pi">,</span> <span class="nv">local_key</span><span class="pi">:</span> <span class="nv">kid</span> <span class="pi">}</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+  <span class="na">fields</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span>
+        <span class="na">type</span><span class="pi">:</span>
+          <span class="na">relation</span><span class="pi">:</span> <span class="s">one to many</span>
+          <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
+          <span class="na">related</span><span class="pi">:</span> <span class="s">App\Models\User</span>
+          <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
+          <span class="na">related_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
+          <span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
+        <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
 </code></pre></div></div>
 
-<ul>
-  <li>For the model that will be linked</li>
-</ul>
+<p>La cle <code class="language-plaintext highlighter-rouge">local_keys</code> correspond au modele qui existe deja et qui subit la relation. Dans notre cas c’est le modele <strong>User</strong> et qui aura la methode <code class="language-plaintext highlighter-rouge">hasOne</code> ou <code class="language-plaintext highlighter-rouge">hasMany</code></p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span>
-      <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
-      <span class="na">related</span><span class="pi">:</span> <span class="s">user</span>
-      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
-      <span class="na">intermediate_table</span><span class="pi">:</span> <span class="s">post_user</span>
-      <span class="na">related_keys</span><span class="pi">:</span>  <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">guy_id</span><span class="pi">,</span> <span class="nv">other_key</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">}</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{}</span>
+</code></pre></div></div>
+<p>ensuite passé la cle etrangere</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>Pour changer la cle locale</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span><span class="pi">,</span> <span class="nv">local_key</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">}</span>
+</code></pre></div></div>
+
+<p>pour le modele en train d’etre creer dans notre cas le modele <strong>Note</strong> et qui doit avoir la methode <code class="language-plaintext highlighter-rouge">belongsTo</code></p>
+
+<p>utiliser le</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">related_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
+</code></pre></div></div>
+<p>si le parent na pas de cchamp id pour la liaison utilisez le local key</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">related_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">owner_key</span><span class="pi">:</span> <span class="nv">id</span> <span class="pi">}</span>
 </code></pre></div></div>
 
 <p><strong>Many to Many (simple)</strong></p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">type</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">relation</span><span class="pi">:</span> <span class="nv">many to many</span><span class="pi">,</span> <span class="nv">type</span><span class="pi">:</span> <span class="nv">simple</span><span class="pi">,</span> <span class="nv">related</span><span class="pi">:</span> <span class="nv">user</span><span class="pi">,</span> <span class="nv">property</span><span class="pi">:</span> <span class="nv">name</span> <span class="pi">},</span> <span class="nv">rules</span><span class="pi">:</span> <span class="nv">required</span> <span class="pi">}</span>
+<p>Nous allons partir du principe que nous sommes en train de generer un modele note <strong>Note</strong> et qui sera lié avec un utilisateur <strong>User</strong>.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Note</span><span class="pi">:</span>
+  <span class="na">subfolder</span><span class="pi">:</span> <span class="s">shop</span>
+  <span class="na">fields</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span>
+        <span class="na">type</span><span class="pi">:</span>
+          <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
+          <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
+          <span class="na">related</span><span class="pi">:</span> <span class="s">App\Models\User</span>
+          <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
+          <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
 </code></pre></div></div>
 
 <p><strong>NB:</strong></p>
@@ -928,66 +1145,63 @@ or the namespace.</li>
   <li>you can change the name of the pivot intermediate table.</li>
 </ul>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span>
-      <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
-      <span class="na">related</span><span class="pi">:</span> <span class="s">user</span>
-      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
-      <span class="na">intermediate_table</span><span class="pi">:</span> <span class="s">post_user</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+<p>La cle <code class="language-plaintext highlighter-rouge">related_keys</code> correspond a la methode du related modele que nous allons ajouter au modele que nous allons créer. Dans notre cas c’est le modele <strong>Note</strong></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Note</span><span class="pi">:</span>
+    <span class="na">subfolder</span><span class="pi">:</span> <span class="s">shop</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span>
+          <span class="na">type</span><span class="pi">:</span>
+            <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
+            <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
+            <span class="na">related</span><span class="pi">:</span> <span class="s">App\Models\User</span>
+            <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
+            <span class="na">related_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">join_key</span><span class="pi">:</span> <span class="nv">user_id</span><span class="pi">,</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">note_id</span>  <span class="pi">}</span>
+          <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
 </code></pre></div></div>
 
-<h3 id="foreign-keys-2">Foreign keys</h3>
+<p>Dans cette situation <code class="language-plaintext highlighter-rouge">foreign_key</code> correspond a la cle etrange du modele que nous sommes en train de generer qui est <strong>Note</strong></p>
 
-<ul>
-  <li>For the model we are going to create</li>
-</ul>
+<p>Dans cette situation <code class="language-plaintext highlighter-rouge">join_key</code> correspond a la cle etrange du modele existant et  qui suit la relation dans notre cas c est <strong>User</strong></p>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span>
-      <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
-      <span class="na">related</span><span class="pi">:</span> <span class="s">user</span>
-      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
-      <span class="na">intermediate_table</span><span class="pi">:</span> <span class="s">post_user</span>
-      <span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">terrain_id</span><span class="pi">,</span> <span class="nv">join_key</span><span class="pi">:</span> <span class="nv">user_id</span> <span class="pi">}</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+<p>La cle <code class="language-plaintext highlighter-rouge">local_keys</code> correspond au modele qui existe deja et qui subit la relation et que nous allons ajouter dans le modele que nous sommes en train de generer. Dans notre cas c’est le modele <strong>User</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Note</span><span class="pi">:</span>
+    <span class="na">subfolder</span><span class="pi">:</span> <span class="s">shop</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span>
+          <span class="na">type</span><span class="pi">:</span>
+            <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
+            <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
+            <span class="na">related</span><span class="pi">:</span> <span class="s">App\Models\User</span>
+            <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
+            <span class="na">local_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">note_id</span><span class="pi">,</span> <span class="nv">join_key</span><span class="pi">:</span> <span class="nv">user_id</span>  <span class="pi">}</span>
+          <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+</code></pre></div></div>
+<p>Dans cette situation <code class="language-plaintext highlighter-rouge">join_key</code> correspond a la cle etrange modele existant et  qui suit la relation dans notre cas c est <strong>User</strong></p>
+
+<p>Dans cette situation <code class="language-plaintext highlighter-rouge">foreign_key</code> correspond a la cle etrange du modele que nous sommes en train de generer qui est <strong>Note</strong></p>
+
+<h3 id="polymorphic-type">Polymorphic type</h3>
+
+<h4 id="one-to-one-polymorphic">One to One (polymorphic)</h4>
+
+<p>Le related model doit exister et contenir la methode morphTo.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Models</span><span class="pi">:</span>
+  <span class="na">Post</span><span class="pi">:</span>
+    <span class="na">fields</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">user_id</span><span class="pi">:</span>
+        <span class="na">type</span><span class="pi">:</span>
+          <span class="na">relation</span><span class="pi">:</span> <span class="s">one to one</span>
+          <span class="na">type</span><span class="pi">:</span> <span class="s">polymorphic</span>
+          <span class="na">related</span><span class="pi">:</span> <span class="s">user</span> <span class="c1"># or App\Models\User</span>
+          <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
+        <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
 </code></pre></div></div>
 
-<ul>
-  <li>For the model that will be linked</li>
-</ul>
+<h4 id="one-to-many-polymorphic">One to Many (polymorphic)</h4>
 
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span>
-      <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">simple</span>
-      <span class="na">related</span><span class="pi">:</span> <span class="s">user</span>
-      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
-      <span class="na">intermediate_table</span><span class="pi">:</span> <span class="s">post_user</span>
-      <span class="na">related_keys</span><span class="pi">:</span> <span class="pi">{</span> <span class="nv">foreign_key</span><span class="pi">:</span> <span class="nv">user_id</span><span class="pi">,</span> <span class="nv">join_key</span><span class="pi">:</span> <span class="nv">terrain_id</span> <span class="pi">}</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
-</code></pre></div></div>
-
-<p>If the keys are passed and the intermediate table (pivot) is not then this table will be created with the convention.</p>
-
-<h3 id="one-to-one-polymorphic">One to One (polymorphic)</h3>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
-  <span class="na">user_id</span><span class="pi">:</span>
-    <span class="na">type</span><span class="pi">:</span>
-      <span class="na">relation</span><span class="pi">:</span> <span class="s">one to one</span>
-      <span class="na">type</span><span class="pi">:</span> <span class="s">polymorphic</span>
-      <span class="na">related</span><span class="pi">:</span> <span class="s">user</span>
-      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
-    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
-</code></pre></div></div>
-
-<h3 id="one-to-many-polymorphic">One to Many (polymorphic)</h3>
+<p>Le related model doit exister et contenir la methode morphTo.</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
   <span class="na">user_id</span><span class="pi">:</span>
@@ -999,12 +1213,26 @@ or the namespace.</li>
     <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
 </code></pre></div></div>
 
-<h3 id="many-to-many-polymorphic">Many to Many polymorphic</h3>
+<p>Mettre le related explanation ici</p>
 
-<p>The <strong><em>many to many</em></strong> polymorphic relationship is not yet established. I haven’t had to use it in my various projects yet.
-Maybe soon.</p>
+<h4 id="many-to-many-polymorphic">Many to Many polymorphic</h4>
 
-</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-04-08T11:07:15+00:00"><!-- start custom article footer snippet -->
+<p>Le related model doit exister et contenir la methode morphTo.</p>
+
+<p>Par default le morphname est le nom du modele suivi de able. vous pouvez changer le morphname en passant
+morphname: taggable</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Post</span><span class="pi">:</span>
+  <span class="na">tag</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span>
+      <span class="na">relation</span><span class="pi">:</span> <span class="s">many to many</span>
+      <span class="na">type</span><span class="pi">:</span> <span class="s">polymorphic</span>
+      <span class="na">related</span><span class="pi">:</span> <span class="s">tag</span>
+      <span class="na">property</span><span class="pi">:</span> <span class="s">name</span>
+    <span class="na">rules</span><span class="pi">:</span> <span class="s">required</span>
+</code></pre></div></div>
+
+</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-05-25T15:14:19+00:00"><!-- start custom article footer snippet -->
 
 <!-- end custom article footer snippet -->
 <div class="article__license"><div class="license">

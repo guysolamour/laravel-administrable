@@ -1,5 +1,5 @@
 @php
-    $livenews = \{{namespace}}\Settings\LivenewsSettings::get();
+    $livenews = \{{namespace}}\Settings\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Settings::get();
 @endphp
 
 @if($livenews->online)
@@ -10,8 +10,6 @@
         background-color: {{ $livenews->background_color }};
         color: {{ $livenews->text_color }}; padding: 5px; text-align: center;"
 ">
-    {!!
-        \{{namespace}}\Settings\LivenewsSettings::parse($livenews)
-    !!}
+    {!! $livenews->parse() !!}
 </marquee>
 @endif

@@ -4,7 +4,7 @@
                                 <a href="{{ route('{{guard}}.dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">{{translateModelUcfirst}}</a>
+                                <a href="{{ route('{{indexRoute}}') }}">{{translateModelUcfirst}}</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">{{ ${{singularSlug}}->{{breadcrumb}} }}</li>
                         </ol>

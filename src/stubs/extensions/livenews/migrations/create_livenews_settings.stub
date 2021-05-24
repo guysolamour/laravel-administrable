@@ -1,29 +1,28 @@
 <?php
 
-use {{namespace}}\Settings\LivenewsSettings;
 use Spatie\LaravelSettings\Migrations\SettingsMigration;
 
 
-class CreateLivenewsSettings extends SettingsMigration
+class Create{{extensionPluralClass}}Settings extends SettingsMigration
 {
     public function up(): void
     {
-        $this->migrator->add(LivenewsSettings::PREFIX . '.content', 'Enter livenews text here');
-        $this->migrator->add(LivenewsSettings::PREFIX . '.text_color', '#FFFFFF');
-        $this->migrator->add(LivenewsSettings::PREFIX . '.background_color', '#FF0000');
-        $this->migrator->add(LivenewsSettings::PREFIX . '.size', 30);
-        $this->migrator->add(LivenewsSettings::PREFIX . '.online', true);
-        $this->migrator->add(LivenewsSettings::PREFIX . '.uppercase', false);
+        $this->migrator->add('{{extensionPluralSlug}}.content', 'Enter {{extensionPluralSlug}} text here');
+        $this->migrator->add('{{extensionPluralSlug}}.text_color', '#FFFFFF');
+        $this->migrator->add('{{extensionPluralSlug}}.background_color', '#FF0000');
+        $this->migrator->add('{{extensionPluralSlug}}.size', 30);
+        $this->migrator->add('{{extensionPluralSlug}}.online', true);
+        $this->migrator->add('{{extensionPluralSlug}}.uppercase', false);
     }
 
 
     public function down(): void
     {
-        $this->migrator->delete(LivenewsSettings::PREFIX . '.content');
-        $this->migrator->delete(LivenewsSettings::PREFIX . '.text_color');
-        $this->migrator->delete(LivenewsSettings::PREFIX . '.background_color');
-        $this->migrator->delete(LivenewsSettings::PREFIX . '.size');
-        $this->migrator->delete(LivenewsSettings::PREFIX . '.online');
-        $this->migrator->delete(LivenewsSettings::PREFIX . '.uppercase');
+        $this->migrator->delete('{{extensionPluralSlug}}.content');
+        $this->migrator->delete('{{extensionPluralSlug}}.text_color');
+        $this->migrator->delete('{{extensionPluralSlug}}.background_color');
+        $this->migrator->delete('{{extensionPluralSlug}}.size');
+        $this->migrator->delete('{{extensionPluralSlug}}.online');
+        $this->migrator->delete('{{extensionPluralSlug}}.uppercase');
     }
 }

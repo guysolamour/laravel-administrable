@@ -7,5 +7,5 @@
     {
         ${{pluralSlug}} = {{singularClass}}::last()->get();
         $form = $this->getForm();
-        return view('{{backLowerNamespace}}.{{pluralSlug}}.index', compact('{{pluralSlug}}','form'));
+        return view('{{indexRoute}}', compact('{{pluralSlug}}','form'));
     }

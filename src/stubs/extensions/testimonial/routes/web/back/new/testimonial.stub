@@ -1,0 +1,18 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller;
+
+Route::middleware(['{{singularSlug}}.auth'])->prefix('{{extensionsFolder}}')->group(function () {
+  Route::name('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.')->group(function () {
+    Route::resource('{{extensionPluralSlug}}', {{extensionClass}}Controller::class)->names([
+        'index'      => 'index',
+        'show'       => 'show',
+        'create'     => 'create',
+        'store'      => 'store',
+        'edit'       => 'edit',
+        'update'     => 'update',
+        'destroy'    => 'destroy',
+    ]);
+  });
+});

@@ -1,8 +1,8 @@
 <?php
 
-namespace {{namespace}}\Http\Controllers\{{backNamespace}};
+namespace {{namespace}}\Http\Controllers\{{backNamespace}}{{namespaceWithSubfolder}};
 
-use {{namespace}}\{{modelsFolder}}\{{singularClass}};
+use {{namespace}}\{{modelsNamespace}}\{{singularClass}};
 use Illuminate\Http\Request;
 use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;

@@ -1,0 +1,241 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+@section('title', 'Lecture de message')
+
+@section('content')
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}">{{extensionLabel}}</a></li>
+                        <li class="breadcrumb-item active">Lecture</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header d-flex justify-content-between ">
+                            <h3 class="card-title">Lecture</h3>
+                            <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.destroy', ${{extensionSingularSlug}}) }}" data-method="delete"
+                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                class="btn btn-danger"><i class="fas fa-trash"></i> Supprimer</a>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body p-0">
+                            <div class="{{extensionSingularSlug}}-read-info">
+                                <h6>Nom: {{ ${{extensionSingularSlug}}->name }}</h6>
+                                <h6>Email: {{ ${{extensionSingularSlug}}->email }}
+                                    <span
+                                        class="{{extensionSingularSlug}}-read-time float-right">{{ ${{extensionSingularSlug}}->created_at->format('d/m/Y h:i') }}</span>
+                                </h6>
+                            </div>
+                            <!-- /.{{extensionSingularSlug}}-read-info -->
+
+                            <!-- /.{{extensionSingularSlug}}-controls -->
+                            <div class="{{extensionSingularSlug}}-read-message">
+                                <p>
+                                    {{ ${{extensionSingularSlug}}->content }}
+                                </p>
+                            </div>
+                            <!-- /.{{extensionSingularSlug}}-read-message -->
+                        </div>
+                        <!-- /.card-body -->
+
+                    </div>
+                    <!-- /.card -->
+                    <div class="card">
+                        <div class="card-header ml-4">
+                            <h3 class="card-title font-weight-bold"><i class="fa fa-comments"></i> Notes</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive {{extensionSingularSlug}}-messages ml-4">
+                                <table class="table table-hover table-striped">
+                                    <tbody>
+                                        @foreach(${{extensionSingularSlug}}->notes->reverse() as $note)
+                                        <tr>
+                                            <td class="{{extensionSingularSlug}}-subject">
+                                                <blockquote style="border-left-color: {{ $note->guest_name }}">
+                                                    {!! $note->comment !!}
+                                                </blockquote>
+                                                <hr>
+                                                <small> <i class="fa fa-user"></i> {{ $note->author->name }}
+                                                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                                                    <i class="fa fa-clock"></i> {{ $note->created_at->diffForHumans() }}
+                                                    &nbsp;&nbsp;| &nbsp;&nbsp;
+                                                    <i class="fa fa-envelope"></i> {{ $note->author->email }}</small>
+                                                <div class="float-right">
+                                                    <a href="#" class="text-secondary" data-toggle="modal"
+                                                        data-target="#note{{ $note->id }}" title="Editer"><i
+                                                            class="fa fa-edit"></i></a>
+                                                    <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.note.destroy', [${{extensionSingularSlug}}, $note]) }}"
+                                                        data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                                        data-method="delete" class="text-danger" data-toggle="tooltip"
+                                                        data-placement="top" title="Supprimer"><i
+                                                            class="fa fa-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="note{{ $note->id }}" tabindex="-1"
+                                            aria-labelledby="note{{ $note->id }}Label" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="note{{ $note->id }}Label">Edition de
+                                                            note</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="post"
+                                                            action="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.note.update', [${{extensionSingularSlug}}, $note]) }}"
+                                                            id="note-form-{{ $note->id }}">
+                                                            @csrf
+                                                            @method('put')
+
+
+                                                            <div class="form-group">
+                                                                <label for="color{{ $note->getKey() }}">Couleur</label>
+                                                                <input type="color" name="color"
+                                                                    id="color{{ $note->getKey() }}"
+                                                                    value="{{ $note->guest_name }}"
+                                                                    class="form-control">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label
+                                                                    for="comment{{ $note->getKey() }}">Contenu</label>
+                                                                <textarea name="comment"
+                                                                    id="comment{{ $note->getKey() }}" cols="30" rows="5"
+                                                                    class="form-control">{{ $note->comment }}</textarea>
+                                                            </div>
+
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Annuler</button>
+                                                        <button type="submit" form="note-form-{{ $note->getKey() }}"
+                                                            class="btn btn-success">Enregistrer</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+
+                                    </tbody>
+                                </table>
+                                <!-- /.table -->
+                            </div>
+
+                            <hr class="mt-4 pt-4 ">
+                            <form action="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.note.store', ${{extensionSingularSlug}}) }}" method="post"
+                                name="{{extensionSingularSlug}}-note-form">
+                                @csrf
+                                <div class="form-group">
+
+                                    <textarea name="comment" id="comment" cols="30" rows="5"
+                                        class="form-control">{{ old('comment') }}</textarea>
+
+                                    @if ($errors->any())
+                                    <div class="alert alert-danger mt-4">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    @endif
+                                </div>
+                                <div class="">
+                                    <button class="btn btn-outline-success btn-sm" type="submit"><i
+                                            class="fa fa-plus"></i> Ajouter</button>
+                                <input type="text" class="choose-color" readonly value="Note couleur"
+                                    style="cursor: pointer; max-width: 108px; display: inline-block;">
+                                <input type="text" class="choose-color display-color" readonly
+                                    style="cursor: pointer;background-color: #007bff;width: 100px; padding: 4px; border: none;">
+                                <input type="hidden" class="color-value" name="color" value="#007bff">
+                                <input type="color" id="color" style="display: none;">
+                                <select name="save" id="save">
+                                    <option value="1" {{ old('save') === '1'  ? 'selected' : '' }}>Sauvegarder
+                                    </option>
+                                    <option value="0" {{ old('save') === '0' ? 'selected' : '' }}>Envoyer un email à
+                                    </option>
+                                </select>
+                                <input data-email
+                                    class="{{ old('save') === '1' || old('save') === null ? 'd-none' : '' }}"
+                                    type="email" name="email" value="{{ ${{extensionsFolder}}->email }}"
+                                    placeholder="example@domain.com">
+                                <input data-email
+                                    class="{{ old('save') === '1' || old('save') === null ? 'd-none' : '' }}"
+                                    type="text" name='subject' placeholder="Sujet">
+                        </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+
+@endsection
+
+
+
+@push('js')
+<script>
+    (function(){
+const inputColor = document.querySelector('#color')
+    Array.from(document.querySelectorAll('.choose-color')).forEach(element => {
+        element.addEventListener('click', function(){
+            inputColor.focus()
+            inputColor.value = "#007bff"
+            inputColor.click()
+        })
+    });
+
+    inputColor.addEventListener('input', function(event){
+        const displayColor = document.querySelector('.display-color')
+        displayColor.style.backgroundColor = event.target.value
+        document.querySelector('.color-value').value = event.target.value
+    });
+
+
+    const form = document.querySelector('form[name={{extensionSingularSlug}}-note-form]')
+    form.querySelector('select[name=save]').addEventListener('change', function(event){
+    const value = event.target.value
+
+    const inputs = Array.from(form.querySelectorAll('input[data-email]'));
+
+    if (value == 1){
+        inputs.forEach(input => input.classList.add('d-none'))
+        }else {
+        inputs.forEach(input => input.classList.remove('d-none'))
+        }
+    });
+    })()
+</script>
+@endpush

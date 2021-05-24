@@ -1,7 +1,7 @@
 <?php
 namespace Database\Seeders;
 
-use {{namespace}}\{{modelsFolder}}\{{singularClass}};
+use {{namespace}}\{{modelsNamespace}}\{{singularClass}};
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
@@ -16,7 +16,8 @@ class {{pluralClass}}TableSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        for ($i = 0; $i < 15; $i++) {
+        
+        for ($i = 0; $i < {{seedCount}}; $i++) {
             {{singularClass}}::create([
 
             ]);

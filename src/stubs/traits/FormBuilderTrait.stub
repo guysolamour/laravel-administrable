@@ -2,6 +2,9 @@
 
 namespace {{namespace}}\Traits;
 
+use Illuminate\Support\Str;
+use Kris\LaravelFormBuilder\Form;
+use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\FormBuilderTrait as FormBuilder;
 
 
@@ -9,86 +12,69 @@ trait FormBuilderTrait
 {
     use FormBuilder;
 
-    /**
-     *
-     * @param mixed|null $model
-     *
-     * @param null $form
-     * @param bool $withModel
-     *
-     * @param bool $withNamespace
-     *
-     * @return \Kris\LaravelFormBuilder\Form
-     */
-    protected function getForm($model = null, $form = null, bool $withModel = true, bool $withNamespace = true)
+    protected function getForm(?Model $model = null, ?string $form = null, bool $withModel = true, bool $withNamespace = true) :Form
     {
+        $form ??= $this->getFormName($withNamespace);
 
-        $form = $form ?: $this->getFormName($withNamespace);
-        $modelName = $this->getModelClassName();
-
+        $options = [];
 
         if ($withModel) {
-            $model = $model ?: new $modelName();
-            return $this->form($form, [
-                'model' => $model
-            ]);
+            if (!$model){
+                $modelName = $this->getModelClassName();
+                $model     = new $modelName();
+            }
+
+            $options['model'] = $model;
         }
 
-        return $this->form($form, []);
+        return $this->form($form, $options);
     }
 
-    /**
-     * @param bool $withNamespace
-     *
-     * @return string
-     */
     private function getModelClassName(): string
     {
         $model = $this->getModelName(true);
 
-        $parts = explode('\\', $model);
-
-        $parts_count = count($parts);
-
-        // we have a sub namespace folder
-        if ($parts_count > 2) {
-            // get the two element of the array
-            $model_name = $parts[$parts_count - 2] . '\\' .  $parts[$parts_count - 1];
-        } else {
-            $model_name = last($parts);
-        }
-
-        return sprintf("{{namespace}}\{{modelsFolder}}\%s", $model_name);
+        return sprintf("{{namespace}}\{{modelsFolder}}\%s", $model);
     }
 
     /**
-     * @param bool $withNamespace
+     * Get controller without {{namespace}}\Http\Controllers
      *
      * @return string
      */
+    private function getControllerWithoutPrefixNamespace() :string
+    {
+        return  Str::afterLast(get_called_class(), 'Controllers\\');
+    }
+
+    private function getModelWithFullNamespace(string $class_name) :string
+    {
+        return Str::after(Str::beforeLast($class_name, 'Controller'), '\\');
+    }
+
+    private function getModelWithoutNamespace(string $model) :string
+    {
+        return Str::afterLast($model, '\\');
+    }
+
+
     private function getModelName(bool $withNamespace = true): string
     {
-        $controller = last(explode('Controllers\\', get_called_class()));
+        $controller = $this->getControllerWithoutPrefixNamespace();
+        $modelWithNamespace = $this->getModelWithFullNamespace($controller);
 
-        $modelNamespace = head(explode('Controller', $controller));
-
-
-        if ($withNamespace) {
-            return $modelNamespace;
-        } else {
-            return last(explode('\\', $modelNamespace));
+        if ($withNamespace){
+            return $modelWithNamespace;
         }
 
+        return $this->getModelWithoutNamespace($modelWithNamespace);
     }
 
 
-    /**
-     * @param bool $withNamespace
-     *
-     * @return string
-     */
     private function getFormName(bool $withNamespace = true): string
     {
-        return sprintf("{{namespace}}\Forms\%sForm", $this->getModelName($withNamespace));
+        return sprintf(
+            "{{namespace}}\Forms\{{backNamespace}}\%sForm", $this->getModelName($withNamespace)
+        );
     }
 }

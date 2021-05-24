@@ -9,6 +9,7 @@
 
         <div class="navbar-nav flex-row order-md-last">
             {{-- Insert Mailbox Link --}}
+            {{-- Insert Notification Link --}}
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-toggle="dropdown">
                     <span class="avatar" data-avatar="{{ get_{{singularSlug}}('id') }}" style="background-image: url({{ get_{{singularSlug}}()->getFrontImageUrl() }}"></span>

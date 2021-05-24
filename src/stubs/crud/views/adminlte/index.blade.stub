@@ -12,7 +12,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    {{-- <h1>Catégories</h1> --}}
+
                 </div>
                 <div class="col-sm-6">
                     <div class='float-sm-right'>
@@ -47,7 +47,7 @@
                                         <h3 class="card-title">{{pluralSlug}}</h3>
                                         <div class="btn-group float-right">
                                             {{-- create link --}}
-                                            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\{{singularClass}}"
+                                            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsNamespace}}\{{singularClass}}"
                                                 id="delete-all"> <i class="fa fa-trash"></i> Tous supprimer</a>
                                         </div>
                                     </div>

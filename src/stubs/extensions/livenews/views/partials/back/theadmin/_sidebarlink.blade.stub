@@ -1,6 +1,0 @@
-                    <li class="menu-item">
-                        <a class="menu-link" href="{{ route('{{backLowerNamespace}}.extension.livenews.index') }}">
-                            <span class="dot"></span>
-                            <span class="title">Livenews</span>
-                        </a>
-                    </li>

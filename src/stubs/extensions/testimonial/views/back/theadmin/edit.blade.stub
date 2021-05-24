@@ -1,0 +1,52 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title','Edition ' . ${{extensionSingularSlug}}->name)
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}">{{extensionLabel}}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.show', ${{extensionSingularSlug}}) }}">{{ ${{extensionSingularSlug}}->name }}</a></li>
+                <li class="breadcrumb-item active">Edition</li>
+            </ol>
+        </nav>
+
+    </div>
+
+    <div class="card">
+        <h4 class="card-title">
+            Edition
+        </h4>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    @include('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}._form', ['edit' => true])
+                </div>
+                <div class="col-md-4">
+                    @include('{{backLowerNamespace}}.media._imagemanager', [
+                        'front_image_label' => 'Image à la une',
+                        'back_image_label'  => 'Image à la une (2)',
+                        'images_label'      => 'Gallerie',
+                        'model'             =>  $form->getModel(),
+                        'front_image'       => true,
+                        'back_image'        => true,
+                        'images'            => true,
+                    ])
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@endsection
+
+
+
+

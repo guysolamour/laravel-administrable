@@ -1,5 +1,0 @@
- <div class="nav-item">
-                    <a href="{{ route('{{backLowerNamespace}}.testimonial.index') }}">
-                        <i class="fa fa-comments-alt"></i><span>Témoignages</span>
-                    </a>
-                </div>

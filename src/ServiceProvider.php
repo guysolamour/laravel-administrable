@@ -4,12 +4,12 @@ namespace Guysolamour\Administrable;
 
 use Guysolamour\Administrable\Console\DeployCommand;
 use Guysolamour\Administrable\Console\StorageDumpCommand;
-use Guysolamour\Administrable\Console\Crud\AddCrudCommand;
 use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
+use Guysolamour\Administrable\Console\Crud\AppendCrudCommand;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
-use Guysolamour\Administrable\Console\Extension\AddExtensionCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
+use Guysolamour\Administrable\Console\Extension\Add\AddExtensionCommand;
 use Guysolamour\Administrable\Console\Administrable\CreateAdministrableCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -29,6 +29,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
 
+        $this->loadMigrationsFrom(config('administrable.migrations_path'));
+
+
         $this->loadHelperFile();
 
     }
@@ -44,7 +47,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->commands([
                 AdminInstallCommand::class,
                 MakeCrudCommand::class,
-                AddCrudCommand::class,
+                AppendCrudCommand::class,
                 RollbackCrudCommand::class,
                 CreateAdministrableCommand::class,
                 DeployCommand::class,

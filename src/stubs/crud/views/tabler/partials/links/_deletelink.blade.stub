@@ -1,4 +1,4 @@
 
-                <a href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.destroy', ${{singularSlug}}) }}" class="btn btn-danger"
+                <a href="{{ route('{{deleteRoute}}', ${{singularSlug}}) }}" class="btn btn-danger"
                     data-method="delete" data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
                     <i class="fas fa-trash"></i>&nbsp; Supprimer</a>

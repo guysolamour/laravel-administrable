@@ -4,8 +4,6 @@ namespace {{namespace}}\Settings;
 
 class ConfigurationSettings extends BaseSettings
 {
-    public const PREFIX = 'configuration';
-
     public ?string $email;
     public ?string $postal;
     public ?string $area;
@@ -20,6 +18,6 @@ class ConfigurationSettings extends BaseSettings
 
     public static function group(): string
     {
-        return static::PREFIX;
+        return 'configuration';
     }
 }

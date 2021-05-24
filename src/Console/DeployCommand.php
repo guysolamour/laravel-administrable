@@ -4,15 +4,9 @@ namespace Guysolamour\Administrable\Console;
 
 
 use Illuminate\Support\Str;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Artisan;
 
 class DeployCommand extends BaseCommand
 {
-
-    use CommandTrait;
-
-
     protected const VAULT_FILE = '.vault-pass';
 
     protected const FILES_TO_MOVE = ['Makefile', '.vault-pass'];
@@ -39,10 +33,9 @@ class DeployCommand extends BaseCommand
                              {--s|server= : Server IP adress }
                              {--p|password= : Decryption password code }
                              {--f|force : Force scripts generation }
-                             {--k|key : Generate Env app key }
                              ';
 
-                             /**
+    /**
      * The console command description.
      *
      * @var string
@@ -61,48 +54,39 @@ class DeployCommand extends BaseCommand
     public function handle()
     {
         $this->path = base_path($this->option('path'));
-        if ($this->filesystem->exists($this->path) && !$this->option('force')){
+
+        if ($this->checkIfGenerationHasAlreadyBeenDone()){
             $this->triggerError("Deployment scripts generation have already been done.");
         }
 
-        $this->server = $this->option('server');
-        if (!empty($this->server) && !filter_var($this->server, FILTER_VALIDATE_IP)){
-            $this->triggerError("The server ip [{$this->server}] is not a valid ip.");
-        }
+        $this->server = $this->getServer();
+
 
         $this->password = $this->option('password') ?: $this->secret('Give vault code for decrypting password file');
 
 
-        // copy directory
         if ($this->option('force')){
             $this->filesystem->deleteDirectory($this->path);
         }
 
         $this->filesystem->copyDirectory(
-            self::TPL_PATH . '/deployment',
+            $this->getTemplatePath() . '/deployment',
             $this->path . '/',
         );
 
-        // Complied Env File
-        $this->addAppKeyToEnvFile();
+        $this->compliedAndMoveFile();
 
 
-        $this->compliedAndMoveFile(self::FILES_TO_MOVE);
-
-
-        $this->triggerSuccess("Deploy scripts generated successfuly");
+        $this->info("Deploy scripts generated successfuly.");
     }
 
-    /**
-     * @param array $files
-     * @return void
-     */
-    protected function compliedAndMoveFile(array $files)
+    protected function compliedAndMoveFile() :void
     {
-        foreach ($files as $file ) {
+        foreach (self::FILES_TO_MOVE as $file ) {
             $makefile_path = $this->path . "/tmp/{$file}";
-            $makefile = $this->compliedFile($makefile_path);
-            $this->writeFile($makefile, $makefile_path);
+            $makefile = $this->filesystem->compliedFile($makefile_path, true, $this->getParsedName());
+
+            $this->filesystem->writeFile($makefile_path, $makefile);
             $this->filesystem->move($this->path . "/tmp/{$file}", base_path($file));
 
             if (self::VAULT_FILE === $file) {
@@ -111,12 +95,7 @@ class DeployCommand extends BaseCommand
         }
     }
 
-    /**
-     *
-     * @param string|null $name
-     * @return array
-     */
-    protected function parseName(?string $name = null): array
+    public function getParsedName(?string $name = null): array
     {
         return [
             '{{server}}'            =>  Str::lower($this->server ?: ''),
@@ -132,32 +111,24 @@ class DeployCommand extends BaseCommand
         ];
     }
 
-
-    protected function addAppKeyToEnvFile()
-    {
-        if (!$this->option('key')){
-            return;
-        }
-
-        $data_map = array_merge($this->parseName(), ['{{ vault_app_key }}'   =>  $this->getAppKey()]);
-
-        $env_path = $this->path . '/templates/env.j2';
-        $env_stub = $this->compliedFile($env_path, true, $data_map);
-
-        $this->writeFile($env_stub, $this->path . '/templates/env.j2');
-    }
-
-    protected function getAppKey() :string
-    {
-        Artisan::call('key:generate --show');
-
-       return str_replace(PHP_EOL,'', Artisan::output());
-    }
-
-    protected function addFileToGitIgnore(string $file)
+    protected function addFileToGitIgnore(string $file) :void
     {
         $this->filesystem->append(base_path('.gitignore'), $file);
     }
 
+	private function checkIfGenerationHasAlreadyBeenDone() :bool
+	{
+        return $this->filesystem->exists($this->path) && !$this->option('force');
+	}
 
+	private function getServer() :string
+	{
+        $server = $this->option('server');
+
+        if (!empty($server) && !filter_var($server, FILTER_VALIDATE_IP)) {
+            $this->triggerError("The server ip [{$server}] is not a valid ip.");
+        }
+
+        return $server;
+    }
 }

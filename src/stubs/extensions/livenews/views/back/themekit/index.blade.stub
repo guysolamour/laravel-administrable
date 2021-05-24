@@ -1,6 +1,6 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
-@section('title','Ruban d\'actualités ')
+@section('title', '{{extensionLabel}}')
 
 @section('content')
 <div class="main-content">
@@ -15,7 +15,7 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page"><a href="#">Ruban d'actualités</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a href="#">{{extensionLabel}}</a></li>
                         </ol>
                     </nav>
                 </div>
@@ -26,14 +26,14 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h3 class="card-title">Ruban d'actualités</h3>
+                        <h3 class="card-title">{{extensionLabel}}</h3>
                         <div class="btn-group float-right">
                         </div>
                     </div>
 
                     <div class="card-body">
 
-                        <form action="{{ route('{{backLowerNamespace}}.extension.livenews.update') }}" method="POST" novalidate>
+                        <form action="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.update') }}" method="POST" novalidate>
                             @csrf
                             @method('put')
                             <div class="row">

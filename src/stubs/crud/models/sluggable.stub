@@ -3,11 +3,7 @@
        return 'slug';
    }
 
-   /**
-    * Return the sluggable configuration array for this model.
-    *
-    * @return array
-    */
+   // Return the sluggable configuration array for this model.
    public function sluggable(): array
    {
        return [

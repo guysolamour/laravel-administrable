@@ -1,0 +1,5 @@
+    public function {{pluralMorphFieldName}}()
+    {
+        return $this->morphToMany({{relatedSingularClass}}::class, '{{morphRelationableName}}');
+    }
+

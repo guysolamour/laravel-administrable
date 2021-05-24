@@ -1,0 +1,16 @@
+<?php
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(['{{singularSlug}}.auth'])->prefix('{{extensionsFolder}}')->group(function () {
+  Route::name('{{backLowerNamespace}}.{{extensionsFolder}}.mailbox.')->group(function() {
+    Route::resource('{{extensionPluralSlug}}','{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller')->names([
+          'index'      => 'index',
+          'show'       => 'show',
+          'destroy'    => 'destroy',
+      ])->except('create','edit','store','update');
+
+      Route::post('/{{extensionPluralSlug}}/{{{extensionSingularSlug}}}/note', '{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller@saveNote')->name('note.store');
+      Route::put('/{{extensionPluralSlug}}/{{{extensionSingularSlug}}}/note/{comment}', '{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller@updateNote')->name('note.update');
+      Route::delete('/{{extensionPluralSlug}}/{{{extensionSingularSlug}}}/note/{comment}', '{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller@deleteNote')->name('note.destroy');
+    });
+});

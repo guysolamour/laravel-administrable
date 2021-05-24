@@ -266,7 +266,7 @@
 
     <div class="grid page__grid">
 
-      <div class="page__sidebar d-print-none"><div class="sidebar-toc"><ul class="toc toc--navigator"><li class="toc-h1">Setup</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/installation">Installation</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/configuration">Configuration</a></li><li class="toc-h2 active"><a href="/laravel-administrable/docs/en/quick-start">Quick Start</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/changelog">Changelog</a></li><li class="toc-h1">Crud</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/generate-crud">Generate</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/append-crud">Append</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/rollback-crud">Rollback</a></li></ul></div></div><div class="page__main js-page-main has-aside cell cell--auto">
+      <div class="page__sidebar d-print-none"><div class="sidebar-toc"><ul class="toc toc--navigator"><li class="toc-h1">Setup</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/installation">Installation</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/configuration">Configuration</a></li><li class="toc-h2 active"><a href="/laravel-administrable/docs/en/quick-start">Quick Start</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/changelog">Changelog</a></li><li class="toc-h1">Crud</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/generate-crud">Generate</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/append-crud">Append</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/rollback-crud">Rollback</a></li><li class="toc-h1">Components</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/daterangepicker-component">daterangepicker</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/select2-component">select2</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/tinymce-component">tinymce</a></li><li class="toc-h1">Extensions</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/daterange-component">Livenews</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/datepicker-component">blog</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/select2-component">testimonial</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/select2-component">contact</a></li><li class="toc-h1">Deployment</li><li class="toc-h2"><a href="/laravel-administrable/docs/en/daterange-component">Install</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/datepicker-component">Deploy</a></li><li class="toc-h2"><a href="/laravel-administrable/docs/en/select2-component">Rollback</a></li></ul></div></div><div class="page__main js-page-main has-aside cell cell--auto">
 
       <div class="page__main-inner"><div class="page__header d-print-none"><header class="header"><div class="main">
       <div class="header__title">
@@ -288,7 +288,7 @@
           <a class="edit-on-github"
             title="Edit on Github"
             href="https://github.com/guysolamour/administrable/tree/master/_docs/en/1.3-quick-start.md">
-            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Quick Start"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-04-08T11:07:15+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
+            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Quick Start"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-05-25T15:14:19+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
 
 <!-- end custom article top snippet -->
 <div class="article__content" itemprop="articleBody"><p>This package was created for my needs during my various projects, wanting to go faster and faster and not being a fan of CMS, I decided to make myself a back office (an administration) according to my needs and applying my own conventions for not reinventing the wheel. I am aware that my organization and conventions may not be suitable for everyone.
@@ -329,6 +329,7 @@ Then run</p>
 </code></pre></div></div>
 
 <p>and add down method to settings migration too</p>
+
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cd">/**
  * Reverse the migrations.
  *
@@ -364,9 +365,9 @@ Then run</p>
 <h3 id="--debug">- debug</h3>
 
 <p>The <strong><em>–debug_packages</em></strong> option is used to add some development packages
-such as (the debugbar and others). The default value is <em>false</em></p>
+such as (the debugbar and others).</p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">make</span><span class="o">:</span><span class="n">crud</span> <span class="p">{</span><span class="nc">Model</span><span class="p">}</span> <span class="o">--</span><span class="n">debug_packages</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">make</span><span class="o">:</span><span class="n">crud</span> <span class="p">{</span><span class="nc">Model</span><span class="p">}</span> <span class="o">--</span><span class="n">debug_packages</span> <span class="c1"># or -k</span>
 </code></pre></div></div>
 <p>Packages installed are:</p>
 <ul>
@@ -380,28 +381,17 @@ such as (the debugbar and others). The default value is <em>false</em></p>
 
 <p>The locale can be changed with the option <em>–locale</em> or <em>-l</em></p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">locale</span><span class="o">=</span><span class="s2">"fr"</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">locale</span><span class="o">=</span><span class="s2">"fr"</span> <span class="c1"># or -l fr</span>
 </code></pre></div></div>
 
 <p class="warning"><strong>NB</strong>: Supported locales: fr</p>
-
-<h3 id="--generate">- generate</h3>
-
-<p>By default <strong>Post</strong>, <strong>Mailbox</strong> and <strong>Testimonial</strong> crud are generated by default.
-This behavior can be modified with the <em>–generate</em> or <em>-g</em> option.</p>
-
-<p><strong>NB</strong>: The models must be separated by a comma and the authorized values are: <strong>Post</strong>, <strong>Mailbox</strong> and <strong>Testimonial</strong>.</p>
-
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">generate</span><span class="o">=</span><span class="s2">"Post,Mailbox,Testimonial"</span>
-</code></pre></div></div>
-<p class="info">Allowed values: <em>Post,Mailbox,Testimonial</em></p>
 
 <h3 id="--preset">- preset</h3>
 
 <p>The front end framework used is <strong>vue js</strong>. This behavior can be modified with the option <strong><em>–preset</em></strong> or <strong><em>-p</em></strong>.
 The authorized values are: <strong>vue</strong>, <strong>react</strong> and <strong>bootstrap</strong> in connection with the <strong><em>laravel/ui</em></strong> package.</p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">preset</span><span class="o">=</span><span class="s2">"vue"</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">preset</span><span class="o">=</span><span class="s2">"vue"</span> <span class="c1"># or -p vue</span>
 </code></pre></div></div>
 
 <h3 id="--models">- models</h3>
@@ -409,7 +399,7 @@ The authorized values are: <strong>vue</strong>, <strong>react</strong> and <str
 <p>By default, models are stored in the <strong>app/Models</strong> folder. This folder can be modified with the option <strong><em>–models</em></strong> or <strong><em>-m</em></strong>.
 With the value of the name of the folder which must necessarily be located in the <strong><em>app</em></strong> folder at the root of the project.</p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">models</span><span class="o">=</span><span class="s2">"Models"</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">models</span><span class="o">=</span><span class="s2">"Models"</span> <span class="c1"># or -m Models</span>
 </code></pre></div></div>
 
 <p class="info">This folder is automatically created if it does not exist and the default value is <strong>Models</strong></p>
@@ -417,12 +407,15 @@ With the value of the name of the folder which must necessarily be located in th
 <h3 id="--seed">- seed</h3>
 <p>To automatically seed the database with <strong><em>–seed</em></strong> or <strong><em>-s</em></strong>, you need to create database first.</p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">seed</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">seed</span> <span class="c1"># or -s</span>
 </code></pre></div></div>
 
 <h3 id="--theme">- theme</h3>
 
 <p>Change the administration theme (template) with <strong><em>–theme</em></strong> or <strong><em>-t</em></strong>. The available themes are: <strong>adminlte</strong>, <strong>tabler</strong>, <strong>theadmin</strong> and <strong>themekit</strong></p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">theme</span><span class="o">=</span><span class="s2">"adminlte"</span> <span class="c1"># or -t adminlte</span>
+</code></pre></div></div>
 
 <p class="info"><strong>NB:</strong> The default theme is <strong><em>adminlte</em></strong>.</p>
 
@@ -509,7 +502,7 @@ You need to publish the service provider first  and create guard.</p>
 
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">db</span><span class="o">:</span><span class="n">seed</span> <span class="o">--</span><span class="kd">class</span> <span class="nc">AdminsTableSeeder</span>
 </code></pre></div></div>
-</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-04-08T11:07:15+00:00"><!-- start custom article footer snippet -->
+</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-05-25T15:14:19+00:00"><!-- start custom article footer snippet -->
 
 <!-- end custom article footer snippet -->
 <div class="article__license"><div class="license">

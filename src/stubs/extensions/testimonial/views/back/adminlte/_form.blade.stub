@@ -1,0 +1,22 @@
+{!! form_start($form) !!}
+
+{!! form_rest($form) !!}
+
+<div class="form-group">
+    <button type="submit" class="btn btn-success">
+      @if (isset($edit) && $edit)
+        <i class="fa fa-edit"></i> Modifier
+      @else
+        <i class="fa fa-save"></i> Enregistrer
+      @endif
+    </button>
+</div>
+
+{!! form_end($form) !!}
+
+@include('{{backLowerNamespace}}.partials._tinymce', [
+    'selector'    => "form[name={$form->getModel()->form_name}] textarea[data-tinymce]",
+    'model'       => $form->getModel(),
+    'model_name'  => get_class($form->getModel()),
+    'prefix'      => config('administrable.auth_prefix_path')
+])

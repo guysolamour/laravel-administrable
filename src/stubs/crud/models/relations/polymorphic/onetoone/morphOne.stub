@@ -1,5 +1,5 @@
     public function {{morphFieldName}}()
     {
-        return $this->morphOne({{relatedSingularClass}}::class,'{{morphRelationableName}}');
+        return $this->morphOne({{relatedSingularClass}}::class, '{{morphRelationableName}}');
     }
 

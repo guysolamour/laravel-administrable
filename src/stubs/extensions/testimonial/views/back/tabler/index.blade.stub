@@ -1,0 +1,112 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title', '{{extensionLabel}}')
+
+
+
+@section('content')
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{extensionLabel}}</a></li>
+            </ol>
+
+            <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.create') }}" class="btn btn-success">
+                <i class="fa fa-plus"></i>&nbsp; Ajouter</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+
+       <div class="d-flex justify-content-between mb-3">
+            <h3> {{extensionLabel}} </h3>
+            <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}" id="delete-all"><i
+                    class="fa fa-trash"></i> &nbsp; Tous supprimer</a>
+        </div>
+        <table class="table table-vcenter card-table" id='list'>
+            <thead>
+                <th></th>
+                <th>
+                    <label class="au-checkbox" for="check-all">
+                        <input type="checkbox" id="check-all">
+                        <span class="au-checkmark"></span>
+                    </label>
+                </th>
+
+                <th>#</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Job</th>
+                <th>Status</th>
+                <th>Contenu</th>
+                <th>Date ajout</th>
+                {{-- add fields here --}}
+
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                @foreach(${{extensionPluralSlug}} as ${{extensionSingularSlug}})
+                <tr class="tr-shadow">
+
+                    <td></td>
+                    <td>
+                        <label class="form-check" for="check-{{ ${{extensionSingularSlug}}->id }}">
+                            <input class="form-check-input" type="checkbox" data-check data-id="{{ ${{extensionSingularSlug}}->id }}" id="check-{{ ${{extensionSingularSlug}}->id }}"
+                                <span class="form-check-label"></span>
+                        </label>
+                    </td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ ${{extensionSingularSlug}}->name }}</td>
+                    <td>{{ ${{extensionSingularSlug}}->email }}</td>
+                    <td>{{ ${{extensionSingularSlug}}->job }}</td>
+
+                    <td>
+                        @if (${{extensionSingularSlug}}->isOnline())
+                        <a data-toggle="tooltip" data-placement="top" title="En ligne"><i
+                                class="fas fa-circle text-success"></i></a>
+                        @else
+                        <a data-toggle="tooltip" data-placement="top" title="Hors ligne"><i
+                                class="fas fa-circle text-secondary"></i></a>
+                        @endif
+                    </td>
+
+                    <td>{!! Str::limit(strip_tags(${{extensionSingularSlug}}->content),50) !!}</td>
+
+                    <td>{{ ${{extensionSingularSlug}}->created_at->format('d/m/Y h:i') }}</td>
+                    {{-- add values here --}}
+
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.show', ${{extensionSingularSlug}}) }}" class="btn btn-primary"
+                                 data-toggle="tooltip" data-placement="top" title="Afficher"><i
+                                    class="fas fa-eye"></i></a>
+
+                                <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params(${{extensionSingularSlug}})) }}" class="btn btn-secondary" data-toggle="tooltip"
+                              data-placement="top" title="Cloner"><i class="fas fa-clone"></i></a>
+
+                            <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.edit', ${{extensionSingularSlug}}) }}" class="btn btn-info"
+                                data-toggle="tooltip" data-placement="top" title="Editer"><i
+                                    class="fas fa-edit"></i></a>
+                            <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.destroy', ${{extensionSingularSlug}}) }}" data-method="delete"
+                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
+                                class="btn btn-danger" data-toggle="tooltip" data-placement="top"
+                                title="Supprimer"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+@endsection

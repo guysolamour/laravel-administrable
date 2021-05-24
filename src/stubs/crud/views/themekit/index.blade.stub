@@ -28,7 +28,7 @@
                     <h3 class="card-title">{{translateModelUcfirst}}</h3>
                     <div class="btn-group float-right">
                         {{-- create link --}}
-                        <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\{{singularClass}}" id="delete-all">
+                        <a href="#" class="btn btn-danger d-none" data-model="\{{namespace}}\{{modelsNamespace}}\{{singularClass}}" id="delete-all">
                             <i class="fa fa-trash"></i> Tous supprimer</a>
                     </div>
                 </div>

@@ -3,10 +3,10 @@
     /**
      * Display the specified resource.
      *
-     * @param  \{{namespace}}\{{modelsFolder}}\{{singularClass}}  ${{singularSlug}}
+     * @param  \{{namespace}}\{{modelsNamespace}}\{{singularClass}}  ${{singularSlug}}
      * @return \Illuminate\Http\Response
      */
     public function show({{singularClass}} ${{singularSlug}})
     {
-       return view('{{backLowerNamespace}}.{{pluralSlug}}.show', compact('{{singularSlug}}'));
+       return view('{{showView}}', compact('{{singularSlug}}'));
     }

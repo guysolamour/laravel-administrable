@@ -2,6 +2,13 @@
 
 
 if (!function_exists('translate_model_field')) {
+    /**
+     * @param string $field_name
+     * @param string|null $field_trans
+     * @param string|null $locale
+     * @param array|null $replace
+     * @return string
+     */
     function translate_model_field(string $field_name, ?string $field_trans, ?string $locale = null, ?array $replace = []): string
     {
         if ($field_trans) {
@@ -35,6 +42,12 @@ if (!function_exists('trans_fb')) {
 
 
 if (!function_exists('delete_all_between')) {
+    /**
+     * @param string $beginning
+     * @param string $end
+     * @param string $string
+     * @return string
+     */
     function delete_all_between(string $beginning, string $end, string $string): string
     {
         $beginningPos = strpos($string, $beginning);
@@ -51,6 +64,12 @@ if (!function_exists('delete_all_between')) {
 }
 
 if (!function_exists('create_zip_archive_from_folder')) {
+    /**
+     *
+     * @param string $filePath
+     * @param string $folderPath
+     * @return string
+     */
     function create_zip_archive_from_folder(string $filePath, string $folderPath): string
     {
         $zip = new \ZipArchive();
@@ -74,7 +93,7 @@ if (!function_exists('create_zip_archive_from_folder')) {
 
 if (!function_exists('get_base64encode_class')) {
     /**
-     * @param \Illuminate\Foundation\Auth\User $model
+     * @param object $model
      * @return string
      */
     function get_base64encode_class($model): string
@@ -86,7 +105,7 @@ if (!function_exists('get_base64encode_class')) {
 
 if (!function_exists('get_clone_model_params')) {
     /**
-     * @param \Illuminate\Foundation\Auth\User $model
+     * @param object $model
      * @return array
      */
     function get_clone_model_params($model): array
@@ -107,11 +126,17 @@ if (!function_exists('get_form_class_name')) {
     {
         $name = class_basename(get_class($model));
 
-        return sprintf('\%s\Forms\Back\%sForm', get_app_namespace() ,\Illuminate\Support\Str::singular(\Illuminate\Support\Str::studly($name)));
+        return sprintf('\%s\Forms\%s\%sForm', config('administrable.back_namespace', 'Back') ,get_app_namespace() ,\Illuminate\Support\Str::singular(\Illuminate\Support\Str::studly($name)));
     }
 }
 
 if (!function_exists('get_form_name')) {
+    /**
+     * get_form_name
+     *
+     * @param  obje t $model
+     * @return string
+     */
     function get_form_name($model): string
     {
         return 'entity-' .  strtolower(class_basename(($model)));
@@ -122,7 +147,7 @@ if (!function_exists('random_element')) {
     /**
      * @param \Illuminate\Database\Eloquent\Model $model
      * @param integer $limit
-     * @return void
+     * @return mixed
      */
     function random_element($model, int $limit = 9)
     {
@@ -141,6 +166,12 @@ if (!function_exists('random_element')) {
 }
 
 if (!function_exists('merge_collections')) {
+    /**
+     * merge_collections
+     *
+     * @param  string[] $collections
+     * @return void
+     */
     function merge_collections(...$collections)
     {
         $collect = collect();
@@ -159,6 +190,12 @@ if (!function_exists('merge_collections')) {
 }
 
 if (!function_exists('is_collection')) {
+    /**
+     * is_collection
+     *
+     * @param  mixed $data
+     * @return bool
+     */
     function is_collection($data): bool
     {
         return $data instanceof Illuminate\Database\Eloquent\Collection || $data instanceof Illuminate\Support\Collection;
@@ -186,6 +223,13 @@ if (!function_exists('previous_route')) {
 }
 
 if (!function_exists('array_remove_by_value')) {
+    /**
+     *
+     * @param array $array
+     * @param mixed $value
+     * @param boolean $return
+     * @return null|array
+     */
     function array_remove_by_value(array $array, $value, bool $return = false)
     {
         if (($key = array_search($value, $array)) !== false) {
@@ -195,6 +239,24 @@ if (!function_exists('array_remove_by_value')) {
         if ($return) {
             return $array;
         }
+    }
+}
+
+if (!function_exists('multiple_in_array')) {
+    /**
+     * @param array $needles
+     * @param array $haystack
+     * @return boolean
+     */
+    function multiple_in_array(array $needles = [], array $haystack = []) :bool
+    {
+       foreach ($needles as $needle ) {
+           if (!in_array($needle, $haystack)){
+               return false;
+           }
+       }
+
+       return true;
     }
 }
 
@@ -222,6 +284,15 @@ if (!function_exists('get_app_namespace')) {
     {
         $namespace = \Illuminate\Container\Container::getInstance()->getNamespace();
         return rtrim($namespace, '\\');
+    }
+}
+
+if (!function_exists('get_template_path')) {
+
+    
+    function get_template_path() :string
+    {
+        return dirname(__FILE__);
     }
 }
 

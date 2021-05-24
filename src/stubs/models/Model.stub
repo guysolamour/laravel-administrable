@@ -74,7 +74,7 @@ class {{singularClass}} extends Authenticatable implements HasMedia
 
     public function isConceptor{{singularClass}}() :bool
     {
-        return in_array($this->email, config('administrable.emails',[]));
+        return $this->email == config('administrable.email');
     }
 
 
@@ -146,7 +146,7 @@ class {{singularClass}} extends Authenticatable implements HasMedia
      */
     public function scopeGetNotifiables($query)
     {
-        return $query->whereNotIn('email',config('administrable.emails', []));
+        return $query->where('email', '!=', config('administrable.email'));
     }
 
 

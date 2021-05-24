@@ -1,0 +1,22 @@
+@extends('{{frontLowerNamespace}}.layouts.default')
+
+
+@seoTags([
+    'title'       => $tag->name,
+    'description' => "Retrouvez un concentré de tous les articles de l'étiquette {$tag->name}"
+])
+
+@section('content')
+<div class='container mt-5 pt-5'>
+    <div class="row">
+        <div class="col-md-8">
+            <h4 class="mb-4">Tous les articles de l'étiquette: <span
+                    class="font-italic font-weight-bold">`{{ $tag->name }}`</span></h4>
+            @include('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.partials._post')
+        </div>
+        <div class="col-md-4">
+            @include('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.partials._sidebar')
+        </div>
+    </div>
+</div>
+@endsection

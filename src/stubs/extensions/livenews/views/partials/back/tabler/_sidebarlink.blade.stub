@@ -1,5 +1,0 @@
-                            <li>
-                                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.extension.livenews.index') }}">
-                                    Livenews
-                                </a>
-                            </li>

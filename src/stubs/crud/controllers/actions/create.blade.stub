@@ -6,7 +6,7 @@
     public function create()
     {
         $form = $this->getForm();
-        return view('{{backLowerNamespace}}.{{pluralSlug}}.create',compact('form'));
+        return view('{{createView}}', compact('form'));
     }
 
 
@@ -27,5 +27,5 @@
        {{singularClass}}::create($request->all());
 
        flashy('L\' élément a bien été ajouté');
-       return redirect()->route('{{backLowerNamespace}}.{{singularSlug}}.index');
+       return redirect()->route('{{indexRoute}}');
     }

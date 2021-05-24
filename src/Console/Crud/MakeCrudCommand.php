@@ -3,28 +3,12 @@
 namespace Guysolamour\Administrable\Console\Crud;
 
 
-use Guysolamour\Administrable\Console\CommandTrait;
-use Guysolamour\Administrable\Console\Crud\CreateCrudForm;
-use Guysolamour\Administrable\Console\Crud\CreateCrudView;
-use Guysolamour\Administrable\Console\Crud\CreateCrudModel;
-use Guysolamour\Administrable\Console\Crud\CreateCrudRoute;
-use Guysolamour\Administrable\Console\Crud\CreateCrudMigration;
-use Guysolamour\Administrable\Console\Crud\CreateCrudController;
+use Guysolamour\Administrable\Console\BaseCommand;
 
-class MakeCrudCommand extends BaseCrudCommand
+
+class MakeCrudCommand extends BaseCommand
 {
-    use CommandTrait;
-
-
-    /**
-     * @var bool
-     */
-    protected $migrate;
-
-    /**
-     * @var array
-     */
-    protected $actions;
+    use CrudTrait;
 
 
     /**
@@ -43,156 +27,70 @@ class MakeCrudCommand extends BaseCrudCommand
      */
     protected $description = 'Create, model, migration and all views (crud)';
 
-    /**
-     *
-     */
+
     public function handle()
     {
         $this->info('Initiating...');
 
         $progress = $this->output->createProgressBar(10);
 
-        $this->model = $this->argument('model');
+        // on récupère le modele que nous allons créer
+        $model =  $this->getModel($this->argument('model'));
 
-        if (!$this->model){
-            $models = $this->getUnusedCrudConfigModels();
-
-            if (empty($models)){
-                $this->triggerError("You must defined a model in configuration yaml file");
-            }
-
-            $this->model = $this->choice('Which model will be used ?', $this->getUnusedCrudConfigModels(), 0);
+        if ($this->checkIfCrudHasAlreadyBeenDoneForModel($model)){
+            $this->triggerError("The model [{$model}] crud has already been done.");
         }
 
-        $this->migrate = $this->option('migrate') == 'true' ? true : false;
+        $migrate = $this->getMigrate();
 
-        $this->theme = config('administrable.theme', 'adminlte');
+        $crud = new Crud($model, $migrate);
 
-
-        $this->checkIfCrudHasAlreadyBeenDoneForModel($this->model);
-
-
-        $config_fields = $this->getCrudConfiguration(ucfirst($this->model));
-
-        $this->fields = $this->getCleanFields($config_fields);
-
-        // Models
-        $this->info(PHP_EOL . 'Creating Model...');
-        [$result, $model_path] = CreateCrudModel::generate(
-            $this->model,
-            $this->fields,
-            $this->actions,
-            $this->breadcrumb,
-            $this->theme,
-            $this->fillable,
-            $this->table_name ?? null,
-            $this->slug,
-            $this->timestamps,
-        );
-        $this->displayResult($result, $model_path);
+        // Model
+        $this->displayTitle('Creating Model...');
+        [$result, $path] = $crud->generate('model');
+        $this->displayResult($result, $path);
         $progress->advance();
 
-
-        // Migrations and seeds
-        $this->info(PHP_EOL . 'Creating Migration...');
-        [$migration_path, $seeder_path] = CreateCrudMigration::generate(
-            $this->model,
-            $this->fields,
-            $this->actions,
-            $this->breadcrumb,
-            $this->theme,
-            $this->slug,
-            $this->timestamps,
-            $this->entity,
-            $this->seeder,
-            $this->table_name ?? null,
-        );
-
-        $this->info('Migration file created at ' . $migration_path);
-        $this->info('Seeder file created at ' . $seeder_path);
+        // Migration
+        $this->displayTitle('Creating Migration...');
+        [$result, $migration] = $crud->generate('migration');
+        $this->displayResult($result, $migration);
         $progress->advance();
 
+        // Seeder
+        $this->displayTitle('Creating Seed...');
+        [$result, $path] = $crud->generate('seed');
+        $this->displayResult($result, $path);
+        $progress->advance();
 
-        // Migrate
-        if ($this->migrate) {
-            $this->info(PHP_EOL . 'Migrate...');
-            $this->call('migrate');
-            $progress->advance();
-        }
+        // Run migration
+        $this->displayTitle('Migrate...');
+        $this->runMigration($migrate);
+        $progress->advance();
 
+        // Form
+        $this->displayTitle('Creating form...');
+        [$result, $path] = $crud->generate('form');
+        $this->displayResult($result, $path);
+        $progress->advance();
 
-        if (!$this->entity) {
-            // Forms
-            $this->info(PHP_EOL . 'Forms...');
-            $form_path = CreateCrudForm::generate(
-                $this->model,
-                $this->fields,
-                $this->actions,
-                $this->breadcrumb,
-                $this->theme,
-                $this->slug,
-                $this->timestamps,
-                $this->entity,
-                $this->seeder,
-                $this->edit_slug
-            );
-            $this->info('Form created at ' . $form_path);
-            $progress->advance();
+        // Controller
+        $this->displayTitle('Creating controller...');
+        [$result, $path] = $crud->generate('controller');
+        $this->displayResult($result, $path);
+        $progress->advance();
 
+        // Route
+        $this->displayTitle('Creating route...');
+        [$result, $path] = $crud->generate('route');
+        $this->displayResult($result, $path);
+        $progress->advance();
 
-
-            // Controllers
-            $this->info(PHP_EOL . 'Controllers...');
-            $controller_path = CreateCrudController::generate(
-                $this->model,
-                $this->fields,
-                $this->actions,
-                $this->breadcrumb,
-                $this->theme,
-                $this->slug,
-                $this->timestamps,
-                $this->entity
-            );
-            $this->info('Controller created at ' . $controller_path);
-            $progress->advance();
-
-
-
-            // Routes
-            $this->info(PHP_EOL . 'Routes...');
-            $route_path = CreateCrudRoute::generate(
-                $this->model,
-                $this->fields,
-                $this->actions,
-                $this->breadcrumb,
-                $this->theme,
-                $this->slug,
-                $this->timestamps,
-                $this->entity
-            );
-            $this->info('Routes created at ' . $route_path);
-            $progress->advance();
-
-
-            //  Views and registered link to left sidebar
-            $this->info(PHP_EOL . 'Views...');
-            $view_path = CreateCrudView::generate(
-                $this->model,
-                $this->fields,
-                $this->actions,
-                $this->breadcrumb,
-                $this->theme,
-                $this->slug,
-                $this->timestamps,
-                $this->imagemanager,
-                $this->icon,
-                $this->trans,
-                $this->clone,
-            );
-            $this->info('Views created at ' . $view_path);
-            $progress->advance();
-        }
-
+        // Views
+        $this->displayTitle('Creating views...');
+        [$result, $path] = $crud->generate('views');
+        $this->displayResult($result, $path);
+        $progress->advance();
 
         // update composer autoload for seeding
         $this->runProcess("composer dump-autoload");
@@ -200,29 +98,4 @@ class MakeCrudCommand extends BaseCrudCommand
         $progress->finish();
     }
 
-
-    /**
-     * @param string $file
-     * @return string
-     */
-    private function removeFileExtension(string $file): string
-    {
-        return pathinfo($file, PATHINFO_FILENAME);
-    }
-
-
-    /**
-     * @param boolean $result
-     * @param string $path
-     * @return void
-     */
-    private function displayResult(bool $result, string $path): void
-    {
-        if ($result) {
-            $this->info('File created at ' . $path);
-        } else {
-            if (!$this->polymorphic)
-                $this->info('File ' . $path . ' already exists');
-        }
-    }
 }

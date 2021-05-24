@@ -1,0 +1,6 @@
+            <li class="menu-item {{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index">
+                <a class="menu-link" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}">
+                    <span class="icon far fa-comments-alt"></span>
+                    <span class="title">{{extensionLabel}}</span>
+                </a>
+            </li>

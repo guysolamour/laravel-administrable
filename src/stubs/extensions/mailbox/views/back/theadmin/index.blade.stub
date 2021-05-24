@@ -1,0 +1,139 @@
+@extends('{{backLowerNamespace}}.layouts.base')
+
+
+@section('title', '{{extensionLabel}}')
+
+
+@section('content')
+<div class="main-content">
+    <div class="card ">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('{{singularSlug}}.dashboard') }}">Tableau de bord</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{extensionLabel}}</li>
+            </ol>
+        </nav>
+
+    </div>
+
+    <div class="card">
+        {{-- <h4 class="card-title">
+                {{extensionLabel}}
+            </h4> --}}
+
+        <div class="card-body">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title h3">
+                        {{extensionLabel}}
+                        @if ($unread != 0)
+                          (<small>{{ $unread }} messages non lus</>)
+                        @endif
+                    </h5>
+                    <div class="btn-group">
+
+                        <a href="#" class="btn btn-sm btn-label btn-round btn-danger d-none" data-model="\{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}" id="delete-all"><label><i
+                                    class="fa fa-trash"></i></label> Tous supprimer</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-separated" id='list'>
+                            <thead>
+                                 <tr>
+                                    <th>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="check-all">
+                                            <label class="form-check-label" for="check-all"></label>
+                                        </div>
+                                    </th>
+                                    <th></th>
+                                    <th>Lu</th>
+                                    <th>Nom</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    {{-- add fields here --}}
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              @foreach(${{extensionPluralSlug}} as ${{extensionSingularSlug}})
+                                <tr>
+                                    <td>
+                                         <div class="form-check">
+                                            <input type="checkbox" data-check class="form-check-input" data-id="{{ ${{extensionSingularSlug}}->id }}"
+                                                id="check-{{ ${{extensionSingularSlug}}->id }}">
+                                            <label class="form-check-label" for="check-{{ ${{extensionSingularSlug}}->id }}"></label>
+                                        </div>
+                                    </td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td><a href="Javascript:void(1)"><i class=" {{ (${{extensionSingularSlug}}->read) ? 'far fa-star' : 'fas fa-star'}} text-warning"></i></a></td>
+                                    <td><a class="text-dark" data-provide="tooltip" title="Apercu rapide"  href="#qv-{{extensionPluralSlug}}-details-{{ ${{extensionSingularSlug}}->id }}" data-toggle="quickview">{{ ${{extensionSingularSlug}}->name }}</a></td>
+                                    <td>{{ Str::limit(${{extensionSingularSlug}}->content, 25) }}</td>
+                                    <td>{{ ${{extensionSingularSlug}}->created_at->diffForHumans() }}</td>
+                                    {{-- add values here --}}
+                                    <td>
+                                        <nav class="nav no-gutters gap-2 fs-16">
+                                            <a class="nav-link hover-primary" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.show', ${{extensionSingularSlug}}) }}" data-provide="tooltip"
+                                                title="Afficher" ><i class="ti-eye"></i></a>
+
+                                            <a class="nav-link hover-danger" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.destroy', ${{extensionSingularSlug}}) }}" data-method="delete" data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?" data-provide="tooltip"  title="Supprimer"><i
+                                                    class="ti-close"></i></a>
+                                        </nav>
+                                    </td>
+
+                                    <div id="qv-mailboxes-details-{{ ${{extensionSingularSlug}}->id }}" class="quickview quickview-lg">
+                                      <div class="quickview-body">
+
+                                          <div class="card card-inverse bg-img"
+                                              style="background-image: url(/vendor/{{theme}}/assets/img/gallery/thumb/2.jpg);">
+                                              <div class="flexbox px-20 pt-20">
+                                                  <label class="toggler text-white">
+                                                      <input type="checkbox" {{ ${{extensionSingularSlug}}->read ? 'checked' : '' }}>
+                                                      <i class="fa fa-star"></i>
+                                                  </label>
+
+                                                  <a class="text-white fs-20 lh-1" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.show', ${{extensionSingularSlug}}) }}"><i class="fa fa-eye"></i></a>
+                                              </div>
+
+                                              <div class="card-body text-center pb-50">
+                                                  <a href="#">
+                                                      <img class="avatar avatar-xxl avatar-bordered" src="{{ ${{extensionSingularSlug}}->getFrontImageUrl() }}">
+                                                  </a>
+                                                  <h4 class="mt-2 mb-0"><a class="hover-primary text-white" href="#">{{ ${{extensionSingularSlug}}->name }}</a></h4>
+                                                  <span><i class="fa fa-map-marker w-20px"></i> {{ ${{extensionSingularSlug}}->email }}</span> <br>
+                                                  <span><i class="fa fa-phone w-20px"></i> {{ ${{extensionSingularSlug}}->phone_number }}</span>
+                                                  {{-- add quick values here --}}
+                                              </div>
+                                          </div>
+
+                                          <div class="quickview-block form-type-material">
+                                              {!! ${{extensionSingularSlug}}->content !!}
+                                          </div>
+                                      </div>
+
+                                      <footer class="p-12 text-right">
+                                          <button class="btn btn-flat btn-secondary" type="button" data-toggle="quickview">Fermer</button>
+                                      </footer>
+                                    </div>
+
+                                </tr>
+                            </tbody>
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@include('{{backLowerNamespace}}.partials._datatable')
+@include('{{backLowerNamespace}}.partials._deleteAll')
+
+
+@endsection

@@ -1,0 +1,49 @@
+<?php
+
+namespace Database\Seeders\{{extensionsFolderClass}}\{{extensionClass}};
+
+use {{namespace}}\{{modelsFolder}}\{{singularClass}};
+use Faker\Factory as Faker;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\Tag;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\Post;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\Category;
+use Illuminate\Database\Seeder;
+
+class BlogPostsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Faker::create();
+
+        for ($i = 0; $i < 6; $i++) {
+            Category::create([
+                'name' => $faker->country,
+            ]);
+        }
+
+        for ($i = 0; $i < 6; $i++) {
+            Tag::create([
+                'name' => $faker->city,
+            ]);
+        }
+
+       for ($i = 0; $i < 10; $i++){
+            /**  @var Post */
+            $post = Post::create([
+                'title'         => $faker->name(),
+                'content'       => $faker->realText(1500),
+                'online'        => $faker->randomElement([true, false]),
+                'allow_comment' => $faker->randomElement([true, false]),
+                'author_id'     => $faker->randomElement(Admin::pluck('id')),
+            ]);
+
+            $post->categories()->sync($faker->randomElements(Category::pluck('id'), 3));
+            $post->tags()->sync($faker->randomElements(Tag::pluck('id'), 3));
+        }
+    }
+}

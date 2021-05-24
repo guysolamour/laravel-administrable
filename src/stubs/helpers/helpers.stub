@@ -16,9 +16,13 @@ if (!function_exists('get_month')) {
 }
 
 if (!function_exists('configuration')) {
-    function configuration(string $attribute, string $default = null)
+    function configuration(?string $attribute = null, string $default = null)
     {
         $configuration = \{{namespace}}\Settings\ConfigurationSettings::get();
+
+        if (is_null($attribute)){
+            return $configuration;
+        }
 
         if (property_exists($configuration, $attribute)) {
             $default = $configuration->$attribute;

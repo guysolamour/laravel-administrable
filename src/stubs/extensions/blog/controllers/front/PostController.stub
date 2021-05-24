@@ -1,0 +1,58 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
+
+use Illuminate\Http\Request;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\Post;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\Category;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\Tag;
+use {{namespace}}\Http\Controllers\Controller;
+
+class PostController extends Controller
+{
+    public function index()
+    {
+        $page = get_meta_page('blog');
+
+        $posts = Post::online()->with('categories')->last()->paginate(9);
+
+        $categories = Category::withCount('posts')->last()->get();
+
+        return view('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index', compact('page', 'posts', 'categories'));
+    }
+
+    public function show(Post $post)
+    {
+        return view('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.show', compact('post'));
+    }
+
+    public function category(Category $category)
+    {
+        $posts = $category->posts()->online()->with('categories', 'approvedComments')->last()->paginate(5);
+
+        return view('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.category', compact('category', 'posts'));
+    }
+
+    public function tag(Tag $tag)
+    {
+        $posts = $tag->posts()->online()->with('tags', 'approvedComments')->last()->paginate(5);
+
+        return view('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.tag', compact('tag', 'posts'));
+    }
+
+    public function search(Request $request)
+    {
+        $q = strtolower($request->get('q'));
+
+        $posts = Post::online()->with('categories', 'approvedComments')
+        ->where('title', 'LIKE', '%' . $q . '%')
+            ->orWhere('content', 'LIKE', '%' . $q . '%')
+            ->paginate(9);
+
+        $posts->withPath(route('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.search', compact('q')));
+        $page = get_meta_page('search');
+
+        return view('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.search', compact('posts', 'page'));
+    }
+
+}

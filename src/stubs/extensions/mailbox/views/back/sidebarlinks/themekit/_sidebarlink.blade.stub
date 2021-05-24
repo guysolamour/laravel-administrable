@@ -1,0 +1,11 @@
+              <div class="nav-item">
+                    <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}">
+                        <i class="fa fa-envelope"></i><span>Messagerie</span>
+                        @php
+                            $new_mailboxes = \{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}::unread()->count()
+                        @endphp
+                        @if($new_mailboxes)
+                        <span class="badge badge-success">{{ $new_mailboxes }}</span>
+                        @endif
+                    </a>
+                </div>

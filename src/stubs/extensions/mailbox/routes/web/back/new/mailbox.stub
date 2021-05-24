@@ -1,0 +1,18 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller;
+
+Route::middleware(['{{singularSlug}}.auth'])->prefix('{{extensionsFolder}}')->group(function () {
+  Route::name('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.')->group(function() {
+    Route::resource('{{extensionPluralSlug}}', {{extensionClass}}Controller::class)->names([
+        'index'      => 'index',
+        'show'       => 'show',
+        'destroy'    => 'destroy',
+    ])->except('create','edit','store','update');
+
+    Route::post('/{{extensionPluralSlug}}/{{{extensionSingularSlug}}}/note', [{{extensionClass}}Controller::class, 'saveNote'])->name('note.store');
+    Route::put('/{{extensionPluralSlug}}/{{{extensionSingularSlug}}}/note/{comment}', [{{extensionClass}}Controller::class, 'updateNote'])->name('note.update');
+    Route::delete('/{{extensionPluralSlug}}/{{{extensionSingularSlug}}}/note/{comment}', [{{extensionClass}}Controller::class, 'deleteNote'])->name('note.destroy');
+  });
+});

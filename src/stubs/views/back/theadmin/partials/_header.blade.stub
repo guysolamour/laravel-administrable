@@ -78,6 +78,7 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ti-home"></i> Tableau de bord</a>
                     <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}"><i class="ti-user"></i> Profile</a>
+                    @if (Route::has('{{backLowerNamespace}}.mailbox.index'))
                     <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
                         <div class="flexbox">
                             <i class="ti-email"></i>
@@ -90,11 +91,9 @@
                             @endif
                         </div>
                     </a>
+                    @enfif
                     <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.configuration.edit') }}"><i class="ti-settings"></i> Configuration</a>
                     <div class="dropdown-divider"></div>
-
-
-
 
                     <a class="dropdown-item" href="{{ route('{{singularSlug}}.logout') }}" onclick="event.preventDefault();document.getElementById('{{singularSlug}}-logout-form').submit();"><i class="ti-power-off"></i> Déconnexion</a>
                     <form id="{{singularSlug}}-logout-form" action="{{ route('{{singularSlug}}.logout') }}" method="POST"

@@ -1,3 +1,20 @@
+@php
+    if (
+        (isset($drp_model) && $drp_model->getKey()) &&
+        (!isset($drp_startdate) || !$drp_startdate)
+    ){
+        $drp_startdate = $drp_model->$drp_fieldname;
+    }
+    else {
+        $drp_startdate = now();
+    }
+
+    // set end date default
+    if (!isset($drp_enddate) || !$drp_enddate){
+        $drp_enddate = now();
+    }
+@endphp
+
 @push('css')
 <link rel="stylesheet" href="{{ asset('vendor/{{theme}}/vendor/daterangepicker/daterangepicker.css') }}">
 @endpush
@@ -5,15 +22,15 @@
 @push('js')
 <script src="{{ asset('vendor/{{theme}}/vendor/daterangepicker/daterangepicker.js') }}"></script>
 <script>
-    $('input[name={{ $datepicker_field_name }}]').daterangepicker({
-        timePicker: @json($datepicker_time_picker ?? true),
-        showDropdowns: @json($datepicker_show_drop_downs ?? true),
-        timePicker24Hour: @json($datepicker_time_picker_24_hour ?? true),
-        singleDatePicker: @json($datepicker_single_date_picker ?? false),
-        startDate: "{{  isset($datepicker_start_date) && $datepicker_start_date ? $datepicker_start_date->format('d/m/Y H:i') :  now()->format('d/m/Y H:i')  }}",
-        endDate: "{{  isset($datepicker_end_date) && $datepicker_end_date ? $datepicker_end_date->format('d/m/Y H:i') :  now()->format('d/m/Y H:i') }}",
-        "opens": @json($datepicker_opens ?? 'center'),
-        drops: @json($datepicker_drops ?? 'up'),
+    $('input[name={{ $drp_fieldname }}]').daterangepicker({
+        timePicker: @json($drp_timepicker ?? true),
+        showDropdowns: @json($drp_showdropdowns ?? true),
+        timePicker24Hour: @json($drp_timepicker24hour ?? true),
+        singleDatePicker: @json($drp_singledatepicker ?? false),
+        startDate: "{{  $drp_startdate->format('d/m/Y H:i')  }}",
+        endDate: "{{  $drp_enddate->format('d/m/Y H:i') }}",
+        opens: @json($drp_opens ?? 'center'),
+        drops: @json($drp_drops ?? 'up'),
         locale: {
             format: 'DD/MM/YYYY HH:mm',
             daysOfWeek: [
