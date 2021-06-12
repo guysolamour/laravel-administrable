@@ -47,7 +47,7 @@
 @stack('js')
 @include('flashy::message')
 
-@include('cookieConsent::index')
+@include('cookie-consent::index')
 
 {{-- add livenews extension here --}}
 

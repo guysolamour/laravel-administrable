@@ -1203,7 +1203,8 @@ class AdminInstallCommand extends BaseCommand
 
 
         $helper_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath('/helpers'));
-        $this->filesystem->compliedAndWriteFileRecursively(
+
+        $this->filesystem->compliedAndWriteFile(
             $helper_stub,
             $helper_path
         );

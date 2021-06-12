@@ -69,7 +69,7 @@
         <div class="form-group col-sm-6">
             <label for="og:type">Page Type</label> <br>
             <input type="text" placeholder="either article or website"
-            id="og:type" list="datalist-4" class="form-control" name="seo[og:type]" value="{{ $tags['og:type'] || 'website' }}">
+            id="og:type" list="datalist-4" class="form-control" name="seo[og:type]" value="{{ $tags['og:type'] ?? 'website' }}">
             <datalist id="datalist-4">
                 <option value="article"></option>
                 <option value="website"></option>

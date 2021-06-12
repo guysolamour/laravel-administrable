@@ -2,7 +2,7 @@
 <script src="{{ asset('vendor/tinymce/tinymce.min.js') }}"></script>
 
 <script>
-    let tinymce_config = {
+    const tinymce_config = {
         model: @json($model),
         model_name: @json($model_name ?? get_class($model)),
         prefix: @json(config('administrable.auth_prefix_path')),
