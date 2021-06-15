@@ -29,8 +29,8 @@
         <div class="row">
           <div class="col-md-3">
            @include('{{backLowerNamespace}}.{{pluralSlug}}._avatar', [
-                'model' => $client,
-                'model_name' => get_class($client),
+                'model' => ${{singularSlug}},
+                'model_name' => get_class(${{singularSlug}}),
                 'front_image' => true,
                 'front_image_label' => 'avatar',
                 'back_image' => false,
@@ -63,7 +63,7 @@
               <div class="card-body">
 
                 <p class="text-muted">
-                  {{ ${{singularSlug}}->about }}
+                  {{ Str::limit(${{singularSlug}}->about, 200) }}
                 </p>
 
                 <hr>

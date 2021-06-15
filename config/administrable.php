@@ -58,8 +58,7 @@ return [
     'route_controller_callable_syntax' => true,
 
     /*
-     * When you create a new settings migration via the `make:settings-migration`
-     * command the package will store these migrations in this directory.
+     * Where to store extensions migrations.
      */
     'migrations_path' => database_path('extensions'),
 
@@ -87,8 +86,8 @@ return [
      * et chacun aura un suffix pour le début et fin. Ces suffixes peuvent etre changés ici
      */
     'daterange' => [
-        'start' => 'start_at',
-        'end'   => 'end_at',
+        'start' => 'started_at',
+        'end'   => 'ended_at',
     ],
     /**
      * Le format utilisé pour afficher les dates dans les vues

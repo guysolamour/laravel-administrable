@@ -1,6 +1,6 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
-@section('title', '{{extensionLabel}}')
+@section('title', "{{extensionLabel}}")
 
 @section('content')
 

@@ -88,6 +88,7 @@
             <label for="og:description">Description</label>
             <textarea class="form-control" name="seo[og:description]"
             id="og:description">{{ $tags['og:description'] }}</textarea>
+            <span class="text-muted form-text">Si vide la description de la page sera utilisée</span>
         </div>
         <div class="form-group col-md-6">
             <label for="og:url">Url Facebook</label>
@@ -141,13 +142,13 @@
             <label for="twitter:description">Description Twitter</label> <br>
             <textarea name="seo[twitter:description]" id="twitter:description"
             class="form-control">{{ $tags['twitter:description'] }}</textarea>
-            <span class="text-muted form-text">Si vide le titre de la page sera utilisé</span>
+            <span class="text-muted form-text">Si vide la description de la page sera utilisée</span>
         </div>
         <div class="form-group col-sm-6">
             <label for="twitter:title">Titre Twitter</label> <br>
             <input type="text" name="seo[twitter:title]" value="Titre de twitter" placeholder=""
             id="twitter:title" class="form-control" value="{{ $tags['twitter:title'] }}">
-            <span class="text-muted form-text">Si vide la description de la page sera utilisé</span>
+            <span class="text-muted form-text">Si vide le titre de la page sera utilisé</span>
         </div>
         <div class="form-group col-sm-6">
             <label for="twitter:image">Image Twitter</label> <br>

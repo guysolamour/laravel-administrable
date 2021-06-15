@@ -164,7 +164,7 @@
                                         </div>
                                         @empty
                                         <div class="col-12 text-center">
-                                            Ce group est vide
+                                            Ce groupe est vide
                                         </div>
                                         @endforelse
                                     </div>
