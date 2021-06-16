@@ -146,18 +146,14 @@ class {{singularClass}} extends Authenticatable implements HasMedia
      */
     public function scopeGetNotifiables($query)
     {
-        return $query->where('email', '!=', config('administrable.email'));
+        return $query->whereIn('email', config('administrable.emails', []));
     }
-
 
 
     public function getRouteKeyName()
     {
       return 'pseudo';
     }
-
-
-
 
 
     // add relation methods below

@@ -3,7 +3,7 @@
 namespace Guysolamour\Administrable;
 
 use Guysolamour\Administrable\Console\DeployCommand;
-use Guysolamour\Administrable\Console\StorageDumpCommand;
+use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
 use Guysolamour\Administrable\Console\Crud\AppendCrudCommand;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
@@ -31,9 +31,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadMigrationsFrom(config('administrable.migrations_path'));
 
-
         $this->loadHelperFile();
-
     }
 
     public function register()

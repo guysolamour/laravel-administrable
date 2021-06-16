@@ -161,8 +161,7 @@ return [
     ],
 
     /**
-     * This mail is used by the conceptor to maintain the application
+     * These mails is used by the conceptor to maintain the application
      */
-    'email' => env('CONCEPTOR_EMAIL'),
-
+    'emails' => array_filter(explode('|', env('CONCEPTOR_EMAILS'))),
 ];

@@ -49,6 +49,7 @@ if (!function_exists('get_meta_tag')) {
         return $page->getTag($code, $key);
     }
 }
+
 if (!function_exists('get_meta_type')) {
     function get_meta_type(int $id) :string
     {
@@ -63,15 +64,12 @@ if (!function_exists('get_meta_type')) {
     }
 }
 
-
 if (!function_exists('isConceptor{{singularClass}}')) {
     function isConceptor{{singularClass}}(\{{namespace}}\{{modelsFolder}}\{{singularClass}} ${{singularSlug}}) :bool
     {
         return ${{singularSlug}}->isConceptor{{singularClass}}();
     }
-
 }
-
 
 if (!function_exists('get_current_month')) {
     function get_current_month(bool $longFormat = false)
@@ -84,8 +82,6 @@ if (!function_exists('get_current_month')) {
 
     }
 }
-
-
 
 if (!function_exists('get_day')) {
     function get_day(\Carbon\Carbon $date)
@@ -110,7 +106,6 @@ if (!function_exists('get_full_date')) {
         return sprintf('%s %d %s %d',$day,$day_int,$month,$year);
     }
 }
-
 
 if (!function_exists('format_price')) {
     /**
@@ -138,8 +133,6 @@ if (!function_exists('format_date')) {
     }
 }
 
-
-
 if (!function_exists('set_active_link')) {
     function set_active_link(...$routes)
     {
@@ -149,8 +142,6 @@ if (!function_exists('set_active_link')) {
         return '';
     }
 }
-
-
 
 if (!function_exists('get_{{singularSlug}}')) {
    /**
@@ -164,7 +155,15 @@ if (!function_exists('get_{{singularSlug}}')) {
 
         return auth('{{singularSlug}}')->user()->$field;
     }
+}
 
+if (!function_exists('get_guard_model')) {
+   /**
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    function get_guard_model() {
+        return \{{namespace}}\{{modelsFolder}}\{{singularClass}}::class;
+    }
 }
 
 if (!function_exists('get_user')) {
