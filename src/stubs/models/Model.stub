@@ -15,7 +15,11 @@ use {{namespace}}\Notifications\{{backNamespace}}\Auth\ResetPassword;
 
 class {{singularClass}} extends Authenticatable implements HasMedia
 {
-    use  HasFactory, Notifiable, MediaableTrait, ModelTrait, CommenterTrait;
+    use HasFactory;
+    use Notifiable;
+    use MediaableTrait;
+    use ModelTrait;
+    use CommenterTrait;
 
     /**
      * The attributes that are mass assignable.

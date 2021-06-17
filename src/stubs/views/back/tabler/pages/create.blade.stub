@@ -44,9 +44,9 @@
             </div>
 
         </div>
-        @seoForm([
-          'model' => $form->getModel()
-        ])
+         <x-administrable::seoform  :model="$form->getModel()" />
+
+         <x-administrable::select2 />
         <div class="form-group">
             <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> Enregistrer</button>
         </div>
@@ -58,19 +58,3 @@
 <!-- /.content-wrapper -->
 
 @endsection
-@push('css')
-<link rel="stylesheet" href="{{ asset('vendor/{{theme}}/libs/select2/css/select2.min.css')  }}">
-<link rel="stylesheet"
-    href="{{ asset('vendor/{{theme}}/libs/select2-bootstrap4-theme/select2-bootstrap4.min.css')  }}">
-@endpush
-
-@push('js')
-<script src="{{ asset('vendor/{{theme}}/libs/select2/js/select2.full.min.js')  }}"></script>
-
-<script>
-    $('.select2').select2({
-        theme: 'bootstrap4'
-    });
-</script>
-
-@endpush

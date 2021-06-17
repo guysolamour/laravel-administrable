@@ -2,36 +2,33 @@
 
 namespace {{namespace}}\{{modelsFolder}};
 
-use {{namespace}}\Traits\DraftableTrait;
-use {{namespace}}\Traits\MediaableTrait;
-use {{namespace}}\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-abstract class BaseModel extends Model implements HasMedia
+abstract class BaseModel extends Model
 {
 
    //  use Cachable;
-   use DraftableTrait, MediaableTrait, ModelTrait;
 
     /**
      * Get the lasts items ordered by id DESC
      * @param $query
      * @param int $limit
-     * @return
+     * @return mixed
      */
     public function scopeLast($query, int $limit = null)
     {
         if (is_null($limit)) {
             return $query->orderByDesc('id');
         }
+
         return $query->limit($limit)->orderByDesc('id');
     }
 
 
     /**
-     * Get elemet by Id
+     * Get elemet by Slug
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $slug
@@ -39,20 +36,7 @@ abstract class BaseModel extends Model implements HasMedia
      */
     public function scopeFindBySlug($query, string $slug)
     {
-        return $query->where('slug',$slug);
-    }
-
-
-
-    public function getMediaCollections() :array
-    {
-        return config('media-library.collections', []);
-    }
-
-
-    public function getMediaConversions() :array
-    {
-        return config('media-library.conversions', []);
+        return $query->where('slug', $slug);
     }
 
 

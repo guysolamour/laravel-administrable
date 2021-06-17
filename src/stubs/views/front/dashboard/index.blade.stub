@@ -1,8 +1,6 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@seoTags([
-    'title' => 'Tableau de bord',
-])
+<x-administrable::seotags :force="true" title="Tableau de bord" />
 
 @section('content')
 <div class="container mt-5">

@@ -1,6 +1,6 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@section('title','Confirmation de mot de passe')
+<x-administrable::seotags :force="true" title="Confirmation de mot de passe" />
 
 @section('content')
 <div class="container mt-5">

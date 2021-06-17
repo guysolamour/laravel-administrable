@@ -8,7 +8,8 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 class Page extends BaseModel
 {
-    use Sluggable, SeoableTrait;
+    use Sluggable;
+    use SeoableTrait;
 
     public $timestamps = false;
 
@@ -17,7 +18,7 @@ class Page extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['code','name','route','title','description'];
+    protected $fillable = ['code', 'name', 'route'];
 
 
 
@@ -25,17 +26,19 @@ class Page extends BaseModel
 
 
     // Attributes
-    public function getUriAttribute()
+
+    public function getUriAttribute() :?string
     {
-        if (Route::has($this->attributes['route'])) {
-            return route($this->attributes['route']);
+        if (!Route::has($this->attributes['route'])) {
+            return null;
         }
+
+        return route($this->attributes['route']);
     }
 
 
     public function getTag(string $code, ?string $key = null)
     {
-
         $tag = $this->metatags->filter(fn ($tag)=> $tag->code == $code)->first();
 
         if ($tag) {
@@ -45,8 +48,10 @@ class Page extends BaseModel
         return '';
     }
 
-    // add relation methods below
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function metatags()
     {
        return $this->hasMany(PageMeta::class,'page_id');
@@ -79,14 +84,12 @@ class Page extends BaseModel
          * @param self $model
          */
         static::created(function ($model) {
-
             $model->metatags()->create([
                 'code'    => 'defaultgroup',
                 'name'    => 'Groupe par défaut',
                 'title'   => 'Groupe par défaut',
                 'type'    =>  PageMeta::TYPES['group']['value'],
             ]);
-
         });
     }
 }

@@ -1,33 +1,20 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@seoTags([
-    'model' => $page,
-])
+<x-administrable::seotags :model="$page" />
 
 @section('content')
 <div class='container mt-5 pt-5 text-center'>
   <div class="jumbotron">
-    <h1 class="display-4 ">{{ $page->getTag('Nos dernières réalisations','title') }}</h1>
+    <h1 class="display-4 ">Welcome to administrable</h1>
     <p class="lead">
-      {!! $page->getTag('Nos dernières réalisations','content') !!}
+      The administration package created by <a href="https://roland-assale.info">Guy-roland ASSALE</a>
     </p>
     <hr class="my-4">
-    <p><img src="{{ $page->getTag('contact','image_url') }}" alt=""></p>
-    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+    <a class="btn btn-primary btn-lg" href="https://guysolamour.github.io/administrable/" role="button">Learn more</a>
   </div>
 
 </div>
+@endsection
 
-
-@stop
-
-@push('css')
-
-@endpush
-
-@push('js')
-
-@endpush
 
 

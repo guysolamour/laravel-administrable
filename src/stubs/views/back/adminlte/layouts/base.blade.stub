@@ -56,6 +56,7 @@
 <script src="{{ asset('vendor/{{theme}}/plugins/daterangepicker/daterangepicker.js') }}"></script>
 <script src="{{ asset('vendor/{{theme}}/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 <script src="{{ asset('js/vendor/axios.js') }}"></script>
+<script src="{{ asset('js/vendor/alpine.js') }}"></script>
 <script src="{{ asset('vendor/{{theme}}/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <script src="{{ asset('vendor/{{theme}}/dist/js/adminlte.js') }}"></script>
 <script src="{{ asset('vendor/{{theme}}/dist/js/pages/dashboard.js') }}"></script>

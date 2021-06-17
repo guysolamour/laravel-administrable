@@ -301,6 +301,11 @@ class AdminInstallCommand extends BaseCommand
         );
 
         $this->filesystem->copyDirectory(
+            $this->getTemplatePath() . "/assets/components",
+            public_path("vendor/components"),
+        );
+
+        $this->filesystem->copyDirectory(
             $this->getTemplatePath() . "/resources",
             public_path(),
         );
@@ -386,13 +391,7 @@ class AdminInstallCommand extends BaseCommand
             <<<TEXT
             $search
                    Blade::include('{$this->data_map['{{frontLowerNamespace}}']}.comments.comments', 'comments');
-                   Blade::include('{$this->data_map['{{backLowerNamespace}}']}.partials._seoform', 'seoForm');
-                   Blade::include('{$this->data_map['{{frontLowerNamespace}}']}.partials._seotags', 'seoTags');
-                   Blade::include('{$this->data_map['{{backLowerNamespace}}']}.partials._daterangepicker', 'daterangepicker');
-                   Blade::include('{$this->data_map['{{backLowerNamespace}}']}.partials._select2', 'select2');
-                   Blade::include('{$this->data_map['{{backLowerNamespace}}']}.partials._tinymce', 'tinymce');
                    Blade::include('{$this->data_map['{{backLowerNamespace}}']}.media._imagemanager', 'imagemanager');
-
             TEXT,
             $blade_sp_path
         );

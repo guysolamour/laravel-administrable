@@ -6,16 +6,6 @@ namespace {{namespace}}\Traits;
 
 trait ModelTrait
 {
-    public function getMediaCollections(): array
-    {
-        return config('media-library.collections', []);
-    }
-
-
-    public function getMediaConversions(): array
-    {
-        return config('media-library.conversions', []);
-    }
 
     /**
      * Guest form name

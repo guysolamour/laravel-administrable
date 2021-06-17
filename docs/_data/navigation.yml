@@ -39,14 +39,20 @@ docs-en:
         url:    /docs/en/append-crud
       - title:  Rollback
         url:    /docs/en/rollback-crud
+
   - title:      Components
     children:
-      - title:  daterangepicker
+      - title:  Daterangepicker
         url:    /docs/en/daterangepicker-component
-      - title:  select2
+      - title:  Select2
         url:    /docs/en/select2-component
-      - title:  tinymce
+      - title:  Tinymce
         url:    /docs/en/tinymce-component
+      - title:  Custom input file
+        url:    /docs/en/custominputfile-component
+      - title:  Seo form
+        url:    /docs/en/seoform-component
+
   - title:      Extensions
     children:
       - title:  Livenews

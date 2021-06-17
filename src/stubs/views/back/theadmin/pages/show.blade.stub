@@ -197,13 +197,7 @@
     @endif
 </div>
 
-
-@include('{{backLowerNamespace}}.partials._tinymce', [
-    'selector' => "form textarea[data-tinymce]",
-    'model' => $page->getModel(),
-    'model_name' => get_class($page->getModel()),
-    'prefix' => config('administrable.auth_prefix_path')
-])
+<x-administrable::tinymce :model="$page" />
 
 @endsection
 

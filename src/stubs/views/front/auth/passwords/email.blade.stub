@@ -1,8 +1,6 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-
-@section('title','Réinitialisation de mot de passe')
-
+<x-administrable::seotags :force="true" title="Réinitialisation de mot de passe" />
 
 @section('content')
 <div class="container mt-5">

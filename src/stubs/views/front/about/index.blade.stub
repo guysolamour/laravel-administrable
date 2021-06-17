@@ -1,9 +1,6 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@seoTags([
-    'model' => $page,
-])
-
+<x-administrable::seotags :model="$page" />
 
 @section('content')
 

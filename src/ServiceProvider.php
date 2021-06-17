@@ -3,10 +3,10 @@
 namespace Guysolamour\Administrable;
 
 use Guysolamour\Administrable\Console\DeployCommand;
-use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
 use Guysolamour\Administrable\Console\Crud\AppendCrudCommand;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
+use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
 use Guysolamour\Administrable\Console\Extension\Add\AddExtensionCommand;
@@ -14,20 +14,19 @@ use Guysolamour\Administrable\Console\Administrable\CreateAdministrableCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    const CONFIG_PATH       = __DIR__ . '/../config/administrable.php';
-    const ASSETS_PATH       = __DIR__ . '/stubs/assets';
-    const LOCALE_PATH       = __DIR__ . '/stubs/locales';
-    const RESOURCES_PATH    = __DIR__ . '/stubs/resources';
-    const IMAGEMANAGER_PATH = __DIR__ . '/stubs/imagemanager';
-    const TINYMCE_PATH      = __DIR__ . '/stubs/tinymce';
-
     public function boot()
     {
         $this->publishes([
-            self::CONFIG_PATH => config_path('administrable.php'),
+            $this->packagePath('config/administrable.php') => config_path('administrable.php'),
         ], 'administrable-config');
 
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        $this->loadViewsFrom($this->srcPath('/resources/views'), 'administrable');
+
+        $this->publishes([
+            $this->srcPath('/resources/views') => resource_path('views/vendor/administrable'),
+        ], 'administrable-views');
+
+        $this->loadRoutesFrom($this->srcPath('/routes/web.php'));
 
         $this->loadMigrationsFrom(config('administrable.migrations_path'));
 
@@ -37,7 +36,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            self::CONFIG_PATH,
+            $this->packagePath('config/administrable.php'),
             'administrable'
         );
 
@@ -54,11 +53,21 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 AddExtensionCommand::class,
             ]);
         }
-
     }
 
-    private function loadHelperFile()
+    private function loadHelperFile(): void
     {
-        require __DIR__ . '/helpers.php';
+        require $this->srcPath('/helpers.php');
+    }
+
+    private function packagePath(string $path = ''): string
+    {
+        return  __DIR__ . '/../' . $path;
+    }
+
+    private function srcPath(string $path = ''): string
+    {
+        return  __DIR__ . $path;
     }
 }
+
