@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use MercurySeries\Flashy\Flashy;
 use Kris\LaravelFormBuilder\Form;
 use {{namespace}}\{{modelsFolder}}\{{singularClass}};
-use {{namespace}}\Traits\FormBuilderTrait;
+use Guysolamour\Administrable\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Forms\{{backNamespace}}\Create{{singularClass}}Form;
 use {{namespace}}\Forms\{{backNamespace}}\Reset{{singularClass}}PasswordForm;

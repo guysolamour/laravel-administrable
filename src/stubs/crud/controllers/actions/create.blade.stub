@@ -27,5 +27,6 @@
        {{singularClass}}::create($request->all());
 
        flashy('L\' élément a bien été ajouté');
+       
        return redirect()->route('{{indexRoute}}');
     }

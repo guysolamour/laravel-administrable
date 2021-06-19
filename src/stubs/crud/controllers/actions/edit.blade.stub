@@ -24,5 +24,6 @@
         ${{singularSlug}}->update($request->all());
 
         flashy('L\' élément a bien été modifié');
+        
         return redirect()->route('{{indexRoute}}');
     }

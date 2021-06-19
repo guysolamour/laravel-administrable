@@ -1,11 +1,11 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
 
-@seoTags([
-    'title'       => '{{extensionLabel}}',
-    'description' => 'Retrouvez un concentré de tous les avis de nos clients'
-])
-
+<x-administrable::seotags
+    :force="true"
+    title="{{extensionLabel}}"
+    description="Retrouvez un concentré de tous les avis de nos clients"
+ />
 
 @section('content')
 <div class='container mt-5 pt-5'>
@@ -31,21 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-
-            <div class="card" style="width: 18rem;">
-                <div class="card-header">
-                    Sidebar
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Item 1</li>
-                    <li class="list-group-item">Item 2</li>
-                    <li class="list-group-item">Item 3</li>
-                    <li class="list-group-item">Item 4</li>
-                    <li class="list-group-item">Item 5</li>
-                </ul>
-            </div>
-        </div>
+      
     </div>
 </div>
 @endsection

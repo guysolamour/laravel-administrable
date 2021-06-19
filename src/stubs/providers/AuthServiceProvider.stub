@@ -2,10 +2,10 @@
 
 namespace {{namespace}}\Providers;
 
-use {{namespace}}\{{modelsFolder}}\Comment;
 use {{namespace}}\Policies\CommentPolicy;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Guysolamour\Administrable\Models\Comment;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

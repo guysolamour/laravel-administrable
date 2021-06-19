@@ -9,7 +9,6 @@ class UserForm extends Form
 {
     public function buildForm()
     {
-
         if ($this->getModel() && $this->getModel()->getKey()) {
             $method = 'PUT';
             $url    = route('{{backLowerNamespace}}.user.update', $this->getModel());

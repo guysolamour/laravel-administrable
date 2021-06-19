@@ -3,11 +3,11 @@
 namespace {{namespace}}\Mail\{{backNamespace}};
 
 use {{namespace}}\{{modelsFolder}}\{{singularClass}};
-use {{namespace}}\{{modelsFolder}}\Comment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Guysolamour\Administrable\Models\Comment;
 
 class CommentMail extends Mailable
 {

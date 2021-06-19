@@ -17,12 +17,11 @@ class RedirectIfNotSuper{{singularClass}}
      */
     public function handle($request, Closure $next)
     {
-
         if (!auth()->guard( '{{singularSlug}}' )->user()->isSuper{{singularClass}}()) {
             return redirect()->route('{{singularSlug}}.dashboard');
         }
+        
         return $next($request);
-
     }
 
 }

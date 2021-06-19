@@ -3,9 +3,9 @@
 namespace {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
 
 use Illuminate\Http\Request;
-use {{namespace}}\{{modelsFolder}}\Comment;
 use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}};
 use Illuminate\Support\Facades\Mail;
+use Guysolamour\Administrable\Models\Comment;
 use {{namespace}}\Mail\{{backNamespace}}\NoteAnswerMail;
 use {{namespace}}\Http\Controllers\Controller;
 

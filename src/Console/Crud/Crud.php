@@ -29,7 +29,7 @@ class Crud
     ];
 
     /**  @var string[] */
-    private const GLOBALS_OPTIONS = ['folder', 'edit_slug', 'clone', 'fillable', 'guarded', 'seeder'];
+    private const GLOBALS_OPTIONS = ['edit_slug', 'clone', 'fillable', 'guarded', 'seeder'];
 
     /**  @var string */
     private $model;
@@ -192,7 +192,7 @@ class Crud
         return  '\\' . Str::ucfirst($namespace);
     }
 
-    
+
 
 
     public function getParsedName(?string $name = null): array
@@ -213,10 +213,10 @@ class Crud
         $subfolder = Str::ucfirst($this->getSubFolder());
 
         if (empty($subfolder)) {
-            return Str::ucfirst($this->getModelsFolder());
+            return $this->getModelsFolder();
         }
 
-        return sprintf("%s\%s", Str::ucfirst($this->getModelsFolder()), $subfolder);
+        return sprintf("%s\%s", $this->getModelsFolder(), $subfolder);
     }
 
     public function getModelsFolderWithSubfolder(): string
@@ -227,10 +227,10 @@ class Crud
         $subfolder = Str::ucfirst($this->getSubFolder());
 
         if (empty($subfolder)) {
-            return Str::ucfirst($this->getCrudGlobalConfiguration('folder', 'Models'));
+            return $this->getModelsFolder();
         }
 
-        return sprintf("%s/%s", Str::ucfirst($this->getCrudGlobalConfiguration('folder', 'Models')),  $subfolder);
+        return sprintf("%s/%s", $this->getModelsFolder(),  $subfolder);
     }
 
     public function getAttributeSeparator(string $attributes): ?string
@@ -845,6 +845,11 @@ class Crud
     public function checkIfThereAreCastableFields(): bool
     {
         return $this->fields->filter(fn(Field $field) => $field->getCast() )->isNotEmpty();
+    }
+
+    public function checkIfThereAreBooleanFields(): bool
+    {
+        return $this->fields->filter(fn(Field $field) => $field->isBoolean() )->isNotEmpty();
     }
 
     private function guestTableName() :string

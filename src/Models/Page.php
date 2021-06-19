@@ -1,8 +1,8 @@
 <?php
 
-namespace {{namespace}}\{{modelsFolder}};
+namespace Guysolamour\Administrable\Models;
 
-use {{namespace}}\Traits\SeoableTrait;
+use Guysolamour\Administrable\Traits\SeoableTrait;
 use Illuminate\Support\Facades\Route;
 use Cviebrock\EloquentSluggable\Sluggable;
 
@@ -27,7 +27,7 @@ class Page extends BaseModel
 
     // Attributes
 
-    public function getUriAttribute() :?string
+    public function getUriAttribute(): ?string
     {
         if (!Route::has($this->attributes['route'])) {
             return null;
@@ -36,10 +36,15 @@ class Page extends BaseModel
         return route($this->attributes['route']);
     }
 
+    public function getFrontRoute(): string
+    {
+        return route('front.about.index');
+    }
+
 
     public function getTag(string $code, ?string $key = null)
     {
-        $tag = $this->metatags->filter(fn ($tag)=> $tag->code == $code)->first();
+        $tag = $this->metatags->filter(fn ($tag) => $tag->code == $code)->first();
 
         if ($tag) {
             return $key ? $tag->$key : $tag;
@@ -54,7 +59,7 @@ class Page extends BaseModel
      */
     public function metatags()
     {
-       return $this->hasMany(PageMeta::class,'page_id');
+        return $this->hasMany(PageMeta::class, 'page_id');
     }
 
     // add sluggable methods below

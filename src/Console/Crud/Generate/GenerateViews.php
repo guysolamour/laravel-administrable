@@ -56,15 +56,13 @@ class GenerateViews extends BaseGenerate
         // tinymce a field
         if ($this->crud->hasTinymceField()) {
             $tinymce = <<<TEXT
-            @tinymce([
-                'selector'   => "form[name={\$form->getModel()->form_name}] textarea[data-tinymce]",
-                'model'      => \$form->getModel(),
-            ])
+            <x-administrable::tinymce
+                selector="textarea[data-tinymce]"
+                :model="\$form->getModel()"
+            />
             TEXT;
 
             $complied =  str_replace('{{-- add tinymce here --}}', $tinymce, $complied);
-        } else {
-            $complied =  str_replace('{{-- add tinymce here --}}', '', $complied);
         }
 
         if ($this->crud->hasAction('edit')) {
@@ -114,29 +112,27 @@ class GenerateViews extends BaseGenerate
              */
             if ($field->isDatepicker()) {
                 $replace = <<<HTML
-                @daterangepicker([
-                    'drp_fieldname'                  =>  '{$field->getName()}',
-                    'drp_singledatepicker'           =>  true, // false, true
-                    'drp_timepicker24hour'           =>  true, // false, true
-                    'drp_singledatepicker'           =>  true, // false, true
-                    'drp_drops'                      =>  'down', // up, down
-                    'drp_opens'                      =>  'right', // left, center, right
-                    "drp_startdate"                  =>  \$form->getModel()->{$field->getName()}, // carbon instance
-                ])
+                <x-administrable::daterangepicker 
+                    fieldname="{$field->getName()}"
+                    drops="down"
+                    opens="right"
+                    :startdate="\$form->getModel()->{$field->getName()}"
+                    :singledatepicker="true"
+                    :timepicker24hour="true"
+                />
                 HTML;
                 $complied =  str_replace($search, $search . PHP_EOL . PHP_EOL . $replace, $complied);
             } else if ($field->isDaterange()) {
                 $replace = <<<HTML
-                @daterangepicker([
-                    'drp_fieldname'                  =>  '{$field->getName()}',
-                    'drp_singledatepicker'           =>  true, // false, true
-                    'drp_timepicker24hour'           =>  true, // false, true
-                    'drp_singledatepicker'           =>  false, // false, true
-                    'drp_drops'                      =>  'down', // up, down
-                    'drp_opens'                      =>  'right', // left, center, right
-                    "drp_startdate"                  =>  \$form->getModel()->{$field->getDaterangeStartFieldName()}, // carbon instance
-                    "drp_enddate"                    =>  \$form->getModel()->{$field->getDaterangeEndFieldName()}, // carbon instance
-                ])
+                <x-administrable::daterangepicker 
+                    fieldname="{$field->getName()}"
+                    drops="down"
+                    opens="right"
+                    :startdate="\$form->getModel()->{$field->getDaterangeStartFieldName()}"
+                    :enddate="\$form->getModel()->{$field->getDaterangeEndFieldName()}"
+                    :singledatepicker="false"
+                    :timepicker24hour="true"
+                />
                 HTML;
                 $complied =  str_replace($search, $search . PHP_EOL . PHP_EOL . $replace, $complied);
             }

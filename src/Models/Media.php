@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\{{modelsFolder}};
+namespace Guysolamour\Administrable\Models;
 
 use Spatie\MediaLibrary\MediaCollections\Models\Media as BaseMedia;
 
@@ -14,7 +14,7 @@ class Media extends BaseMedia
      */
     protected $appends = [
         'url', 'thumb_url', 'thumb_sm_url',
-        'human_size', 'date_for_humans','select'
+        'human_size', 'date_for_humans', 'select'
     ];
 
 
@@ -54,16 +54,16 @@ class Media extends BaseMedia
 
     // Methods
 
-    public function select(bool $action = true) :void
+    public function select(bool $action = true): void
     {
         $this->setCustomProperty('select', $action);
         $this->save();
     }
 
-    public function unSelect() :void
+    public function unSelect(): void
     {
         $this->select(false);
     }
 
-     // add relation methods below
+    // add relation methods below
 }

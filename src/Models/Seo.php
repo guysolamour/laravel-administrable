@@ -1,8 +1,7 @@
 <?php
 
-namespace {{namespace}}\Models;
+namespace Guysolamour\Administrable\Models;
 
-use {{namespace}}\Traits\MediaableTrait;
 use Spatie\MediaLibrary\HasMedia;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\SEOMeta;
@@ -10,9 +9,10 @@ use Artesaos\SEOTools\Facades\SEOTools;
 use Illuminate\Database\Eloquent\Model;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\TwitterCard;
+use Guysolamour\Administrable\Traits\MediaableTrait;
 
-class Seo extends Model implements HasMedia {
-
+class Seo extends Model implements HasMedia
+{
     use MediaableTrait;
 
     /**
@@ -36,7 +36,7 @@ class Seo extends Model implements HasMedia {
      * @var array
      */
     protected $fillable = [
-        'page:title', 'og:locale', 'og:type', 'og:title', 'og:description', 'og:url','og:image',
+        'page:title', 'og:locale', 'og:type', 'og:title', 'og:description', 'og:url', 'og:image',
         'twitter:type', 'twitter:title', 'twitter:image', 'twitter:description',
         'robots:index', 'robots:follow', 'page:canonical:url', 'page:author', 'page:meta:description',
         'page:meta:keywords', 'html'
@@ -61,18 +61,18 @@ class Seo extends Model implements HasMedia {
         return $this->morphTo();
     }
 
-    public function getHtmlTags(bool $force = false) :?string
+    public function getHtmlTags(bool $force = false): ?string
     {
         return $force ? $this->generateTags() : $this->html;
     }
 
-    public function generateTags(?Model $model = null) :string
+    public function generateTags(?Model $model = null): string
     {
-        if ($this['page:title']){
+        if ($this['page:title']) {
             SEOMeta::setTitle($this['page:title']);
         }
 
-        if ($this['robots:index'] && $this['robots:follow']){
+        if ($this['robots:index'] && $this['robots:follow']) {
             SEOMeta::setRobots('robots', "{$this['robots:index']},{$this['robots:follow']}");
         }
 
@@ -93,27 +93,26 @@ class Seo extends Model implements HasMedia {
         }
 
         // OpenGraph
-        if ($this['og:title']){
+        if ($this['og:title']) {
             OpenGraph::setTitle($this['og:title']);
-        }
-        else if (SEOMeta::getTitle()) {
+        } else if (SEOMeta::getTitle()) {
             OpenGraph::setTitle(SEOMeta::getTitle());
         }
 
         if ($this['og:description']) {
             OpenGraph::setDescription($this['og:description']);
-        }
-        else if (SEOMeta::getDescription()) {
+        } else if (SEOMeta::getDescription()) {
             OpenGraph::setDescription(SEOMeta::getDescription());
         }
 
+
         if ($this['og:url']) {
             OpenGraph::setUrl($this['og:url']);
-        } else if (is_object($model) && method_exists($model, 'getFrontRoute')) {
+        } else if (is_object($model) && (method_exists($model, 'getFrontRoute'))) {
             OpenGraph::setUrl($model->getFrontRoute());
         }
 
-        if ($this['og:url']){
+        if ($this['og:url']) {
             OpenGraph::addProperty('type', $this['og:type']);
         }
 
@@ -138,8 +137,7 @@ class Seo extends Model implements HasMedia {
 
         if ($this['twitter:image']) {
             TwitterCard::setImage($this['twitter:image']);
-        }
-        else if ($this['og:image']) {
+        } else if ($this['og:image']) {
             TwitterCard::setImage($this['og:image']);
         } else if (is_object($model) && method_exists($model, 'getFrontImageUrl')) {
             TwitterCard::setImage($model->getFrontImageUrl());
@@ -152,22 +150,20 @@ class Seo extends Model implements HasMedia {
         }
 
         // JsonLd
-        if (SEOMeta::getTitle()){
+        if (SEOMeta::getTitle()) {
             JsonLd::setTitle(SEOMeta::getTitle());
         }
 
-        if (SEOMeta::getDescription()){
+        if (SEOMeta::getDescription()) {
             JsonLd::setDescription(SEOMeta::getDescription());
         }
 
 
-        if ($this['og:image']){
+        if ($this['og:image']) {
             JsonLd::addImage($this['og:image']);
-        }
-        else if ($this['twitter:image']){
+        } else if ($this['twitter:image']) {
             JsonLd::addImage($this['twitter:image']);
-        }
-        else if (is_object($model) && method_exists($model, 'getFrontImageUrl')) {
+        } else if (is_object($model) && method_exists($model, 'getFrontImageUrl')) {
             JsonLd::addImage($model->getFrontImageUrl());
         }
 
@@ -180,7 +176,7 @@ class Seo extends Model implements HasMedia {
 
         static::saving(function ($model) {
             /**
-             * @var \{{namespace}}\{{modelsFolder}}\Seo $model
+             * @var Seo $model
              */
             if (request('seo')) {
                 $model->addImage('og:image');
@@ -193,7 +189,7 @@ class Seo extends Model implements HasMedia {
     {
         $key_with_prefix = "seo.{$key}";
 
-        if (!request()->has($key_with_prefix)){
+        if (!request()->has($key_with_prefix)) {
             return;
         }
 
@@ -206,10 +202,10 @@ class Seo extends Model implements HasMedia {
         $this->getMedia($collection, ['field' => $key_with_prefix])->each->delete();
 
         $media =  $this->addMediaFromRequest($key_with_prefix)
-                    ->withCustomProperties([
-                        'field' => $key_with_prefix,
-                    ])
-                    ->toMediaCollection($collection);
+            ->withCustomProperties([
+                'field' => $key_with_prefix,
+            ])
+            ->toMediaCollection($collection);
 
         $this->setAttribute($key, $media->getFullUrl());
     }

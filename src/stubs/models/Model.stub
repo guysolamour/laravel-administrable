@@ -2,12 +2,12 @@
 
 namespace {{namespace}}\{{modelsFolder}};
 
-use {{namespace}}\Traits\ModelTrait;
-use {{namespace}}\Traits\MediaableTrait;
-use {{namespace}}\Traits\CommenterTrait;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Notifications\Notifiable;
 use Creativeorange\Gravatar\Facades\Gravatar;
+use Guysolamour\Administrable\Traits\ModelTrait;
+use Guysolamour\Administrable\Traits\CommenterTrait;
+use Guysolamour\Administrable\Traits\MediaableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use {{namespace}}\Notifications\{{backNamespace}}\Auth\VerifyEmail;

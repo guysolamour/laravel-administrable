@@ -2,13 +2,6 @@
 
 
 if (!function_exists('translate_model_field')) {
-    /**
-     * @param string $field_name
-     * @param string|null $field_trans
-     * @param string|null $locale
-     * @param array|null $replace
-     * @return string
-     */
     function translate_model_field(string $field_name, ?string $field_trans, ?string $locale = null, ?array $replace = []): string
     {
         if ($field_trans) {
@@ -23,11 +16,6 @@ if (!function_exists('trans_fb')) {
     /**
      * Makes translation fall back to specified value if definition does not exist
      *
-     * @param string $key
-     * @param null|string $fallback
-     * @param null|string $locale
-     * @param array|null $replace
-     *
      * @return array|\Illuminate\Contracts\Translation\Translator|null|string
      */
     function trans_fb(string $key, ?string $fallback = null, ?string $locale = null, ?array $replace = [])
@@ -39,7 +27,6 @@ if (!function_exists('trans_fb')) {
         return $fallback;
     }
 }
-
 
 if (!function_exists('delete_all_between')) {
     /**
@@ -62,34 +49,6 @@ if (!function_exists('delete_all_between')) {
     }
 
 }
-
-if (!function_exists('create_zip_archive_from_folder')) {
-    /**
-     *
-     * @param string $filePath
-     * @param string $folderPath
-     * @return string
-     */
-    function create_zip_archive_from_folder(string $filePath, string $folderPath): string
-    {
-        $zip = new \ZipArchive();
-
-
-        if ($zip->open($filePath, \ZipArchive::CREATE) === TRUE) {
-            $files = Illuminate\Support\Facades\File::allFiles($folderPath);
-
-            foreach ($files as $key => $value) {
-                $relativeNameInZipFile = basename($value);
-                $zip->addFile($value, $relativeNameInZipFile);
-            }
-
-            $zip->close();
-        }
-
-        return $filePath;
-    }
-}
-
 
 if (!function_exists('get_base64encode_class')) {
     /**

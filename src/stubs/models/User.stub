@@ -2,12 +2,12 @@
 
 namespace {{namespace}}\{{modelsFolder}};
 
-use {{namespace}}\Traits\CommenterTrait;
-use {{namespace}}\Traits\MediaableTrait;
-use {{namespace}}\Traits\ModelTrait;
-use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Guysolamour\Administrable\Traits\ModelTrait;
+use Guysolamour\Administrable\Traits\CommenterTrait;
+use Guysolamour\Administrable\Traits\MediaableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 

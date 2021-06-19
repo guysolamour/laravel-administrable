@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\{{modelsFolder}};
+namespace Guysolamour\Administrable\Models;
 
 
 class Comment extends BaseModel
@@ -88,6 +88,6 @@ class Comment extends BaseModel
         $this->update(['approved' => true]);
     }
 
-     // add relation methods below
+    // add relation methods below
 
 }

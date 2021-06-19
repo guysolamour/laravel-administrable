@@ -12,9 +12,7 @@
         </div>
         {!! form_row($form->content) !!}
 
-        @seoForm([
-        'model' => $form->getModel()
-        ])
+        <x-administrable::seoform :model="$form->getModel()" />
 
         <div class="form-group">
             <button type="submit" class="btn btn-success"> <i class="fa fa-edit"></i> Modifier</button>
@@ -59,17 +57,17 @@
 {!! form_end($form) !!}
 
 
-@tinymce([
-    'selector' => "form[name={$form->getModel()->form_name}] textarea[data-tinymce]",
-    'model' => $form->getModel(),
-])
+<x-administrable::tinymce 
+  selector="textarea[data-tinymce]"
+  :model="$form->getModel()"
+/>
 
-@select2()
+<x-administrable::select2 />
 
-@daterangepicker([
-    'drp_fieldname'        => 'created_at',
-    'drp_model'            => $form->getModel(),
-    'drp_singledatepicker' => true,
-    'drp_opens'            => 'left',
-    'drp_drops'            => 'bottom',
-])
+<x-administrable::daterangepicker 
+  fieldname="created_at"
+  :model="$form->getModel()"
+  :singledatepicker="true"
+  opens="left"
+  drops="bottom"
+/>

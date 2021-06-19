@@ -1,8 +1,8 @@
 <?php
 
-namespace {{namespace}}\Traits;
+namespace Guysolamour\Administrable\Traits;
 
-use {{namespace}}\{{modelsFolder}}\Seo;
+use Guysolamour\Administrable\Models\Seo;
 
 trait SeoableTrait
 {
@@ -15,16 +15,17 @@ trait SeoableTrait
     }
 
 
-    public function generateSeo(bool $request = true) :void
+    public function generateSeo(bool $request = true): void
     {
         /**
-         * @var \{{namespace}}\{{modelsFolder}}\Seo
+         * @var Seo
          */
         $seo = $this->seo ?: new Seo;
 
         if ($request && request('seo')) {
             $seo->fill(request('seo'));
         }
+
         $seo->setAttribute('html', $seo->generateTags($this));
 
         $this->seo()->save($seo);
@@ -33,7 +34,7 @@ trait SeoableTrait
     public static function bootSeoableTrait()
     {
         /**
-         * @param \{{namespace}}\{{modelsFolder}}\BaseModel $model
+         * @param \Illuminate\Database\Eloquent\Model $model
          */
         static::saved(function ($model) {
             if (request('seo')) {

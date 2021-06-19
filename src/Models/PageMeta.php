@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\{{modelsFolder}};
+namespace Guysolamour\Administrable\Models;
 
 
 class PageMeta extends BaseModel
@@ -32,7 +32,7 @@ class PageMeta extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['code','name','title','type','content', 'page_id', 'parent_id'];
+    protected $fillable = ['code', 'name', 'title', 'type', 'content', 'page_id', 'parent_id'];
 
 
 
@@ -43,7 +43,7 @@ class PageMeta extends BaseModel
      */
     protected $casts = [
         'image' => 'boolean',
-     ];
+    ];
 
 
 
@@ -94,9 +94,9 @@ class PageMeta extends BaseModel
      *
      * @return boolean
      */
-    public function isImage() :bool
+    public function isImage(): bool
     {
-       return $this->type == self::TYPES['image']['value'];
+        return $this->type == self::TYPES['image']['value'];
     }
 
     /**
@@ -112,27 +112,27 @@ class PageMeta extends BaseModel
      *
      * @return boolean
      */
-    public function isVideo() :bool
+    public function isVideo(): bool
     {
-       return $this->type == self::TYPES['video']['value'];
-    }
-
-      /**
-     *
-     * @return boolean
-     */
-    public function isText() :bool
-    {
-       return $this->type == self::TYPES['text']['value'];
+        return $this->type == self::TYPES['video']['value'];
     }
 
     /**
      *
      * @return boolean
      */
-    public function isSimpleText() :bool
+    public function isText(): bool
     {
-       return $this->type == self::TYPES['simpletext']['value'];
+        return $this->type == self::TYPES['text']['value'];
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isSimpleText(): bool
+    {
+        return $this->type == self::TYPES['simpletext']['value'];
     }
 
 
@@ -173,6 +173,4 @@ class PageMeta extends BaseModel
     }
 
     // add relation methods below
-
-
 }

@@ -1,10 +1,10 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-
-@seoTags([
-    'title'       => $category->name,
-    'description' => "Retrouvez un concentré de tous les articles de la categorie {$category->name}"
-])
+<x-administrable::seotags 
+    :force="true"
+    :title="$category->name"
+    :description='"Retrouvez un concentré de tous les articles de la categorie {$category->name}"'
+/>
 
 @section('content')
 <div class='container mt-5 pt-5'>

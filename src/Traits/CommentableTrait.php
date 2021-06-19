@@ -1,8 +1,8 @@
 <?php
 
-namespace {{namespace}}\Traits;
+namespace Guysolamour\Administrable\Traits;
 
-use {{namespace}}\{{modelsFolder}}\Comment;
+use Guysolamour\Administrable\Models\Comment;
 
 /**
  * Add this trait to any model that you want to be able to

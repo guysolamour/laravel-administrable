@@ -2,12 +2,12 @@
 
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
-use {{namespace}}\{{modelsFolder}}\Comment;
+use Guysolamour\Administrable\Models\Comment;
 use Illuminate\Http\Request;
-use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Mail\{{frontNamespace}}\ReplyCommentMail;
 use Illuminate\Support\Facades\Mail;
+use Guysolamour\Administrable\Traits\FormBuilderTrait;
 
 class CommentController extends Controller
 {

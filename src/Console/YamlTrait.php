@@ -34,9 +34,9 @@ trait YamlTrait
         return $this->getCrudConfiguration('folder', 'Models');
     }
 
-     public function getModelsFolder(): string
+    public function getModelsFolder(): string
     {
-        return Str::ucfirst($this->getCrudGlobalConfiguration('folder', 'Models'));
+        return Str::ucfirst(config('administrable.models_folder'));
     }
 
     /**

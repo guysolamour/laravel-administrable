@@ -1,6 +1,6 @@
 @extends('{{backLowerNamespace}}.layouts.base')
 
-@section('title',$post->title)
+@section('title', $post->title)
 
 @section('content')
 

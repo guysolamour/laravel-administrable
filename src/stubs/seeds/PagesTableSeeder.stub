@@ -1,10 +1,10 @@
 <?php
 namespace Database\Seeders;
 
-use {{namespace}}\{{modelsFolder}}\Page;
-use {{namespace}}\{{modelsFolder}}\PageMeta;
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Guysolamour\Administrable\Models\Page;
+use Guysolamour\Administrable\Models\PageMeta;
 
 
 class PagesTableSeeder extends Seeder
@@ -25,7 +25,7 @@ class PagesTableSeeder extends Seeder
         ]);
 
         /**
-         * @var \{{namespace}}\{{modelsFolder}}\Page $home_page
+         * @var Page $home_page
          */
         $home_page->generateSeo(false);
 
@@ -38,7 +38,7 @@ class PagesTableSeeder extends Seeder
         ]);
 
         /**
-         * @var \{{namespace}}\{{modelsFolder}}\Page $contact_page
+         * @var Page $contact_page
          */
         $contact_page->generateSeo(false);
 
@@ -50,7 +50,7 @@ class PagesTableSeeder extends Seeder
         ]);
 
         /**
-         * @var \{{namespace}}\{{modelsFolder}}\Page $mention_page
+         * @var Page $mention_page
          */
         $mention_page->generateSeo(false);
 
@@ -61,7 +61,7 @@ class PagesTableSeeder extends Seeder
             'route'  => '{{frontLowerNamespace}}.about.index',
         ]);
         /**
-        * @var \{{namespace}}\{{modelsFolder}}\Page $about_page
+        * @var Page $about_page
         */
         $about_page->generateSeo(false);
 
@@ -71,7 +71,7 @@ class PagesTableSeeder extends Seeder
             'route'  => '{{frontLowerNamespace}}.post.index',
         ]);
         /**
-        * @var \{{namespace}}\{{modelsFolder}}\Page $blog_page
+        * @var Page $blog_page
         */
         $blog_page->generateSeo(false);
 
@@ -82,9 +82,8 @@ class PagesTableSeeder extends Seeder
             'route'  => '{{frontLowerNamespace}}.post.search',
         ]);
         /**
-        * @var \{{namespace}}\{{modelsFolder}}\Page $search_page
+        * @var Page $search_page
         */
         $search_page->generateSeo(false);
-
     }
 }

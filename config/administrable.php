@@ -2,24 +2,43 @@
 
 return [
 
-    /**
-     * Used in the back office
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Application Names
+    |--------------------------------------------------------------------------
+    |
+    | Used in the back office
+    |
+    */
     'app_first_name'   => config('app.first_name', 'Admin'),
     'app_last_name'    => config('app.last_name', 'Admin'),
     'app_short_name'   => config('app.short_name', 'Lvl'),
-
-    /**
-     * Available theme are adminlte,theadmin,cooladmin,tabler,themekit
-     * The theme should not be changed once the installation has been done
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Theme
+    |--------------------------------------------------------------------------
+    |
+    | Available theme are adminlte,theadmin,cooladmin,tabler,themekit
+    | The theme should not be changed once the installation has been done
+    */
     'theme' => 'themekit',
-
-    /**
-     * The guard used for the installation. By default the value is admin.
-     * This value is also used to generate the crud.
-     * After installation, this value should no longer be changed at the risk of farting the views of the crud
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Folder
+    |--------------------------------------------------------------------------
+    |
+    | Models folder name inside app directory
+    */
+    'models_folder' => 'Models',
+     /*
+    |--------------------------------------------------------------------------
+    | Guard
+    |--------------------------------------------------------------------------
+    |
+    | The guard used for the installation. By default the value is admin.
+    | After installation, this value should no longer be changed at the risk of farting the views of the crud
+    | This value is also used to generate the crud.
+    */
     'guard' => 'admin',
 
     /**

@@ -2,11 +2,11 @@
 
 namespace {{namespace}}\Notifications\{{backNamespace}};
 
-use {{namespace}}\{{modelsFolder}}\Comment;
 use Illuminate\Bus\Queueable;
 use {{namespace}}\Mail\{{backNamespace}}\CommentMail;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Guysolamour\Administrable\Models\Comment;
 
 class CommentNotification extends Notification
 {

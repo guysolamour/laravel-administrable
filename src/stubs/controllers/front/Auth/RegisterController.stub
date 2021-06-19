@@ -4,7 +4,7 @@ namespace {{namespace}}\Http\Controllers\{{frontNamespace}}\Auth;
 
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Providers\RouteServiceProvider;
-use {{namespace}}\User;
+use {{namespace}}\{{modelsFolder}}\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;

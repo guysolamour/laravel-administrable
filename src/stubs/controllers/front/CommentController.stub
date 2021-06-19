@@ -3,7 +3,7 @@
 namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
 
 use {{namespace}}\{{modelsFolder}}\Admin;
-use {{namespace}}\{{modelsFolder}}\Comment;
+use Guysolamour\Administrable\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use {{namespace}}\Http\Controllers\Controller;
@@ -89,7 +89,6 @@ class CommentController extends Controller
 
         flashy('Votre réponse a bien été ajoutée. Ce dernière sera affichée dès lors qu\'ells sera aprouvée. ');
 
-
         return Redirect::to(URL::previous() . '#comment-' . $reply->getKey());
     }
 
@@ -122,6 +121,7 @@ class CommentController extends Controller
         $comment->delete();
 
         flashy('Votre commentaire a bien été supprimé !');
+        
         return back();
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\Traits;
+namespace Guysolamour\Administrable\Traits;
 
 use Illuminate\Support\Arr;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -19,7 +19,7 @@ trait MediaableTrait
 
     public function getFrontImageUrl(string $conversionName = ''): ?string
     {
-        /** @var \{{namespace}}\{{modelsFolder}}\Media */
+        /** @var \App\Models\Media */
         $media = $this->front_image;
 
         if (!$media && $this->email) {
@@ -36,7 +36,7 @@ trait MediaableTrait
 
     public function getBackImageUrl(string $conversionName = ''): ?string
     {
-        /** @var \{{namespace}}\{{modelsFolder}}\Media */
+        /** @var \App\Models\Media */
         $media = $this->back_image;
 
         return $media ? $media->getUrl($conversionName) : null;
@@ -164,7 +164,7 @@ trait MediaableTrait
     public static function bootMediaableTrait()
     {
         /**
-         * @param \{{namespace}}\{{modelsFolder}}\BaseModel $model
+         * @param \App\Models\BaseModel $model
          */
         static::created(function ($model) {
 

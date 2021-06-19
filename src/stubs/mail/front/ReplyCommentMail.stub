@@ -2,11 +2,11 @@
 
 namespace {{namespace}}\Mail\{{frontNamespace}};
 
-use {{namespace}}\{{modelsFolder}}\Comment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Guysolamour\Administrable\Models\Comment;
 
 class ReplyCommentMail extends Mailable
 {

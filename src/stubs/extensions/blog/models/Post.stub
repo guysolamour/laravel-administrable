@@ -3,11 +3,11 @@
 namespace {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}};
 
 use {{namespace}}\{{modelsFolder}}\{{singularClass}};
-use {{namespace}}\Traits\SeoableTrait;
-use {{namespace}}\{{modelsFolder}}\BaseModel;
-use {{namespace}}\Traits\CommentableTrait;
-use {{namespace}}\Traits\DaterangeTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Guysolamour\Administrable\Models\BaseModel;
+use Guysolamour\Administrable\Traits\SeoableTrait;
+use Guysolamour\Administrable\Traits\DaterangeTrait;
+use Guysolamour\Administrable\Traits\CommentableTrait;
 
 class Post extends BaseModel
 {
@@ -103,7 +103,7 @@ class Post extends BaseModel
         parent::booted();
 
         /**
-         * @param \{{namespace}}\{{modelsFolder}}\BaseModel $model
+         * @param BaseModel $model
          */
         static::saved(function ($model) {
             $model->saveCategories();

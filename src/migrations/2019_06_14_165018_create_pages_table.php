@@ -20,8 +20,6 @@ class CreatePagesTable extends Migration
             $table->string('name');
             $table->string('route')->unique();
             $table->string('slug')->unique();
-
-
         });
     }
 

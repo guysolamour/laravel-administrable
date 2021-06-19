@@ -10,5 +10,6 @@
     {
         ${{singularSlug}}->delete();
         flashy('L\' élément a bien été supprimé');
+        
         return redirect()->route('{{indexRoute}}');
     }

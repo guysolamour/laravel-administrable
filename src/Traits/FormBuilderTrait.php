@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\Traits;
+namespace Guysolamour\Administrable\Traits;
 
 use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\Form;
@@ -12,14 +12,14 @@ trait FormBuilderTrait
 {
     use FormBuilder;
 
-    protected function getForm(?Model $model = null, ?string $form = null, bool $withModel = true, bool $withNamespace = true) :Form
+    protected function getForm(?Model $model = null, ?string $form = null, bool $withModel = true, bool $withNamespace = true): Form
     {
         $form ??= $this->getFormName($withNamespace);
 
         $options = [];
 
         if ($withModel) {
-            if (!$model){
+            if (!$model) {
                 $modelName = $this->getModelClassName();
                 $model     = new $modelName();
             }
@@ -34,25 +34,25 @@ trait FormBuilderTrait
     {
         $model = $this->getModelName(true);
 
-        return sprintf("{{namespace}}\{{modelsFolder}}\%s", $model);
+        return sprintf("%s\%s\%s", get_app_namespace(), config('administrable.models_folder'),$model);
     }
 
     /**
-     * Get controller without {{namespace}}\Http\Controllers
+     * Get controller without App\Http\Controllers
      *
      * @return string
      */
-    private function getControllerWithoutPrefixNamespace() :string
+    private function getControllerWithoutPrefixNamespace(): string
     {
         return  Str::afterLast(get_called_class(), 'Controllers\\');
     }
 
-    private function getModelWithFullNamespace(string $class_name) :string
+    private function getModelWithFullNamespace(string $class_name): string
     {
         return Str::after(Str::beforeLast($class_name, 'Controller'), '\\');
     }
 
-    private function getModelWithoutNamespace(string $model) :string
+    private function getModelWithoutNamespace(string $model): string
     {
         return Str::afterLast($model, '\\');
     }
@@ -63,7 +63,7 @@ trait FormBuilderTrait
         $controller = $this->getControllerWithoutPrefixNamespace();
         $modelWithNamespace = $this->getModelWithFullNamespace($controller);
 
-        if ($withNamespace){
+        if ($withNamespace) {
             return $modelWithNamespace;
         }
 
@@ -74,7 +74,8 @@ trait FormBuilderTrait
     private function getFormName(bool $withNamespace = true): string
     {
         return sprintf(
-            "{{namespace}}\Forms\{{backNamespace}}\%sForm", $this->getModelName($withNamespace)
+            "%s\Forms\%s\%sForm",
+            get_app_namespace(), config('administrable.back_namespace'), $this->getModelName($withNamespace)
         );
     }
 }

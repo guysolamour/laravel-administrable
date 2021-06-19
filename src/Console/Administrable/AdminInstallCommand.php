@@ -14,7 +14,7 @@ class AdminInstallCommand extends BaseCommand
     protected $guard;
 
     /** @var string */
-    protected $models_folder_name = 'Models';
+    protected $models_folder_name;
 
     /** @var bool */
     protected $migrate;
@@ -29,7 +29,7 @@ class AdminInstallCommand extends BaseCommand
     protected  $themes = ['adminlte', 'theadmin', 'tabler', 'themekit'];
 
     /** @var bool */
-    protected $route_controller_callable_syntax = true;
+    protected $route_controller_callable_syntax;
 
     /** @var string */
     protected $theme;
@@ -48,7 +48,7 @@ class AdminInstallCommand extends BaseCommand
     protected $signature = 'administrable:install
                                 {guard? : Name of the guard }
                                 {--p|preset=vue : Ui preset to use }
-                                {--m|model=Models : Models folder name inside app directory }
+                                {--m|model= : Models folder name inside app directory }
                                 {--s|seed : Seed database with fake data }
                                 {--c|route_callable_syntax=true : Use route controller callable syntax }
                                 {--r|migrate=true : Run migrations }
@@ -62,6 +62,13 @@ class AdminInstallCommand extends BaseCommand
 
 
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->models_folder_name = config('administrable.models_folder');
+        $this->route_controller_callable_syntax = config('administrable.route_controller_callable_syntax');
+    }
 
     public function handle()
     {
@@ -1217,6 +1224,7 @@ class AdminInstallCommand extends BaseCommand
     {
         $this->updateThemeConfig();
         $this->updateGuardConfig();
+        $this->updateModelsFolderConfig();
         $this->updateControllerCallbackSyntaxConfig();
     }
 
@@ -1230,6 +1238,21 @@ class AdminInstallCommand extends BaseCommand
                 $this->filesystem->get($config_path),
                 "'theme' => '{$theme}',",
                 "'theme' => '{$this->theme}',",
+                $config_path
+            );
+        }
+    }
+
+    private function updateModelsFolderConfig() :void
+    {
+        $config_path = $this->getConfigFilePath();
+
+        $folder = config('administrable.models_folder');
+        if ($folder !== $this->models_folder_name) {
+            $this->filesystem->replaceAndWriteFile(
+                $this->filesystem->get($config_path),
+                "'models_folder' => '{$folder}',",
+                "'models_folder' => '{$this->models_folder_name}',",
                 $config_path
             );
         }

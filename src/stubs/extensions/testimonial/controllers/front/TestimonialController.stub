@@ -20,6 +20,4 @@ class {{extensionClass}}Controller extends Controller
 
       return view('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.index', compact('{{extensionPluralSlug}}'));
     }
-
-
 }

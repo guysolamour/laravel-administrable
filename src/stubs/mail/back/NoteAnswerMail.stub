@@ -2,11 +2,11 @@
 
 namespace {{namespace}}\Mail\{{backNamespace}};
 
-use {{namespace}}\Models\Comment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Guysolamour\Administrable\Models\Comment;
 
 class NoteAnswerMail extends Mailable
 {
@@ -24,7 +24,7 @@ class NoteAnswerMail extends Mailable
     public function __construct(string $subject, Comment $note)
     {
         $this->subject = $subject;
-        $this->note = $note;
+        $this->note    = $note;
     }
 
     /**
@@ -37,6 +37,6 @@ class NoteAnswerMail extends Mailable
         return $this
             ->from(config('mail.from.address'))
             ->subject($this->subject)
-            ->markdown('emails.back.note');
+            ->markdown('emails.{{backLowerNamespace}}.note');
     }
 }

@@ -1,7 +1,4 @@
 globals:
-  # Where to store models in app folder
-  folder: {{modelsFolder}}
-
   # activate or deactivate slug editing in form globally
   edit_slug: false
 
@@ -19,7 +16,7 @@ extensions:
   - livenews:     { label: ruban d'actualité }
   - blog:         { label: blog }
   - testimonial:  { label: témoignages }
-  - mailbx:       { label: messagerie de contact }
+  - mailbox:      { label: messagerie de contact }
 
 
 
@@ -31,25 +28,10 @@ models:
       - online: { type: boolean, trans: en ligne, choices: { non: assale, age: 89 } }
       - title:
           name: title
-          default: salut
           nullable: true
           rules: min:3
-          tinymce: true
-          length: 15
-          form: { id: facebook_id, pattern: '[A-Za-z]+', type: url, class: form-control, readonly: true, disabled: true }
           slug: true
           breadcrumb: true
-      - image:
-          type:
-            relation: one to one
-            type: polymorphic
-            related: App\Models\User
-            # model_id: imageable_id
-            # model_type: imageable_type
-            property: name
-            # local_keys: { foreign_key: note_id, join_key: user_id   }
-            # related_keys: { join_key: zauser_id, foreign_key: note_id  }
-      - description: { name: description, type: text, rules: required }
-      - promotion: { type: datetime, rules: req|string|url, daterange: true  }
+      - description: { name: description, type: text, rules: required, tinymce: true }
+      - promotion: { type: datetime, rules: req|string, daterange: true  }
       - delete: { type: datetime, rules: req, datepicker: true }
-      - user_id: { trans: client, type: { relation: many to many,  related: App\Models\User , type: simple, property: name, related_keys: {  foreign_key: user_id, owner_key: salut }, local_keys: { local_key: mama,  foreign_key: note_id } }, rules: req }

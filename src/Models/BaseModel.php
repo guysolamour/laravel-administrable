@@ -1,15 +1,15 @@
 <?php
 
-namespace {{namespace}}\{{modelsFolder}};
+namespace Guysolamour\Administrable\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia;
+use Guysolamour\Administrable\Traits\ModelTrait;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 abstract class BaseModel extends Model
 {
-
-   //  use Cachable;
+    use Cachable;
+    use ModelTrait;
 
     /**
      * Get the lasts items ordered by id DESC
@@ -52,35 +52,9 @@ abstract class BaseModel extends Model
         return $query->whereIn('slug', $slugs);
     }
 
-    /**
-     * Guest form name
-     *
-     * @return string
-     */
-    public function getFormNameAttribute() :string
-    {
-        return get_form_name($this);
-    }
+   
 
-     /**
-     * Get formated date
-     *
-     * @return string
-     */
-    public function getFormatedDateAttribute() :string
-    {
-        return $this->created_at->format('d/m/Y h:i');
-    }
+    
 
-
-    /**
-     * Get FormBuilder class name
-     *
-     * @return string
-     */
-    public function getFormClassName()
-    {
-        return get_form_class_name($this);
-    }
 
 }

@@ -2,8 +2,8 @@
 
 namespace {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}};
 
-use {{namespace}}\{{modelsFolder}}\BaseModel;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Guysolamour\Administrable\Models\BaseModel;
 
 class Tag extends BaseModel
 {

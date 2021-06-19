@@ -34,13 +34,14 @@ class RollbackCrudCommand extends BaseCommand
 
         $crud = new Crud($model);
 
+        // Rollback migration
+        $this->displayTitle('Rollback migration...');
+        $this->runRollbackMigrationArtisanCommand();
 
         // Migration
         $this->displayTitle('Removing Migration...');
         $message = $crud->rollback('migration');
         $this->info($message);
-
-        die;
 
         // Model
         $this->displayTitle('Removing Model...');
@@ -62,9 +63,7 @@ class RollbackCrudCommand extends BaseCommand
         $message = $crud->rollback('route');
         $this->info($message);
 
-        // Rollback migration
-        $this->displayTitle('Rollback migration...');
-        $this->runRollbackMigrationArtisanCommand();
+        
 
         // Migration
         $this->displayTitle('Removing Migration...');

@@ -1,8 +1,9 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-@seoTags([
-    'model' => $page,
-])
+<x-administrable::seotags 
+    :model="$page"
+/>
+
 
 @section('content')
 <div class='container mt-5 pt-5'>

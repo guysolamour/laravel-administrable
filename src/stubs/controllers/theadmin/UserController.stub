@@ -3,11 +3,11 @@
 namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
 use Illuminate\Http\Request;
-use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\{{modelsFolder}}\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Guysolamour\Administrable\Traits\FormBuilderTrait;
 
 
 class UserController extends Controller
@@ -104,6 +104,7 @@ class UserController extends Controller
         ]);
 
         flashy('L\' utilisateur a bien été modifié');
+
         return redirect()->route('{{backLowerNamespace}}.user.index');
     }
 
@@ -145,7 +146,7 @@ class UserController extends Controller
 
         flashy('Votre mot de passe a été mis à jour');
 
-        return redirect()->route('back.user.index');
+        return redirect()->route('{{backLowerNamespace}}.user.index');
     }
 
 }

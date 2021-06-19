@@ -12,7 +12,7 @@
     if ($model && is_object($model)){
         $seo = $model->seo;
     }else {
-        $seo = new \App\Models\Seo;
+        $seo = new \Guysolamour\Administrable\Models\Seo;
 
         if ($title){
             $seo->setAttribute('page:title', $title);

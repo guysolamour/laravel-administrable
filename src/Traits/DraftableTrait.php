@@ -1,11 +1,10 @@
 <?php
 
-namespace {{namespace}}\Traits;
+namespace Guysolamour\Administrable\Traits;
 
 
 trait DraftableTrait
 {
-
 
     /**
      * Get online elements
@@ -50,5 +49,4 @@ trait DraftableTrait
     {
         return !$this->isOnline();
     }
-
 }

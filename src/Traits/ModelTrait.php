@@ -1,6 +1,6 @@
 <?php
 
-namespace {{namespace}}\Traits;
+namespace Guysolamour\Administrable\Traits;
 
 
 
@@ -48,5 +48,4 @@ trait ModelTrait
     {
         return get_form_class_name($this);
     }
-
 }

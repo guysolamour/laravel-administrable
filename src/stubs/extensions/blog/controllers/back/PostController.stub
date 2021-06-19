@@ -4,9 +4,9 @@ namespace {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderCla
 
 use Illuminate\Http\Request;
 use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\Post;
-use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Forms\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\PostForm;
+use Guysolamour\Administrable\Traits\FormBuilderTrait;
 
 class PostController extends Controller
 {

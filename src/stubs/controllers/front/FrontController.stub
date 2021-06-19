@@ -27,5 +27,4 @@ class FrontController extends Controller
 
        return view('{{frontLowerNamespace}}.legalmention.index', compact('page'));
     }
-
 }

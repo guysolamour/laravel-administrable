@@ -136,11 +136,11 @@ class Field
         $this->setName($field);
         $this->setType($attributes);
         $this->setRules($attributes);
-        $this->setCast($attributes);
         $this->setDefault($attributes);
         $this->setNullable($attributes);
         $this->setDatepicker($attributes);
         $this->setDaterange($attributes);
+        $this->setCast($attributes);
         $this->setLength(Arr::get($attributes, 'length'));
 
         $this->setSlug($attributes);
@@ -510,10 +510,6 @@ class Field
         $this->setRelationIntermediateTable($attributes);
 
         $this->setRelationExistsValidationRule();
-
-
-
-        // dd($this);
     }
 
     private function setDatepicker(array $attributes) :void
@@ -672,7 +668,10 @@ class Field
         $cast = Arr::get($attributes, 'cast');
 
         if (!$cast) {
-            if ($this->isDatetime()) {
+            if ($this->isDaterange() || $this->isDatepicker()) {
+                $cast = 'DaterangepickerCast::class';
+            }
+            else if ($this->isDatetime()) {
                 $cast = 'datetime';
             }
             elseif ($this->isBoolean()) {

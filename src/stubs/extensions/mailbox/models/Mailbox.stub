@@ -2,13 +2,14 @@
 
 namespace {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}};
 
-use {{namespace}}\{{modelsFolder}}\BaseModel;
-use {{namespace}}\Traits\CommentableTrait;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Guysolamour\Administrable\Models\BaseModel;
+use Guysolamour\Administrable\Traits\CommentableTrait;
 
 class {{extensionClass}} extends BaseModel
 {
-    use Sluggable, CommentableTrait;
+    use Sluggable;
+    use CommentableTrait;
 
     /**
     * The table associated with the model.

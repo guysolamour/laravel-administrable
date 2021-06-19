@@ -28,7 +28,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadRoutesFrom($this->srcPath('/routes/web.php'));
 
-        $this->loadMigrationsFrom(config('administrable.migrations_path'));
+        $this->loadMigrationsFrom([
+            $this->srcPath('/migrations'),
+            config('administrable.migrations_path'),
+        ]);
 
         $this->loadHelperFile();
     }

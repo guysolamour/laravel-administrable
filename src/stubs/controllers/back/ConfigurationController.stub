@@ -7,7 +7,6 @@ use {{namespace}}\Http\Controllers\Controller;
 use {{namespace}}\Settings\ConfigurationSettings;
 
 
-
 class ConfigurationController extends Controller
 {
     public function edit(ConfigurationSettings $configuration)

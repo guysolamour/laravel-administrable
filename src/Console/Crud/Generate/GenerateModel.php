@@ -21,14 +21,17 @@ class GenerateModel extends BaseGenerate
         $stub  = $this->crud->filesystem->get($this->crud->getCrudTemplatePath('/models/model.stub'));
         $model = $this->crud->filesystem->compliedFile($stub, false, $this->data_map);
 
-        $model = $this->addBaseModelNamespace($model);
+
         $model = $this->addFillableOrGuardedProperty($model);
         $model = $this->addTableNameProperty($model);
         $model = $this->addTimestampProperty($model);
         $model = $this->addCastsProperty($model);
+        $model = $this->addDaterangeCast($model);
+        $model = $this->addDraftableTrait($model);
         $model = $this->addDaterangeTrait($model);
         $model = $this->addDaterangeTraitProperty($model);
         $model = $this->addDatepickerTraitProperty($model);
+        $model = $this->addMediaTrait($model);
         $model = $this->loadSluggableTrait($model);
 
         $model_path = $this->getModelPath();
@@ -54,17 +57,17 @@ class GenerateModel extends BaseGenerate
 		return sprintf("%s\%s\BaseModel", $this->crud->getAppNamespace(), $this->crud->getModelsFolder());
 	}
 
-	protected function addBaseModelNamespace(string $model) :string
-	{
-        if ($this->crud->hasSubfolder()) {
-            $search = "Traits\ModelTrait;";
-            $replace = "use {$this->getBaseModelClass()};" . PHP_EOL;
+	// protected function addBaseModelNamespace(string $model) :string
+	// {
+    //     if ($this->crud->hasSubfolder()) {
+    //         $search = "Traits\ModelTrait;";
+    //         $replace = "use {$this->getBaseModelClass()};" . PHP_EOL;
 
-            $model = str_replace($search, $search . PHP_EOL . $replace, $model);
-        }
+    //         $model = str_replace($search, $search . PHP_EOL . $replace, $model);
+    //     }
 
-        return $model;
-	}
+    //     return $model;
+	// }
 
     protected function addTableNameProperty(string $model): string
     {
@@ -221,11 +224,16 @@ class GenerateModel extends BaseGenerate
              * @var Field $field
              */
             if ($cast = $field->getCast()) {
+
                 // la non indentation est importante c'est pour mieux formater le texte
-                if ($field->isDaterange()) {
+                if ($field->isDatepicker()){
                     $template .= "
-        '{$field->getDaterangeStartFieldName()}' => '{$cast}',
-        '{$field->getDaterangeEndFieldName()}'   => '{$cast}',";
+        '{$field->getName()}' => {$cast},";
+                }
+                else if ($field->isDaterange()) {
+                    $template .= "
+        '{$field->getDaterangeStartFieldName()}' => {$cast},
+        '{$field->getDaterangeEndFieldName()}'   => {$cast},";
                 } else {
                     $template .= "
         '{$field->getName()}' => '{$cast}',";
@@ -240,6 +248,56 @@ class GenerateModel extends BaseGenerate
 
     }
 
+    protected function addDaterangeCast(string $model)
+    {
+        if (!$this->crud->checkIfThereAreDaterangeFields() && !$this->crud->checkIfThereAreDatepickerFields()) {
+            return $model;
+        }
+
+
+        $search = "use Guysolamour\Administrable\Traits\ModelTrait;";
+        $model = str_replace($search, $search . PHP_EOL . "use Guysolamour\Administrable\Casts\DaterangepickerCast;", $model);
+
+        return $model;
+    }
+
+    protected function addMediaTrait(string $model): string
+    {
+        if (!$this->crud->hasImagemanager()) {
+            return $model;
+        }
+
+        $search = "use Guysolamour\Administrable\Traits\ModelTrait;";
+        $model = str_replace($search, $search . PHP_EOL . "use Guysolamour\Administrable\Traits\MediaableTrait;", $model);
+
+        $search = "use ModelTrait;";
+        $model = str_replace($search, $search . PHP_EOL . '    use MediaableTrait;', $model);
+
+
+        $search = "extends BaseModel";
+        $model = str_replace($search, $search . ' implements HasMedia' , $model);
+
+        $search = "use Guysolamour\Administrable\Traits\ModelTrait;";
+        $model = str_replace($search, $search . PHP_EOL . "use Spatie\MediaLibrary\HasMedia;", $model);
+
+        return $model;
+    }
+
+    protected function addDraftableTrait(string $model): string
+    {
+        if (!$this->crud->checkIfThereAreBooleanFields()) {
+            return $model;
+        }
+
+        $search = "use ModelTrait;";
+        $model = str_replace($search, $search . PHP_EOL . '    use DraftableTrait;' , $model);
+
+        $search = "use Guysolamour\Administrable\Traits\ModelTrait;";
+        $model = str_replace($search, $search . PHP_EOL . "use Guysolamour\Administrable\Traits\DraftableTrait;", $model);
+
+        return $model;
+    }
+
     protected function addDaterangeTrait(string $model): string
     {
         if (!$this->crud->checkIfThereAreDaterangeFields() && !$this->crud->checkIfThereAreDatepickerFields()) {
@@ -249,8 +307,8 @@ class GenerateModel extends BaseGenerate
         $search = "use ModelTrait;";
         $model = str_replace($search, $search . PHP_EOL . '    use DaterangeTrait;' , $model);
 
-        $search = "use {$this->crud->getAppNamespace()}\Traits\ModelTrait;";
-        $model = str_replace($search, $search . PHP_EOL . "use {$this->crud->getAppNamespace()}\Traits\DaterangeTrait;", $model);
+        $search = "use Guysolamour\Administrable\Traits\ModelTrait;";
+        $model = str_replace($search, $search . PHP_EOL . "use Guysolamour\Administrable\Traits\DaterangeTrait;", $model);
 
         return $model;
     }
@@ -357,7 +415,7 @@ class GenerateModel extends BaseGenerate
     {
         $default_model = '';
 
-        
+
         $fields =  $this->crud->getFields();
 
         foreach ($fields as $field) {

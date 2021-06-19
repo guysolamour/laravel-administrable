@@ -2,12 +2,14 @@
 
 namespace {{namespace}}\{{modelsFolder}}\{{extensionsFolder}}\{{extensionClass}};
 
-use {{namespace}}\{{modelsFolder}}\BaseModel;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Guysolamour\Administrable\Models\BaseModel;
+use Guysolamour\Administrable\Traits\DraftableTrait;
 
 class {{extensionClass}} extends BaseModel
 {
     use Sluggable;
+    use DraftableTrait;
 
     /**
     * The table associated with the model.

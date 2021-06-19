@@ -9,7 +9,7 @@
     protected function validateLogin(Request $request)
     {
         $request->validate([
-            'login' => 'required|string',
+            'login'    => 'required|string',
             'password' => 'required|string',
         ],['login.required' => 'Le Pseudo ou l\'Email est requis']);
     }

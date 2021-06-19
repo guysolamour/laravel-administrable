@@ -35,7 +35,7 @@ if (!function_exists('configuration')) {
 if (!function_exists('get_meta_page')) {
     function get_meta_page(string $name)
     {
-        return \{{namespace}}\{{modelsFolder}}\Page::firstWhere('code', $name);
+        return \Guysolamour\Administrable\Models\Page::firstWhere('code', $name);
     }
 }
 
@@ -53,7 +53,7 @@ if (!function_exists('get_meta_tag')) {
 if (!function_exists('get_meta_type')) {
     function get_meta_type(int $id) :string
     {
-        $types = \{{namespace}}\{{modelsFolder}}\PageMeta::TYPES;
+        $types = \Guysolamour\Administrable\Models\PageMeta::TYPES;
 
         foreach ($types as $key => $type) {
             if ($type['value'] === $id) {

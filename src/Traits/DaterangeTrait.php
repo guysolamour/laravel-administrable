@@ -1,20 +1,18 @@
 <?php
 
-namespace {{namespace}}\Traits;
-
-use Carbon\Carbon;
+namespace Guysolamour\Administrable\Traits;
 
 
 trait DaterangeTrait
 {
 
-    public function getDateranges() :array
+    public function getDateranges(): array
     {
         return $this->dateranges ?? [];
     }
 
 
-    public function getDatepickers() :array
+    public function getDatepickers(): array
     {
         return $this->datepickers ?? [];
     }
@@ -22,14 +20,9 @@ trait DaterangeTrait
 
     private function parseRangeDates(string $dates): array
     {
-        return  array_map(fn($date) => $this->sanitizeDaterangeDate($date), explode(' - ', $dates));
+        return  array_map(fn ($date) => trim($date), explode(' - ', $dates));
     }
 
-
-    private function sanitizeDaterangeDate(string $date) :string
-    {
-        return Carbon::parse(str_replace('/', '-', str_replace(['AM', 'am', 'PM', 'pm'], '', $date)))->toDateTimeString();
-    }
 
     /**
      * @return void
@@ -38,13 +31,13 @@ trait DaterangeTrait
     {
         $attributes = $this->dateranges;
 
-        if (!empty($attributes)){
-            foreach ($attributes as $attribute ) {
-                if ($dates = request($attribute)){
+        if (!empty($attributes)) {
+            foreach ($attributes as $attribute) {
+                if ($dates = request($attribute)) {
                     [$start_at, $end_at] = $this->parseRangeDates($dates);
 
-                    $this->attributes["{$attribute}_". config('administrable.daterange.start')] = $start_at;
-                    $this->attributes["{$attribute}_". config('administrable.daterange.end')]   = $end_at;
+                    $this->setAttribute("{$attribute}_" . config('administrable.daterange.start'), $start_at);
+                    $this->setAttribute("{$attribute}_" . config('administrable.daterange.end'), $end_at);
                 }
             }
         }
@@ -60,7 +53,7 @@ trait DaterangeTrait
         if (!empty($attributes)) {
             foreach ($attributes as $attribute) {
                 if ($date = request($attribute)) {
-                    $this->attributes[$attribute] = $this->sanitizeDaterangeDate($date);
+                    $this->setAttribute($attribute, $date);
                 }
             }
         }

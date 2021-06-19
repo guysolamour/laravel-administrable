@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Redirect;
 
 class RedirectController extends Controller
 {
-
     private $config;
 
     public function __construct(ConfigurationSettings $config)
@@ -17,19 +16,19 @@ class RedirectController extends Controller
         $this->config = $config;
     }
 
-    public function twitter () {
-		    return Redirect::to( $this->config->twitter);
+    public function twitter() {
+		    return Redirect::to($this->config->twitter);
     }
 
-	  public function linkedin () {
-        return Redirect::to( $this->config->linkedin);
+	  public function linkedin() {
+        return Redirect::to($this->config->linkedin);
     }
 
-	  public function facebook () {
-        return Redirect::to( $this->config->facebook);
+	  public function facebook() {
+        return Redirect::to($this->config->facebook);
     }
 
-	  public function youtube () {
-        return Redirect::to( $this->config->youtube);
+	  public function youtube() {
+        return Redirect::to($this->config->youtube);
     }
 }
