@@ -1,15 +1,36 @@
 @php
-    $livenews = \{{namespace}}\Settings\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Settings::get();
+    ${{extensionPluralSlug}} = \{{namespace}}\{{modelsFolder}}{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}::latest()->get();
 @endphp
 
-@if($livenews->online)
-<marquee style="
-        position: fixed; bottom: 0; right: 0;
-        left: 0; z-index: 9000;
-        font-size: {{ $livenews->size }}px;
-        background-color: {{ $livenews->background_color }};
-        color: {{ $livenews->text_color }}; padding: 5px; text-align: center;"
-">
-    {!! $livenews->parse() !!}
-</marquee>
+@if( ${{extensionPluralSlug}}->isNotEmpty())
+<div class="marquee">
+  @foreach (${{extensionPluralSlug}} as $news)
+      @if(
+          $news->online && !empty($news->content) &&
+          $news->started_at->isPast() && $news->ended_at->isFuture()
+      )
+          <span style="
+              font-size: {{ $news->size }}px;
+              background-color: {{ $news->background_color }};
+              color: {{ $news->text_color }}; padding: 5px; text-align: center;"
+          " >{{ $news->parseContent() }}</span>
+      @endif
+  @endforeach
+</div>
+
+<link rel="stylesheet" href="{{ asset('vendor/{{extensionsFolder}}/{{extensionPluralSlug}}/css/marquee.css') }}">
+<script  src='{{ asset('vendor/{{extensionsFolder}}/{{extensionPluralSlug}}/js/marquee.js') }}'></script>
+<script>
+    $(function(){
+        $('.marquee').marquee({
+            duration: {{ $livenews_duration ?? 10000 }},
+            delayBeforeStart: {{ $livenews_delay_before_start ?? 5000 }},
+            direction: '{{ $livenews_direction ?? 'left' }}',
+            allowCss3Support: true,
+        });
+    });
+</script>
 @endif
+
+
+

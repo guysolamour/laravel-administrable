@@ -4,8 +4,17 @@ use Illuminate\Support\Facades\Route;
 use {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller;
 
 Route::prefix('{{extensionsFolder}}/')->middleware(['{{singularSlug}}.auth'])->group(function () {
-    Route::name('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.')->group(function () {
-        Route::get('{{extensionPluralSlug}}', [{{extensionClass}}Controller::class, 'index'])->name('index');
-        Route::put('{{extensionPluralSlug}}', [{{extensionClass}}Controller::class, 'update'])->name('update');
+    Route::name('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.')->group(function () {
+      Route::resource('{{extensionPluralSlug}}', {{extensionClass}}Controller::class)->names([
+            'index'    => 'index',
+            'show'     => 'show',
+            'create'   => 'create',
+            'store'    => 'store',
+            'edit'     => 'edit',
+            'update'   => 'update',
+            'destroy'  => 'destroy',
+      ])->except('show');
     });
 });
+
+

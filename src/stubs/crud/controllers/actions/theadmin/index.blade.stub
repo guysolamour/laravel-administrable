@@ -6,7 +6,7 @@
     public function index()
     {
         ${{pluralSlug}} = {{singularClass}}::last()->get();
-        $form = $this->getForm();
-        
+        $form = $this->getForm(new {{singularClass}}, {{singularClass}}Form::class);
+
         return view('{{indexRoute}}', compact('{{pluralSlug}}','form'));
     }

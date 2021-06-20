@@ -6,7 +6,7 @@
      */
     public function edit({{singularClass}} ${{singularSlug}})
     {
-        $form = $this->getForm(${{singularSlug}});
+        $form = $this->getForm(${{singularSlug}}, {{singularClass}}Form::class);
         return view('{{editView}}', compact('{{singularSlug}}','form'));
     }
 
@@ -19,11 +19,11 @@
      */
     public function update(Request $request, {{singularClass}} ${{singularSlug}})
     {
-        $form = $this->getForm(${{singularSlug}});
+        $form = $this->getForm(${{singularSlug}}, {{singularClass}}Form::class);
         $form->redirectIfNotValid();
         ${{singularSlug}}->update($request->all());
 
         flashy('L\' élément a bien été modifié');
-        
+
         return redirect()->route('{{indexRoute}}');
     }

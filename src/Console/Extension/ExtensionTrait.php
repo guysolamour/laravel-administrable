@@ -103,6 +103,21 @@ trait ExtensionTrait
         $this->loadBackForms();
     }
 
+    protected function loadAssets() :void
+    {
+        $stubs = $this->getExtensionStubsPath('assets');
+
+        if (empty($stubs)) {
+            return;
+        }
+
+        $path = public_path("vendor/{$this->data_map['{{extensionsFolder}}']}/{$this->data_map['{{extensionPluralSlug}}']}");
+
+        $this->filesystem->copyDirectory($stubs, $path);
+
+        $this->displayMessage('Assets copied to ' . $path);
+    }
+
     protected function loadFrontViews() :void
     {
         $stubs = $this->getExtensionStubs('views/front');

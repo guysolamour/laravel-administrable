@@ -9,7 +9,8 @@
     public function destroy({{singularClass}} ${{singularSlug}})
     {
         ${{singularSlug}}->delete();
-        flashy('L\' élément a bien été supprimé');
         
+        flashy('L\' élément a bien été supprimé');
+
         return redirect()->route('{{indexRoute}}');
     }

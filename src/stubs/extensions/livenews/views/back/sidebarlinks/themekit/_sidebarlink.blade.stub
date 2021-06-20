@@ -1,5 +1,5 @@
                     <div class="nav-item">
-                        <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.index') }}">
+                        <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index') }}">
                             <i class="fa fa-folder"></i><span>{{extensionLabel}}</span>
                         </a>
                     </div>

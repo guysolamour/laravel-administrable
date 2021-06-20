@@ -1,0 +1,22 @@
+ .marquee {
+    /*   width: 300px; */
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-color:  #f00;
+    color: white;
+    z-index: 1000;
+    /*   background: #ccc; */
+    font-size: 35px; /* any font size or any style you want */
+}
+
+.marquee span {
+    display: inline-block;
+    margin-right: 50px; /* same as the width of .marquee */
+}
+
+.marquee span:last-child {
+    margin-right: 0;
+}

@@ -14,7 +14,7 @@ trait MediaableTrait
 
     public function getFrontImageAttribute()
     {
-        return $this->getMedia(config('media-library.collections.front.label', 'default'), ['select' => true])->first();
+        return $this->getMedia(config('administrable.media.collections.front.label', 'default'), ['select' => true])->first();
     }
 
     public function getFrontImageUrl(string $conversionName = ''): ?string
@@ -31,7 +31,7 @@ trait MediaableTrait
 
     public function getBackImageAttribute()
     {
-        return $this->getMedia(config('media-library.collections.back.label', 'default'), ['select' => true])->first();
+        return $this->getMedia(config('administrable.media.collections.back.label', 'default'), ['select' => true])->first();
     }
 
     public function getBackImageUrl(string $conversionName = ''): ?string
@@ -45,7 +45,7 @@ trait MediaableTrait
 
     public function getImagesAttribute()
     {
-        $medias = $this->getMedia(config('media-library.collections.images.label', 'default'), ['select' => true]);
+        $medias = $this->getMedia(config('administrable.media.collections.images.label', 'default'), ['select' => true]);
 
         return $this->sortImages($medias);
     }
@@ -57,7 +57,7 @@ trait MediaableTrait
 
     public function getMediaCollections(): array
     {
-        $collections = config('media-library.collections', []);
+        $collections = config('administrable.media.collections', []);
 
         if (property_exists($this, 'medialibrary_collections')) {
             if (empty($this->medialibrary_collections)) {
@@ -90,7 +90,9 @@ trait MediaableTrait
 
     public function getMediaConversions(): array
     {
-        $conversions =  config('media-library.conversions', []);
+        $conversions =  config('administrable.media.conversions', []);
+
+        $default_conversions = array_filter($conversions, fn($item) => Arr::get($item, 'default'));
 
         if (property_exists($this, 'medialibrary_conversions')) {
             if (empty($this->medialibrary_conversions)) {
@@ -101,6 +103,14 @@ trait MediaableTrait
                 $conversions = $this->medialibrary_conversions;
             }
         }
+
+        foreach ($default_conversions as $key => $value) {
+            if (Arr::get($conversions, $key)){
+                continue;
+            }
+            $conversions[$key] = $value;
+        }
+
 
         $conversions = collect($conversions)->filter()->map(function ($collection, $key) {
 
@@ -122,7 +132,7 @@ trait MediaableTrait
             foreach ($collections as $collection) {
                 $this->addMediaCollection($collection['label'])
                     ->useDisk(
-                        config('media-library.collections_disc')
+                        config('administrable.media.collections_disc')
                     )
                     ->withResponsiveImagesIf($collection['conversion']);
             }
@@ -164,7 +174,7 @@ trait MediaableTrait
     public static function bootMediaableTrait()
     {
         /**
-         * @param \App\Models\BaseModel $model
+         * @param \Guysolamour\Administrable\Models\BaseModel $model
          */
         static::created(function ($model) {
 
@@ -188,6 +198,7 @@ trait MediaableTrait
     }
 
     /**
+     * @param \Illuminate\Database\Eloquent\Model|\Guysolamour\Administrable\Traits\MediaableTrait $model
      * @param array $images
      * @return void
      */
@@ -195,13 +206,12 @@ trait MediaableTrait
     {
         $attributes = self::getCollectionAttributes(request($collection . '-attributes'));
 
-
         if ($images) {
             foreach ($images as $image) {
                 $attr = $attributes[$image->getClientOriginalName()];
 
                 $model->addMediaFromBase64(base64_encode(file_get_contents($image->path())))
-                    ->setName($attr['name'])
+                    ->usingFileName($attr['name'])
                     ->withCustomProperties([
                         'order'  => $attr['order'],
                         'select' => $attr['select'],

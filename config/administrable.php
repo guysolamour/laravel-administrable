@@ -81,6 +81,34 @@ return [
      */
     'migrations_path' => database_path('extensions'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Media
+    |--------------------------------------------------------------------------
+    |
+    | Regsiter media collections and conversions
+    */
+    'media' => [
+        /**
+         * Default disc name
+         */
+        'collections_disc' => 'media',
+        'collections' => [
+            'front'          => ['label' => 'front-image', 'description' => 'Image à la une',         'conversion'  => true, 'multiple' => false],
+            'back'           => ['label' => 'back-image',  'description' => 'Seconde image à la une', 'conversion'  => true, 'multiple' => false],
+            'images'         => ['label' => 'images',      'description' => 'Gallerie',               'conversion'  => true, 'multiple' => true],
+            'attachments'    => ['label' => 'attachments', 'conversion' => true],
+            'seo'            => ['label' => 'seo',         'conversion' => false],
+        ],
+        'conversions' => [
+            'avatar'    => ['label' => 'avatar',    'height' => 100, 'width'   =>  100],
+            'avatar-sm' => ['label' => 'avatar-sm', 'height' => 50,  'width'   =>  50],
+            'avatar-xs' => ['label' => 'avatar-xs', 'height' => 30,  'width'   =>  30],
+            'thumb'     => ['label' => 'thumb',     'height' => 100, 'default' => true],
+            'thumb-sm'  => ['label' => 'thumb-sm',  'height' => 250, 'default' => true],
+        ],
+    ],
+
     /**
      * Redirect when attempting to access some routes or files
      */

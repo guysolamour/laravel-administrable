@@ -1,5 +1,5 @@
                             <li>
-                                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.index') }}">
+                                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index') }}">
                                     {{extensionLabel}}
                                 </a>
                             </li>

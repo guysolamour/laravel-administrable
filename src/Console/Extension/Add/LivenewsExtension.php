@@ -6,17 +6,18 @@ use Guysolamour\Administrable\Console\Extension\BaseExtension;
 
 class LivenewsExtension extends BaseExtension
 {
-
     public function run()
     {
         if ($this->checkifExtensionHasBeenInstalled()){
             $this->triggerError("The [{$this->name}] extension has already been added, remove all generated files and run this command again!");
         }
 
-        $this->loadSettings();
+        $this->loadModels();
         $this->loadRoutes();
+        $this->loadForms();
         $this->loadControllers();
         $this->loadViews();
+        $this->loadAssets();
         $this->loadMigrations();
         $this->runMigrateArtisanCommand();
 
@@ -27,7 +28,6 @@ class LivenewsExtension extends BaseExtension
     {
         return false;
     }
-
 
     protected function loadViews(): void
     {
@@ -43,5 +43,4 @@ class LivenewsExtension extends BaseExtension
             $path
         );
     }
-
 }

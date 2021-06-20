@@ -4,8 +4,8 @@ namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
 
 use Illuminate\Http\Request;
-use {{namespace}}\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
+use Guysolamour\Administrable\Traits\FormBuilderTrait;
 
 
 class DefaultController extends Controller

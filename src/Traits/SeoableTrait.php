@@ -34,7 +34,7 @@ trait SeoableTrait
     public static function bootSeoableTrait()
     {
         /**
-         * @param \Illuminate\Database\Eloquent\Model $model
+         * @param \Illuminate\Database\Eloquent\Model|\Guysolamour\Administrable\Traits\SeoableTrait $model
          */
         static::saved(function ($model) {
             if (request('seo')) {

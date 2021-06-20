@@ -1,10 +1,22 @@
 <?php
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('{{extensionsFolder}}/')->middleware(['{{singularSlug}}.auth'])->group(function () {
-  Route::name('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.')->group(function () {
-    Route::get('{{extensionPluralSlug}}', '{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller@index')->name('index');
-    Route::put('{{extensionPluralSlug}}', '{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller@update')->name('update');
-  });
+Route::middleware(['{{singularSlug}}.auth'])->group(function () {
+    Route::namespace('{{backNamespace}}')->group(function () {
+      Route::prefix('{{extensionsFolder}}/{{extensionSingularSlug}}')->group(function(){
+        Route::name('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionPluralSlug}}.')->group(function () {
+          Route::resource('{{extensionPluralSlug}}','{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Controller')->names([
+                'index'      => 'index',
+                'show'       => 'show',
+                'create'     => 'create',
+                'store'      => 'store',
+                'edit'       => 'edit',
+                'update'     => 'update',
+                'destroy'    => 'destroy',
+          ])->except('show');
+        });
+      });
+    });
 });
+
 

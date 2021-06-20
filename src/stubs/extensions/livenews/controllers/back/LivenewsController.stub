@@ -2,31 +2,98 @@
 
 namespace {{namespace}}\Http\Controllers\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
 
-use {{namespace}}\Http\Controllers\Controller;
-use {{namespace}}\Settings\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Settings;
 use Illuminate\Http\Request;
+use {{namespace}}\Http\Controllers\Controller;
+use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}};
+use Guysolamour\Administrable\Traits\FormBuilderTrait;
+use {{namespace}}\Forms\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}Form;
 
-class LivenewsController extends Controller
+class {{extensionClass}}Controller extends Controller
 {
-    public function index({{extensionClass}}Settings $settings)
+    use FormBuilderTrait;
+
+    public function index()
     {
-        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.index', compact('settings'));
+        ${{extensionPluralSlug}} = {{extensionClass}}::latest()->get();
+
+        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index', compact('{{extensionPluralSlug}}'));
     }
 
-    public function update(Request $request, {{extensionClass}}Settings $settings)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        $request->validate([
-            'content'          => 'required|string',
-            'text_color'       => 'required|string',
-            'background_color' => 'required|string',
-            'size'             => 'required|integer',
-            'online'           => 'required',
-        ]);
+        $form = $this->getForm(new {{extensionClass}}, {{extensionClass}}Form::class);
 
-        $settings->update($request->all());
+        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.create', compact('form'));
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $form = $this->getForm(new {{extensionClass}}, {{extensionClass}}Form::class);
+        $form->redirectIfNotValid();
+
+        {{extensionClass}}::create($request->all());
+
+        flashy('Le ruban d\'actualité a bien été ajouté');
+
+        return redirect()->route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  {{extensionClass}}  ${{extensionPluralSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function edit({{extensionClass}} ${{extensionPluralSlug}})
+    {
+        $form = $this->getForm(${{extensionPluralSlug}}, {{extensionClass}}Form::class);
+
+        return view('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.edit', compact('{{extensionPluralSlug}}', 'form'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  {{extensionClass}}  ${{extensionPluralSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, {{extensionClass}} ${{extensionPluralSlug}})
+    {
+        $form = $this->getForm(${{extensionPluralSlug}}, {{extensionClass}}Form::class);
+        $form->redirectIfNotValid();
+        ${{extensionPluralSlug}}->update($request->all());
 
         flashy("Le ruban d'actualité a bien été mise à jour");
 
-        return back();
+        return redirect()->route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  {{extensionClass}}  ${{extensionPluralSlug}}
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy({{extensionClass}} ${{extensionPluralSlug}})
+    {
+        ${{extensionPluralSlug}}->delete();
+
+        flashy("Le ruban d'actualité a bien été supprimé");
+
+        return redirect()->route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index');
+    }
+
 }

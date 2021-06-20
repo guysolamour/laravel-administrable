@@ -1,5 +1,5 @@
                     <li class="menu-item">
-                        <a class="menu-link" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.index') }}">
+                        <a class="menu-link" href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index') }}">
                             <span class="dot"></span>
                             <span class="title">{{extensionLabel}}</span>
                         </a>

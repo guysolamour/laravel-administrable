@@ -108,7 +108,7 @@ abstract class BaseExtension
         return array_merge($this->parseName($name), [
             '{{modelsFolder}}'  => $this->getCrudModelsFolder(),
             '{{extensionName}}'  => Arr::get($this->getExtension(), 'name', $this->name),
-            '{{extensionLabel}}' => Arr::get($this->getExtension(), 'label', $this->name),
+            '{{extensionLabel}}' => Str::ucfirst(Arr::get($this->getExtension(), 'label', $this->name)),
             '{{extensionsFolder}}' => $this->getSubfolder(),
             '{{extensionsFolderClass}}' => Str::ucfirst($this->getSubfolder()),
             '{{extensionClass}}' => Str::ucfirst($this->name),
@@ -180,12 +180,5 @@ abstract class BaseExtension
             '{{administrableLogo}}'   =>  config('administrable.logo_url'),
         ];
     }
-
-    /**
-     *
-     * loadViews()
-     *      loadFrontViews()
-     *      loadBackViews()
-     */
 
 }

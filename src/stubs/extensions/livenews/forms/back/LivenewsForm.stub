@@ -1,0 +1,74 @@
+<?php
+
+namespace {{namespace}}\Forms\{{backNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
+
+use Kris\LaravelFormBuilder\Form;
+
+class LivenewsForm extends Form
+{
+    public function buildForm()
+    {
+        if ($this->getModel() && $this->getModel()->getKey()) {
+            $method = 'PUT';
+            $url    = route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.update', $this->getModel());
+        } else {
+            $method = 'POST';
+            $url    = route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.store');
+        }
+
+        $this->formOptions = [
+            'method' => $method,
+            'url'    => $url,
+            'name'   => get_form_name($this->getModel()),
+        ];
+
+        $this
+            // add fields here
+
+            ->add('text_color', 'color', [
+                'label'  => 'Couleur de texte',
+                'rules' => ['required', 'string',],
+            ])
+            ->add('background_color', 'color', [
+                'label'  => 'Couleur de fond',
+                'rules' => ['required', 'string',],
+            ])
+            ->add('size', 'number', [
+                'label'  => 'Taille du texte',
+                'rules' => ['required', 'integer',],
+            ])
+            ->add('started_at', 'text', [
+                'label'  => 'Date de début',
+                'rules' => ['required', 'string',],
+            ])
+            ->add('ended_at', 'text', [
+                'label'  => 'Date de fin',
+                'rules' => ['required', 'string',],
+            ])
+            ->add('content', 'textarea', [
+                'label'  => 'Message à afficher',
+                'rules' => ['required', 'string',],
+            ])
+            ->add('uppercase', 'select', [
+                'choices' => ['1' => 'Oui', '0' => 'Non'],
+                'rules' => 'required',
+                'label' => 'Mettre le texte en majuscule',
+                'attr'  => [
+                    'class' => 'custom-select select2'
+                ]
+            ])
+            ->add('online', 'select', [
+                'choices' => ['1' => 'Oui', '0' => 'Non'],
+                'rules' => 'required',
+                'label' => 'Afficher pour les utilisateurs',
+                'attr'  => [
+                    'class' => 'custom-select select2'
+                ]
+            ])
+
+
+
+
+            ;
+    }
+}
