@@ -1,5 +1,5 @@
 @php
-    $tags = $model->seo ?:  new \App\Models\Seo
+    $tags = $model->seo ?:  new \Guysolamour\Administrable\Models\Seo
 @endphp
 <div class="card" x-data="Seoable()" x-init="init()">
     <h5 class="card-header">Référencement </h5>
