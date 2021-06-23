@@ -248,10 +248,12 @@ if (!function_exists('get_app_namespace')) {
 
 if (!function_exists('get_template_path')) {
 
-    
+
     function get_template_path() :string
     {
         return dirname(__FILE__);
     }
 }
+
+
 

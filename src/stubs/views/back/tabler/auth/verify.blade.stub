@@ -6,7 +6,7 @@
 
 <div class="container-tight py-6">
     <div class="text-center mb-4">
-        <img src="{{ config('administrable.logo_url') }}" height="36" alt="{{ config('administrable.name')}}">
+        <img src="{{ configuration('logo') }}" onerror="this.src='{{ config('administrable.logo_url') }}'" height="36" alt="{{ config('administrable.name')}}">
     </div>
     <div class="card-body">
         @if (session('resent'))

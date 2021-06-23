@@ -23,103 +23,70 @@
     </h4>
 
     <div class="card-body form-type-material">
-      <form action="{{ route('{{backLowerNamespace}}.configuration.store') }}" method="post">
-        @csrf
+      {!! form_start($form) !!}
         <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="email">Email du site</label>
-              <input type="email" name="email" id="email" class="form-control"
-                value="{{ $configuration->email }}">
+            <div class="col-md-6">
+                {!! form_row($form->email) !!}
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="postal">Code postal</label>
-              <input type="text" name="postal" id="postal" class="form-control"
-                value="{{ $configuration->postal }}">
+            <div class="col-md-6">
+                {!! form_row($form->postal) !!}
             </div>
-          </div>
         </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="area">Localisation</label>
-              <input type="text" name="area" id="area" class="form-control"
-                value="{{ $configuration->area }}">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="cell">Numéro céllulaire</label>
-              <input type="text" name="cell" id="cell" class="form-control"
-                value="{{ $configuration->cell }}">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="phone">Numéro de téléphone</label>
-              <input type="text" name="phone" id="phone" class="form-control"
-                value="{{ $configuration->phone }}">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="youtube">Lien de la page youtube</label>
-              <input type="text" name="youtube" id="youtube" class="form-control"
-                value="{{ $configuration->youtube }}">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="facebook">Lien de la page facebook</label>
-              <input type="text" name="facebook" id="facebook" class="form-control"
-                value="{{ $configuration->facebook }}">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="twitter">Lien de la page twitter</label>
-              <input type="text" name="twitter" id="twitter" class="form-control"
-                value="{{ $configuration->twitter }}">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="linkedin">Lien de la page linkedin</label>
-              <input type="text" name="linkedin" id="linkedin" class="form-control"
-                value="{{ $configuration->linkedin }}">
-            </div>
-          </div>
+          <div class="row">
+              <div class="col-md-6">
+                  {!! form_row($form->area) !!}
+              </div>
+              <div class="col-md-6">
+                  <div class="form-group row pt-3">
+                    <div class="col-md-3">
+                        <img class="img-fluid" src="{{ $configuration->logo }}" alt="logo {{ config('app.name') }}">
+                    </div>
+                    <div class="col-md-9">
+                        {!! form_widget($form->logo) !!}
+                    </div>
 
+                </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-4">
+                  {!! form_row($form->cell) !!}
+              </div>
+              <div class="col-md-4">
+                  {!! form_row($form->phone) !!}
+              </div>
+              <div class="col-md-4">
+                  {!! form_row($form->whatsapp) !!}
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6">
+                  {!! form_row($form->facebook) !!}
+              </div>
+              <div class="col-md-6">
+                  {!! form_row($form->twitter) !!}
+              </div>
+              <div class="col-md-6">
+                  {!! form_row($form->linkedin) !!}
+              </div>
+              <div class="col-md-6">
+                  {!! form_row($form->youtube) !!}
+              </div>
+          </div>
+          {!! form_rest($form) !!}
           {{-- add fields here --}}
-        </div>
-        <div class="row">
-          <div class="col-md-12">
+            <div class="col-md-12">
             <div class="form-group">
-              <label for="about">La section à propos située en pied de page</label>
-              <textarea name="about" id="about" cols="30" rows="10"
-                class="form-control">{{ $configuration->about }}</textarea>
+              <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-edit"></i>
+                Enregistrer</button>
             </div>
           </div>
-
-          <div class="col-md-12">
-            <div class="form-group">
-              <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-edit"></i> Enregistrer</button>
-            </div>
-          </div>
-        </div>
-      </form>
+          {!! form_end($form) !!}
     </div>
   </div>
 </div>
 
-
-
 @endsection
+
+
+<x-administrable::custominputfile selector="input[name=logo]" />

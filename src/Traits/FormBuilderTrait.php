@@ -4,7 +4,6 @@ namespace Guysolamour\Administrable\Traits;
 
 use Illuminate\Support\Str;
 use Kris\LaravelFormBuilder\Form;
-use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\FormBuilderTrait as FormBuilder;
 
 
@@ -12,7 +11,15 @@ trait FormBuilderTrait
 {
     use FormBuilder;
 
-    protected function getForm(?Model $model = null, ?string $form = null, bool $withModel = true, bool $withNamespace = true): Form
+    /**
+     *
+     * @param \Illuminate\Database\Eloquent\Model|\Spatie\LaravelSettings\Settings $model
+     * @param string|null $form
+     * @param boolean $withModel
+     * @param boolean $withNamespace
+     * @return Form
+     */
+    protected function getForm($model = null, ?string $form = null, bool $withModel = true, bool $withNamespace = true): Form
     {
         $form ??= $this->getFormName($withNamespace);
 
@@ -56,7 +63,6 @@ trait FormBuilderTrait
     {
         return Str::afterLast($model, '\\');
     }
-
 
     private function getModelName(bool $withNamespace = true): string
     {
