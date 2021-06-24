@@ -48,8 +48,16 @@ class Seo extends Model implements HasMedia
      * @var array
      */
     protected $attributes = [
-        'og:type'      => 'article',
-        'twitter:type' => 'summary',
+        'page:title'           => '',
+        'og:title'             => '',
+        'og:url'               => '',
+        'og:description'       => '',
+        'twitter:title'        => '',
+        'twitter:description'  => '',
+        'page:canonical:url'  => '',
+        'page:meta:description'  => '',
+        'og:type'              => 'article',
+        'twitter:type'         => 'summary',
     ];
 
     /**

@@ -73,7 +73,7 @@
                                 <div class="form-group">
                                     <label for="">Type de champ</label>
                                     <select name="type" id="image_field{{ $page->id }}" class="custom-select">
-                                        @foreach(\{{namespace}}\{{modelsFolder}}\PageMeta::TYPES as $type)
+                                        @foreach(\Guysolamour\Administrable\Models\PageMeta::TYPES as $type)
                                         <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
                                         @endforeach
                                     </select>
@@ -90,7 +90,7 @@
                                         @foreach($page->metatags as $group_field)
                                         <option value="{{ $group_field['id'] }}" {{
                                             (isset($group) && $group && $group['code'] === $group_field['code']) ||
-                                            ($group_field['code'] === \{{namespace}}\{{modelsFolder}}\PageMeta::DEFAULT_GROUP_CODE) ? 'selected' : ''
+                                            ($group_field['code'] === \Guysolamour\Administrable\Models\PageMeta::DEFAULT_GROUP_CODE) ? 'selected' : ''
                                         }}>
                                             {{ $group_field['name'] }}
                                         </option>

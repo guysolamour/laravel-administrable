@@ -47,7 +47,7 @@
                             <div class="form-group">
                                 <label for="">Type de champ</label>
                                 <select name="type" class="custom-select" disabled>
-                                    @foreach(\{{namespace}}\{{modelsFolder}}\PageMeta::TYPES as $type)
+                                    @foreach(\Guysolamour\Administrable\Models\PageMeta::TYPES as $type)
                                     <option value="{{ $type['value'] }}"
                                         {{ $type['value'] == $meta->type ? 'selected' : '' }}>{{ $type['label'] }}
                                     </option>

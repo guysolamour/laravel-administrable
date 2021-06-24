@@ -18,7 +18,7 @@ class {{singularClass}}Controller extends Controller
     public function profile({{singularClass}} ${{singularSlug}}) {
 
       $edit_form = $this->getForm(${{singularSlug}});
-      $reset_form = $this->getForm(${{singularSlug}},Reset{{singularClass}}PasswordForm::class);
+      $reset_form = $this->getForm(${{singularSlug}}, Reset{{singularClass}}PasswordForm::class);
 
       return view('{{backLowerNamespace}}.{{pluralSlug}}.show', compact('{{singularSlug}}','edit_form','reset_form'));
     }

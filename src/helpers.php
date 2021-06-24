@@ -220,18 +220,6 @@ if (!function_exists('multiple_in_array')) {
 }
 
 
-if (!function_exists('guest_views_folder_name')) {
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $model
-     * @return string
-     */
-    function guest_views_folder_name($model): string
-    {
-        return \Illuminate\Support\Str::plural(\Illuminate\Support\Str::slug(class_basename($model)));
-    }
-}
-
-
 if (!function_exists('get_app_namespace')) {
 
     /**

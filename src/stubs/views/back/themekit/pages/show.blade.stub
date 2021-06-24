@@ -209,7 +209,7 @@
             this.attachedFileField = this.form.find('input[name=attachedfilecontent]')
             this.videoField = this.form.find('input[name=videocontent]')
             this.thumbnail = this.form.find('.thumbnail')
-            this.types = @json(\{{namespace}}\{{modelsFolder}}\PageMeta::TYPES) // render by blade
+            this.types = @json(\Guysolamour\Administrable\Models\PageMeta::TYPES) // render by blade
 
 
             this.currentType = 'text'

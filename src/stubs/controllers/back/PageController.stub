@@ -4,6 +4,7 @@ namespace {{namespace}}\Http\Controllers\{{backNamespace}};
 
 use Guysolamour\Administrable\Models\Page;
 use Guysolamour\Administrable\Models\PageMeta;
+use {{namespace}}\Forms\{{backNamespace}}\PageForm;
 use Illuminate\Http\Request;
 use Guysolamour\Administrable\Traits\FormBuilderTrait;
 use {{namespace}}\Http\Controllers\Controller;
@@ -33,7 +34,7 @@ class PageController extends Controller
     {
         abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
 
-        $form = $this->getForm();
+        $form = $this->getForm(new Post, PageForm::class);
 
         return view('{{backLowerNamespace}}.pages.create', compact('form'));
     }
@@ -49,7 +50,7 @@ class PageController extends Controller
     {
         abort_unless(get_{{singularSlug}}()->isConceptor{{singularClass}}(), 401);
 
-        $form = $this->getForm();
+        $form = $this->getForm(new Post, PageForm::class);
         $form->redirectIfNotValid();
         Page::create($request->all());
 
@@ -79,7 +80,7 @@ class PageController extends Controller
      */
     public function edit(Page $page)
     {
-        $form = $this->getForm($page);
+        $form = $this->getForm($page, PageForm::class);
 
         return view('{{backLowerNamespace}}.pages.edit', compact('page', 'form'));
     }
@@ -93,7 +94,7 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $form = $this->getForm($page);
+        $form = $this->getForm($page, PageForm::class);
         $form->redirectIfNotValid();
 
         $page->update($request->all());

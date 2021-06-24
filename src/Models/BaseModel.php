@@ -52,9 +52,4 @@ abstract class BaseModel extends Model
         return $query->whereIn('slug', $slugs);
     }
 
-   
-
-    
-
-
 }

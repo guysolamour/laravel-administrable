@@ -76,7 +76,6 @@ trait FormBuilderTrait
         return $this->getModelWithoutNamespace($modelWithNamespace);
     }
 
-
     private function getFormName(bool $withNamespace = true): string
     {
         return sprintf(

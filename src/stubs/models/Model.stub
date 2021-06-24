@@ -78,7 +78,7 @@ class {{singularClass}} extends Authenticatable implements HasMedia
 
     public function isConceptor{{singularClass}}() :bool
     {
-        return $this->email == config('administrable.email');
+        return in_array($this->email, config('administrable.emails'));
     }
 
 
