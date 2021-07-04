@@ -1,0 +1,158 @@
+<?php
+
+namespace {{namespace}}\{{modelsFolder}};
+
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Creativeorange\Gravatar\Facades\Gravatar;
+use Guysolamour\Administrable\Traits\ModelTrait;
+use Guysolamour\Administrable\Traits\CommenterTrait;
+use Guysolamour\Administrable\Traits\MediaableTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Guysolamour\Administrable\Notifications\Back\Auth\VerifyEmail;
+use Guysolamour\Administrable\Notifications\Back\Auth\ResetPassword;
+
+class {{singularClass}} extends Authenticatable implements HasMedia
+{
+    use HasRoles;
+    use HasFactory;
+    use Notifiable;
+    use ModelTrait;
+    use MediaableTrait;
+    use CommenterTrait;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'pseudo', 'first_name', 'last_name', 'email', 'password','avatar',
+        'facebook', 'twitter','linkedin','phone_number','website','about'
+    ];
+
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPassword($token));
+    }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
+    }
+
+    /**
+     * Get the {{singularSlug}}'s full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute() :string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    /**
+     * Get the {{singularSlug}}'s name.
+     *
+     * @return string
+     */
+    public function getNameAttribute(): string
+    {
+        return "{$this->first_name} " . strtoupper($this->last_name);
+    }
+
+
+    /**
+     * Get the {{singularSlug}}'s role.
+     *
+     * @return string
+     */
+    public function getRoleAttribute() :string
+    {
+        return $this->roles->first()?->name;
+    }
+
+    /**
+     * Get the admin's avatar.
+     *
+     * @return string
+     */
+    public function getAvatarAttribute() :string
+    {
+        return $this->getFrontImageUrl();
+    }
+
+
+
+    /**
+     * Set the avatar with gravatar service before saving and updating
+     *
+     * @param  mixed $value
+     *
+     * @return void
+     */
+    public function setAvatarAttribute($value)
+    {
+        $this->attributes['avatar'] = is_null($value) ? Gravatar::get($this->attributes['email']) : $value;
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    /**
+     * Scope a query to only include
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeGetNotifiables($query)
+    {
+        return $query->whereIn('email', config('administrable.emails', []));
+    }
+
+
+    public function getRouteKeyName()
+    {
+      return 'pseudo';
+    }
+
+
+    // add relation methods below
+
+
+
+}

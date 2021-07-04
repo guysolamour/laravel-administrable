@@ -13,7 +13,7 @@ trait FormBuilderTrait
 
     /**
      *
-     * @param \Illuminate\Database\Eloquent\Model|\Spatie\LaravelSettings\Settings $model
+     * @param \Illuminate\Database\Eloquent\Model|\Spatie\LaravelSettings\Settings|string $model
      * @param string|null $form
      * @param boolean $withModel
      * @param boolean $withNamespace
@@ -26,7 +26,10 @@ trait FormBuilderTrait
         $options = [];
 
         if ($withModel) {
-            if (!$model) {
+            if (is_string($model)){
+                $model = new $model;
+            }
+            else if (!$model) {
                 $modelName = $this->getModelClassName();
                 $model     = new $modelName();
             }

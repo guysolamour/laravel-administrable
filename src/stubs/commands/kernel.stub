@@ -1,5 +1,0 @@
-
-        $schedule->command('backup:clean')->weekly();
-        $schedule->command('backup:run --only-db')->weekly();
-        $schedule->command('administrable:storage:dump --s')->weekly();
-        $schedule->command('telescope:prune')->daily();

@@ -2,9 +2,10 @@
 
 namespace Guysolamour\Administrable\Models;
 
-use Guysolamour\Administrable\Traits\SeoableTrait;
 use Illuminate\Support\Facades\Route;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Guysolamour\Administrable\Models\BaseModel;
+use Guysolamour\Administrable\Traits\SeoableTrait;
 
 class Page extends BaseModel
 {

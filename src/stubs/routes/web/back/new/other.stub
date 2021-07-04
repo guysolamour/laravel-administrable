@@ -1,9 +1,0 @@
-<?php
-
-use Illuminate\Support\Facades\Route;
-use {{namespace}}\Http\Controllers\{{backNamespace}}\DefaultController;
-
-Route::middleware(['{{singularSlug}}.auth'])->group(function () {
-    Route::post('model/destroy/all', [DefaultController::class, 'destroyModels'])->name('{{backLowerNamespace}}.model.destroy.all');
-    Route::get('model/{model}/{key}/clone', [DefaultController::class, 'clone'])->name('{{backLowerNamespace}}.model.clone');
-});

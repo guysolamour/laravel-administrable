@@ -212,12 +212,6 @@ class AdminInstallCommand extends BaseCommand
         $this->loadUtilPackage();
         $this->info('Packages loaded successfuly');
 
-
-        // Commands
-        $this->info(PHP_EOL . 'Load commands');
-        $kernel_path = $this->loadCommands();
-        $this->info('Commands loaded successfuly at ' . $kernel_path);
-
         // Config
         $this->info(PHP_EOL . 'Load config');
         $config_path = $this->loadConfigs();
@@ -273,7 +267,6 @@ class AdminInstallCommand extends BaseCommand
                     "garygreen/pretty-routes": "^1.0",
                     "barryvdh/laravel-debugbar": "^3.3",
                     "barryvdh/laravel-ide-helper": "^2.7",
-                    "sven/artisan-view": "^3.3",
             TEXT,
             $composer_path
         );
@@ -351,24 +344,6 @@ class AdminInstallCommand extends BaseCommand
     }
 
 
-
-    private function loadCommands() :string
-    {
-        $kernel_path = app_path('Console/Kernel.php');
-        $kernel = $this->filesystem->get($kernel_path);
-        $commands_stub = $this->filesystem->get($this->getTemplatePath() . '/commands/kernel.stub');
-
-        $search = 'protected function schedule(Schedule $schedule)' . PHP_EOL .   '    {';
-        $this->filesystem->replaceAndWriteFile(
-            $kernel,
-            $search,
-            $search . PHP_EOL . $commands_stub,
-            $kernel_path
-        );
-
-        return $kernel_path;
-    }
-
     private function loadProviders() :string
     {
         $provider_path = app_path('/Providers');
@@ -397,7 +372,6 @@ class AdminInstallCommand extends BaseCommand
             $search,
             <<<TEXT
             $search
-                   Blade::include('{$this->data_map['{{frontLowerNamespace}}']}.comments.comments', 'comments');
                    Blade::include('{$this->data_map['{{backLowerNamespace}}']}.media._imagemanager', 'imagemanager');
             TEXT,
             $blade_sp_path
@@ -708,9 +682,6 @@ class AdminInstallCommand extends BaseCommand
 
     private function loadForms() :string
     {
-
-        $guard = $this->data_map['{{singularClass}}'];
-
         $form_path = app_path('Forms/');
 
         // Front forms;
@@ -728,20 +699,6 @@ class AdminInstallCommand extends BaseCommand
         $this->filesystem->compliedAndWriteFile(
             $forms_stub,
             $form_path . $this->data_map["{{backNamespace}}"]
-        );
-
-        // Rename some form to add the guard
-        $this->filesystem->move(
-            $form_path . $this->data_map["{{backNamespace}}"] . '/CreateForm.php',
-            $form_path . $this->data_map["{{backNamespace}}"] . '/Create' . $guard . 'Form.php',
-        );
-        $this->filesystem->move(
-            $form_path . $this->data_map["{{backNamespace}}"] . '/GuardForm.php',
-            $form_path . $this->data_map["{{backNamespace}}"] . '/' . $guard . 'Form.php',
-        );
-        $this->filesystem->move(
-            $form_path . $this->data_map["{{backNamespace}}"] . '/ResetPasswordForm.php',
-            $form_path . $this->data_map["{{backNamespace}}"] . '/Reset' . $guard . 'PasswordForm.php',
         );
 
         return $form_path;
@@ -857,7 +814,7 @@ class AdminInstallCommand extends BaseCommand
 
     private function loadControllers() :string
     {
-        $guard = $this->data_map['{{singularClass}}'];
+        // $guard = $this->data_map['{{singularClass}}'];
 
         $controllers_path =  app_path('/Http/Controllers/');
 
@@ -883,10 +840,25 @@ class AdminInstallCommand extends BaseCommand
             $controllers_path . $this->data_map["{{backNamespace}}"]
         );
 
-        // Rename the default controller and add the guard so as not to fix it on admin
-        $this->filesystem->move(
-            $controllers_path . $this->data_map["{{backNamespace}}"] . '/GuardController.php',
-            $controllers_path . $this->data_map["{{backNamespace}}"] . '/' . $guard . 'Controller.php',
+        // change baseController namespace
+        $base_controller_path = $controllers_path . 'Controller.php';
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($base_controller_path),
+            "Illuminate\Routing\Controller",
+            "Guysolamour\Administrable\Http\Controllers\BaseController",
+            $base_controller_path
+        );
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($base_controller_path),
+            $search = "use Illuminate\Foundation",
+            "// " . $search,
+            $base_controller_path
+        );
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($base_controller_path),
+            $search = "use AuthorizesRequests",
+            "// " . $search,
+            $base_controller_path
         );
 
         // Delete default HomeController
@@ -1007,10 +979,8 @@ class AdminInstallCommand extends BaseCommand
             FTP_USERNAME=
             FTP_PASSWORD=
 
-
             MODEL_CACHE_ENABLED=false
             COOKIE_CONSENT_ENABLED=true
-
 
             MAIL_DKIM_SELECTOR=dkim
             MAIL_DKIM_DOMAIN=
@@ -1091,15 +1061,21 @@ class AdminInstallCommand extends BaseCommand
             $migrations_path . '/2014_07_25_092010_create_' . $this->data_map['{{singularSlug}}'] . '_password_resets_table.php',
         );
 
-        // load setting migrations
+        // load setting migration
         $this->call('vendor:publish', [
             '--provider' => 'Spatie\LaravelSettings\LaravelSettingsServiceProvider',
             '--tag'      => 'migrations',
         ]);
 
-        // load media library migrations
+        // load media library migration
         $this->call('vendor:publish', [
             '--provider' => 'Spatie\MediaLibrary\MediaLibraryServiceProvider',
+            '--tag'      => 'migrations',
+        ]);
+
+        // load permission migration
+        $this->call('vendor:publish', [
+            '--provider' => 'Spatie\Permission\PermissionServiceProvider',
             '--tag'      => 'migrations',
         ]);
 

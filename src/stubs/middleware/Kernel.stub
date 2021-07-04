@@ -1,2 +1,0 @@
-
-        '{{singularSnake}}.super' => \{{namespace}}\Http\Middleware\RedirectIfNotSuper{{singularClass}}::class,

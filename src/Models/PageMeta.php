@@ -2,9 +2,12 @@
 
 namespace Guysolamour\Administrable\Models;
 
+use Guysolamour\Administrable\Traits\MediaableTrait;
+use Spatie\MediaLibrary\HasMedia;
 
-class PageMeta extends BaseModel
+class PageMeta extends BaseModel implements HasMedia
 {
+    use MediaableTrait;
 
     const TYPES = [
         'text'               => ['label' => 'Texte', 'value'           => 1],

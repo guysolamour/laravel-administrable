@@ -26,6 +26,7 @@
     "spatie/laravel-backup": "^7.6",
     "creativeorange/gravatar": "^1.0",
     "spatie/laravel-honeypot": "^4.0",
+    "spatie/laravel-permission": "^4.0",
     "spatie/laravel-settings": "^2.1",
     "kris/laravel-form-builder": "^1.40",
     "cviebrock/eloquent-sluggable": "^8.0",

@@ -60,10 +60,17 @@ return [
      * The name of the folder where the front office controllers will be stored in App/Http/Controller folder
      */
     'front_namespace' => 'Front',
-
-    /**
-     * The name of the folder where the back office controllers will be stored in App/Http/Controller folder
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Back namespace
+    |--------------------------------------------------------------------------
+    | Tous les fichiers de l'administration sont sauvegardés dans un sous dossier pour mieux organiser
+    | Exemple: les controllers sera sauvegardés dans App/Http/Controller/Back
+    | Exemple: les forms sera sauvegardés dans App/Forms/Back
+    |
+    | Vous devez publier les vues avec la commande `php artisan vendor:publish --tag="administrable-views" pour éviter des erreurs
+    | et renommer le dossier back dans ressources/vendor/administrable en minuscule
+    */
     'back_namespace' => 'Back',
 
     /**
@@ -76,10 +83,99 @@ return [
      */
     'route_controller_callable_syntax' => true,
 
+    'schedule' => [
+        'command' => [
+            /**
+             * Faire un backup de la base de donnes et l'envoyer par ftp
+             */
+            'backup'    => true,
+             /**
+             * Faire un backup du dossier public storage et l'envoyer par fp
+             */
+            'storage'   => true,
+             /**
+             * Run telescope:prune command
+             */
+            'telescope' => true,
+
+        ],
+    ],
+
     /*
      * Where to store extensions migrations.
      */
     'migrations_path' => database_path('extensions'),
+
+    'modules' => [
+        'auth' => [
+            'back' => [
+               'controller' => [
+                    'login'        => \Guysolamour\Administrable\Http\Controllers\Back\Auth\LoginController::class,
+                    'forgot'       => \Guysolamour\Administrable\Http\Controllers\Back\Auth\ForgotPasswordController::class,
+                    'reset'        => \Guysolamour\Administrable\Http\Controllers\Back\Auth\ResetPasswordController::class,
+                    'confirm'      => \Guysolamour\Administrable\Http\Controllers\Back\Auth\ConfirmPasswordController::class,
+                    'verification' => \Guysolamour\Administrable\Http\Controllers\Back\Auth\VerificationController::class,
+               ],
+               'policy' => \Guysolamour\Administrable\Policies\GuardPolicy::class,
+            ],
+        ],
+        'page' => [
+            'model'       => \Guysolamour\Administrable\Models\Page::class,
+            'back' => [
+                'form'        => \Guysolamour\Administrable\Forms\Back\PageForm::class,
+                'controller'  => \Guysolamour\Administrable\Http\Controllers\Back\PageController::class,
+            ],
+        ],
+        'default' => [
+            'back' => [
+                'controller'  => Guysolamour\Administrable\Http\Controllers\Back\DefaultController::class,
+            ],
+        ],
+        'pagemeta' => [
+            'model'       => Guysolamour\Administrable\Models\PageMeta::class,
+        ],
+        'configuration' => [
+            'model'       => Guysolamour\Administrable\Settings\ConfigurationSettings::class,
+            'back' => [
+                'form'        => Guysolamour\Administrable\Forms\Back\ConfigurationForm::class,
+                'controller'  => Guysolamour\Administrable\Http\Controllers\Back\ConfigurationController::class,
+            ],
+        ],
+        'user' => [
+            'back' => [
+                'form'        => Guysolamour\Administrable\Forms\Back\UserForm::class,
+                'controller'  => Guysolamour\Administrable\Http\Controllers\Back\UserController::class,
+            ],
+        ],
+        'guard' => [
+            'model'       => Guysolamour\Administrable\Models\Guard::class,
+            'back' => [
+                'controller'  => Guysolamour\Administrable\Http\Controllers\Back\GuardController::class,
+                'form'        => Guysolamour\Administrable\Forms\Back\GuardForm::class,
+                'createform'  => Guysolamour\Administrable\Forms\Back\CreateGuardForm::class,
+                'resetpasswordform'  => Guysolamour\Administrable\Forms\Back\ResetGuardPasswordForm::class,
+            ],
+        ],
+        'comment' => [
+            'model' => Guysolamour\Administrable\Models\Comment::class,
+            'front' => [
+                'policy' => Guysolamour\Administrable\Policies\CommentPolicy::class,
+                'controller'   => Guysolamour\Administrable\Http\Controllers\Front\CommentController::class,
+                'form'       => '',
+                'replymail'    => Guysolamour\Administrable\Mail\Front\ReplyCommentMail::class,
+            ],
+            'back' => [
+                'controller'   => Guysolamour\Administrable\Http\Controllers\Back\CommentController::class,
+                'form'         => Guysolamour\Administrable\Forms\Back\CommentForm::class,
+                'mail'         => Guysolamour\Administrable\Mail\Back\CommentMail::class,
+                'notification' => Guysolamour\Administrable\Notifications\Back\CommentNotification::class,
+            ],
+        ],
+        'social_redirect' => [
+            'controller' => Guysolamour\Administrable\Http\Controllers\Front\RedirectController::class,
+            'networks'   => ['facebook', 'twitter', 'linkedin', 'youtube']
+        ]
+    ],
 
     /*
     |--------------------------------------------------------------------------

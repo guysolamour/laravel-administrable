@@ -18,7 +18,7 @@ trait CommandTrait
     {
         $path = Str::start($path, '/');
 
-        return $this->getBasePath('/stubs' . $path);
+        return $this->getPackagePath('/stubs' . $path);
     }
 
     public function getBasePath(string $path = ''): string
@@ -32,7 +32,7 @@ trait CommandTrait
     {
         $path = Str::start($path, '/');
 
-        return dirname(get_template_path()) . $path;
+        return dirname((string) get_template_path()) . $path;
     }
 
     public function triggerError(string $error)

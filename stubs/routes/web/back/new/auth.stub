@@ -1,0 +1,8 @@
+<?php
+use Illuminate\Support\Facades\Route;
+use {{namespace}}\Http\Controllers\{{backNamespace}}\HomeController;
+
+
+Route::get('/', [HomeController::class, 'index'])->name('{{singularSlug}}.dashboard');
+
+

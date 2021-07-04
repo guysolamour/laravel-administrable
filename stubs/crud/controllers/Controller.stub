@@ -1,0 +1,29 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}}{{namespaceWithSubfolder}};
+
+use {{namespace}}\{{modelsNamespace}}\{{singularClass}};
+use Illuminate\Http\Request;
+use Guysolamour\Administrable\Http\Controllers\BaseController;
+use {{namespace}}\Forms\{{backNamespace}}{{namespaceWithSubfolder}}\{{singularClass}}Form;
+use Guysolamour\Administrable\Traits\FormBuilderTrait;
+
+class {{singularClass}}Controller extends BaseController
+{
+    use FormBuilderTrait;
+
+    {{indexMethod}}
+
+
+    {{createMethod}}
+
+
+    {{showMethod}}
+
+
+    {{editMethod}}
+
+
+    {{deleteMethod}}
+
+}

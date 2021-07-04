@@ -1,0 +1,36 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{backNamespace}};
+
+use Illuminate\Http\Request;
+use Guysolamour\Administrable\Http\Controllers\BaseController;
+
+class HomeController extends BaseController
+{
+    public function redirectTo()
+    {
+        return config('administrable.auth_prefix_path');
+    }
+
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('{{singularSlug}}.auth:{{singularSlug}}');
+    }
+
+    /**
+     * Show the {{singularSlug}} dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index() {
+
+        return view('{{backLowerNamespace}}.dashboard.index');
+    }
+
+}

@@ -1,0 +1,30 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}};
+
+use Illuminate\Http\Request;
+use Guysolamour\Administrable\Http\Controllers\BaseController;
+
+class FrontController extends BaseController
+{
+    public function home()
+    {
+       $page = get_meta_page('home');
+
+       return view('{{frontLowerNamespace}}.home.index', compact('page'));
+    }
+
+    public function about()
+    {
+       $page = get_meta_page('about');
+
+       return view('{{frontLowerNamespace}}.about.index', compact('page'));
+    }
+
+    public function legalMentions()
+    {
+       $page = get_meta_page('legalmention');
+
+       return view('{{frontLowerNamespace}}.legalmention.index', compact('page'));
+    }
+}
