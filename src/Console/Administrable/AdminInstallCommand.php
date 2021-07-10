@@ -740,7 +740,7 @@ class AdminInstallCommand extends BaseCommand
             $search,
             <<<HTML
             {$search}
-                    \\$namespace\Http\Middleware\RedirectIfNotPaid::class,
+                    \\Guysolamour\Administrable\Http\Middleware\RedirectIfNotPaid::class,
             HTML,
             $kernel_path
         );
@@ -751,26 +751,7 @@ class AdminInstallCommand extends BaseCommand
 
     private function loadMiddleware() :string
     {
-
         $middleware_path = app_path('Http/Middleware');
-
-        // // Addition of RedirectIfNotSuper middleware
-        // $redirect_middleware_stub = $this->getTemplatePath('/middleware/RedirectIfNotSuper.stub');
-        // $redirect_middleware = $this->filesystem->compliedFile($redirect_middleware_stub);
-
-        // $this->filesystem->compliedAndWriteFile(
-        //     $redirect_middleware,
-        //     $middleware_path . '/RedirectIfNotSuper' . $this->data_map['{{singularClass}}'] . '.php'
-        // );
-
-        // Addition of RedirectIfNotSuper middleware
-        $redirect_middleware_stub = $this->getTemplatePath('/middleware/RedirectIfNotPaid.stub');
-        $redirect_middleware = $this->filesystem->compliedFile($redirect_middleware_stub);
-
-        $this->filesystem->compliedAndWriteFile(
-            $redirect_middleware,
-            $middleware_path . '/RedirectIfNotPaid.php'
-        );
 
         // Addition of RedirectIfNotSuper middleware
         $redirect_authenticated_middleware_stub = $this->getTemplatePath('/middleware/RedirectIfAuthenticated.stub');
@@ -828,11 +809,6 @@ class AdminInstallCommand extends BaseCommand
 
         // Back controllers
         $controllers_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath('/controllers/back'));
-
-        if ($this->isTheAdminTheme()) {
-            $theadmin_controllers = $this->filesystem->getFilesFromDirectory($this->getTemplatePath('controllers/' . $this->theme));
-            $controllers_stub = array_merge($controllers_stub, $theadmin_controllers);
-        }
 
 
         $this->filesystem->compliedAndWriteFileRecursively(

@@ -22,7 +22,7 @@ return [
     | Available theme are adminlte,theadmin,cooladmin,tabler,themekit
     | The theme should not be changed once the installation has been done
     */
-    'theme' => 'adminlte',
+    'theme' => 'themekit',
     /*
     |--------------------------------------------------------------------------
     | Folder
