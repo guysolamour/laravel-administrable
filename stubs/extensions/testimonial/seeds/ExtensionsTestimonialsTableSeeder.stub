@@ -3,8 +3,6 @@ namespace Database\Seeders\{{extensionsFolderClass}}\{{extensionClass}};
 
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
-use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}};
 
 class {{extensionsFolderClass}}{{extensionPluralClass}}TableSeeder extends Seeder
 {
@@ -17,10 +15,10 @@ class {{extensionsFolderClass}}{{extensionPluralClass}}TableSeeder extends Seede
     {
         $faker = Faker::create();
          for ($i = 0; $i < 15; $i++) {
-            {{extensionClass}}::create([
+            config('administrable.extensions.testimonial.model')::create([
                 'name'    => $faker->firstname,
                 'email'   => $faker->safeEmail(),
-                'job'     => $faker->title,
+                'job'     => $faker->job,
                 'content' => $faker->realText(500),
                 'online'  => $faker->randomElement([true,false]),
             ]);

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Guysolamour\Administrable\Helper getCloneModelParams($model)
  * @method static \Guysolamour\Administrable\Helper getFormClassName($model)
  * @method static \Guysolamour\Administrable\Helper getFormName($model)
- * @method static \Guysolamour\Administrable\Helper randomElement(\Illuminate\Support\Collection $collection, int $limit = 9)
+ * @method static \Guysolamour\Administrable\Helper randomElements(\Illuminate\Support\Collection $collection, int $limit = 9)
  * @method static \Guysolamour\Administrable\Helper mergeCollections(...$collections)
  * @method static \Guysolamour\Administrable\Helper isCollection($data)
  * @method static \Guysolamour\Administrable\Helper previousRoute()

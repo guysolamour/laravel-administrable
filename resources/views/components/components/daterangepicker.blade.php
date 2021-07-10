@@ -1,17 +1,22 @@
 @php
-    if (
+   if (
         (isset($model) && $model->getKey()) &&
         (!isset($startdate) || !$startdate)
     ){
         $startdate = $model->$fieldname;
     }
-    else {
+
+    if (!isset($startdate) || !$startdate) {
         $startdate = now();
     }
 
     // set end date default
     if (!isset($enddate) || !$enddate){
         $enddate = now();
+    }
+
+    if (!isset($selector) && (isset($fieldname) && $fieldname)){
+        $selector = "input[name={$fieldname}]";
     }
 @endphp
 
@@ -26,12 +31,12 @@
 
 @push('js')
 <script>
-    $('input[name={{ $fieldname }}]').daterangepicker({
+    $('{{ $selector }}').daterangepicker({
         timePicker: @json($timepicker ?? true),
         showDropdowns: @json($showdropdowns ?? true),
         timePicker24Hour: @json($timepicker24hour ?? true),
         singleDatePicker: @json($singledatepicker ?? false),
-        startDate: "{{  $startdate->format('d/m/Y H:i')  }}",
+        startDate: "{{  $startdate?->format('d/m/Y H:i')  }}",
         endDate: "{{  $enddate->format('d/m/Y H:i') }}",
         opens: @json($opens ?? 'center'),
         drops: @json($drops ?? 'up'),

@@ -3,8 +3,8 @@
         <div class="navbar navbar-light">
             <div class="container-xl">
                 <ul class="navbar-nav">
-                    <li class="nav-item {{ set_active_link('{{singularSlug}}.dashboard') }}">
-                        <a class="nav-link" href="{{ route('{{singularSlug}}.dashboard') }}">
+                    <li class="nav-item {{ set_active_link(config('administrable.guard') . '.dashboard') }}">
+                        <a class="nav-link" href="{{ route(config('administrable.guard') . '.dashboard') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="fa fa-home icon"></i>
                             </span>
@@ -13,8 +13,8 @@
                             </span>
                         </a>
                     </li>
-                    <li class="nav-item {{ set_active_link('{{backLowerNamespace}}.comment.index') }}">
-                        <a class="nav-link" href="{{ route('{{backLowerNamespace}}.comment.index') }}">
+                    <li class="nav-item {{ set_active_link(back_route_path('comment.index')) }}">
+                        <a class="nav-link" href="{{ back_route('comment.index') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="fa fa-comments icon"></i>&nbsp;
                             </span>
@@ -23,8 +23,8 @@
                             </span>
                         </a>
                     </li>
-                     <li class="nav-item {{ set_active_link('{{backLowerNamespace}}.page.index') }}">
-                        <a class="nav-link" href="{{ route('{{backLowerNamespace}}.page.index') }}">
+                     <li class="nav-item {{ set_active_link(back_route_path('page.index')) }}">
+                        <a class="nav-link" href="{{ back_route('page.index') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="fa fa-folder icon"></i>&nbsp;
                             </span>
@@ -34,8 +34,8 @@
                         </a>
                     </li>
 
-                    <li class="nav-item {{ set_active_link('{{backLowerNamespace}}.user.index') }}">
-                        <a class="nav-link" href="{{ route('{{backLowerNamespace}}.user.index') }}">
+                    <li class="nav-item {{ set_active_link(back_route_path('user.index')) }}">
+                        <a class="nav-link" href="{{ back_route('user.index') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="fa fa-users icon"></i>&nbsp;
                             </span>
@@ -57,7 +57,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             {{--  insert extensions links here  --}}
-                            
+
                         </ul>
                     </li>
 

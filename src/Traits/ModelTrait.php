@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 
 trait ModelTrait
 {
-
     public function getRelatedForm(): string
     {
         if ($this->form) {

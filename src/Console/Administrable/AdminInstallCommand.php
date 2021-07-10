@@ -754,14 +754,14 @@ class AdminInstallCommand extends BaseCommand
 
         $middleware_path = app_path('Http/Middleware');
 
-        // Addition of RedirectIfNotSuper middleware
-        $redirect_middleware_stub = $this->getTemplatePath('/middleware/RedirectIfNotSuper.stub');
-        $redirect_middleware = $this->filesystem->compliedFile($redirect_middleware_stub);
+        // // Addition of RedirectIfNotSuper middleware
+        // $redirect_middleware_stub = $this->getTemplatePath('/middleware/RedirectIfNotSuper.stub');
+        // $redirect_middleware = $this->filesystem->compliedFile($redirect_middleware_stub);
 
-        $this->filesystem->compliedAndWriteFile(
-            $redirect_middleware,
-            $middleware_path . '/RedirectIfNotSuper' . $this->data_map['{{singularClass}}'] . '.php'
-        );
+        // $this->filesystem->compliedAndWriteFile(
+        //     $redirect_middleware,
+        //     $middleware_path . '/RedirectIfNotSuper' . $this->data_map['{{singularClass}}'] . '.php'
+        // );
 
         // Addition of RedirectIfNotSuper middleware
         $redirect_middleware_stub = $this->getTemplatePath('/middleware/RedirectIfNotPaid.stub');

@@ -1,10 +1,11 @@
            <li class="nav-item">
-             <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}" class="nav-link {{ set_active_link('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}">
+             <a href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index') }}"
+             class="nav-link {{ set_active_link(back_view_path('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index')) }}">
                <i class="nav-icon far fa-envelope"></i>
                  Messagerie
                <p>
                    @php
-                       $new_mailboxes =  \{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}::unread()->count()
+                       $new_mailboxes =  config('administrable.extensions.mailbox.model')::unread()->count()
                    @endphp
                    @if($new_mailboxes)
                       <span class="badge badge-success right">{{ $new_mailboxes  }}</span>

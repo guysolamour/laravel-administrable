@@ -1,7 +1,7 @@
          <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
             @php
-                $unreadMailboxes = \{{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}}::unread()->get()
+                $unreadMailboxes = config('administrable.extensions.mailbox.model')::unread()->get()
             @endphp
           <i class="far fa-envelope"></i>
           @if($unreadMailboxes->count())
@@ -27,6 +27,6 @@
                 </a>
                 <div class="dropdown-divider"></div>
             @endforeach
-          <a href="{{ route('{{backLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.index') }}" class="dropdown-item dropdown-footer">Voir tous les Messages</a>
+          <a href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index') }}" class="dropdown-item dropdown-footer">Voir tous les Messages</a>
         </div>
       </li>

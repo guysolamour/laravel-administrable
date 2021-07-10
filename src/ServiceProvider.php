@@ -11,6 +11,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Guysolamour\Administrable\Console\DeployCommand;
 use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
 use Guysolamour\Administrable\Console\Crud\AppendCrudCommand;
+use Guysolamour\Administrable\Jobs\PublishProgrammaticalyPost;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
 use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
@@ -23,6 +24,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function boot()
     {
+        $this->app->bind('administrable-helper', fn () => new Helper);
+
         $this->scheduleCommands();
 
         $this->publishes([
@@ -45,7 +48,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadRoutesFrom($this->packagePath("/routes/front.php"));
         $this->loadTranslationsFrom($this->packagePath('resources/lang'), 'administrable');
 
-        $this->app->bind('administrable-helper', fn() => new Helper);
 
         $this->publishes([
             $this->packagePath('/resources/views/back/' . config('administrable.theme') . '/back') => resource_path('views/vendor/administrable/' . strtolower(config('administrable.back_namespace'))),
@@ -66,13 +68,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadGuardGates();
 
-        Validator::extend('route_exists', function ($attribute, $value, $parameters, $validator) {
-            return Route::has($value);
-        });
+        $this->loadValidationRules();
 
-        Validator::replacer('route_exists', function ($message, $attribute, $rule, $parameters) {
-            return str_replace('Route', 'route', $message);
-        });
     }
 
     private function scheduleCommands() :void
@@ -92,6 +89,22 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             if (config('administrable.schedule.command.telescope')){
                 $schedule->command('telescope:prune')->daily();
             }
+
+            if (Extension::state('blog')) {
+                $schedule->job(new PublishProgrammaticalyPost)->hourly();
+            }
+
+        });
+    }
+
+    private function loadValidationRules() :void
+    {
+        Validator::extend('route_exists', function ($attribute, $value, $parameters, $validator) {
+            return Route::has($value);
+        });
+
+        Validator::replacer('route_exists', function ($message, $attribute, $rule, $parameters) {
+            return str_replace('Route', 'route', $message);
         });
     }
 
@@ -135,6 +148,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->booting(function () {
             $loader = AliasLoader::getInstance();
             $loader->alias('AdminModule', Module::class);
+            $loader->alias('AdminExtension', Extension::class);
         });
 
     }

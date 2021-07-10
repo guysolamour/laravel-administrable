@@ -1,7 +1,6 @@
 @extends(back_view_path('layouts.base'))
 
-
-@section('title','Edition ' . $comment->getCommenterName())
+@section('title', Lang::get('administrable::messages.default.edition'))
 
 @section('content')
 
@@ -12,15 +11,15 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    {{-- <h1>Edition</h1> --}}
+                    {{-- <h1>{{ Lang::get('administrable::messages.default.edition') }}</h1> --}}
                 </div>
                 <div class="col-sm-6">
                     <div class="float-sm-right">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . 'dashboard') }}">Tableau de bord</a></li>
-                            <li class="breadcrumb-item"><a href="{{ back_route('comment.index') }}">Commentaires</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . 'dashboard') }}">{{ Lang::get('administrable::messages.default.dashboard') }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ back_route('comment.index') }}">{{ Lang::get('administrable::messages.view.comment.plural') }}</a></li>
                             <li class="breadcrumb-item"><a href="{{ back_route('comment.show', $comment) }}">{{ $comment->getCommenterName() }}</a></li>
-                            <li class="breadcrumb-item active">Edition</li>
+                            <li class="breadcrumb-item active">{{ Lang::get('administrable::messages.default.edition') }}</li>
                         </ol>
                     </div>
                 </div>
@@ -34,7 +33,7 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Edition</h3>
+                <h3 class="card-title">{{ Lang::get('administrable::messages.default.edition') }}</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
                         title="Réduire">
@@ -50,13 +49,6 @@
             </div>
 
         </div>
-        <!-- /.card-body -->
-
-        <!-- /.card -->
-
     </section>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
-
 @endsection

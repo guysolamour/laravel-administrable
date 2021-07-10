@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body box-profile">
         <div class="text-center">
-            <img id="holder" data-avatar="{{ $model->id }}" class="profile-user-img img-fluid img-circle" src="{{ $model->getFrontImageUrl() }}"
+            <img id="holder" data-avatar="{{ $model->getKey() }}" class="profile-user-img img-fluid img-circle" src="{{ $model->getFrontImageUrl() }}"
                 alt="{{ $model->name }}" style="cursor: pointer;">
         </div>
 
@@ -12,7 +12,7 @@
         @if (get_guard()->can('change-' . config('administrable.guard') . '-avatar', $guard))
         <div class="text-center">
             <button type="button" class="btn btn-primary text-white " data-image='front-image' data-container='.front-image-box'>
-                <i class="fa fa-image"></i> Changer d'avatar
+                <i class="fa fa-image"></i> {{ Lang::get('administrable::messages.view.guard.changeavatar') }}
             </button>
         </div>
         @endif
@@ -59,11 +59,9 @@
         images_sortable_container    : '.images-box',
     })
 
-
     function fnAvatarCommit(image){
         $(`[data-avatar={{$model->id}}]`).attr('src', image.url).attr('alt', image.name);
     }
-
 
 </script>
 

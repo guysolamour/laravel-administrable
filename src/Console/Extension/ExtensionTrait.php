@@ -191,7 +191,7 @@ trait ExtensionTrait
             {$search}
 
                     <li class="nav-item {{ set_active_link({$set_active_routes})  }}">
-                        <a class="nav-link" href="{{ route('{$this->data_map['{{frontLowerNamespace}}']}.{$this->getSubfolder()}.{$this->name}.{$route}') }}">{$this->data_map['{{extensionLabel}}']}</a>
+                        <a class="nav-link" href="{{ front_route('{$this->getSubfolder()}.{$this->name}.{$this->name}.{$route}') }}">{$this->data_map['{{extensionLabel}}']}</a>
                     </li>
             HTML,
             $path

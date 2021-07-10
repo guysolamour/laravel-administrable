@@ -1,4 +1,4 @@
-@extends('{{frontLowerNamespace}}.layouts.default')
+@extends(front_view_path('layouts.default'))
 
 
 <x-administrable::seotags
@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-      
+
     </div>
 </div>
 @endsection

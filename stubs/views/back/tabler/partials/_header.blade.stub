@@ -19,15 +19,15 @@
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="{{ route('back.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
+                    <a class="dropdown-item" href="{{ back_route('{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
                         <i class="fa fa-user icon dropdown-item-icon"></i>&nbsp;
                         Mon profil
                     </a>
-                    <a class="dropdown-item" href="{{ route('back.{{singularSlug}}.index') }}">
+                    <a class="dropdown-item" href="{{ back_route('{{singularSlug}}.index') }}">
                        <i class="fa fa-users icon dropdown-item-icon"></i>&nbsp;
                         {{pluralClass}}
                     </a>
-                    <a class="dropdown-item" href="{{ route('back.configuration.edit') }}">
+                    <a class="dropdown-item" href="{{ back_route('configuration.edit') }}">
                         <i class="fa fa-tools icon dropdown-item-icon"></i>&nbsp;
                         Configuration
                     </a>

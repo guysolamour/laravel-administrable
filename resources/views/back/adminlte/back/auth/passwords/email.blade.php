@@ -1,7 +1,7 @@
 @extends(back_view_path('layouts.app'))
 
 
-@section('title','Réinitialisation de mot de passe')
+@section('title', Lang::get('administrable::messages.view.auth.passwordupdate'))
 
 @section('content')
    <div class="login-box">
@@ -11,7 +11,7 @@
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Réinitialisation de mot de passe</p>
+                <p class="login-box-msg">{{ Lang::get('administrable::messages.view.auth.passwordupdate') }}</p>
                 @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
@@ -21,10 +21,9 @@
                 <form action="{{ route( config('administrable.guard') . '.password.email') }}" method="post">
                     @csrf
                     @honeypot
-                    {{--<input type="hidden" name="token" value="{{ $token }}">--}}
                     <div class="input-group mb-3">
 
-                        <input type="email" name="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email" value="{{ old('email') }}">
+                        <input type="email" name="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ Lang::get('administrable::messages.view.auth.email') }}" value="{{ old('email') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -38,18 +37,12 @@
                     </div>
 
                     <div class="row">
-
-                        <!-- /.col -->
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block btn-flat">Envoyer le lien de réinitialisation</button>
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">{{ Lang::get('administrable::messages.view.auth.sendupdatelink') }}</button>
                         </div>
-                        <!-- /.col -->
                     </div>
                 </form>
-
-
             </div>
-            <!-- /.login-card-body -->
         </div>
     </div>
 @endsection

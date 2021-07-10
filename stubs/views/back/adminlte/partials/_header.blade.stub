@@ -6,7 +6,7 @@
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="{{ url('/') }}" class="nav-link  text-primxary btn btn-info text-white btn-sm" target="_blank">Voir le site</a>
+        <a href="{{ route('home') }}" class="nav-link  text-primxary btn btn-info text-white btn-sm" target="_blank">Voir le site</a>
       </li>
     </ul>
 

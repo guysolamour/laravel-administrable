@@ -2,7 +2,6 @@
 
 namespace {{namespace}}\Http\Controllers\{{frontNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
 
-use Illuminate\Http\Request;
 use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}};
 use {{namespace}}\Http\Controllers\Controller;
 
@@ -16,8 +15,8 @@ class {{extensionClass}}Controller extends Controller
      */
     public function index()
     {
-      $testimonials = {{extensionClass}}::online()->last()->paginate(9);
+      $testimonials = config('administrable.extensions.testimonial.model')::online()->last()->paginate(9);
 
-      return view('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionPluralSlug}}.index', compact('{{extensionPluralSlug}}'));
+      return front_view('{{extensionsFolder}}.{{extensionPluralSlug}}.index', compact('{{extensionPluralSlug}}'));
     }
 }

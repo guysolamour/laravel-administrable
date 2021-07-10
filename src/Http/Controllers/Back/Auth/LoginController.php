@@ -4,6 +4,7 @@ namespace Guysolamour\Administrable\Http\Controllers\Back\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Guysolamour\Administrable\Http\Controllers\BaseController;
 
@@ -47,7 +48,7 @@ class LoginController extends BaseController
         $request->validate([
             'login' => 'required|string',
             'password' => 'required|string',
-        ],['login.required' => 'Le Pseudo ou l\'Email est requis']);
+        ],['login.required' => Lang::get('administrable::messages.controller.guard.loginrequired')]);
     }
 
      /**

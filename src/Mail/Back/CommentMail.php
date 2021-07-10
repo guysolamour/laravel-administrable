@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Lang;
 
 class CommentMail extends Mailable
 {
@@ -35,7 +36,7 @@ class CommentMail extends Mailable
     {
         return $this
             ->from(config('mail.from.address'))
-            ->subject('Nouveau commentaire ' . $this->comment->getCommenterName())
+            ->subject(Lang::get('Nouveau commentaire ') . $this->comment->getCommenterName())
             ->markdown('administrable::emails.back.comment');
     }
 }

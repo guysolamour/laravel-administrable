@@ -70,14 +70,14 @@
                                     </div>
                                     <div class="row">
 
-                                      <div class="col-md-12">
-                                        <p><span class="font-weight-bold">{{ Lang::get("administrable::messages.view.page.route") }}:</span></p>
-                                        @if($page->uri)
-                                        <p class="pb-2 "><b>{{ Lang::get("administrable::messages.view.page.uri") }}: </b><a href="{{ $page->uri }}" class="text-primary" target="_blank">{{ $page->uri }}</a>
-                                        </p>
-                                        @else
-                                        {{ Lang::get("administrable::messages.view.page.nouri") }}
-                                        @endif
+                                        <div class="col-md-12">
+                                            <p><span class="font-weight-bold">{{ Lang::get("administrable::messages.view.page.route") }}:</span></p>
+                                            @if($page->uri)
+                                            <p class="pb-2 "><b>{{ Lang::get("administrable::messages.view.page.uri") }}: </b><a href="{{ $page->uri }}" class="text-primary" target="_blank">{{ $page->uri }}</a>
+                                            </p>
+                                            @else
+                                            {{ Lang::get("administrable::messages.view.page.nouri") }}
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -104,10 +104,12 @@
                                             <i class="fas fa-edit"></i> </button>
                                         @include(back_view_path('pages._updatemetaform'), ['meta' => $group])
                                         @include(back_view_path('pages._addmetataform'), ['group' => $group])
+                                        @role('super-' . config('administrable.guard'), config('administrable.guard'))
                                         <a href="{{ back_route('pagemeta.destroy', [$page, $group]) }}" data-method="delete"
                                             data-confirm="{{ Lang::get('administrable::messages.view.pagemeta.destroy') }}"
                                             class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="{{ Lang::get('administrable::messages.default.delete') }}"><i
                                                 class="fas fa-trash"></i> </a>
+                                        @endrole
 
                                     </div>
                                 </div>

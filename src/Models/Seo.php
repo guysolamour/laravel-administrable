@@ -48,16 +48,16 @@ class Seo extends Model implements HasMedia
      * @var array
      */
     protected $attributes = [
-        'page:title'           => '',
-        'og:title'             => '',
-        'og:url'               => '',
-        'og:description'       => '',
-        'twitter:title'        => '',
-        'twitter:description'  => '',
-        'page:canonical:url'  => '',
-        'page:meta:description'  => '',
-        'og:type'              => 'article',
-        'twitter:type'         => 'summary',
+        'page:title'            => '',
+        'og:title'              => '',
+        'og:url'                => '',
+        'og:description'        => '',
+        'twitter:title'         => '',
+        'twitter:description'   => '',
+        'page:canonical:url'    => '',
+        'page:meta:description' => '',
+        'og:type'               => 'article',
+        'twitter:type'          => 'summary',
     ];
 
     /**
@@ -73,6 +73,8 @@ class Seo extends Model implements HasMedia
     {
         return $force ? $this->generateTags() : $this->html;
     }
+
+    
 
     public function generateTags(?Model $model = null): string
     {
@@ -201,7 +203,7 @@ class Seo extends Model implements HasMedia
             return;
         }
 
-        $collection = config('media-library.collections.seo.label');
+        $collection = config('administrable.media.collections.seo.label');
 
         if (!$collection) {
             return;

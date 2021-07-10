@@ -2,7 +2,8 @@
 
 namespace Guysolamour\Administrable\Traits;
 
-use Guysolamour\Administrable\Models\Seo;
+use Illuminate\Support\Str;
+
 
 trait SeoableTrait
 {
@@ -11,20 +12,39 @@ trait SeoableTrait
      */
     public function seo()
     {
-        return $this->morphOne(Seo::class, 'seoable');
+        return $this->morphOne(config('administrable.modules.seo.model'), 'seoable');
     }
 
+    private function setDefaultSeoDataMapping($tags)
+    {
+        if (!property_exists($this, 'seo_default_mapping')) {
+            return $tags;
+        }
+
+        foreach ($this->seo_default_mapping as $key => $seo_attributes) {
+            if (!is_array($seo_attributes)) {
+                continue;
+            }
+
+            foreach ($seo_attributes as  $value) {
+                if (is_null($tags->getAttributeValue($value))) {
+                    $tags[$value] = Str::limit(strip_tags($this->getAttributeValue($key), 300));
+                }
+            }
+        }
+
+        return $tags;
+    }
 
     public function generateSeo(bool $request = true): void
     {
-        /**
-         * @var Seo
-         */
-        $seo = $this->seo ?: new Seo;
+        $seo = $this->seo ?: new (config('administrable.modules.seo.model'));
 
         if ($request && request('seo')) {
             $seo->fill(request('seo'));
         }
+
+        $this->setDefaultSeoDataMapping($seo);
 
         $seo->setAttribute('html', $seo->generateTags($this));
 

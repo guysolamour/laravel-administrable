@@ -1,4 +1,6 @@
 <?php
+
+use Guysolamour\Administrable\Extension;
 use Illuminate\Support\Str;
 use Guysolamour\Administrable\Module;
 use Illuminate\Support\Facades\Route;
@@ -143,6 +145,127 @@ Route::prefix(config('administrable.auth_prefix_path'))
         });
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | EXTENSIONS
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('extensions/')->middleware([config('administrable.guard') . '.auth'])->group(function () {
+
+            /*
+            |--------------------------------------------------------------------------
+            | EXTENSIONS -> Livenews
+            |--------------------------------------------------------------------------
+            */
+            if (Extension::state('livenews')) {
+                Route::name(Str::lower(config('administrable.back_namespace')) . '.extensions.livenews.livenews.')->group(function () {
+                    Route::resource('livenews', Extension::backController('livenews'))->names([
+                        'index'    => 'index',
+                        'show'     => 'show',
+                        'create'   => 'create',
+                        'store'    => 'store',
+                        'edit'     => 'edit',
+                        'update'   => 'update',
+                        'destroy'  => 'destroy',
+                    ])->except('show');
+                });
+            }
+            /*
+            |--------------------------------------------------------------------------
+            | EXTENSIONS -> Testimonial
+            |--------------------------------------------------------------------------
+            */
+            if (Extension::state('testimonial')) {
+                Route::name(Str::lower(config('administrable.back_namespace')) . '.extensions.testimonial.testimonial.')->group(function () {
+                    Route::resource('testimonials', Extension::backController('testimonial'))->names([
+                        'index'    => 'index',
+                        'show'     => 'show',
+                        'create'   => 'create',
+                        'store'    => 'store',
+                        'edit'     => 'edit',
+                        'update'   => 'update',
+                        'destroy'  => 'destroy',
+                    ]);
+
+                });
+            }
+            /*
+            |--------------------------------------------------------------------------
+            | EXTENSIONS -> Mailbox
+            |--------------------------------------------------------------------------
+            */
+            if (Extension::state('mailbox')) {
+                Route::name(Str::lower(config('administrable.back_namespace')) . '.extensions.mailbox.mailbox.')->group(function () {
+                    Route::resource('mailboxes', Extension::backController('mailbox'))->names([
+                        'index'    => 'index',
+                        'show'     => 'show',
+                        'create'   => 'create',
+                        'store'    => 'store',
+                        'edit'     => 'edit',
+                        'update'   => 'update',
+                        'destroy'  => 'destroy',
+                    ])->except('create', 'edit', 'store', 'update');
+
+                    Route::post('/mailboxes/{mailbox}/note', [Extension::backController('mailbox'), 'saveNote'])->name('note.store');
+                    Route::put('/mailboxes/{mailbox}/note/{comment}', [Extension::backController('mailbox'), 'updateNote'])->name('note.update');
+                    Route::delete('/mailboxes/{mailbox}/note/{comment}', [Extension::backController('mailbox'), 'deleteNote'])->name('note.destroy');
+                });
+
+            }
+            /*
+            |--------------------------------------------------------------------------
+            | EXTENSIONS -> Blog
+            |--------------------------------------------------------------------------
+            */
+            if (Extension::state('blog')){
+                Route::name(Str::lower(config('administrable.back_namespace')) . '.extensions.blog.category.')->group(function () {
+                    Route::prefix('blog')->group(function () {
+                        Route::resource('categories', config('administrable.extensions.blog.category.back.controller'))->names([
+                            'index'      => 'index',
+                            'show'       => 'show',
+                            'create'     => 'create',
+                            'store'      => 'store',
+                            'edit'       => 'edit',
+                            'update'     => 'update',
+                            'destroy'    => 'destroy',
+                        ]);
+                    });
+
+                });
+
+                Route::name(Str::lower(config('administrable.back_namespace')) . '.extensions.blog.tag.')->group(function () {
+                    Route::prefix('blog')->group(function () {
+                        Route::resource('tags', config('administrable.extensions.blog.tag.back.controller'))->names([
+                            'index'      => 'index',
+                            'show'       => 'show',
+                            'create'     => 'create',
+                            'store'      => 'store',
+                            'edit'       => 'edit',
+                            'update'     => 'update',
+                            'destroy'    => 'destroy',
+                        ]);
+                    });
+                });
+
+                Route::name(Str::lower(config('administrable.back_namespace')) . '.extensions.blog.post.')->group(function () {
+                    Route::prefix('blog')->group(function () {
+                        Route::resource('posts', config('administrable.extensions.blog.post.back.controller'))->names([
+                            'index'      => 'index',
+                            'show'       => 'show',
+                            'create'     => 'create',
+                            'store'      => 'store',
+                            'edit'       => 'edit',
+                            'update'     => 'update',
+                            'destroy'    => 'destroy',
+                        ]);
+
+                        // JS
+                        Route::post('posts/category', [config('administrable.extensions.blog.post.back.controller'), 'addCategory']);
+                        Route::post('posts/tag', [config('administrable.extensions.blog.post.back.controller'), 'addTag']);
+                    });
+                });
+            }
+        });
     }
 );
 

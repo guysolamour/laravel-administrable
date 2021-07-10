@@ -3,7 +3,6 @@
 @section('title',  Lang::get("administrable::messages.view.page.plural"))
 
 @section('content')
-
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">

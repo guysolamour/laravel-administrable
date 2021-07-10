@@ -46,7 +46,25 @@ class AddExtensionCommand extends BaseCommand
             $this->triggerError("The [$name] extension is not in available. Available extensions are [" . join(', ', self::EXTENSIONS) . "].");
         }
 
+        // if (!$this->configHasBeenPublished()){
+        //     $this->triggerError("Please publish config file and activate the ['". $name ."'] extension.");
+        // }
+
+        // if (!$this->extensionIsActive()){
+        //     $this->triggerError("Please activate the ['" . $name . "'] extension.");
+        // }
+
         $this->addExtension($name);
+    }
+
+    private function extensionIsActive() :bool
+    {
+        return config('administrable.extensions.livenews.activate');
+    }
+
+    private function configHasBeenPublished() :bool
+    {
+        return file_exists(config_path('administrable.php'));
     }
 
     private function getExtensionName() :string

@@ -10,6 +10,7 @@ use Guysolamour\Administrable\Models\Page;
 
 
 class Helper {
+
     public function getGuard(?string $attribute = null)
     {
         $guard = auth()->guard(config('administrable.guard'))->user();
@@ -128,7 +129,10 @@ class Helper {
 
     public function configuration(?string $attribute = null, string $default = null)
     {
-        $configuration = \Guysolamour\Administrable\Settings\ConfigurationSettings::get();
+        /**
+         * @var \Spatie\LaravelSettings\Settings
+         */
+        $configuration = app(config('administrable.modules.configuration.model'));
 
         if (is_null($attribute)) {
             return $configuration;
@@ -230,7 +234,7 @@ class Helper {
      * @param integer $limit
      * @return mixed
      */
-    public function randomElement($collection, int $limit = 9)
+    public function randomElements($collection, int $limit = 9)
     {
         $count = $collection->count();
 

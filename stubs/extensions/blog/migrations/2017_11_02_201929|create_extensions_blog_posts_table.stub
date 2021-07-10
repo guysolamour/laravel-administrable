@@ -19,6 +19,9 @@ class Create{{extensionsFolderClass}}{{extensionClass}}PostsTable extends Migrat
             $table->string('title');
             $table->longText('content');
             $table->boolean('online')->default(true);
+            $table->string('type')->default(config('administrable.extensions.blog.post.model')::TYPES['text']['name']);
+            $table->string('video_link')->nullable();
+            $table->timestamp('published_at')->nullable();
             $table->boolean('allow_comment')->default(true);
             $table->string('slug')->unique();
 

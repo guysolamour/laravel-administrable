@@ -1,6 +1,6 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-<x-administrable::seotags 
+<x-administrable::seotags
     :model="$post"
 />
 
@@ -15,7 +15,7 @@
             <p>
                 Catégories:
                 @foreach($post->categories as $category)
-                <a href="{{ route('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.category', $category) }}" class="btn btn-link">{{ $category->name }}</a>
+                <a href="{{ front_route('{{extensionsFolder}}.{{extensionSingularSlug}}.category', $category) }}" class="btn btn-link">{{ $category->name }}</a>
                 @endforeach
             </p>
             @endif
@@ -23,7 +23,7 @@
             <p>
                 Etiquettes:
                 @foreach($post->tags as $tag)
-                <a href="{{ route('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.tag', $tag) }}" class="btn btn-link">{{ $tag->name }}</a>
+                <a href="{{ front_route('{{extensionsFolder}}.{{extensionSingularSlug}}.tag', $tag) }}" class="btn btn-link">{{ $tag->name }}</a>
                 @endforeach
             </p>
             @endif
@@ -56,7 +56,7 @@
                      <div>
                          <h6>Suivant</h6>
                          <p class="text-uppercase"><a
-                                 href="{{ route('{{frontLowerNamespace}}.{{extensionsFolder}}.{{extensionSingularSlug}}.show', $post->next) }}">{{ $post->next->title }}</a>
+                                 href="{{ front_route('{{extensionsFolder}}.{{extensionSingularSlug}}.show', $post->next) }}">{{ $post->next->title }}</a>
                          </p>
                      </div>
                  </div>

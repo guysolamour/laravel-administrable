@@ -1,6 +1,6 @@
 @extends(back_view_path('layouts.app'))
 
-@section('title', 'Connexion')
+@section('title', Lang::get('administrable::messages.view.auth.login'))
 
 @section('content')
     <div class="login-box">
@@ -10,13 +10,13 @@
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Connecter vous afin de démarrer votre session</p>
+                <p class="login-box-msg">{{ Lang::get('administrable::messages.view.auth.startsession') }}</p>
 
                 <form action="{{ route( config('administrable.guard') . '.login') }}" method="post">
                     @csrf
                     @honeypot
                     <div class="input-group mb-3">
-                        <input type="text" name="login" class="form-control {{ $errors->has('login') || $errors->has('email') || $errors->has('pseudo') ? 'is-invalid' : '' }}" placeholder="Pseudo ou Email" value="{{ old('login') }}">
+                        <input type="text" name="login" class="form-control {{ $errors->has('login') || $errors->has('email') || $errors->has('pseudo') ? 'is-invalid' : '' }}" placeholder="{{ Lang::get('administrable::messages.view.guard.pseudo') }} - {{ Lang::get('administrable::messages.view.guard.email') }}" value="{{ old('login') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -29,7 +29,7 @@
                         @endif
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" name="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Mot de passe">
+                        <input type="password" name="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ Lang::get('administrable::messages.view.guard.password') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -47,24 +47,26 @@
                             <div class="icheck-primary">
                                 <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                 <label for="remember">
-                                    Se souvenir de moi
+                                    {{ Lang::get('administrable::messages.view.auth.remember') }}
                                 </label>
                             </div>
                         </div>
                         <!-- /.col -->
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block btn-flat">Connexion</button>
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">
+                                {{ Lang::get('administrable::messages.view.auth.login') }}
+                            </button>
                         </div>
                         <!-- /.col -->
                     </div>
                 </form>
 
                 <p class="mb-2">
-                    <a href="{{ route( config('administrable.guard') . '.password.request') }}">Mot de passe oublié ?</a>
+                    <a href="{{ route( config('administrable.guard') . '.password.request') }}">
+                        {{ Lang::get('administrable::messages.view.auth.forgotpassword') }}
+                    </a>
                 </p>
-                {{-- <p class="mb-2">
-                    <a href="{{ back_route('register')  }}" class="text-center">Pas de compte ? S'inscrire</a>
-                </p> --}}
+
             </div>
             <!-- /.login-card-body -->
         </div>

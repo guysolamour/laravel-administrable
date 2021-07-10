@@ -19,7 +19,6 @@ trait MediaableTrait
 
     public function getFrontImageUrl(string $conversionName = ''): ?string
     {
-        /** @var \App\Models\Media */
         $media = $this->front_image;
 
         if (!$media && $this->email) {
@@ -36,7 +35,6 @@ trait MediaableTrait
 
     public function getBackImageUrl(string $conversionName = ''): ?string
     {
-        /** @var \App\Models\Media */
         $media = $this->back_image;
 
         return $media ? $media->getUrl($conversionName) : null;

@@ -44,44 +44,43 @@
                 <div class='row'>
                     <div class='col-md-8'>
                         <section style="margin-bottom: 2rem;">
-
                             <div class="btn-group-horizontal">
                                 <a href="{{ back_route('user.edit', $user) }}" class="btn btn-info" data-toggle="tooltip"
                                     data-placement="top" title="{{ Lang::get('administrable::messages.default.edit') }}"><i class="fas fa-edit"></i>{{ Lang::get('administrable::messages.default.edit') }}</a>
                                 <a href="{{ back_route('user.destroy',$user) }}" data-method="delete" data-toggle="tooltip"
-                                    data-placement="top" title="Supprimer"
-                                    data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?" class="btn btn-danger"><i
+                                    data-placement="top" title="{{ Lang::get('administrable::messages.default.delete') }}"
+                                    data-confirm="{{ Lang::get('administrable::messages.view.user.destroy') }}" class="btn btn-danger"><i
                                         class="fa fa-trash"></i> {{ Lang::get('administrable::messages.default.delete') }}</a>
                             </div>
                         </section>
                         {{-- add fields here --}}
-                      <div class="pb-2">
-                          <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.user.name') }}:</span></p>
-                          <p>
-                              {{ $user->name }}
-                          </p>
-                      </div>
+                        <div class="pb-2">
+                            <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.user.name') }}:</span></p>
+                            <p>
+                                {{ $user->name }}
+                            </p>
+                        </div>
 
-                      <div class="pb-2">
-                          <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.user.pseudo') }}:</span></p>
-                          <p>
-                              {{ $user->pseudo }}
-                          </p>
-                      </div>
+                        <div class="pb-2">
+                            <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.user.pseudo') }}:</span></p>
+                            <p>
+                                {{ $user->pseudo }}
+                            </p>
+                        </div>
 
-                      <div class="pb-2">
-                          <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.user.email') }}:</span></p>
-                          <p>
-                              {{ $user->email }}
-                          </p>
-                      </div>
+                        <div class="pb-2">
+                            <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.user.email') }}:</span></p>
+                            <p>
+                                {{ $user->email }}
+                            </p>
+                        </div>
 
-                      <div class="pb-2">
-                          <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.user.createdat') }}:</span></p>
-                          <p>
-                              {{ $user->created_at->format('d/m/Y h:i') }}
-                          </p>
-                      </div>
+                        <div class="pb-2">
+                            <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.user.createdat') }}:</span></p>
+                            <p>
+                                {{ $user->created_at->format('d/m/Y h:i') }}
+                            </p>
+                        </div>
 
 
                     </div>
@@ -90,18 +89,10 @@
                            'model' => $user,
                        ])
                     </div>
-
                 </div>
             </div>
 
         </div>
-        <!-- /.card-body -->
-
-        <!-- /.card -->
-
     </section>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
-
 @endsection

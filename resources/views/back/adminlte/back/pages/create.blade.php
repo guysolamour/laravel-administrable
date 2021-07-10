@@ -10,7 +10,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    {{-- <h1>Lang::get("administrable::messages.default.add")</h1> --}}
+                    {{-- <h1>{{ Lang::get("administrable::messages.default.add") }}</h1> --}}
                 </div>
                 <div class="col-sm-6">
                     <div class="float-sm-right">
@@ -49,7 +49,7 @@
 
         </div>
         <x-administrable::seoform :model="$form->getModel()" />
-            
+
         <div class="form-group">
             <button type="submit" class="btn btn-success"> <i class="fa fa-save"></i> {{ Lang::get("administrable::messages.default.save") }}</button>
         </div>

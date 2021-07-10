@@ -14,7 +14,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . '.dashboard') }}">{{ __("administrable::messages.default.dashboard") }}</a></li>
+              <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . '.dashboard') }}">{{ Lang::get("administrable::messages.default.dashboard") }}</a></li>
               <li class="breadcrumb-item active">{{ Lang::get('administrable::messages.view.guard.plural') }}</li>
             </ol>
           </div>
@@ -24,7 +24,6 @@
 
     <!-- Main content -->
     <section class="content">
-
       <!-- Default box -->
       <div class="card card-solid">
         <div class="card-body pb-0">

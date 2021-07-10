@@ -15,7 +15,7 @@
         {!! form_row($form->email) !!}
     </div>
     <div class='col-md-6'>
-        <label for="role">Role</label>
+        <label for="role">{{ Lang::get('administrable::messages.view.guard.role') }}</label>
         <select name="role" id="role" class="form-control select2" required>
             @php
                 $roles = config('permission.models.role')::where('guard_name', config('administrable.guard'))->get();

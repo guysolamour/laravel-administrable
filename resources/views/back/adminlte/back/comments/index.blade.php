@@ -1,7 +1,6 @@
 @extends(back_view_path('layouts.base'))
 
-
-@section('title', 'Commentaires')
+@section('title', Lang::get('administrable::messages.view.comment.plural'))
 
 @section('content')
 
@@ -11,13 +10,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    {{-- <h1>Commentaires</h1> --}}
+                    {{-- <h1>{{ Lang::get('administrable::messages.view.comment.plural') }}</h1> --}}
                 </div>
                 <div class="col-sm-6">
                     <div class='float-sm-right'>
                          <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ back_route('dashboard') }}">Tableau de bord</a></li>
-                            <li class="breadcrumb-item active">Commentaires</li>
+                            <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . 'dashboard') }}">{{ Lang::get('administrable::messages.default.dashboard') }}</a></li>
+                            <li class="breadcrumb-item active">{{ Lang::get('administrable::messages.view.comment.plural') }}</li>
                         </ol>
                     </div>
                 </div>
@@ -45,10 +44,10 @@
                             <div class="card-body p-0">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3 class="card-title">Commentaires</h3>
+                                        <h3 class="card-title">{{ Lang::get('administrable::messages.view.comment.plural') }}</h3>
                                         <div class="btn-group float-right">
                                             <a href="#" class="btn btn-danger d-none" data-model="{{ AdminModule::model('comment') }}"
-                                                id="delete-all"> <i class="fa fa-trash"></i> Tous supprimer</a>
+                                                id="delete-all"> <i class="fa fa-trash"></i> {{ Lang::get('administrable::messages.default.deleteall') }}</a>
                                         </div>
                                     </div>
                                     <!-- /.card-header -->
@@ -66,13 +65,13 @@
                                                             </div>
                                                         </th>
                                                           <th>#</th>
-                                                          <th>Nom</th>
-                                                          <th>Email</th>
-                                                          <th>Contenu</th>
-                                                          <th>Approuvé</th>
-                                                          <th>Date ajout</th>
+                                                          <th>{{ Lang::get('administrable::messages.view.comment.name') }}</th>
+                                                          <th>{{ Lang::get('administrable::messages.view.comment.email') }}</th>
+                                                          <th>{{ Lang::get('administrable::messages.view.comment.content') }}</th>
+                                                          <th>{{ Lang::get('administrable::messages.view.comment.approved') }}</th>
+                                                          <th>{{ Lang::get('administrable::messages.view.comment.createdat') }}</th>
                                                           {{-- add fields here --}}
-                                                          <th>Actions</th>
+                                                          <th>{{ Lang::get('administrable::messages.view.comment.actions') }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -94,9 +93,9 @@
                                                         <td>{!! Str::limit(strip_tags($comment->comment),50) !!}</td>
                                                         <td>
                                                             @if ($comment->approved)
-                                                              <a data-provide="tooltip" title="Approuvé"><i class="fas fa-circle text-success"></i></a>
+                                                              <a data-provide="tooltip" title="{{ Lang::get('administrable::messages.view.comment.approved') }}"><i class="fas fa-circle text-success"></i></a>
                                                             @else
-                                                              <a data-provide="tooltip" title="Non approuvé"><i class="fas fa-circle text-secondary"></i></a>
+                                                              <a data-provide="tooltip" title="{{ Lang::get('administrable::messages.view.comment.disapproved') }}"><i class="fas fa-circle text-secondary"></i></a>
                                                             @endif
                                                         </td>
 
@@ -104,27 +103,23 @@
                                                         {{-- add values here --}}
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a target="_blank" href="{{ route('front.'. strtolower(class_basename($comment->commentable)) .'.show', $comment->commentable) . '#comment-' . $comment->getKey() }}"
-                                                                    class="btn btn-primary" data-toggle="tooltip"
-                                                                    data-placement="top" title="Afficher"><i
-                                                                        class="fas fa-eye"></i></a>
                                                                 @unless ($comment->approved)
                                                                   <a href="{{ back_route('comment.approved', $comment) }}"
                                                                     class="btn btn-success" data-toggle="tooltip"
-                                                                    data-placement="top" title="Approuver"><i
+                                                                    data-placement="top" title="{{ Lang::get('administrable::messages.view.comment.approved') }}"><i
                                                                         class="fas fa-check"></i></a>
                                                                 @endunless
                                                                 <a href="{{ back_route('comment.edit', $comment) }}"
                                                                     class="btn btn-info" data-toggle="tooltip"
-                                                                    data-placement="top" title="Editer"><i
+                                                                    data-placement="top" title="{{ Lang::get('administrable::messages.default.edit') }}"><i
                                                                         class="fas fa-edit"></i></a>
-                                                                <a href="#" class="btn btn-secondary" title="Répondre" data-toggle="modal"
+                                                                <a href="#" class="btn btn-secondary" title="{{ Lang::get('administrable::messages.view.comment.reply') }}" data-toggle="modal"
                                                                     data-target="#answerModal{{ $comment->getKey() }}"><i class="fas fa-undo"></i></a>
                                                                 <a href="{{ back_route('comment.destroy', $comment) }}"
                                                                     data-method="delete"
-                                                                    data-confirm="Etes vous sur de bien vouloir procéder à la suppression ?"
+                                                                    data-confirm="{{ Lang::get('administrable::messages.view.comment.destroy') }}"
                                                                     class="btn btn-danger" data-toggle="tooltip"
-                                                                    data-placement="top" title="Supprimer"><i
+                                                                    data-placement="top" title="{{ Lang::get('administrable::messages.default.default') }}"><i
                                                                         class="fas fa-trash"></i></a>
                                                             </div>
                                                         </td>
@@ -150,23 +145,23 @@
                                                                         <input type="hidden" name="child_id" value="{{ $comment->getKey() }}">
 
                                                                         <div class="form-group">
-                                                                            <input type="text" name="guest_name" class="form-control" placeholder="Votre nom"
+                                                                            <input type="text" name="guest_name" class="form-control" placeholder="{{ Lang::get('administrable::messages.view.comment.name') }}"
                                                                                 value="{{ get_guard('full_name') }}">
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <input type="text" name="guest_email" class="form-control" placeholder="Votre email"
+                                                                            <input type="text" name="guest_email" class="form-control" placeholder="{{ Lang::get('administrable::messages.view.comment.email') }}"
                                                                                 value="{{ get_guard('email') }}">
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <textarea name="comment" class="form-control" placeholder="Ecrivez votre réponse commentaire"
+                                                                            <textarea name="comment" class="form-control" placeholder="{{ Lang::get('administrable::messages.view.comment.answer') }}"
                                                                                 rows="10" required></textarea>
                                                                         </div>
                                                                     </form>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ Lang::get('administrable::messages.default.cancel') }}</button>
                                                                     <button type="submit" form="answerComment{{ $comment->getKey() }}" class="btn btn-primary"><i
-                                                                            class="fa fa-plus"></i> Répondre</button>
+                                                                            class="fa fa-plus"></i> {{ Lang::get('administrable::messages.view.comment.reply') }}</button>
                                                                 </div>
                                                             </div>
                                                         </div>

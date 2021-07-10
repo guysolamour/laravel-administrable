@@ -1,23 +1,23 @@
 @extends(back_view_path('layouts.app'))
 
-@section('title', 'Confirmation de mot de passe')
+@section('title', Lang::get('administrable::messages.view.auth.passwordconfirmation'))
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Confirmation de mot de passe</div>
+                <div class="card-header">{{ Lang::get('administrable::messages.view.auth.passwordconfirmation') }}</div>
 
                 <div class="card-body">
-                    Merci de confirmer votre mot de passe avant de continuer
-
                     <form method="POST" action="{{ route( config('administrable.guard') .'.password.confirm') }}">
                         @csrf
                         @honeypot
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">Mot de passe</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">
+                                {{ Lang::get('administrable::messages.view.auth.password') }}
+                            </label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
@@ -33,12 +33,12 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Confirmer le mot de passe
+                                    {{  Lang::get('administrable::messages.view.auth.confirmpassword') }}
                                 </button>
 
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ back_route('password.request') }}">
-                                        Mot de passe oublié ?
+                                        {{  Lang::get('administrable::messages.view.auth.forgotpassword') }}
                                     </a>
                                 @endif
                             </div>

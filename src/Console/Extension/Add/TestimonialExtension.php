@@ -13,11 +13,8 @@ class TestimonialExtension extends BaseExtension
             $this->triggerError("The [{$this->name}] extension has already been added, remove all generated files and run this command again!");
         }
 
-        $this->loadModels();
         $this->loadMigrations();
-        $this->loadForms();
         $this->loadControllers();
-        $this->loadRoutes();
         $this->loadSeeders();
         $this->loadViews();
         $this->runMigrateArtisanCommand();

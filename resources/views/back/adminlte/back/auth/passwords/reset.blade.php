@@ -1,7 +1,7 @@
 @extends(back_view_path('layouts.app'))
 
 
-@section('title','Réinitialisation de mot de passe')
+@section('title', Lang::get('administrable::messages.view.auth.passwordupdate'))
 
 @section('content')
    <div class="register-box">
@@ -11,7 +11,7 @@
 
         <div class="card">
             <div class="card-body register-card-body">
-                <p class="login-box-msg">Réinitialisation de mot de passe</p>
+                <p class="login-box-msg">{{ Lang::get('administrable::messages.view.auth.passwordupdate') }}</p>
                 @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
@@ -59,16 +59,12 @@
                         </div>
                     </div>
                     <div class="row">
-
-                        <!-- /.col -->
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block btn-flat">Réinitialiser</button>
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">{{ Lang::get('administrable::messages.view.auth.reset') }}</button>
                         </div>
-                        <!-- /.col -->
                     </div>
                 </form>
             </div>
-            <!-- /.form-box -->
         </div><!-- /.card -->
     </div>
 @endsection

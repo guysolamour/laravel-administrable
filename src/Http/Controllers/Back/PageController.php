@@ -201,7 +201,7 @@ class PageController extends BaseController
             'title'    => 'nullable',
             'content'  => 'nullable',
             'type'     => 'required',
-            'page_id'  => 'required|exists:\Guysolamour\Administrable\Models\Page,id',
+            'page_id'  => 'required',
         ];
 
         if (!$edit) {

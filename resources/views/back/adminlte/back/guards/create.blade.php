@@ -15,7 +15,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . '.dashboard') }}">{{ __("administrable::messages.default.dashboard") }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . '.dashboard') }}">{{ Lang::get("administrable::messages.default.dashboard") }}</a></li>
                             <li class="breadcrumb-item"><a href="{{ back_route(config('administrable.guard') . '.index') }}">{{ Lang::get('administrable::messages.view.guard.plural') }}</a></li>
                             <li class="breadcrumb-item active">{{ Lang::get('administrable::messages.default.add') }}</li>
                         </ol>
@@ -31,7 +31,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Réduire">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip">
                             <i class="fas fa-minus"></i></button>
                     </div>
                 </div>

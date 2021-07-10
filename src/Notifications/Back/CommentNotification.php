@@ -3,7 +3,6 @@
 namespace Guysolamour\Administrable\Notifications\Back;
 
 use Illuminate\Bus\Queueable;
-use App\Mail\Back\CommentMail;
 use Guysolamour\Administrable\Module;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;

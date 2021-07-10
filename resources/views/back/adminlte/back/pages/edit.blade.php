@@ -33,7 +33,7 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">{{ Lang::get("administrable::messages.default.edit") }}: {{ $page->name }}</h3>
+                <h3 class="card-title">{{ Lang::get("administrable::messages.default.edition") }}: {{ $page->name }}</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
                         title="Réduire">

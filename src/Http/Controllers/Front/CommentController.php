@@ -4,6 +4,7 @@ namespace Guysolamour\Administrable\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Mail;
 use Guysolamour\Administrable\Module;
 use Illuminate\Support\Facades\Redirect;
@@ -53,11 +54,9 @@ class CommentController extends BaseController
         if (!$guard) {
             $notification = config('administrable.modules.comment.back.notification');
             Notification::send(Module::getGuardModel()::getNotifiables()->get(), new $notification($comment));
-
-            flashy('Votre commentaire a bien été ajouté. Ce dernier sera affiché dès lors qu\'il sera aprouvé. ');
-        }else {
-            flashy('Votre commentaire a bien été ajouté.');
         }
+
+        flashy(Lang::get('administrable::messages.controller.comment.create'));
 
         return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
     }
@@ -94,7 +93,7 @@ class CommentController extends BaseController
             Mail::to($comment->getCommenterEmail())->send(new $mail($comment));
         }
 
-        flashy('Votre réponse a bien été ajoutée. Ce dernière sera affichée dès lors qu\'ells sera aprouvée. ');
+        flashy(Lang::get('administrable::messages.controller.comment.reply'));
 
         return Redirect::to(URL::previous() . '#comment-' . $reply->getKey());
     }
@@ -116,7 +115,7 @@ class CommentController extends BaseController
             'comment' => $request->get('content')
         ]);
 
-        flashy('Votre commentaire a bien été modifié !');
+        flashy(Lang::get('administrable::messages.controller.comment.edit'));
 
         return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
     }
@@ -131,7 +130,7 @@ class CommentController extends BaseController
         $this->authorize('delete', $comment);
         $comment->delete();
 
-        flashy('Votre commentaire a bien été supprimé !');
+        flashy(Lang::get('administrable::messages.controller.comment.delete'));
 
         return back();
     }

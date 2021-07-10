@@ -13,10 +13,10 @@ class PageForm extends Form
     {
         if ($this->getModel() && $this->getModel()->getKey()) {
             $method = 'PUT';
-            $url    = route('back.page.update', $this->getModel());
+            $url    = back_route('page.update', $this->getModel());
         } else {
             $method = 'POST';
-            $url    = route('back.page.store');
+            $url    = back_route('page.store');
         }
 
         $this->formOptions = [

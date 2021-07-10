@@ -15,9 +15,7 @@ class BlogExtension extends BaseExtension
 
         $this->loadModels();
         $this->loadMigrations();
-        $this->loadForms();
         $this->loadControllers();
-        $this->loadRoutes();
         $this->loadSeeders();
         $this->loadViews();
         $this->runMigrateArtisanCommand();
@@ -67,7 +65,7 @@ class BlogExtension extends BaseExtension
 
             public function posts()
             {
-                return \$this->hasMany(Post::class, 'author_id');
+                return \$this->hasMany(config('administrable.extensions.blog.post.model'), 'author_id');
             }
         TEXT;
 

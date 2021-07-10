@@ -1,5 +1,6 @@
 <?php
 
+
 return [
 
     /*
@@ -90,7 +91,7 @@ return [
              */
             'backup'    => true,
              /**
-             * Faire un backup du dossier public storage et l'envoyer par fp
+             * Faire un backup du dossier public storage et l'envoyer par ftp
              */
             'storage'   => true,
              /**
@@ -100,10 +101,88 @@ return [
 
         ],
     ],
-
     /*
-     * Where to store extensions migrations.
-     */
+    |--------------------------------------------------------------------------
+    | EXTENSIONS
+    |--------------------------------------------------------------------------
+    |
+    | Pour utiliser une extension, vous devez passer l'option activate de cette extensions à `true`
+    | et lancer la commande `php artisan administrable:add:extension extensionanme`
+    |
+    */
+    'extensions' => [
+        'livenews' => [
+            'activate'    => false,
+            'model'       => \Guysolamour\Administrable\Models\Extensions\Livenews\Livenews::class,
+            'back'     => [
+                'form'       => \Guysolamour\Administrable\Forms\Back\Extensions\Livenews\LivenewsForm::class,
+                'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Livenews\LivenewsController::class,
+            ],
+
+        ],
+        'blog' => [
+            'activate' => false,
+            'post' => [
+                'model' => \Guysolamour\Administrable\Models\Extensions\Blog\Post::class,
+                'back' => [
+                    'form' => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\PostForm::class,
+                    'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Blog\PostController::class,
+                ],
+                'front' => [
+                    'controller' => \Guysolamour\Administrable\Http\Controllers\Front\Extensions\Blog\PostController::class,
+                ],
+            ],
+            'category' => [
+                'model' => \Guysolamour\Administrable\Models\Extensions\Blog\Category::class,
+                'back' => [
+                    'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Blog\CategoryController::class,
+                    'form' => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\CategoryForm::class,
+                ],
+            ],
+            'tag' => [
+                'model' => \Guysolamour\Administrable\Models\Extensions\Blog\Tag::class,
+                'back' => [
+                    'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Blog\TagController::class,
+                    'form' => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\TagForm::class,
+                ],
+            ],
+        ],
+        'testimonial' => [
+            'activate' => false,
+            'model'    => \Guysolamour\Administrable\Models\Extensions\Testimonial\Testimonial::class,
+            'back'     => [
+                'form'       => \Guysolamour\Administrable\Forms\Back\Extensions\Testimonial\TestimonialForm::class,
+                'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Testimonial\TestimonialController::class,
+            ],
+            'front'     => [
+                'controller' => \Guysolamour\Administrable\Http\Controllers\Front\Extensions\Testimonial\TestimonialController::class,
+            ],
+        ],
+        'mailbox' => [
+            'activate'    => false,
+            'model'       => \Guysolamour\Administrable\Models\Extensions\Mailbox\Mailbox::class,
+            'back'     => [
+                'notification' => \Guysolamour\Administrable\Notifications\Back\Extensions\Mailbox\ContactNotification::class,
+                'mail'       => \Guysolamour\Administrable\Mail\Back\Extensions\Mailbox\ContactMail::class,
+                'note_mail'       => \Guysolamour\Administrable\Mail\Front\NoteAnswerMail::class,
+                'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Mailbox\MailboxController::class,
+            ],
+            'front'     => [
+                'note_mail'       => \Guysolamour\Administrable\Mail\Front\NoteAnswerMail::class,
+                'form'       => \Guysolamour\Administrable\Forms\Front\Extensions\Mailbox\ContactForm::class,
+                'controller' => \Guysolamour\Administrable\Http\Controllers\Front\Extensions\Mailbox\ContactController::class,
+                'mail' => \Guysolamour\Administrable\Mail\Front\Extensions\Mailbox\SendMeContactMessageMail::class,
+            ],
+        ],
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | EXTENSIONS -> Migrations
+    |--------------------------------------------------------------------------
+    |
+    | Where to store extensions migrations.
+    |
+    */
     'migrations_path' => database_path('extensions'),
 
     'modules' => [
@@ -125,6 +204,9 @@ return [
                 'form'        => \Guysolamour\Administrable\Forms\Back\PageForm::class,
                 'controller'  => \Guysolamour\Administrable\Http\Controllers\Back\PageController::class,
             ],
+        ],
+        'seo' => [
+            'model' => \Guysolamour\Administrable\Models\Seo::class,
         ],
         'default' => [
             'back' => [
@@ -161,7 +243,6 @@ return [
             'front' => [
                 'policy' => Guysolamour\Administrable\Policies\CommentPolicy::class,
                 'controller'   => Guysolamour\Administrable\Http\Controllers\Front\CommentController::class,
-                'form'       => '',
                 'replymail'    => Guysolamour\Administrable\Mail\Front\ReplyCommentMail::class,
             ],
             'back' => [
@@ -182,7 +263,7 @@ return [
     | Media
     |--------------------------------------------------------------------------
     |
-    | Regsiter media collections and conversions
+    | Register media collections and conversions
     */
     'media' => [
         /**

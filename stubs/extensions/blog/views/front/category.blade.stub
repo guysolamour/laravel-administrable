@@ -1,6 +1,6 @@
 @extends('{{frontLowerNamespace}}.layouts.default')
 
-<x-administrable::seotags 
+<x-administrable::seotags
     :force="true"
     :title="$category->name"
     :description='"Retrouvez un concentré de tous les articles de la categorie {$category->name}"'

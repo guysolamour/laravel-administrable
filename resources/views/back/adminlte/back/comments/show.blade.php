@@ -16,8 +16,8 @@
                 <div class="col-sm-6">
                     <div class="float-sm-right">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ back_route('dashboard') }}">Tableau de bord</a></li>
-                            <li class="breadcrumb-item"><a href="{{ back_route('comment.index') }}">Commentaires</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . '.dashboard') }}">{{ Lang::get('administrable::messages.default.dashboard') }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ back_route('comment.index') }}">{{ Lang::get('administrable::messages.view.comment.plural') }}</a></li>
                             <li class="breadcrumb-item active">{{ $comment->getCommenterName() }}</li>
                         </ol>
                     </div>
@@ -44,26 +44,26 @@
                     <div class='col-md-8'>
                         {{-- add fields here --}}
                         <div class="pb-2">
-                                <p><span class="font-weight-bold">Nom:</span></p>
+                                <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.comment.name') }}:</span></p>
                                 <p>
                                     {{ $comment->getCommenterName() }}
                                 </p>
                             </div>
                             <div class="pb-2">
-                                <p><span class="font-weight-bold">Email:</span></p>
+                                <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.comment.email') }}:</span></p>
                                 <p>
                                     {{ $comment->getCommenterEmail() }}
                                 </p>
                             </div>
                             <div class="pb-2">
-                                <p><span class="font-weight-bold">Commentaire:</span></p>
+                                <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.comment.content') }}:</span></p>
                                 <p>
                                     {{ $comment->comment }}
                                 </p>
                             </div>
 
                             <div class="pb-2">
-                                <p><span class="font-weight-bold">Date ajout:</span></p>
+                                <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.comment.createdat') }}:</span></p>
                                 <p>
                                     {{ $comment->created_at->format('d/m/Y h:i') }}
                                 </p>
@@ -73,18 +73,18 @@
                         @if ($comment->approved)
                         <a target="_blank"
                             href="{{ route( Str::lower(config('administrable.front_namespace')) . strtolower(class_basename($comment->commentable)) .'.show', $comment->commentable) . '#comment-' . $comment->getKey() }}"
-                            class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Afficher"><i class="fas fa-eye"></i>
-                            Voir</a>
+                            class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="{{ Lang::get('administrable::messages.default.show') }}"><i class="fas fa-eye"></i>
+                            {{ Lang::get('administrable::messages.default.show') }}</a>
                         @endif
                         <a href="{{ back_route('comment.edit', $comment) }}" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Editer</a>
+                            <i class="fas fa-edit"></i> {{ Lang::get('administrable::messages.default.edit') }}</a>
                         @unless ($comment->approved)
                         <a href="{{ back_route('comment.approved', $comment) }}" class="btn btn-success" data-toggle="tooltip"
-                            data-placement="top" title="Approuver"><i class="fas fa-check"></i> Approuver</a>
+                            data-placement="top" title="{{ Lang::get('administrable::messages.view.comment.approved') }}"><i class="fas fa-check"></i> {{ Lang::get('administrable::messages.view.comment.approved') }}</a>
                         @endunless
                         <a href="{{ back_route('comment.destroy', $comment) }}" class="btn btn-danger" data-method="delete"
-                            data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
-                            <i class="fas fa-trash"></i> Supprimer</a>
+                            data-confirm="{{ Lang::get('administrable::messages.view.comment.destroy') }}">
+                            <i class="fas fa-trash"></i> {{ Lang::get('administrable::messages.default.delete') }}</a>
                         </div>
                     </div>
 
@@ -92,12 +92,6 @@
             </div>
 
         </div>
-        <!-- /.card-body -->
-
-        <!-- /.card -->
-
     </section>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
 @endsection

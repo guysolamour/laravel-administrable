@@ -63,6 +63,12 @@ class Page extends BaseModel
         return $this->hasMany(PageMeta::class, 'page_id');
     }
 
+    public function getRelatedForm(): string
+    {
+        return config('administrable.modules.page.back.form');
+    }
+
+
     // add sluggable methods below
 
     public function getRouteKeyName()

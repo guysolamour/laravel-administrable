@@ -1,7 +1,7 @@
 @php
-    $tags = $model->seo ?:  new \Guysolamour\Administrable\Models\Seo
+    $tags = $model->seo ?:  new (config('administrable.modules.seo.model'));
 @endphp
-<div class="card" x-data="Seoable()" x-init="init()">
+<div class="card" x-data="seoable">
     <h5 class="card-header">Référencement </h5>
     <div class="card-body">
         <nav>
@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="page:title">Titre</label>
-                        <input type="text" x-model="form['page:title']" class="form-control" id="page:title" name="seo[page:title]"
+                        <input type="text" @change="handleTitleChange" x-model="form['page:title']" class="form-control" id="page:title" name="seo[page:title]"
                         placeholder="Titre de la page" value="{{ $tags['page:title'] }}">
                         <small class="form-text text-muted">
                             Le titre est très important pour les moteurs de recherche car c'est lui qui
@@ -54,12 +54,12 @@
 
                 <div class="form-group">
                     <label for="page:canonical:url">Url canonique</label>
-                    <input type="url" x-model="form['page:canonical:url']" class="form-control" placeholder="https://aswebagency.com/website" id="page:canonical:url" name="seo[page:canonical:url]" value="{{ $tags['page:canonical:url'] }}">
+                    <input type="url" @change="handleCanonicalUrlChange" x-model="form['page:canonical:url']" class="form-control" placeholder="https://aswebagency.com/website" id="page:canonical:url" name="seo[page:canonical:url]" value="{{ $tags['page:canonical:url'] }}">
                     <small class="form-text text-muted">Laisser vide à moins de savoir ce que vous faites</small>
                 </div>
                 <div class="form-group">
                     <label for="page:meta:description">Description</label>
-                    <textarea x-model="form['page:meta:description']" class="form-control" id="page:meta:description" data-meta="description" name="seo[page:meta:description]"
+                    <textarea @change="handleMetadescriptionChange" x-model="form['page:meta:description']" class="form-control" id="page:meta:description" data-meta="description" name="seo[page:meta:description]"
                     placeholder="Meta description" :maxlength="options.meta_description_length">{{ $tags['page:meta:description'] }}</textarea>
                     <small class="form-text text-muted">
                         La meta description est le texte qui accompagne le titre lors de l'affichage sur facebook
@@ -221,9 +221,9 @@
 
 @push('js')
 <script>
-    function Seoable(){
-        return {
-            // Data
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('seoable', () => ({
+             // Data
             form: @json($tags),
             options: {
                 form: "form[name={{ $model->form_name }}]",
@@ -234,20 +234,6 @@
                 meta_description_length: 160,
             },
             init(){
-                this.$watch('form.page:title', (value) => {
-                    this.form['og:title']      = value
-                    this.form['twitter:title'] = value
-                })
-
-                this.$watch('form.page:canonical:url', (value) => {
-                    this.form['og:url'] = value
-                })
-
-                this.$watch('form.page:meta:description', (value) => {
-                    this.form['og:description']      = value
-                    this.form['twitter:description'] = value
-                })
-
                 this.addEnctypeFormDataToParentForm()
 
                 this.addRemoveImageIcon()
@@ -263,6 +249,23 @@
                 return document.querySelector(this.options.form)
             },
             // Methods
+            handleTitleChange(){
+                const value = this.form['page:title']
+
+                this.form['og:title']      = value
+                this.form['twitter:title'] = value
+            },
+            handleCanonicalUrlChange(){
+                const value = this.form['page:canonical:url']
+
+                this.form['og:url'] = value
+            },
+            handleMetadescriptionChange(){
+                const value = this.form['page:meta:description']
+
+                this.form['og:description']      = value
+                this.form['twitter:description'] = value
+            },
             addRemoveImageIcon(){
                 const $form = $(this.parentForm)
 
@@ -348,7 +351,8 @@
                 })
 
             }
-        }
-    }
+        }));
+    });
+
 </script>
 @endpush

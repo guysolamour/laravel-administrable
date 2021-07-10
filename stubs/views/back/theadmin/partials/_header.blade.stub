@@ -15,40 +15,40 @@
                     <span data-i8-icon="home"></span>
                     <span class="title">Tableau de bord</span>
                 </a>
-                @if(Route::has('{{backLowerNamespace}}.testimonial.index'))
-                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.testimonial.index') }}">
+                @if(Route::has(back_route_path('extensions.testimonial.testimonial.index')))
+                <a class="dropdown-item" href="{{ back_route('extensions.testimonial.testimonial.index') }}">
                     <span data-i8-icon="sms"></span>
                     <span class="title">Témoignages</span>
                 </a>
                 @endif
-                @if(Route::has('{{backLowerNamespace}}.category.index'))
-                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.category.index') }}">
+                @if(Route::has(back_route_path('extensions.blog.category.index')))
+                <a class="dropdown-item" href="{{ back_route('extensions.blog.category.index') }}">
                     <span data-i8-icon="folder"></span>
                     <span class="title">Catégories</span>
                 </a>
                 @endif
-                @if(Route::has('{{backLowerNamespace}}.post.index'))
-                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.post.index') }}">
+                @if(Route::has(back_route_path('extensions.blog.post.index')))
+                <a class="dropdown-item" href="{{ route('extensions.blog.post.index') }}">
                     <span data-i8-icon="document"></span>
                     <span class="title">Articles</span>
                 </a>
                 @endif
-                @if(Route::has('{{backLowerNamespace}}.mailbox.index'))
-                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
+                @if(Route::has(back_route_path('extensions.mailbox.mailbox.index')))
+                <a class="dropdown-item" href="{{ back_route('extensions.mailbox.mailbox.index') }}">
                     <span data-i8-icon="invite"></span>
                     <span class="title">Messagerie</span>
                 </a>
                 @endif
 
-                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.configuration.edit') }}">
+                <a class="dropdown-item" href="{{ back_route('configuration.edit') }}">
                     <span data-i8-icon="settings"></span>
                     <span class="title">Configuration</span>
                 </a>
-                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}">
+                <a class="dropdown-item" href="{{ back_route('{{singularSlug}}.profile', get_guard()) }}">
                     <span data-i8-icon="portrait_mode"></span>
                     <span class="title">Profile</span>
                 </a>
-                <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.index') }}">
+                <a class="dropdown-item" href="{{ back_route('{{singularSlug}}.index') }}">
                     <span data-i8-icon="businessman"></span>
                     <span class="title">{{pluralClass}}</span>
                 </a>
@@ -77,14 +77,14 @@
                         alt="{{ get_{{singularSlug}}('full_name') }}"></span>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('{{singularSlug}}.dashboard') }}"><i class="ti-home"></i> Tableau de bord</a>
-                    <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.{{singularSlug}}.profile', get_{{singularSlug}}()) }}"><i class="ti-user"></i> Profile</a>
-                    @if (Route::has('{{backLowerNamespace}}.mailbox.index'))
-                    <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">
+                    <a class="dropdown-item" href="{{ back_route('{{singularSlug}}.profile', get_guard()) }}"><i class="ti-user"></i> Profile</a>
+                    @if (Route::has(back_route_path('extensions.mailbox.mailbox.index')))
+                    <a class="dropdown-item" href="{{ route('extensions.mailbox.mailbox.index') }}">
                         <div class="flexbox">
                             <i class="ti-email"></i>
                             <span class="flex-grow">Messagerie</span>
                             @php
-                              $messages =  \{{namespace}}\{{modelsFolder}}\Mailbox::unread()->get()
+                              $messages =  config('administrable.extensions.mailbox.model')::unread()->get()
                             @endphp
                             @if($messages->count())
                             <span class="badge badge-pill badge-info">{{ $messages->count() }}</span>
@@ -92,7 +92,7 @@
                         </div>
                     </a>
                     @enfif
-                    <a class="dropdown-item" href="{{ route('{{backLowerNamespace}}.configuration.edit') }}"><i class="ti-settings"></i> Configuration</a>
+                    <a class="dropdown-item" href="{{ back_route('configuration.edit') }}"><i class="ti-settings"></i> Configuration</a>
                     <div class="dropdown-divider"></div>
 
                     <a class="dropdown-item" href="{{ route('{{singularSlug}}.logout') }}" onclick="event.preventDefault();document.getElementById('{{singularSlug}}-logout-form').submit();"><i class="ti-power-off"></i> Déconnexion</a>
@@ -115,7 +115,7 @@
                         style="height: 290px">
 
                         @foreach ($messages as $message)
-                            <a class="media media-new1" href="{{ route('{{backLowerNamespace}}.mailbox.show', $message) }}">
+                            <a class="media media-new1" href="{{ back_route('extensions.mailbox.mailbox.show', $message) }}">
                                 <span class="avatar status-success">
                                     <img src="{{ $message->getFrontImageUrl() }}" alt="{{ $message->name }}">
                                 </span>
@@ -135,7 +135,7 @@
                         </div>
 
                        <div class="right">
-                            <a href="{{ route('{{backLowerNamespace}}.mailbox.index') }}">Voir les autres messages</a>
+                            <a href="{{ back_route('extensions.mailbox.mailbox.index') }}">Voir les autres messages</a>
                         </div>
                     </div>
 
@@ -144,7 +144,7 @@
             <!-- END Messages -->
               <!-- Notifications -->
             @php
-                $unreadNotifications = get_{{singularSlug}}()->unreadNotifications;
+                $unreadNotifications = get_guard()->unreadNotifications;
             @endphp
             <li class="dropdown d-none d-md-block">
                 <span class="topbar-btn" data-toggle="dropdown"><i class="ti-bell"></i></span>
@@ -154,8 +154,8 @@
                         style="height: 290px">
 
                         @forelse($unreadNotifications as $notification)
-                            @if($notification->type === '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')
-                            <a class="media media-new1" href="{{ route('{{backLowerNamespace}}.comment.show', $notification->data['comment']['id']) }}">
+                            @if($notification->type === config('administrable.modules.comment.back.notification'))
+                            <a class="media media-new1" href="{{ back_route('comment.show', $notification->data['comment']['id']) }}">
                                 <div class="media-body">
                                     <p><time class="float-right" datetime="{{ $message->created_at }}">{{ $message->created_at->diffForHumans() }}</time></p>
                                     <p >
@@ -185,7 +185,7 @@
                             </div>
 
                             <div class="right">
-                                <a href="{{ route('{{backLowerNamespace}}.notification.markasread') }}">Tous marquer comme lues</a>
+                                <a href="{{ back_route('notification.markasread') }}">Tous marquer comme lues</a>
                             </div>
                         </div>
                     @endempty

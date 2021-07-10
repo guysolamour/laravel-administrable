@@ -103,8 +103,6 @@ class GuardController extends BaseController
             abort(403);
         }
 
-        // dd($request->all());
-
         $form = $this->getForm($guard, config('administrable.modules.guard.back.form'));
 
         $this->redirectIfNotValid($form);
@@ -140,7 +138,7 @@ class GuardController extends BaseController
         auth()->guard(config('administrable.guard'))->user()
             ->unreadNotifications()->update(['read_at' => now()]);
 
-        flashy('Toutes les notifications ont été lues');
+        flashy(Lang::get("administrable::messages.controller.guard.notificationread"));
 
         return back();
     }

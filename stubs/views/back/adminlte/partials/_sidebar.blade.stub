@@ -1,8 +1,8 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{ route('{{singularSlug}}.dashboard') }}" class="brand-link">
-      <img src="{{ configuration('logo') }}" onerror="this.src='{{ config('administrable.logo_url') }}'" alt="{{ config('administrable.name')}} Logo" class="brand-image img-circle" >
+    <a href="{{ route(config('administrable.guard') . '.dashboard') }}" class="brand-link">
+      <img src="{{ configuration('logo') }}" onerror="this.src='{{ config('administrable.logo_url') }}'" alt="{{ config('administrable.name')}}" class="brand-image img-circle" >
 
       {{-- <span class="brand-text font-weight-light">{{ config('app.last_name','vel') }}</span> --}}
     </a>
@@ -12,10 +12,10 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img  data-avatar="{{ get_guard('id') }}" src="{{ get_guard()->getFrontImageUrl() }}" class="img-circle elevation-2" alt="{{ get_guard()->full_name }} avatar">
+          <img  data-avatar="{{ get_guard('id') }}" src="{{ get_guard()->getFrontImageUrl() }}" class="img-circle elevation-2" alt="{{ get_guard()->full_name }}">
         </div>
         <div class="info">
-          <a href="{{ back_route('{{singularSlug}}.profile', get_guard()) }}" class="d-block">{{ get_guard('pseudo') }}</a>
+          <a href="{{ back_route(config('administrable.guard') . '.profile', get_guard()) }}" class="d-block">{{ get_guard('pseudo') }}</a>
         </div>
       </div>
 
@@ -25,7 +25,7 @@
            {{-- insert sidebar links here --}}
             @php
             $countCommentNotifications = get_guard()->unreadNotifications->filter(fn($item) => $item->type ===
-            '{{namespace}}\Notifications\{{backNamespace}}\CommentNotification')->count();
+            config('administrable.modules.comment.back.notification'))->count();
             @endphp
             <li class="nav-item">
             <a href="{{ back_route('comment.index') }}" class="nav-link {{ set_active_link(back_route_path('comment.index')) }}">
@@ -62,7 +62,7 @@
           </li>
 
            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link {{ set_active_link(back_route_path('{{singularSlug}}.index'), back_route_path('{{singularSlug}}.profile'),back_route_path('{{singularSlug}}.create')) }}">
+            <a href="#" class="nav-link {{ set_active_link(back_route_path(config('administrable.guard') . '.index'), back_route_path(config('administrable.guard') . '.profile'), back_route_path(config('administrable.guard') . '.create')) }}">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 {{pluralClass}}
@@ -71,20 +71,20 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item ">
-                <a href="{{ back_route('{{singularSlug}}.index') }}" class="nav-link {{ set_active_link(back_route_path('{{singularSlug}}.index')) }}">
+                <a href="{{ back_route(config('administrable.guard') . '.index') }}" class="nav-link {{ set_active_link(back_route_path(config('administrable.guard') . '.index')) }}">
                   <i class="far fa-th-list nav-icon"></i>
                   <p>Liste</p>
                 </a>
               </li>
               <li class="nav-item ">
-                <a href="{{ back_route('{{singularSlug}}.profile', get_guard()) }}" class="nav-link {{ set_active_link(back_route_path('{{singularSlug}}.profile')) }}">
+                <a href="{{ back_route(config('administrable.guard') . '.profile', get_guard()) }}" class="nav-link {{ set_active_link(back_route_path(config('administrable.guard') . '.profile')) }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Mon profil</p>
                 </a>
               </li>
                 @if (get_guard()->can('create-' . config('administrable.guard')))
                     <li class="nav-item">
-                        <a href="{{ back_route('{{singularSlug}}.create') }}" class="nav-link {{ set_active_link(back_route_path('{{singularSlug}}.create')) }}">
+                        <a href="{{ back_route(config('administrable.guard') . '.create') }}" class="nav-link {{ set_active_link(back_route_path(config('administrable.guard') . '.create')) }}">
                             <i class="far fa-plus nav-icon"></i>
                             <p>Ajouter</p>
                         </a>

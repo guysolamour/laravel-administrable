@@ -2,9 +2,8 @@
 namespace Database\Seeders\{{extensionsFolderClass}}\{{extensionClass}};
 
 use Faker\Factory as Faker;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use {{namespace}}\{{modelsFolder}}\{{extensionsFolderClass}}\{{extensionClass}}\{{extensionClass}};
+use Illuminate\Database\Seeder;
 
 class {{extensionsFolderClass}}{{extensionPluralClass}}TableSeeder extends Seeder
 {
@@ -17,7 +16,7 @@ class {{extensionsFolderClass}}{{extensionPluralClass}}TableSeeder extends Seede
     {
         $faker = Faker::create();
          for ($i = 0; $i < 15; $i++) {
-            {{extensionClass}}::create([
+            config('administrable.extensions.mailbox.model')::create([
                 'name'         => $title =  $faker->name(),
                 'slug'         => Str::slug($title),
                 'email'        => $faker->freeEmail,

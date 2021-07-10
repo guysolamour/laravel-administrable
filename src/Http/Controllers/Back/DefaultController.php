@@ -5,6 +5,7 @@ namespace Guysolamour\Administrable\Http\Controllers\Back;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Guysolamour\Administrable\Traits\FormBuilderTrait;
 use Guysolamour\Administrable\Http\Controllers\BaseController;
 
@@ -18,7 +19,7 @@ class DefaultController extends BaseController
     {
         $request->get('model')::destroy($request->get('ids'));
 
-        flashy('Les élements sélectionnés ont été supprimés');
+        flashy(Lang::get('administrable::messages.default.destroymodels'));
 
         return response()->json();
     }
@@ -36,7 +37,7 @@ class DefaultController extends BaseController
         // View
         $views_folder   = $model->getViewsFolder();
         $view_segments = Str::afterLast(Str::beforeLast($form_name, '\\'), 'Forms\\');
-        $view_segments = Str::lower(str_replace('\\', '.', $view_segements));
+        $view_segments = Str::plural(Str::lower(str_replace('\\', '.', $view_segments)));
 
         $view = "administrable::{$view_segments}.{$views_folder}.create";
 

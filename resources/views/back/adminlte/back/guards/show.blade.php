@@ -14,7 +14,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . '.dashboard') }}">{{ __("administrable::messages.default.dashboard") }}</a></li>
+              <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . '.dashboard') }}">{{ Lang::get("administrable::messages.default.dashboard") }}</a></li>
               <li class="breadcrumb-item"><a href="{{ back_route(config('administrable.guard') . '.index') }}">{{ Lang::get('administrable::messages.view.guard.plural') }}</a></li>
               <li class="breadcrumb-item active">{{ Lang::get('administrable::messages.view.guard.profil') }}</li>
             </ol>
@@ -29,13 +29,13 @@
         <div class="row">
           <div class="col-md-3">
             @include(back_view_path('guards._avatar'), [
-                    'model'       => $guard,
-                    'model_name'  => get_class($guard),
-                    'front_image' => true,
-                    'front_image_label' => Lang::get('administrable::messages.view.guard.avatar'),
-                    'back_image'  => false,
-                    'images'      => false,
-                    'form_name'   => '',
+                'model'       => $guard,
+                'model_name'  => get_class($guard),
+                'front_image' => true,
+                'front_image_label' => Lang::get('administrable::messages.view.guard.avatar'),
+                'back_image'  => false,
+                'images'      => false,
+                'form_name'   => '',
             ])
 
             <div class="card">
@@ -105,7 +105,7 @@
                               </div>
                               @role(config('administrable.guard') . '|super-' . config('administrable.guard'), config('administrable.guard'))
                               <div class='col-md-6'>
-                                  <label for="role">Role</label>
+                                  <label for="role">{{ Lang::get('administrable::messages.view.guard.role') }}</label>
                                   <select name="role" id="role" class="form-control select2" required>
                                     @php
                                         $roles = config('permission.models.role')::where('guard_name', config('administrable.guard'))->get();
@@ -120,14 +120,13 @@
                           </div>
                           <div class="row">
                             <div class='col-md-6'>
-                                    {!! form_row($edit_form->website) !!}
-                                </div>
-                                <div class='col-md-6'>
-                                    {!! form_row($edit_form->phone_number) !!}
-                                </div>
+                                {!! form_row($edit_form->website) !!}
+                            </div>
+                            <div class='col-md-6'>
+                                {!! form_row($edit_form->phone_number) !!}
+                            </div>
                           </div>
                           <div class='row'>
-
                               <div class='col-md-4'>
                                   {!! form_row($edit_form->facebook) !!}
                               </div>
@@ -137,8 +136,6 @@
                               <div class='col-md-4'>
                                   {!! form_row($edit_form->linkedin) !!}
                               </div>
-
-
                           </div>
                           <div class='row'>
                               <div class='col-md-12'>
@@ -148,7 +145,7 @@
                           <div class='row'>
 
                               <div class='col-md-12'>
-                                  <button type='submit' class='btn btn-info btn-block'> <i class='fas fa-edit'></i> Modifier</button>
+                                  <button type='submit' class='btn btn-info btn-block'> <i class='fas fa-edit'></i> {{ Lang::get('administrable::messages.default.modify') }}</button>
                               </div>
 
                           </div>
@@ -169,7 +166,7 @@
                                 {!! form_row($reset_form->new_password_confirmation) !!}
                             </div>
                         <div class='col-md-12'>
-                            <button type='submit' class='btn btn-info btn-block'> <i class='fas fa-edit'></i> Modifier</button>
+                            <button type='submit' class='btn btn-info btn-block'> <i class='fas fa-edit'></i> {{ Lang::get('administrable::messages.default.modify') }}</button>
                         </div>
                         {!! form_end($reset_form) !!}
                     </div>

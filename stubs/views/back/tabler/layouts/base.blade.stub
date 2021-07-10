@@ -61,7 +61,7 @@
     {{-- <script src="{{ asset('vendor/{{theme}}/libs/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script> --}}
     {{-- <script src="{{ asset('vendor/{{theme}}/libs/peity/jquery.peity.min.js') }}"></script> --}}
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
-    <script src="{{ asset('js/vendor/alpine.js') }}"></script>
+    <script defer src="{{ asset('js/vendor/alpine.js') }}"></script>
     <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/vendor/larails-alert.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>

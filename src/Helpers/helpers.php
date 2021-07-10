@@ -31,6 +31,15 @@ if (!function_exists('get_guard')) {
     }
 }
 
+if (!function_exists('random_elements')) {
+    function random_elements($collection, int $limit = 9)
+    {
+        return Helper::randomElements($collection, $limit);
+    }
+}
+
+
+
 
 if (!function_exists('back_view')) {
     function back_view($view = null, $data = [], $mergeData = [])

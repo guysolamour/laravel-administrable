@@ -35,8 +35,7 @@
             <div class="card-header">
                 <h3 class="card-title">{{ Lang::get('administrable::messages.default.edition') }}</h3>
                 <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                        title="Réduire">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip">
                         <i class="fas fa-minus"></i></button>
                 </div>
             </div>
@@ -57,13 +56,6 @@
             </div>
 
         </div>
-        <!-- /.card-body -->
-
-        <!-- /.card -->
-
     </section>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
-
 @endsection
