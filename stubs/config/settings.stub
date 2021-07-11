@@ -6,7 +6,7 @@ return [
      * You can register all the settings classes here.
      */
     'settings' => [
-       \{{namespace}}\Settings\ConfigurationSettings::class,
+       \Guysolamour\Administrable\Settings\ConfigurationSettings::class,
     ],
 
     /*

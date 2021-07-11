@@ -21,8 +21,8 @@
 <link rel="stylesheet" href="{{ asset('vendor/extensions/livenews/css/marquee.css') }}">
 <script  src='{{ asset('vendor/extensions/livenews/js/marquee.js') }}'></script>
 <script>
-    $(function(){
-        $('.marquee').marquee({
+    jQuery(function(){
+        jQuery('.marquee').marquee({
             duration: {{ $livenews_duration ?? 10000 }},
             delayBeforeStart: {{ $livenews_delay_before_start ?? 5000 }},
             direction: '{{ $livenews_direction ?? 'left' }}',

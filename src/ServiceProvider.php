@@ -37,11 +37,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadViewsFrom($this->packagePath('/resources/views/components'), 'administrable');
         $this->loadViewsFrom($this->packagePath('/resources/views/emails'), 'administrable');
 
-        $this->loadMigrationsFrom([
-            $this->srcPath('/migrations'),
-            config('administrable.migrations_path'),
-        ]);
-
         $this->loadHelperFile();
 
         $this->loadRoutesFrom($this->packagePath("/routes/back.php"));

@@ -15,7 +15,7 @@ class AppendMigration extends GenerateMigration
 
         $data_map = array_merge($this->data_map, [
             '{{migrationTableName}}' => $this->crud->getModelTableName(),
-            '{{migrationFileName}}'  => $this->getMigrationFileName(),
+            '{{migrationFileName}}'  => Str::camel($this->getMigrationFileName()),
         ]);
 
         $complied = $this->crud->filesystem->compliedFile($stub, true, $data_map);

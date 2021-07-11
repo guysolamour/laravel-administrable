@@ -30,6 +30,8 @@ class ConfigurationsTableSeeder extends Seeder
             'facebook' => $faker->url,
             'twitter'  => $faker->url,
             'linkedin' => $faker->url,
+            'whatsapp' => "00000",
+            'logo'     => "00000",
         ]);
 
         DB::table('options')->insert([

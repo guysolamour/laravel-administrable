@@ -55,7 +55,7 @@ class PostController extends BaseController
         $posts->withPath(route('front.extensions.blog.search', compact('q')));
         $page = get_meta_page('search');
 
-        return back_view('extensions.blog.search', compact('posts', 'page'));
+        return front_view('extensions.blog.search', compact('posts', 'page'));
     }
 
 }

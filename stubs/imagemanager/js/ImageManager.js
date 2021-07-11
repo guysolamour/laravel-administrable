@@ -759,7 +759,7 @@ class ImageManager {
   }
 
   isEmptyModel() {
-    return $.isEmptyObject(this.config.model)
+    return this.config.model.id === undefined;
   }
 
   handleClick(event) {
