@@ -48,7 +48,7 @@
                                     <div class="row text-center">
                                         @if (get_guard()->can('delete-' . config('administrable.guard'), $guard))
                                         <div class="col-6 border-right">
-                                            <a href="{{ back_route( config('administrable.guard') .'.profile', $guard) }}"
+                                            <a href="{{ back_route( config('administrable.guard') . '.profile', $guard) }}"
                                                 class="link d-flex align-items-center justify-content-center"><i class="ik ik-message-square f-20 mr-5"></i>
                                                 {{ Lang::get('administrable::messages.view.guard.profil') }}
                                             </a>
@@ -60,7 +60,7 @@
                                         </div>
                                         @else
                                         <div class="col-12">
-                                            <a href="{{ back_route( config('administrable.guard') .'.profile', $guard) }}', $guard) }}"
+                                            <a href="{{ back_route( config('administrable.guard') .'.profile', $guard) }}"
                                                 class="link d-flex align-items-center justify-content-center"><i class="ik ik-message-square f-20 mr-5"></i>
                                                 {{ Lang::get('administrable::messages.view.guard.profil') }}
                                             </a>

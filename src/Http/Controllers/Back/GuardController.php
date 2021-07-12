@@ -151,6 +151,8 @@ class GuardController extends BaseController
             abort(403);
         }
 
+        $guard->delete();
+
         flashy(Lang::get("administrable::messages.controller.guard.delete"));
 
         return redirect()->to(back_route(config('administrable.guard') .'.index'));

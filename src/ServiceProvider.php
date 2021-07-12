@@ -43,6 +43,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadRoutesFrom($this->packagePath("/routes/front.php"));
         $this->loadTranslationsFrom($this->packagePath('resources/lang'), 'administrable');
 
+        $this->loadMigrationsFrom([
+            config('administrable.migrations_path'),
+        ]);
 
         $this->publishes([
             $this->packagePath('/resources/views/back/' . config('administrable.theme') . '/back') => resource_path('views/vendor/administrable/' . strtolower(config('administrable.back_namespace'))),

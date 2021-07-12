@@ -53,9 +53,9 @@
                                     <hr class="mb-0">
                                     <div class="card-body">
                                         <small class="text-muted d-block">{{ Lang::get('administrable::messages.view.guard.email') }} </small>
-                                        <h6>{{ ${{singularSlug}}->email }}</h6>
+                                        <h6>{{ $guard->email }}</h6>
                                         <small class="text-muted d-block pt-10">{{ Lang::get('administrable::messages.view.guard.telephone') }}</small>
-                                        <h6>{{ ${{singularSlug}}->phone_number }}</h6>
+                                        <h6>{{ $guard->phone_number }}</h6>
 
                                         <br>
                                         @if($guard->facebook)
