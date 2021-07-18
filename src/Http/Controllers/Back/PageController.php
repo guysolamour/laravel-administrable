@@ -31,7 +31,7 @@ class PageController extends BaseController
      */
     public function create()
     {
-        abort_unless(get_admin()->isConceptorAdmin(), 401);
+        abort_unless(get_admin()->hasRole('super-' . config('administrable.guard')), 401);
 
         $form = $this->getForm(Module::getModel('page'), Module::backForm('page'));
 
@@ -47,7 +47,7 @@ class PageController extends BaseController
      */
     public function store(Request $request)
     {
-        abort_unless(get_admin()->isConceptorAdmin(), 401);
+        abort_unless(get_admin()->hasRole('super-' . config('administrable.guard')), 401);
 
         $form = $this->getForm(Module::getModel('page'), Module::backForm('page'));
         $form->redirectIfNotValid();
@@ -119,7 +119,7 @@ class PageController extends BaseController
     {
         $page = Module::model('page')::where('slug', $slug)->firstOrFail();
 
-        abort_unless(get_admin()->isConceptorAdmin(), 401);
+        abort_unless(get_admin()->hasRole('super-' . config('administrable.guard')), 401);
         $page->delete();
 
         flashy(Lang::get("administrable::messages.controller.page.delete"));
@@ -163,7 +163,7 @@ class PageController extends BaseController
 
     public function updateMetaTag($page, int $id, Request $request)
     {
-        $pagemeta = Module::model('meta')::where('id', $id)->firstOrFail();
+        $pagemeta = Module::model('pagemeta')::where('id', $id)->firstOrFail();
 
         $request->validate($this->getValidationRules(true));
 
@@ -182,9 +182,9 @@ class PageController extends BaseController
 
     public function deleteMetaTag($page, int $id)
     {
-        $pagemeta = Module::model('meta')::where('id', $id)->firstOrFail();
+        $pagemeta = Module::model('pagemeta')::where('id', $id)->firstOrFail();
 
-        abort_unless(get_admin()->isConceptorAdmin(), 401);
+        abort_unless(get_admin()->hasRole('super-' . config('administrable.guard')), 401);
 
         $pagemeta->delete();
 
@@ -238,13 +238,12 @@ class PageController extends BaseController
 
 
     /**
-     * @param int $pagemeta
+     * @param object $pagemeta
      * @param \Illuminate\Http\Request $id
      * @return void
      */
-    private function saveImage(int $id,Request $request) :void
+    private function saveImage($pagemeta, Request $request): void
     {
-        $pagemeta = Module::model('meta')::where('id', $id)->firstOrFail();
         if ('image' === get_meta_type(request('type'))) {
             $key = 'imagecontent';
         } else if ('attachedfile' === get_meta_type(request('type'))) {

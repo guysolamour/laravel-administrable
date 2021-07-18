@@ -142,7 +142,7 @@
                                                 <i class="fas fa-edit"></i> &nbsp;{{ Lang::get('administrable::messages.default.modify') }} </a>
 
                                             @role('super-' . config('administrable.guard'), config('administrable.guard'))
-                                            <a href="{{ route('pagemeta.destroy', [$page, $meta]) }}" data-method="delete"
+                                            <a href="{{ back_route('pagemeta.destroy', [$page, $meta]) }}" data-method="delete"
                                                 data-confirm="{{ Lang::get('administrable::messages.view.pagemeta.destroy') }}"
                                                 class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="{{ Lang::get('administrable::messages.default.delete') }}"><i
                                                     class="fas fa-trash"></i>
