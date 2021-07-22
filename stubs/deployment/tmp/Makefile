@@ -110,7 +110,7 @@ DEFAULT_NGINX_SERVEUR=$(DOMAIN)
 NODEJS_VERSION=12
 
 # The PHP version to install
-PHP_VERSION=7.4
+PHP_VERSION=8.0
 
 
 # The number of releases to keep

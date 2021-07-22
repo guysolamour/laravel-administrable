@@ -18,7 +18,7 @@
         aria-labelledby="addPageMetaDataModalLabel" aria-hidden="true">
         @endif
         >
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     @if(isset($group) && $group)

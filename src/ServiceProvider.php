@@ -18,6 +18,7 @@ use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
 use Guysolamour\Administrable\Console\Extension\Add\AddExtensionCommand;
 use Guysolamour\Administrable\Console\Administrable\CreateAdministrableCommand;
+use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -136,6 +137,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 AppendCrudCommand::class,
                 RollbackCrudCommand::class,
                 CreateAdministrableCommand::class,
+                UpdateGuardCommand::class,
                 DeployCommand::class,
                 StorageDumpCommand::class,
                 NotPaidCommand::class,

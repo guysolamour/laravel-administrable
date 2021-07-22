@@ -17,6 +17,10 @@
             'url' => env('APP_URL').'/storage/media',
             'visibility' => 'public',
         ],
+        'snapshots' => [
+            'driver' => 'local',
+            'root' => database_path('snapshots'),
+        ],
         'storagedump' => [
             'driver' => 'local',
             'root' => storage_path('storagedump'),
