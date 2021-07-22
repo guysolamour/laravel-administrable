@@ -13,7 +13,7 @@
             </ol>
             @if (get_guard()->can('create-' . config('administrable.guard')))
             <a href="{{ back_route(config('administrable.guard') . '.create') }}" class="btn btn-success">
-                <i class="fa fa-plus"></i>&nbsp; {{ Lang::get('administrable::messages.view.guard.add') }}</a>
+                <i class="fa fa-plus"></i>&nbsp; {{ Lang::get('administrable::messages.default.add') }}</a>
             @endif
         </div>
     </div>

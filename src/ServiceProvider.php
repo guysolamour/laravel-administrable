@@ -15,10 +15,10 @@ use Guysolamour\Administrable\Jobs\PublishProgrammaticalyPost;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
 use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
+use Guysolamour\Administrable\Console\Administrable\CreateGuardCommand;
+use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
 use Guysolamour\Administrable\Console\Extension\Add\AddExtensionCommand;
-use Guysolamour\Administrable\Console\Administrable\CreateAdministrableCommand;
-use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -136,7 +136,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 MakeCrudCommand::class,
                 AppendCrudCommand::class,
                 RollbackCrudCommand::class,
-                CreateAdministrableCommand::class,
+                CreateGuardCommand::class,
                 UpdateGuardCommand::class,
                 DeployCommand::class,
                 StorageDumpCommand::class,

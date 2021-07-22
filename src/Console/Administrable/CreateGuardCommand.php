@@ -7,12 +7,8 @@ use Guysolamour\Administrable\Console\BaseCommand;
 use Guysolamour\Administrable\Console\YamlTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class CreateAdministrableCommand extends BaseCommand
+class CreateGuardCommand extends BaseCommand
 {
-    use YamlTrait;
-
-    /** * @var string|null  */
-    protected $guard = null;
 
     /** @var int  */
     protected const PASSWORD_MIN_LENGTH = 8;
@@ -23,7 +19,7 @@ class CreateAdministrableCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'administrable:create
+    protected $signature = 'administrable:guard:create
                                 {--u|username= : Guard username }
                                 {--p|password= : Guard password }
                                 {--e|email=    : Guard email }
@@ -91,7 +87,7 @@ class CreateAdministrableCommand extends BaseCommand
 
     public function handle()
     {
-        $this->guard = $this->getGuard();
+        // $this->guard = $this->getGuard();
 
         // Check if package was installed
         if (!$this->checkIfPackageHasBeenInstalled()) {;
@@ -124,12 +120,12 @@ class CreateAdministrableCommand extends BaseCommand
 
     protected function getModel(): string
     {
-        return Str::singular(Str::studly($this->guard));
+        return get_guard_model_class();
     }
 
-    private function getModelInstance(): Model
+    private function getModelInstance(): \Illuminate\Database\Eloquent\Model
     {
-        $model =  sprintf("%s\%s\%s", $this->getAppNamespace(), $this->getModelsFolder(), $this->getModel());
+        $model = $this->getModel();
 
         return new $model;
     }
