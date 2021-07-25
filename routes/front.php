@@ -30,7 +30,7 @@ Route::name(Str::lower(config('administrable.front_namespace') . '.'))
         $networks = config('administrable.modules.social_redirect.networks');
 
         foreach ($networks as $network ) {
-            Route::get($network, [Module::controller('social_rediect'), $network])->name($network);
+            Route::get($network, [Module::controller('social_redirect'), $network])->name($network);
         }
         /*
         |--------------------------------------------------------------------------

@@ -2,8 +2,8 @@
 
 namespace Guysolamour\Administrable;
 
-use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Validator;
@@ -98,13 +98,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     private function loadValidationRules() :void
     {
-        Validator::extend('route_exists', function ($attribute, $value, $parameters, $validator) {
-            return Route::has($value);
-        });
+        Validator::extend('route_exists', fn ($attribute, $value, $parameters, $validator) => Route::has($value));
 
-        Validator::replacer('route_exists', function ($message, $attribute, $rule, $parameters) {
-            return str_replace('Route', 'route', $message);
-        });
+        Validator::replacer('route_exists', fn ($message, $attribute, $rule, $parameters) => str_replace('Route', 'route', $message));
     }
 
     private function loadPolicies(array $policies) :void

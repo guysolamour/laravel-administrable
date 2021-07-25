@@ -31,6 +31,13 @@ if (!function_exists('get_guard')) {
     }
 }
 
+if (!function_exists('get_guard_notifiers')) {
+    function get_guard_notifiers(bool $include_super_guard = false)
+    {
+        return Helper::getGuardNotifiers($include_super_guard);
+    }
+}
+
 if (!function_exists('random_elements')) {
     function random_elements($collection, int $limit = 9)
     {

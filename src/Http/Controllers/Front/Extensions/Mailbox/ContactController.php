@@ -35,7 +35,7 @@ class ContactController extends BaseController
         }
 
         $notification = config('administrable.extensions.mailbox.back.notification');
-        Notification::send(get_guard_model_class()::getNotifiables()->get(), new $notification($mailbox));
+        Notification::send(get_guard_notifiers(), new $notification($mailbox));
 
         if ($request->ajax()) {
             return response()->json(['sucess' => Lang::get('administrable::extensions.mailbox.controller.create')]);

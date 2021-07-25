@@ -19,6 +19,27 @@ class Helper {
 
     }
 
+    /**
+     *
+     * @param boolean $include_super_guard
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getGuardNotifiers(bool $include_super_guard = false)
+    {
+        /**
+         * @var \Illuminate\Database\Eloquent\Collection
+         */
+        $guards = get_guard_model_class()::get();
+
+        if (!$include_super_guard) {
+            $guard = config('administrable.guard');
+            $guards = $guards->filter(fn ($item) => !$item->hasRole('super-' . $guard, $guard));
+        }
+
+
+        return $guards;
+    }
+
     private function getViewPath(string $view, string $prefix) :string
     {
         $prefix = Str::lower($prefix);

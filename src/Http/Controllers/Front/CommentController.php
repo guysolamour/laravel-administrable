@@ -53,7 +53,7 @@ class CommentController extends BaseController
         // send notification to admins
         if (!$guard) {
             $notification = config('administrable.modules.comment.back.notification');
-            Notification::send(Module::getGuardModel()::getNotifiables()->get(), new $notification($comment));
+            Notification::send(get_guard_notifiers(), new $notification($comment));
         }
 
         flashy(Lang::get('administrable::messages.controller.comment.create'));

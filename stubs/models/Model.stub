@@ -133,17 +133,6 @@ class {{singularClass}} extends Authenticatable implements HasMedia
         $this->attributes['password'] = bcrypt($value);
     }
 
-    /**
-     * Scope a query to only include
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeGetNotifiables($query)
-    {
-        return $query->whereIn('email', config('administrable.emails', []));
-    }
-
 
     public function getRouteKeyName()
     {
@@ -152,7 +141,5 @@ class {{singularClass}} extends Authenticatable implements HasMedia
 
 
     // add relation methods below
-
-
 
 }

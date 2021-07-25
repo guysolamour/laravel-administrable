@@ -288,7 +288,7 @@
           <a class="edit-on-github"
             title="Edit on Github"
             href="https://github.com/guysolamour/administrable/tree/master/_docs/en/1.3-quick-start.md">
-            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Quick Start"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-06-19T11:14:23+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
+            <i class="far fa-edit"></i></a></div><meta itemprop="headline" content="Quick Start"><meta itemprop="author" content="Guy-roland ASSALE"/><meta itemprop="datePublished" content="2021-07-22T21:22:37+00:00"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
 
 <!-- end custom article top snippet -->
 <div class="article__content" itemprop="articleBody"><p>This package was created for my needs during my various projects, wanting to go faster and faster and not being a fan of CMS, I decided to make myself a back office (an administration) according to my needs and applying my own conventions for not reinventing the wheel. I am aware that my organization and conventions may not be suitable for everyone.
@@ -308,11 +308,11 @@ Then run</p>
 
 <p class="warning">Supported drivers: <strong>MySql</strong>, <strong>Sqlite</strong></p>
 
-<h2 id="publish-config-and-assets-css-and-js-files">Publish config and assets (css and js) files</h2>
+<h2 id="publish-config">Publish config</h2>
 
 <p>Necessary for the theme.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>php artisan vendor:publish <span class="nt">--provider</span><span class="o">=</span><span class="s2">"Guysolamour</span><span class="se">\A</span><span class="s2">dministrable</span><span class="se">\S</span><span class="s2">erviceProvider"</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>php artisan vendor:publish <span class="nt">--tag</span><span class="o">=</span><span class="s2">"administrable-config"</span>
 </code></pre></div></div>
 
 <p>Open create media table migration add add down method</p>
@@ -374,7 +374,6 @@ such as (the debugbar and others).</p>
   <li><em>garygreen/pretty-routes</em></li>
   <li><em>barryvdh/laravel-debugbar</em></li>
   <li><em>barryvdh/laravel-ide-helper</em></li>
-  <li><em>sven/artisan-view</em></li>
 </ul>
 
 <h3 id="--locale">- locale</h3>
@@ -433,7 +432,7 @@ With the value of the name of the folder which must necessarily be located in th
 <p><strong>themekit</strong>
 <img src="/laravel-administrable/assets/images/themes/themekit.png" alt="themekit" /></p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">theme</span><span class="o">=</span><span class="s2">"adminlte"</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">administrable</span><span class="o">:</span><span class="n">install</span> <span class="p">{</span><span class="n">guard</span><span class="o">=</span><span class="n">admin</span><span class="p">}</span> <span class="o">--</span><span class="n">theme</span><span class="o">=</span><span class="s2">"themekit"</span>
 </code></pre></div></div>
 
 <p>You can now log in to the back office with <strong><em>administrable</em></strong> route</p>
@@ -474,35 +473,9 @@ You need to publish the service provider first  and create guard.</p>
 
 <p>You can seed the database with fake data</p>
 
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">db</span><span class="o">:</span><span class="n">seed</span> <span class="o">--</span><span class="kd">class</span> <span class="nc">ConfigurationsTableSeeder</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">db</span><span class="o">:</span><span class="n">seed</span>
 </code></pre></div></div>
-
-<p>If the <strong>Post</strong> crud was generated</p>
-
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">db</span><span class="o">:</span><span class="n">seed</span> <span class="o">--</span><span class="kd">class</span> <span class="nc">PostsTableSeeder</span>
-</code></pre></div></div>
-
-<p>If the <strong>Testimonial</strong> crud was generated</p>
-
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">db</span><span class="o">:</span><span class="n">seed</span> <span class="o">--</span><span class="kd">class</span> <span class="nc">TestimonialsTableSeeder</span>
-</code></pre></div></div>
-
-<p>If the <strong>Mailbox</strong> crud was generated</p>
-
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">db</span><span class="o">:</span><span class="n">seed</span> <span class="o">--</span><span class="kd">class</span> <span class="nc">MailboxesTableSeeder</span>
-
-</code></pre></div></div>
-
-<p>The guard</p>
-
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">db</span><span class="o">:</span><span class="n">seed</span> <span class="o">--</span><span class="n">class</span> <span class="p">{</span><span class="n">guard</span><span class="p">}</span><span class="n">sTableSeeder</span>
-</code></pre></div></div>
-
-<p>If the guard is admin:</p>
-
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">php</span> <span class="n">artisan</span> <span class="n">db</span><span class="o">:</span><span class="n">seed</span> <span class="o">--</span><span class="kd">class</span> <span class="nc">AdminsTableSeeder</span>
-</code></pre></div></div>
-</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-06-19T11:14:23+00:00"><!-- start custom article footer snippet -->
+</div><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2021-07-22T21:22:37+00:00"><!-- start custom article footer snippet -->
 
 <!-- end custom article footer snippet -->
 <div class="article__license"><div class="license">
