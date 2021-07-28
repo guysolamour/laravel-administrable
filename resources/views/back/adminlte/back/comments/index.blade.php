@@ -15,7 +15,7 @@
                 <div class="col-sm-6">
                     <div class='float-sm-right'>
                          <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . 'dashboard') }}">{{ Lang::get('administrable::messages.default.dashboard') }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route(config('administrable.guard') . '.dashboard') }}">{{ Lang::get('administrable::messages.default.dashboard') }}</a></li>
                             <li class="breadcrumb-item active">{{ Lang::get('administrable::messages.view.comment.plural') }}</li>
                         </ol>
                     </div>

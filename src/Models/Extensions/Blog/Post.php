@@ -22,6 +22,13 @@ class Post extends BaseModel implements HasMedia
     use DraftableTrait;
     use CommentableTrait;
 
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     public const TYPES = [
         'text'  => ['name' => 'text',  'label'  => 'Texte'],
         'video' => ['name' => 'video', 'label'  => 'Vidéo'],
@@ -66,6 +73,7 @@ class Post extends BaseModel implements HasMedia
     protected $casts = [
         'online'        => 'boolean',
         'allow_comment' => 'boolean',
+        'created_at'    => DaterangepickerCast::class,
         'published_at'  => DaterangepickerCast::class,
     ];
 
@@ -103,13 +111,13 @@ class Post extends BaseModel implements HasMedia
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'extensions_blog_post_category');
+        return $this->belongsToMany(config('administrable.extensions.blog.category.model'), 'extensions_blog_post_category');
     }
 
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'extensions_blog_post_tag');
+        return $this->belongsToMany(config('administrable.extensions.blog.tag.model'), 'extensions_blog_post_tag');
     }
 
 
