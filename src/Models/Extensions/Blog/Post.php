@@ -5,13 +5,13 @@ namespace Guysolamour\Administrable\Models\Extensions\Blog;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Cviebrock\EloquentSluggable\Sluggable;
-use Guysolamour\Administrable\Casts\DaterangepickerCast;
 use Guysolamour\Administrable\Models\BaseModel;
 use Guysolamour\Administrable\Traits\SeoableTrait;
 use Guysolamour\Administrable\Traits\DaterangeTrait;
 use Guysolamour\Administrable\Traits\DraftableTrait;
 use Guysolamour\Administrable\Traits\MediaableTrait;
 use Guysolamour\Administrable\Traits\CommentableTrait;
+use Guysolamour\Administrable\Casts\DaterangepickerCast;
 
 class Post extends BaseModel implements HasMedia
 {

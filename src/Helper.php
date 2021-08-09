@@ -11,12 +11,15 @@ use Guysolamour\Administrable\Models\Page;
 
 class Helper {
 
+    /**
+     * @param string|null $attribute
+     * @return mixed
+     */
     public function getGuard(?string $attribute = null)
     {
         $guard = auth()->guard(config('administrable.guard'))->user();
 
         return is_null($attribute) ? $guard : $guard->$attribute;
-
     }
 
     /**
@@ -27,18 +30,23 @@ class Helper {
     public function getGuardNotifiers(bool $include_super_guard = false)
     {
         /**
+         * @var \Guysolamour\Administrable\Models\BaseModel
+         */
+        $model = get_guard_model_class();
+
+        /**
          * @var \Illuminate\Database\Eloquent\Collection
          */
-        $guards = get_guard_model_class()::get();
+        $guards = $model::get();
 
         if (!$include_super_guard) {
             $guard = config('administrable.guard');
             $guards = $guards->filter(fn ($item) => !$item->hasRole('super-' . $guard, $guard));
         }
 
-
         return $guards;
     }
+
 
     private function getViewPath(string $view, string $prefix) :string
     {
@@ -48,21 +56,34 @@ class Helper {
             $view = $prefix .  Str::start($view, '.');
         }
 
-        if (View::exists("administrable::{$view}")){
+        return $view;
+    }
+
+    
+    public function backViewPath(string $view) :string
+    {
+        $view =  $this->getViewPath($view, config('administrable.back_namespace'));
+
+        if (View::exists("administrable::{$view}")) {
             return "administrable::{$view}";
         }
 
         return $view;
     }
 
-    public function backViewPath(string $view) :string
-    {
-        return $this->getViewPath($view, config('administrable.back_namespace'));
-    }
-
     public function frontViewPath(string $view) :string
     {
-        return $this->getViewPath($view, config('administrable.front_namespace'));
+        $view =  $this->getViewPath($view, config('administrable.front_namespace'));
+
+        if (View::exists($view)) {
+            return $view;
+        }
+
+        if (View::exists("administrable::{$view}")) {
+            return "administrable::{$view}";
+        }
+
+        return $view;
     }
 
     public function backView($view = null, $data = [], $mergeData = [])
