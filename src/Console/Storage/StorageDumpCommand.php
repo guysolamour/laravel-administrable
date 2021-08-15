@@ -82,7 +82,7 @@ class StorageDumpCommand extends BaseCommand
     private function sendNotification(string $disk) :void
     {
         if ($this->option('send_notification')) {
-            $notifiables = get_guard_model()::getNotifiables()->get();
+            $notifiables = get_super_guard_notifiers();
             $notification = config('administrable.storage_dump.notifications.mail.class', SuccessfulStorageFolderBackupNotification::class);
 
             if ($notifiables->isNotEmpty() && class_exists($notification)) {

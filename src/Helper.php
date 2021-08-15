@@ -46,7 +46,27 @@ class Helper {
 
         return $guards;
     }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getSuperGuardNotifiers()
+    {
+        /**
+         * @var \Guysolamour\Administrable\Models\BaseModel
+         */
+        $model = get_guard_model_class();
 
+        /**
+         * @var \Illuminate\Database\Eloquent\Collection
+         */
+        $guards = $model::get();
+
+        $guard = config('administrable.guard');
+        $guards = $guards->filter(fn ($item) => $item->hasRole('super-' . $guard, $guard));
+
+        return $guards;
+    }
 
     private function getViewPath(string $view, string $prefix) :string
     {
@@ -59,7 +79,7 @@ class Helper {
         return $view;
     }
 
-    
+
     public function backViewPath(string $view) :string
     {
         $view =  $this->getViewPath($view, config('administrable.back_namespace'));

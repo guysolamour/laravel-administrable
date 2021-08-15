@@ -34,11 +34,11 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Guysolamour\Administrable\Helper getGuardModelClass()
  * @method static \Guysolamour\Administrable\Helper getGuard()
  * @method static \Guysolamour\Administrable\Helper getGuardNotifiers(bool $include_super_guard)
+ * @method static \Guysolamour\Administrable\Helper getSuperGuardNotifiers()
  * @method static \Guysolamour\Administrable\Helper backViewPath(string $view)
  * @method static \Guysolamour\Administrable\Helper frontViewPath(string $view)
  * @method static \Guysolamour\Administrable\Helper backView($view = null, $data = [], $mergeData = [])
  * @method static \Guysolamour\Administrable\Helper frontView($view = null, $data = [], $mergeData = [])
- * @method static \Guysolamour\Administrable\Helper
  * @method static \Guysolamour\Administrable\Helper
  *
  */

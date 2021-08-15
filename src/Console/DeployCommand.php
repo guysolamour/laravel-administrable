@@ -121,7 +121,7 @@ class DeployCommand extends BaseCommand
         return $this->filesystem->exists($this->path) && !$this->option('force');
 	}
 
-	private function getServer() :string
+	private function getServer() :?string
 	{
         $server = $this->option('server');
 
