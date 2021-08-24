@@ -246,6 +246,30 @@ if (!function_exists('merge_collections')) {
     }
 }
 
+if (!function_exists('filemanager_is_multiple_collection')) {
+    /**
+     *
+     * @param  string $collection_name
+     * @return bool
+     */
+    function filemanager_is_multiple_collection($collection_name)
+    {
+        return Helper::filemanagerIsMultipleCollection($collection_name);
+    }
+}
+
+if (!function_exists('filemanager_collection_label')) {
+    /**
+     *
+     * @param  mixed $collection_name
+     * @return string
+     */
+    function filemanager_collection_label(string $collection_name)
+    {
+        return Helper::filemanagerCollectionLabel($collection_name);
+    }
+}
+
 if (!function_exists('is_collection')) {
     /**
      *

@@ -236,7 +236,7 @@ return [
                 'form'        => Guysolamour\Administrable\Forms\Back\GuardForm::class,
                 'createform'  => Guysolamour\Administrable\Forms\Back\CreateGuardForm::class,
                 'resetpasswordform'  => Guysolamour\Administrable\Forms\Back\ResetGuardPasswordForm::class,
-            ],
+            ],//0759956172
         ],
         'comment' => [
             'model' => Guysolamour\Administrable\Models\Comment::class,
@@ -250,6 +250,14 @@ return [
                 'form'         => Guysolamour\Administrable\Forms\Back\CommentForm::class,
                 'mail'         => Guysolamour\Administrable\Mail\Back\CommentMail::class,
                 'notification' => Guysolamour\Administrable\Notifications\Back\CommentNotification::class,
+            ],
+        ],
+        'filemanager'     => [
+            'model'          => \Guysolamour\Administrable\Models\Media::class,
+            'temporary_model' => \Guysolamour\Administrable\Models\TemporaryMedia::class,
+            'back'           => [
+                'controller'            => \Guysolamour\Administrable\Http\Controllers\Back\MediaController::class,
+                'temporary_controller'  => \Guysolamour\Administrable\Http\Controllers\Back\TemporaryMediaController::class,
             ],
         ],
         'social_redirect' => [
@@ -273,19 +281,96 @@ return [
         'collections' => [
             'front'          => ['label' => 'front-image', 'description' => 'Image à la une',         'conversion'  => true, 'multiple' => false],
             'back'           => ['label' => 'back-image',  'description' => 'Seconde image à la une', 'conversion'  => true, 'multiple' => false],
-            'images'         => ['label' => 'images',      'description' => 'Gallerie',               'conversion'  => true, 'multiple' => true],
+            'images'         => ['label' => 'images',      'description' => 'Gallerie',               'conversion'  => true, 'multiple' => true
+            ],
             'attachments'    => ['label' => 'attachments', 'conversion' => true],
             'seo'            => ['label' => 'seo',         'conversion' => false],
         ],
         'conversions' => [
             'avatar'    => ['label' => 'avatar',    'height' => 100, 'width'   =>  100],
             'avatar-sm' => ['label' => 'avatar-sm', 'height' => 50,  'width'   =>  50],
-            'avatar-xs' => ['label' => 'avatar-xs', 'height' => 30,  'width'   =>  30],
+            'avatar-xs' => ['label' => 'avatar-xs', 'height' => 30,  'width'   =>  30
+            ],
             'thumb'     => ['label' => 'thumb',     'height' => 100, 'default' => true],
-            'thumb-sm'  => ['label' => 'thumb-sm',  'height' => 250, 'default' => true],
+            'thumb-sm'  => ['label' => 'thumb-sm',  'height' => 250, 'default' => true
+            ],
+        ],
+        'temporary_files' => [
+            'folder' => 'administrable/temp',
+            'suffix' => true, // append date('Ymds') to file name
+        ],
+        // If true, the uploaded file will be renamed to uniqid() + file extension in kb.
+        'rename_file' => false,
+        // If true, the uploading file's size will be verified for over than max_image_size/max_file_size.
+        'should_validate_size' => true,
+        'select_uploaded_file' => false,
+
+        'max_image_size' => 10000,
+        'max_file_size'  => 10000,
+
+        'valid_mimetypes' => [
+            'image' => [
+                'image/jpeg',
+                'image/pjpeg',
+                'image/png',
+                'image/gif',
+                'image/svg+xml',
+            ],
+            'file' => [
+                'image/jpeg',
+                'image/pjpeg',
+                'image/png',
+                'image/gif',
+                'image/svg+xml',
+                'application/pdf',
+                'application/zip',
+                'application/msword',
+                'application/epub+zip',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-powerpoint',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'text/csv',
+                'text/plain',
+            ],
+        ],
+        'file_icon_array' => [
+            'pdf'  => 'fa-file-pdf',
+            'doc'  => 'fa-file-word',
+            'docx' => 'fa-file-word',
+            'xls'  => 'fa-file-excel',
+            'xlsx' => 'fa-file-excel',
+            'zip'  => 'fa-file-archive',
+            'gif'  => 'fa-file-image',
+            'jpg'  => 'fa-file-image',
+            'jpeg' => 'fa-file-image',
+            'png'  => 'fa-file-image',
+            'ppt'  => 'fa-file-powerpoint',
+            'pptx' => 'fa-file-powerpoint',
+        ],
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | File Extension Information
+        |--------------------------------------------------------------------------
+        */
+        'file_icon_array' => [
+            'pdf'  => 'fa-file-pdf',
+            'doc'  => 'fa-file-word',
+            'docx' => 'fa-file-word',
+            'xls'  => 'fa-file-excel',
+            'xlsx' => 'fa-file-excel',
+            'zip'  => 'fa-file-archive',
+            'gif'  => 'fa-file-image',
+            'jpg'  => 'fa-file-image',
+            'jpeg' => 'fa-file-image',
+            'png'  => 'fa-file-image',
+            'ppt'  => 'fa-file-powerpoint',
+            'pptx' => 'fa-file-powerpoint',
         ],
     ],
-
     /**
      * Redirect when attempting to access some routes or files
      */

@@ -91,8 +91,9 @@
 
                     </div>
                     <div class='col-md-4'>
-                        @include(back_view_path('media._show'), [
-                            'model' => $testimonial,
+                        @filemanagerShow([
+                            'model'      =>  $testimonial,
+                            'collection' =>  'front-image',
                         ])
                     </div>
 

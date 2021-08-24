@@ -1,10 +1,12 @@
 <?php
 
-use Guysolamour\Administrable\Extension;
 use Illuminate\Support\Str;
 use Guysolamour\Administrable\Module;
 use Illuminate\Support\Facades\Route;
 use Spatie\Honeypot\ProtectAgainstSpam;
+use Guysolamour\Administrable\Extension;
+use Guysolamour\Administrable\Http\Controllers\Back\MediaController;
+use Guysolamour\Administrable\Http\Controllers\Back\TemporaryMediaController;
 
 Route::prefix(config('administrable.auth_prefix_path'))
     ->middleware(['web'])
@@ -138,12 +140,44 @@ Route::prefix(config('administrable.auth_prefix_path'))
                 'edit'       => 'comment.edit',
                 'update'     => 'comment.update',
                 'destroy'    => 'comment.destroy',
-            ])->except(['create', 'store']);
+                ])->except(['create', 'store']);
 
-            Route::post('comments/{comment}/reply', [Module::backController('comment'), 'reply'])->name('comment.reply');
-            Route::get('comments/{comment}/approved', [Module::backController('comment'), 'approved'])->name('comment.approved');
-        });
+                Route::post('comments/{comment}/reply', [Module::backController('comment'), 'reply'])->name('comment.reply');
+                Route::get('comments/{comment}/approved', [Module::backController('comment'), 'approved'])->name('comment.approved');
+            });
+            /*
+            |--------------------------------------------------------------------------
+            | FILEMANAGER
+            |--------------------------------------------------------------------------
+            */
+            Route::post('temporarymedia/option', [config("administrable.modules.filemanager.back.temporary_controller"), 'getOption']);
+            Route::post('temporarymedia/order', [config("administrable.modules.filemanager.back.temporary_controller"), 'order']);
+            Route::post('temporarymedia', [config("administrable.modules.filemanager.back.temporary_controller"), 'store']);
+            Route::post('temporarymedia/selectall', [config("administrable.modules.filemanager.back.temporary_controller"), 'selectAll']);
+            Route::post('temporarymedia/unselectall', [config("administrable.modules.filemanager.back.temporary_controller"), 'unSelectAll']);
+            Route::post('temporarymedia/{collection}', [config("administrable.modules.filemanager.back.temporary_controller"), 'index']);
+            Route::post('temporarymedia/{temporaryMedia}/select', [config("administrable.modules.filemanager.back.temporary_controller"), 'select']);
+            Route::post('temporarymedia/{temporaryMedia}/unselect', [config("administrable.modules.filemanager.back.temporary_controller"), 'unselect']);
+            Route::post('temporarymedia/{temporaryMedia}/rename', [config("administrable.modules.filemanager.back.temporary_controller"), 'rename']);
+            Route::post('temporarymedia/{temporaryMedia}/modify', [config("administrable.modules.filemanager.back.temporary_controller"), 'modify']);
+            Route::delete('temporarymedia/{temporaryMedia}', [config("administrable.modules.filemanager.back.temporary_controller"), 'destroy']);
 
+            Route::post('media/{model}/{id}/{collection}/unselectall', [config("administrable.modules.filemanager.back.controller"), 'unSelectAll']);
+            Route::get('media/{model}/{id}/{collection}', [config("administrable.modules.filemanager.back.controller"), 'index']);
+            Route::post('media/{model}/{id}/{collection}', [config("administrable.modules.filemanager.back.controller"), 'store']);
+            Route::post('media/{model}/{id}/{collection}/selectall', [config("administrable.modules.filemanager.back.controller"), 'selectAll']);
+            Route::post('media/{media}/select', [config("administrable.modules.filemanager.back.controller"), 'select']);
+            Route::post('media/{media}/unselect', [config("administrable.modules.filemanager.back.controller"), 'unselect']);
+            Route::post('media/{media}/rename', [config("administrable.modules.filemanager.back.controller"), 'rename']);
+            Route::post('media/{model}/{id}/{collection}/modify/{media}', [config("administrable.modules.filemanager.back.controller"), 'modify']);
+            Route::delete('media/{media}', [config("administrable.modules.filemanager.back.controller"), 'destroy']);
+            Route::post('media/order', [config("administrable.modules.filemanager.back.controller"), 'order']);
+
+            // // Js
+            Route::get('media/order', [config("administrable.modules.filemanager.back.controller"), 'order'])->name('back.media.order.index');
+            Route::get('media/{model}/{id}/tinymce', [config("administrable.modules.filemanager.back.controller"), 'tinymce'])->name('back.media.tinymce');
+            Route::delete('media/seo/{model}/{id}', [config("administrable.modules.filemanager.back.controller"), 'destroySeo'])->name('back.media.seodestroy');
+            Route::delete('media/{model}/{id}/{collection}/all', [config("administrable.modules.filemanager.back.controller"), 'destroyAll'])->name('back.media.destroy.all');
 
         /*
         |--------------------------------------------------------------------------

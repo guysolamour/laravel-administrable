@@ -34,7 +34,6 @@ class MakeCrudCommand extends BaseCommand
 
         $progress = $this->output->createProgressBar(10);
 
-        // on récupère le modele que nous allons créer
         $model =  $this->getModel($this->argument('model'));
 
         if ($this->checkIfCrudHasAlreadyBeenDoneForModel($model)){
@@ -44,6 +43,7 @@ class MakeCrudCommand extends BaseCommand
         $migrate = $this->getMigrate();
 
         $crud = new Crud($model, $migrate);
+
 
         // Model
         $this->displayTitle('Creating Model...');

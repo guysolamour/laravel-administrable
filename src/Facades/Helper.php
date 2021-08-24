@@ -39,7 +39,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Guysolamour\Administrable\Helper frontViewPath(string $view)
  * @method static \Guysolamour\Administrable\Helper backView($view = null, $data = [], $mergeData = [])
  * @method static \Guysolamour\Administrable\Helper frontView($view = null, $data = [], $mergeData = [])
- * @method static \Guysolamour\Administrable\Helper
+ * @method static \Guysolamour\Administrable\Helper filemanagerIsMultipleCollection(string $collection_name)
+ * @method static \Guysolamour\Administrable\Helper filemanagerCollectionLabel(string $collection_name)
  *
  */
 class Helper extends Facade

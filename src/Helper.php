@@ -46,7 +46,7 @@ class Helper {
 
         return $guards;
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -393,6 +393,20 @@ class Helper {
         }
 
         return true;
+    }
+
+    public function filemanagerIsMultipleCollection(string $collection_name) :bool
+    {
+        $collection_name = Str::before($collection_name, '-');
+
+        return config("administrable.media.collections.{$collection_name}.multiple", false);
+    }
+
+    public function filemanagerCollectionLabel(string $collection_name) :string
+    {
+        $collection_name = Str::before($collection_name, '-');
+
+        return config("administrable.media.collections.{$collection_name}.description", '');
     }
 
     /**

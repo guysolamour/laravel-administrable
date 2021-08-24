@@ -122,8 +122,9 @@
                                 </div>
                             </div>
                         </div>
-                         @include(back_view_path('media._show'), [
-                           'model' => $post,
+                        @filemanagerShow([
+                            'model'      =>  $post,
+                            'collection' =>  'front-image',
                         ])
                     </div>
 

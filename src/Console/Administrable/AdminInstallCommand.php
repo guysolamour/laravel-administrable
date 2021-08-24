@@ -311,8 +311,8 @@ class AdminInstallCommand extends BaseCommand
         );
 
         $this->filesystem->copyDirectory(
-            $this->getTemplatePath() . "/imagemanager",
-            public_path('vendor/imagemanager'),
+            $this->getTemplatePath() . "/assets/filemanager",
+            public_path('vendor/filemanager'),
         );
 
         $this->filesystem->copyDirectory(
@@ -355,39 +355,39 @@ class AdminInstallCommand extends BaseCommand
             $provider_path
         );
 
-        $blade_sp = 'BladeServiceProvider';
-        $blade_sp_path = $provider_path . '/' . $blade_sp . '.php';
+        // $blade_sp = 'BladeServiceProvider';
+        // $blade_sp_path = $provider_path . '/' . $blade_sp . '.php';
 
-        $this->call('cmd:make:provider', [
-            'name'       => $blade_sp,
-            '--register' => true
-        ]);
-        $search = <<<TEXT
-            public function boot()
-            {
-        TEXT;
+        // $this->call('cmd:make:provider', [
+        //     'name'       => $blade_sp,
+        //     '--register' => true
+        // ]);
+        // $search = <<<TEXT
+        //     public function boot()
+        //     {
+        // TEXT;
 
-        $this->filesystem->replaceAndWriteFile(
-            $this->filesystem->get($blade_sp_path),
-            $search,
-            <<<TEXT
-            $search
-                   Blade::include('{$this->data_map['{{backLowerNamespace}}']}.media._imagemanager', 'imagemanager');
-            TEXT,
-            $blade_sp_path
-        );
+        // $this->filesystem->replaceAndWriteFile(
+        //     $this->filesystem->get($blade_sp_path),
+        //     $search,
+        //     <<<TEXT
+        //     $search
+        //            Blade::include('{$this->data_map['{{backLowerNamespace}}']}.media._imagemanager', 'imagemanager');
+        //     TEXT,
+        //     $blade_sp_path
+        // );
 
-        $search = 'use Illuminate\Support\ServiceProvider;';
+        // $search = 'use Illuminate\Support\ServiceProvider;';
 
-        $this->filesystem->replaceAndWriteFile(
-            $this->filesystem->get($blade_sp_path),
-            $search,
-            <<<TEXT
-            use Illuminate\Support\Facades\Blade;
-            $search
-            TEXT,
-            $blade_sp_path
-        );
+        // $this->filesystem->replaceAndWriteFile(
+        //     $this->filesystem->get($blade_sp_path),
+        //     $search,
+        //     <<<TEXT
+        //     use Illuminate\Support\Facades\Blade;
+        //     $search
+        //     TEXT,
+        //     $blade_sp_path
+        // );
 
         return $provider_path;
     }

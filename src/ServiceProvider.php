@@ -19,6 +19,8 @@ use Guysolamour\Administrable\Console\Administrable\CreateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
 use Guysolamour\Administrable\Console\Extension\Add\AddExtensionCommand;
+use Guysolamour\Administrable\Jobs\RemoveOrphanTemporaryFiles;
+use Guysolamour\Administrable\View\Components\Filemanager;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -36,6 +38,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadViewsFrom($this->packagePath('/resources/views/front'), 'administrable');
         $this->loadViewsFrom($this->packagePath('/resources/views/back/' . config('administrable.theme')), 'administrable');
         $this->loadViewsFrom($this->packagePath('/resources/views/components'), 'administrable');
+        $this->loadViewsFrom($this->packagePath('/resources/views/filemanager'), 'administrable');
         $this->loadViewsFrom($this->packagePath('/resources/views/emails'), 'administrable');
 
         $this->loadHelperFile();
@@ -52,6 +55,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->packagePath('/resources/views/back/' . config('administrable.theme') . '/back') => resource_path('views/vendor/administrable/' . strtolower(config('administrable.back_namespace'))),
             $this->packagePath('/resources/views/front') => resource_path('views/vendor/administrable'),
             $this->packagePath('/resources/views/components') => resource_path('views/vendor/administrable/components'),
+            $this->packagePath('/resources/views/filemanager') => resource_path('views/vendor/administrable/filemanager'),
             $this->packagePath('/resources/views/emails') => resource_path('views/vendor/administrable/emails'),
         ], 'administrable-views');
 
@@ -60,15 +64,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         ], 'administrable-lang');
 
         Blade::include('administrable::front.comments.comments', 'comments');
+        Blade::include('administrable::filemanager.image', 'imagemanager');
+        Blade::include('administrable::filemanager.button', 'filemanagerButton');
+        Blade::include('administrable::filemanager.show', 'filemanagerShow');
 
         $this->loadPolicies([
             config('administrable.modules.comment.model') => config('administrable.modules.comment.front.policy'),
         ]);
 
+        Blade::component('administrable-filemanager', Filemanager::class);
+
         $this->loadGuardGates();
 
         $this->loadValidationRules();
-
     }
 
     private function scheduleCommands() :void
@@ -93,6 +101,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 $schedule->job(new PublishProgrammaticalyPost)->hourly();
             }
 
+            $schedule->job(new RemoveOrphanTemporaryFiles)->daily();
         });
     }
 

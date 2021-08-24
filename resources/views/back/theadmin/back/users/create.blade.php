@@ -25,10 +25,11 @@
                     @include(back_view_path('users._form'))
                 </div>
                 <div class="col-md-4">
-                    @include(back_view_path('media._imagemanager'), [
-                        'front_image_label'      => Lang::get('administrable::messages.view.user.avatar'),
-                        'model'                  => new (AdminModule::getUserModel()),
-                        'front_image'            => true,
+                    @imagemanager([
+                        'model'             =>  new (AdminModule::getUserModel()),
+                        'label'             =>  Lang::get('administrable::messages.view.user.avatar'),
+                        'type'              =>  'image'
+                        'collection'        => 'front-image',
                     ])
                 </div>
             </div>

@@ -40,7 +40,6 @@ trait MediaableTrait
         return $media ? $media->getUrl($conversionName) : null;
     }
 
-
     public function getImagesAttribute()
     {
         $medias = $this->getMedia(config('administrable.media.collections.images.label', 'default'), ['select' => true]);
@@ -51,6 +50,11 @@ trait MediaableTrait
     public function getImageAttribute()
     {
         return $this->getFrontImageUrl();
+    }
+
+    public function getMediaCollection(string $key, $default = null)
+    {
+        return Arr::get($this->getMediaCollections(), $key, $default);
     }
 
     public function getMediaCollections(): array
@@ -86,11 +90,16 @@ trait MediaableTrait
         return $collections->toArray();
     }
 
+    public function getMediaConversion(string $key, $default = null)
+    {
+        return Arr::get($this->getMediaConversions(), $key, $default);
+    }
+
     public function getMediaConversions(): array
     {
         $conversions =  config('administrable.media.conversions', []);
 
-        $default_conversions = array_filter($conversions, fn($item) => Arr::get($item, 'default'));
+        $default_conversions = array_filter($conversions, fn ($item) => Arr::get($item, 'default'));
 
         if (property_exists($this, 'medialibrary_conversions')) {
             if (empty($this->medialibrary_conversions)) {
@@ -103,7 +112,7 @@ trait MediaableTrait
         }
 
         foreach ($default_conversions as $key => $value) {
-            if (Arr::get($conversions, $key)){
+            if (Arr::get($conversions, $key)) {
                 continue;
             }
             $conversions[$key] = $value;
@@ -163,75 +172,44 @@ trait MediaableTrait
      */
     public function sortImages($medias, string $sort_key = 'order')
     {
-        return $medias->sortBy(function ($media, $key) use ($sort_key) {
-            return $media->getCustomProperty($sort_key);
-        })->values()->all();
+        return $medias->sortBy(fn($media, $key) => $media->getCustomProperty($sort_key))->values()->all();
     }
-
 
     public static function bootMediaableTrait()
     {
         /**
-         * @param \Guysolamour\Administrable\Models\BaseModel $model
+         * @param \Guysolamour\Administrable\Traits\MediaableTrait $model
          */
         static::created(function ($model) {
 
-            $collections = $model->getMediaCollections();
+            if (!request()->has('filemanager')){
+                return;
+            }
 
-            if ($collections) {
-                foreach ($collections  as $collection) {
+            $files = collect(request('filemanager'))->map(function ($item) {
+                return array_map(fn ($key) => config("administrable.modules.filemanager.temporary_model")::findOrFail($key), json_decode($item));
+            });
 
-                    if (
-                        'front-image' === $collection['label'] ||
-                        'back-image'  === $collection['label'] ||
-                        'images'      === $collection['label']
-                    ) {
-                        if (request($collection)) {
-                            self::saveImages($model, request($collection['label']), $collection['label']);
-                        }
-                    }
+            if ($files->isEmpty()) {
+                return;
+            }
+
+            $files->each(function ($files, $collection) use ($model) {
+                foreach ($files as $file) {
+                    /**
+                     * @var \Guysolamour\Administrable\Models\TemporaryMedia $file
+                     */
+                    $model
+                        ->addMedia($file->getStorageUrl())
+                        ->usingName($file->name)
+                        ->usingFileName($file->file_name)
+                        ->withCustomProperties($file->custom_properties)
+                        ->toMediaCollection($collection);
+
+                    $file->delete();
                 }
-            }
+                option_delete('filemanager' . $collection);
+            });
         });
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Model|\Guysolamour\Administrable\Traits\MediaableTrait $model
-     * @param array $images
-     * @return void
-     */
-    private static function saveImages($model, $images, string $collection): void
-    {
-        $attributes = self::getCollectionAttributes(request($collection . '-attributes'));
-
-        if ($images) {
-            foreach ($images as $image) {
-                $attr = $attributes[$image->getClientOriginalName()];
-
-                $model->addMediaFromBase64(base64_encode(file_get_contents($image->path())))
-                    ->usingFileName($attr['name'])
-                    ->withCustomProperties([
-                        'order'  => $attr['order'],
-                        'select' => $attr['select'],
-                    ])
-                    ->toMediaCollection($collection);
-            }
-        }
-    }
-
-    /**
-     *
-     * @param string $attributes
-     * @return array
-     */
-    private static function getCollectionAttributes($attributes): array
-    {
-        $attr = [];
-        foreach (json_decode($attributes, true) as $attribute) {
-            foreach ($attribute as $key => $value) {
-                $attr[$key] = $value;
-            }
-        }
-        return $attr;
     }
 }

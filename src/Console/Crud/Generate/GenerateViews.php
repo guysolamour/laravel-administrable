@@ -17,7 +17,6 @@ class GenerateViews extends BaseGenerate
             return [false, 'Skip creating views'];
         }
 
-
         $paths = PHP_EOL;
 
         if ($this->crud->hasAction('index')) {
@@ -112,7 +111,7 @@ class GenerateViews extends BaseGenerate
              */
             if ($field->isDatepicker()) {
                 $replace = <<<HTML
-                <x-administrable::daterangepicker 
+                <x-administrable::daterangepicker
                     fieldname="{$field->getName()}"
                     drops="down"
                     opens="right"
@@ -124,7 +123,7 @@ class GenerateViews extends BaseGenerate
                 $complied =  str_replace($search, $search . PHP_EOL . PHP_EOL . $replace, $complied);
             } else if ($field->isDaterange()) {
                 $replace = <<<HTML
-                <x-administrable::daterangepicker 
+                <x-administrable::daterangepicker
                     fieldname="{$field->getName()}"
                     drops="down"
                     opens="right"
@@ -153,7 +152,7 @@ class GenerateViews extends BaseGenerate
         $complied =  $this->loadLinkButtonFor('delete', $complied);
 
 
-        $complied = $this->loadImagemanagerViewsAndAssets( $complied, 'edit');
+        $complied = $this->loadEditViewImageManagerAssets( $complied);
 
 
         $this->crud->filesystem->writeFile($path, $complied,  false);
@@ -170,7 +169,7 @@ class GenerateViews extends BaseGenerate
 
         $complied =  $this->loadBreadcrumbFor('create', $complied);
 
-        $complied = $this->loadImagemanagerViewsAndAssets( $complied, 'create');
+        $complied = $this->loadCreateViewImageManagerAssets( $complied);
 
         $this->crud->filesystem->writeFile($path, $complied,  false);
 
@@ -204,7 +203,7 @@ class GenerateViews extends BaseGenerate
         $complied =  $this->loadLinkButtonFor('edit', $complied);
         $complied =  $this->loadLinkButtonFor('delete', $complied);
 
-        $complied = $this->loadImagemanagerViewsAndAssets( $complied, 'show');
+        $complied = $this->loadShowViewImageManagerAssets( $complied);
 
         $show_views = $this->getShowViewFields();
         $view = $this->insertFieldToViewSHow($show_views, $complied);
@@ -315,120 +314,97 @@ class GenerateViews extends BaseGenerate
         return $show_views;
     }
 
-    protected function loadImagemanagerViewsAndAssets(string $complied, string $action) :string
+    protected function loadShowViewImageManagerAssets(string $complied)
     {
+        $field = $this->crud->getImagemanager();
 
-        if (!$this->crud->getImagemanager()) {
-            $search = "{{-- add imagemanager here --}}";
+        $search = "{{-- add imagemanager here --}}";
+
+        if (!$field) {
             return str_replace($search, '', $complied);
         }
 
+        $model = $this->data_map["{{singularSlug}}"];
 
-        $field = $this->crud->getImagemanager();
+        $partial = '';
 
+        foreach($field as $key => $label){
+            $collection = config("administrable.media.collections.{$key}.label");
+            $partial .= <<<LABEL
+                @filemanagerShow([
+                    'model'       =>  \${$model},
+                    'label'       =>  '$label'
+                    'collection'  =>  '$collection',
+                ])
 
-        $media_collections = config('media-library.collections');
-
-        if (true === $field) {
-            $labels = <<<LABEL
-            'front_image_label' =>  '{$media_collections['front']['description']}',
-            'back_image_label'  =>  '{$media_collections['back']['description']}',
-            'images_label'      =>  '{$media_collections['images']['description']}',
             LABEL;
 
-            if ('show' !== $action) {
-                $labels = <<<LABEL
-                $labels
-                'front_image'       =>  true,
-                'back_image'        =>  true,
-                'images'            =>  true,
-                LABEL;
-            }
-        } else if (Arr::isAssoc($field)) {
-            $labels = '';
-            $collections = '';
-
-            foreach ($media_collections as $key => $collection) {
-                if (Arr::exists($field, $key)) {
-                    if ('images' === $key) {
-                        $labels .= "'{$key}_label' =>  '{$field[$key]}'," . PHP_EOL;
-                        $collections .= "'{$key}' =>  true," . PHP_EOL;
-                    } else {
-                        $labels .= "'{$key}_image_label' =>  '{$field[$key]}'," . PHP_EOL;
-                        $collections .= "'{$key}_image' =>  true," . PHP_EOL;
-                    }
-                }
-            }
-
-            if ('show' !== $action) {
-                $labels .= $collections;
-            }
-        } else if (is_array($field)) {
-            $labels = '';
-            $collections = '';
-
-            foreach ($media_collections as $key => $collection) {
-                if (in_array($key, $field)) {
-                    if ('images' === $key) {
-                        $labels .= <<<LABEL
-                            '{$key}_label' =>  '{$media_collections[$key]['description']}',\n
-                        LABEL;
-                        $collections .= "'{$key}' =>  true," . PHP_EOL;
-                    } else {
-                        $labels .= <<<LABEL
-                            '{$key}_image_label' =>  '{$media_collections[$key]['description']}',\n
-                        LABEL;
-                        $collections .= "'{$key}_image' =>  true," . PHP_EOL;
-                    }
-                }
-            }
-
-            if ('show' !== $action) {
-                $labels .= $collections;
-            }
-        } else {
-            $labels = '';
         }
-
-        if ($action === 'create') {
-            $models = <<<TEXT
-                'model'             =>   new {$this->data_map["{{namespace}}"]}\\{$this->data_map["{{modelsNamespace}}"]}\\{$this->data_map["{{singularClass}}"]},
-               // 'form_name'         =>  \$img_model->form_name,
-            TEXT;
-        } else if ($action === 'edit') {
-            $model = $this->data_map["{{singularSlug}}"];
-            $models = <<<TEXT
-               'model'      =>  \${$model},
-               // 'form_name'  =>  \${$model}->form_name,
-            TEXT;
-        } else if ('show' === $action) {
-            $model = $this->data_map["{{singularSlug}}"];
-            $models = <<<TEXT
-                'model'   =>  \${$model},
-            TEXT;
-        }
-
-        if ('show' === $action) {
-            $model = $this->data_map["{{singularSlug}}"];
-            $partial =  <<<TEXT
-             @include('{$this->data_map["{{backLowerNamespace}}"]}.media._show', [
-                $models
-                $labels
-            ])
-            TEXT;
-        } else {
-            $partial =  <<<TEXT
-             @include('{$this->data_map["{{backLowerNamespace}}"]}.media._imagemanager', [
-                $labels
-                $models
-            ])
-            TEXT;
-        }
-        $search = "{{-- add imagemanager here --}}";
 
         return str_replace($search, $partial, $complied);
     }
 
+    protected function loadEditViewImageManagerAssets(string $complied) :string
+    {
+        $field = $this->crud->getImagemanager();
+
+        $search = "{{-- add imagemanager here --}}";
+
+        if (!$field) {
+            return str_replace($search, '', $complied);
+        }
+
+        if (!$field) {
+            return $complied;
+        }
+
+        $model = $this->data_map["{{singularSlug}}"];
+
+        $partial = '';
+
+        foreach ($field as $key => $label) {
+            $collection = config("administrable.media.collections.{$key}.label");
+            $partial .= <<<LABEL
+                 @imagemanager([
+                    'collection'        => "$collection",
+                    'model'             =>  \${$model},
+                    'label'             =>  "$label",
+                    'type'              =>  "image"
+                ])
+
+            LABEL;
+        }
+
+        return str_replace($search, $partial, $complied);
+    }
+
+
+    protected function loadCreateViewImageManagerAssets(string $complied) :string
+    {
+        $field = $this->crud->getImagemanager();
+        $search = "{{-- add imagemanager here --}}";
+
+        if (!$field) {
+            return str_replace($search, '', $complied);
+        }
+
+        $partial = '';
+
+        foreach ($field as $key => $label) {
+            $collection = config("administrable.media.collections.{$key}.label");
+            $partial .= <<<LABEL
+                 @imagemanager([
+                    'collection'        => "$collection",
+                    'model'             =>  \$form->getModel(),
+                    'label'             =>  "$label",
+                    'type'              =>  "image"
+                ])
+
+            LABEL;
+        }
+
+        return str_replace($search, $partial, $complied);
+    }
 
     protected function getStub(string $name) :string
     {

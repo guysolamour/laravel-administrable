@@ -71,8 +71,9 @@
                                 </div>
                         </div>
                         <div class="col-md-4">
-                            @include(back_view_path('media._show'), [
-                                'model' => $user,
+                            @filemanagerShow([
+                                'model'      =>  $user,
+                                'collection' =>  'front-image',
                             ])
                         </div>
                     </div>
