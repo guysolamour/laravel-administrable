@@ -7,4 +7,4 @@
     state: absent
   with_items:
     - "{{ archive_path }}"
-    - "{{ playbooks_directory_path }}/tmp/{{ archive }}"
+    - "{{ temporary_dir }}/tmp/{{ archive }}"

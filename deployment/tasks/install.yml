@@ -18,7 +18,7 @@
     include_vars: "{{ playbooks_directory_path }}/variables/vars.yml"
 
   - name: Include password file
-    include_vars: "{{ playbooks_directory_path }}/variables/passwords.yml"
+    include_vars: "{{ temporary_dir }}/variables/passwords.yml"
 
   - name: Include tools file
     include_tasks: "{{ playbooks_directory_path }}/install/tools.yml"

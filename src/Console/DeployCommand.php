@@ -7,19 +7,14 @@ use Illuminate\Support\Str;
 
 class DeployCommand extends BaseCommand
 {
-    protected const VAULT_FILE = '.vault-pass';
+    protected const FOLDERS_TO_CREATE = ['tmp', 'variables'];
 
-    protected const FILES_TO_MOVE = ['Makefile', '.vault-pass'];
-
-
-
-
-    protected $filesystem;
+    private $filesystem;
 
     /**
      * @var string
      */
-    protected $path;
+    private $password;
 
 
 
@@ -28,11 +23,10 @@ class DeployCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'administrable:deploy
+    protected $signature = 'administrable:deploy:scripts
                              {--d|path=.deployment : Relative to the current path }
                              {--s|server= : Server IP adress }
-                             {--p|password= : Decryption password code }
-                             {--f|force : Force scripts generation }
+                             {--p|vault=.vault-pass : File name to decrypt ansible protected variables }
                              ';
 
     /**
@@ -53,54 +47,54 @@ class DeployCommand extends BaseCommand
 
     public function handle()
     {
-        $this->path = base_path($this->option('path'));
-
         if ($this->checkIfGenerationHasAlreadyBeenDone()){
-            $this->triggerError("Deployment scripts generation have already been done.");
+            $this->triggerError("Scripts has already been generated. You can delete all files and run this command again!");
         }
 
-        $this->server = $this->getServer();
+        $this->password = $this->secret('Give vault code for decrypting password file');
 
+        $this->createPathFolderDirectories();
 
-        $this->password = $this->option('password') ?: $this->secret('Give vault code for decrypting password file');
+        $this->compliedAndMoveScriptsFile();
 
-
-        if ($this->option('force')){
-            $this->filesystem->deleteDirectory($this->path);
-        }
-
-        $this->filesystem->copyDirectory(
-            $this->getTemplatePath() . '/deployment',
-            $this->path . '/',
-        );
-
-        $this->compliedAndMoveFile();
-
+        $this->addPathFolderToGitignore();
 
         $this->info("Deploy scripts generated successfuly.");
     }
 
-    protected function compliedAndMoveFile() :void
+    private function getPath() :string
     {
-        foreach (self::FILES_TO_MOVE as $file ) {
-            $makefile_path = $this->path . "/tmp/{$file}";
-            $makefile = $this->filesystem->compliedFile($makefile_path, true, $this->getParsedName());
+        return base_path($this->option('path'));
+    }
 
-            $this->filesystem->writeFile($makefile_path, $makefile);
-            $this->filesystem->move($this->path . "/tmp/{$file}", base_path($file));
+    private function createPathFolderDirectories() :void
+    {
+        if(!self::FOLDERS_TO_CREATE){
+            return;
+        }
 
-            if (self::VAULT_FILE === $file) {
-                $this->addFileToGitIgnore($file);
-            }
+        foreach (self::FOLDERS_TO_CREATE as $folder) {
+            $this->filesystem->createDirectoryIfNotExists($this->getPath() . DIRECTORY_SEPARATOR . $folder);
+        }
+    }
+
+    private function compliedAndMoveScriptsFile() :void
+    {
+        $files = $this->filesystem->files($this->getTemplatePath() . '/deployment', true);
+
+        foreach ($files as $file ) {
+            $content = $this->filesystem->compliedFile($file->getRealPath(), true, $this->getParsedName());
+
+            $this->filesystem->writeFile(base_path() . DIRECTORY_SEPARATOR . $file->getRelativePathname(), $content);
         }
     }
 
     public function getParsedName(?string $name = null): array
     {
         return [
-            '{{server}}'            =>  Str::lower($this->server ?: ''),
+            '{{server}}'            =>  Str::lower($this->getServer() ?: ''),
             '{{appname}}'           =>  Str::lower(config('app.name', '')),
-            '{{path}}'              =>  Str::lower($this->path),
+            '{{path}}'              =>  Str::lower($this->getPath()),
             '{{appurl}}'            =>  Str::lower(config('app.url', '')),
             '{{appfirstname}}'      =>  Str::lower(config('app.first_name', '')),
             '{{applastname}}'       =>  Str::lower(config('app.last_name', '')),
@@ -111,14 +105,14 @@ class DeployCommand extends BaseCommand
         ];
     }
 
-    protected function addFileToGitIgnore(string $file) :void
+    private function addPathFolderToGitignore() :void
     {
-        $this->filesystem->append(base_path('.gitignore'), $file);
+        $this->filesystem->append(base_path('.gitignore'), DIRECTORY_SEPARATOR .  $this->option('path'));
     }
 
 	private function checkIfGenerationHasAlreadyBeenDone() :bool
 	{
-        return $this->filesystem->exists($this->path) && !$this->option('force');
+        return $this->filesystem->exists($this->getPath());
 	}
 
 	private function getServer() :?string
@@ -126,7 +120,7 @@ class DeployCommand extends BaseCommand
         $server = $this->option('server');
 
         if (!empty($server) && !filter_var($server, FILTER_VALIDATE_IP)) {
-            $this->triggerError("The server ip [{$server}] is not a valid ip.");
+            $this->triggerError("The server ip [{$server}] is not a valid ip v4 adress.");
         }
 
         return $server;

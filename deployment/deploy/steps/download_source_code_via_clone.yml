@@ -2,7 +2,7 @@
   become_user: "{{ remote_default_user }}"
   shell: "git clone {{ ansistrano_git_repo }} {{ archive }}"
   args:
-    chdir: "{{ playbooks_directory_path }}/tmp"
+    chdir: "{{ temporary_dir }}/tmp"
   delegate_to: localhost
   when: copy_strategy == 'clone'
 
@@ -10,6 +10,6 @@
   delegate_to: localhost
   become_user: "{{ remote_default_user }}"
   archive:
-    path: "{{ playbooks_directory_path }}/tmp/{{ archive }}/"
+    path: "{{ temporary_dir }}/tmp/{{ archive }}/"
     dest: "{{ archive_path }}"
   when: copy_strategy == 'clone'

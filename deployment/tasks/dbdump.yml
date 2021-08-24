@@ -10,7 +10,7 @@
   tasks:
 
   - name: Include password file
-    include_vars: "{{ playbooks_directory_path }}/variables/passwords.yml"
+    include_vars: "{{ temporary_dir }}/variables/passwords.yml"
 
   - name: Dump database
     mysql_db:

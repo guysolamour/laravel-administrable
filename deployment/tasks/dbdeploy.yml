@@ -1,0 +1,46 @@
+---
+- name: Import database from host to remote
+  hosts: all
+  gather_facts: no
+  remote_user:  "{{ user }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_winrm_server_cert_validation: ignore
+    database_dump_filename: dump
+    database_dump_folder: "database/snapshots/{{ database_dump_filename }}.sql"
+  tasks:
+
+  - name: Include variables
+    include_vars: "{{ playbooks_directory_path }}/variables/vars.yml"
+
+  - name: Dump remote database
+    become: "{{ remote_default_user }}"
+    shell: "php artisan snapshot:create {{ database_dump_filename }}"
+    args:
+      chdir: "{{ playbooks_directory_path | dirname }}"
+    delegate_to: localhost
+
+  - name: Copy file from host to remote
+    become: "{{ remote_default_user }}"
+    fetch:
+      src: "{{ playbooks_directory_path | dirname }}/{{ database_dump_folder }}"
+      dest: "{{ current_realease_path }}/{{ database_dump_folder }}"
+      flat: yes
+    delegate_to: localhost
+
+  - name: Import host database in remote
+    command: "php artisan snapshot:load {{ database_dump_filename }}"
+    args:
+      chdir: "{{ current_realease_path }}"
+
+  - name: Remove remote dump file
+    shell: "php artisan snapshot:delete {{ database_dump_filename }}"
+    args:
+      chdir: "{{ current_realease_path }}"
+
+  - name: Remove host dump file
+    command: "php artisan snapshot:delete {{ database_dump_filename }}"
+    become: "{{ remote_default_user }}"
+    args:
+      chdir: "{{ playbooks_directory_path | dirname }}"
+    delegate_to: localhost

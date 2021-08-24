@@ -1,7 +1,8 @@
+#!/bin/bash
 ###################################################################################################################
 ##########                                                                                            #############
-##########                                  DEPLOIMENT SYSTEM                                         #############
-##########                        The technology used is ansible with ansistrano   roles              #############
+##########                                  DEPLOYMENT SYSTEM                                         #############
+##########                        The technology used is ansible with ansistrano  roles               #############
 ##########        by Guy-roland ASSALE | rolandassale@gmail.com | https://www.roland-assale.info      #############
 ###################################################################################################################
 
@@ -10,6 +11,13 @@
 ##########                                                                                            #############
 ##########                                 PREPARING THE SERVER                                       #############
 ##########            1- Create a user to run the tasks                                               #############
+##########                  sudo useradd user -s /bin/bash -d /home/user -m -G sudo                   #############
+##########                  > add password user user@000.000.000.000                                  #############
+##########                  > add ssh key with sshcopyid                                              #############
+##########                  ssh-copy-id -i ~/.ssh/id_rsa.pub user@000.000.000.000                     #############
+##########                  > add user to sudoers file                                                #############
+##########                  run visudo  and append user ALL=(ALL) NOPASSWD:ALL at the end of the line #############
+##########                  sudo apt install -y python-apt                                            #############
 ##########            2- Put this user in the sodoers files and add SSH keys in the remote            #############
 ##########            3- install python-apt on the remote machine                                     #############
 ###################################################################################################################
@@ -39,16 +47,12 @@
 ###################################################################################################################
 
 
-# This line must not be modified
-.PHONY: clean help deploy rollback create view edit install run dkim dbseed dbdump storagedump
-
-
-# This line must be modified
-.DEFAULT_GOAL:= help
-
-
 # The playbook folder
-PLAYBOOKS_DIR={{path}}
+PLAYBOOKS_DIR=$(pwd)/vendor/guysolamour/administrable/deployment
+
+# Le dossier où sera stocké les fichiers temporaires et les fichiers de mot de passe.
+# Ce dossier ne doit pas etre versionné
+TEMPORARY_DIR=$(pwd)/.deployment
 
 # The name of the file that will store the code to decrypt passwords
 VAULT_PASS=.vault-pass
@@ -57,7 +61,8 @@ VAULT_PASS=.vault-pass
 # User who will be used to launch the tasks on the server
 # This one must be able to connect in SSH on the remote machine without password
 # Default value is root
-REMOTE_DEFAULT_USER=$(shell whoami)
+REMOTE_DEFAULT_USER=$(whoami)
+
 
 # The user who will run the server in PHP
 # In most cases the value is www-data (nginx && apache)
@@ -65,7 +70,7 @@ REMOTE_SERVER_USER=www-data
 
 
 # Ip address for the remote server
-HOST={{server}}
+HOST=
 
 
 # The strategy used to get the source files (git clone or git archive)
@@ -81,29 +86,30 @@ REPOSITORY=
 APPLICATION={{appname}}
 
 
+
 # The website domain
 DOMAIN={{appurl}}
 
 
 # The name of the archive that will be created when copying the source code
 # This value should not be changed
-ARCHIVE=$(APPLICATION)
+ARCHIVE=${APPLICATION}
 
 
 # The user to create
-USER=$(APPLICATION)
+USER=${APPLICATION}
 
 
 # The database to create
-DATABASE_NAME=$(APPLICATION)
+DATABASE_NAME=${APPLICATION}
 
 
 # The database user
-DATABASE_USER=$(APPLICATION)
+DATABASE_USER=${APPLICATION}
 
 
 # The default domain of the server
-DEFAULT_NGINX_SERVEUR=$(DOMAIN)
+DEFAULT_NGINX_SERVEUR=${DOMAIN}
 
 
 # The version of NODE JS (lts) to install
@@ -160,11 +166,11 @@ MODEL_CACHE_ENABLED=true
 ###################################################################################################################
 
 # The path of the database dump file
-DB_DUMP_PATH=$(shell pwd)
+DB_DUMP_PATH=${pwd}
 
 
 # The path of the storage folder dump file
-STORAGE_DUMP_PATH=$(shell pwd)
+STORAGE_DUMP_PATH=${pwd}
 
 
 ###################################################################################################################
@@ -179,7 +185,7 @@ DKIM_KEYS=yes
 
 # In the ansistrano shared folder
 DKIM_STORAGE_PRIVATE_KEY_PATH=storage/dkim/dkim.private.key
-DKIM_STORAGE_PUBLIC_KEY_PATH=storage/dkim/dkim.public.pub
+DKIM_STORAGE_PUBLIC_KEY_PATH=storage/dkim/dkim.public.key
 
 # Display the public key in console in order to copy it and put it on the host of the domain
 SHOW_DKIM_PUBLIC_KEY=yes
@@ -192,7 +198,7 @@ SHOW_DKIM_PUBLIC_KEY=yes
 
 
 ZSH_THEME=random
-ZSH_PLUGINS=git composer npm sudo
+ZSH_PLUGINS="git composer npm sudo"
 
 ###################################################################################################################
 ##########                                                                                            #############
@@ -216,129 +222,5 @@ MEMORY_LIMIT=128M
 UPLOAD_MAX_FILESIZE=50M
 POST_MAX_SIZE=50M
 
-
-###################################################################################################################
-#######################
-##########                                       TASKS                                                #############
-##########                          Just shortcuts to launch ansible tasks                            #############
-##########                                                                                            #############
-###################################################################################################################
-
-#------------------------------------------------------------------------------------------------------------------------------>
-clean: ## remove deploy temporary files
-	@rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE)
-	@rm -rf $(PLAYBOOKS_DIR)/tmp/$(ARCHIVE).tgz
-
-#------------------------------------------------------------------------------------------------------------------------------>
-help: ## Display this help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
-#------------------------------------------------------------------------------------------------------------------------------>
-deploy: ## Deploy website
-	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/deploy.yml \
-						--vault-password-file $(VAULT_PASS) \
-												--extra-vars " \
-														playbooks_directory_path=$(PLAYBOOKS_DIR) show_dkim_public_key=$(SHOW_DKIM_PUBLIC_KEY) \
-														application=$(APPLICATION) domain=$(DOMAIN) php_version=$(PHP_VERSION) \
-														remote_default_user=$(REMOTE_DEFAULT_USER) \
-														remote_server_user=$(REMOTE_SERVER_USER) \
-														archive=$(ARCHIVE) repository=$(REPOSITORY) \
-														user=$(USER) database_name=$(DATABASE_NAME) \
-														dkim_storage_private_key_path=$(DKIM_STORAGE_PRIVATE_KEY_PATH) \
-														dkim_storage_public_key_path=$(DKIM_STORAGE_PUBLIC_KEY_PATH) \
-														database_user=$(DATABASE_USER) keep_releases=$(KEEP_RELEASES) \
-														build_javascript=$(BUILD_JAVASCRIPT) copy_strategy=$(COPY_STRATEGY) \
-														scheduler=$(SCHEDULER) horizon=$(HORIZON) dkim_keys=$(DKIM_KEYS) \
-													"
-
-#------------------------------------------------------------------------------------------------------------------------------>
-rollback: ## Rollback website
-	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/rollback.yml \
-						--vault-password-file $(VAULT_PASS) \
-												--extra-vars " \
-														playbooks_directory_path=$(PLAYBOOKS_DIR) show_dkim_public_key=$(SHOW_DKIM_PUBLIC_KEY) \
-														application=$(APPLICATION) domain=$(DOMAIN) php_version=$(PHP_VERSION) \
-														remote_default_user=$(REMOTE_DEFAULT_USER) \
-														remote_server_user=$(REMOTE_SERVER_USER) \
-														archive=$(ARCHIVE) repository=$(REPOSITORY) \
-														user=$(USER) database_name=$(DATABASE_NAME) \
-														database_user=$(DATABASE_USER) keep_releases=$(KEEP_RELEASES) \
-														build_javascript=$(BUILD_JAVASCRIPT) copy_strategy=$(COPY_STRATEGY) \
-														scheduler=$(SCHEDULER) horizon=$(HORIZON) dkim_keys=$(DKIM_KEYS) \
-													" -v
-
-#------------------------------------------------------------------------------------------------------------------------------>
-dbdump: ## Dump database
-	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/dbdump.yml \
-						--vault-password-file $(VAULT_PASS) \
-												--extra-vars " \
-															playbooks_directory_path=$(PLAYBOOKS_DIR) \
-															application=$(APPLICATION) domain=$(DOMAIN) \
-															user=$(USER) database_name=$(DATABASE_NAME) \
-															database_user=$(DATABASE_USER) path=$(DB_DUMP_PATH) \
-												"
-#------------------------------------------------------------------------------------------------------------------------------>
-install: ## Install and configure the server
-	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/install.yml \
-						--vault-password-file $(VAULT_PASS) \
-												--extra-vars " \
-														playbooks_directory_path=$(PLAYBOOKS_DIR)  zsh_plugins=$(ZSH_PLUGINS) \
-														application=$(APPLICATION) domain=$(DOMAIN) php_version=$(PHP_VERSION) \
-														remote_server_user=$(REMOTE_SERVER_USER) nodejs_version=$(NODEJS_VERSION) \
-														remote_default_user=$(REMOTE_DEFAULT_USER) domain=$(DOMAIN) \
-														user=$(USER) database_name=$(DATABASE_NAME) zsh_theme=$(ZSH_THEME) \
-														database_user=$(DATABASE_USER) default_nginx_serveur=$(DEFAULT_NGINX_SERVEUR) \
-														ftp_host=$(FTP_HOST) ftp_username=$(FTP_USERNAME) vim_rc_url=$(VIM_RC_URL) \
-														model_cache_enabled=$(MODEL_CACHE_ENABLED) vim_set_number=$(VIM_SET_NUMBER) \
-														mail_from_address=$(MAIL_FROM_ADDRESS) app_first_name=$(APP_FIRST_NAME) \
-														app_last_name=$(APP_LAST_NAME) memory_limit=$(MEMORY_LIMIT) \
-														upload_max_filesize=$(UPLOAD_MAX_FILESIZE) post_max_size=$(POST_MAX_SIZE) \
-														forward_root_emails=$(FORWARD_ROOT_EMAILS) \
-												"
-#------------------------------------------------------------------------------------------------------------------------------>
-storagedump: ## Dump the storage folder
-	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/storagedump.yml \
-						--vault-password-file $(VAULT_PASS) \
-												--extra-vars " \
-															playbooks_directory_path=$(PLAYBOOKS_DIR) \
-															application=$(APPLICATION) domain=$(DOMAIN) \
-															user=$(USER)  \
-															path=$(STORAGE_DUMP_PATH)  \
-												"
-#------------------------------------------------------------------------------------------------------------------------------>
-dbseed: ## Seed database
-	@ansible-playbook -i "$(HOST)," $(PLAYBOOKS_DIR)/tasks/dbseed.yml \
-						--vault-password-file $(VAULT_PASS) \
-												--extra-vars " \
-															seed_file='$(SEED_FILE)' user='$(USER)' \
-															domain='$(DOMAIN)' \
-												"
-
-#------------------------------------------------------------------------------------------------------------------------------>
-run: ## Run a command on host machine from deploy directory
-	@ssh $(APPLICATION)@$(HOST) "cd /home/$(APPLICATION)/$(DOMAIN)/current && $(COMMAND)"
-
-#------------------------------------------------------------------------------------------------------------------------------>
-dkim: ## Display dkim publick key
-	@make run COMMAND="cat $(DKIM_STORAGE_PUBLIC_KEY_PATH)" --silent
-
-
-###################################################################################################################
-##########                                                                                            #############
-##########                       PASSWORDS                                                            #############
-##########                                                                                            #############
-###################################################################################################################
-
-#------------------------------------------------------------------------------------------------------------------------------>
-create: ## Create passwords file content
-	@ansible-vault create $(PLAYBOOKS_DIR)/variables/passwords.yml --vault-password-file=$(VAULT_PASS)
-
-#------------------------------------------------------------------------------------------------------------------------------>
-view: ## View passwords file content
-	@ansible-vault view $(PLAYBOOKS_DIR)/variables/passwords.yml --vault-password-file=$(VAULT_PASS)
-
-#------------------------------------------------------------------------------------------------------------------------------>
-edit: ## Edit passwords file
-	@ansible-vault edit $(PLAYBOOKS_DIR)/variables/passwords.yml --vault-password-file=$(VAULT_PASS)
-
-
+# This line can not be removed
+source ${PLAYBOOKS_DIR}/tasks.sh
