@@ -23,7 +23,7 @@
   - name: Copy file from remote to host
     fetch:
       src: "{{ dump_path }}"
-      dest: "{{ path }}/"
+      dest: "{{ temporary_dir | dirname }}/"
       flat: yes
 
   - name: Delete remote archive

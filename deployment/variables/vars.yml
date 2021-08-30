@@ -1,4 +1,4 @@
-archive_path: "{{ playbooks_directory_path }}/tmp/{{ archive }}.tgz"
+archive_path: "{{ temporary_dir }}/tmp/{{ archive }}.tgz"
 deploy_path: "/home/{{ user }}/{{ domain }}"
 
 dkim_private_key_path: "{{ ansistrano_shared_path }}/{{ dkim_storage_private_key_path }}"

@@ -3,7 +3,6 @@ namespace Database\Seeders;
 
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use Guysolamour\Administrable\Models\Page;
 use Guysolamour\Administrable\Models\PageMeta;
 
 
@@ -16,73 +15,73 @@ class PagesTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create();
+        // $faker = Faker::create();
 
-        $home_page = Page::create([
+        $home_page = config('administrable.modules.page.model')::create([
             'code'   => 'home',
             'name'   => 'Accueil',
             'route'  => 'home',
         ]);
 
         /**
-         * @var Page $home_page
+         * @var \Guysolamour\Administrable\Models\Page $home_page
          */
         $home_page->generateSeo(false);
 
 
 
-        $contact_page = Page::create([
+        $contact_page = config('administrable.modules.page.model')::create([
             'code'   => 'contact',
             'name'   => 'Contact',
             'route'  => '{{frontLowerNamespace}}.contact.create',
         ]);
 
         /**
-         * @var Page $contact_page
+         * @var \Guysolamour\Administrable\Models\Page $contact_page
          */
         $contact_page->generateSeo(false);
 
 
-        $mention_page = Page::create([
+        $mention_page = config('administrable.modules.page.model')::create([
             'code'   => 'legalmention',
             'name'   => 'Mentions légales',
             'route'  => '{{frontLowerNamespace}}.legalmention.index',
         ]);
 
         /**
-         * @var Page $mention_page
+         * @var \Guysolamour\Administrable\Models\Page $mention_page
          */
         $mention_page->generateSeo(false);
 
 
-        $about_page = Page::create([
+        $about_page = config('administrable.modules.page.model')::create([
             'code'   => 'about',
             'name'   => 'A propos',
             'route'  => '{{frontLowerNamespace}}.about.index',
         ]);
         /**
-        * @var Page $about_page
+        * @var \Guysolamour\Administrable\Models\Page $about_page
         */
         $about_page->generateSeo(false);
 
-        $blog_page = Page::create([
+        $blog_page = config('administrable.modules.page.model')::create([
             'code'   => 'blog',
             'name'   => 'Blog',
             'route'  => '{{frontLowerNamespace}}.post.index',
         ]);
         /**
-        * @var Page $blog_page
+        * @var \Guysolamour\Administrable\Models\Page $blog_page
         */
         $blog_page->generateSeo(false);
 
 
-        $search_page = Page::create([
+        $search_page = config('administrable.modules.page.model')::create([
             'code'   => 'search',
             'name'   => 'Recherche',
             'route'  => '{{frontLowerNamespace}}.post.search',
         ]);
         /**
-        * @var Page $search_page
+        * @var \Guysolamour\Administrable\Models\Page $search_page
         */
         $search_page->generateSeo(false);
     }

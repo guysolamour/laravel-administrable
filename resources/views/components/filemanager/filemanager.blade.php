@@ -779,7 +779,7 @@ document.addEventListener('alpine:init', () => {
                         <hr>
 
                         <div class="col-md-12 pl-2">
-                            <div class="row mt-4" >
+                            <div class="row mt-4">
                                 <div x-show="filteredUploadFiles.length > 0" class="col-12 col-md-8 col-xl-8 row order-sm-2 order-md-1  order-xl-1 modal-zone modal-container">
                                     <template x-for="(file, index) in filteredUploadFiles" :key="index">
                                         <div @contextmenu="handleRightClick" @dblclick="toggleSelect(file)" :data-id="file.id" class="imagebox col-12 col-sm-6 col-md-6 col-lg-4"  :class="{ 'choosed-image': file.select }">
@@ -856,7 +856,7 @@ document.addEventListener('alpine:init', () => {
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-4 col-xl-4 border-left order-sm-1 order-md-2 order-xl-2 mb-sm-4 modal-zone mt-4 mt-md-2 ml-md-4">
+                                <div class="col-12 col-md-4 col-xl-4 border-left order-sm-1 order-md-2 order-xl-2 mb-sm-4 modal-zone mt-4 mt-md-2">
                                     <template x-if="!jQuery.isEmptyObject(selected_file)">
                                         <div class="card" >
                                             <img x-show="isImage(selected_file)" :src="selected_file.url" class="card-img-top" :alt="selected_file.name">
@@ -898,7 +898,6 @@ document.addEventListener('alpine:init', () => {
                                     </template>
                                 </div>
                             </div>
-
 
                         </div>
                     </div>

@@ -1,3 +1,14 @@
+@once
+    @push('css')
+    <link rel="stylesheet" href="{{ asset('css/vendor/jquery.fancybox.min.css') }}">
+    @endpush
+
+    @push('js')
+    <script src="{{ asset('js/vendor/jquery.fancybox.min.js') }}"></script>
+    @endpush
+@endonce
+
+@if($model->$collection)
 <div class="card front-image-collection">
     <div class="card-header bg-secondary">
         <h3 class="card-title text-white">
@@ -31,12 +42,5 @@
         @endif
     </div>
 </div>
+@endif
 
-
-@push('css')
-<link rel="stylesheet" href="{{ asset('css/vendor/jquery.fancybox.min.css') }}">
-@endpush
-
-@push('js')
-<script src="{{ asset('js/vendor/jquery.fancybox.min.js') }}"></script>
-@endpush

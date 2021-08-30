@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ALL_COMMANDS=(
-  'help' 'run' 'exec' 'dkim' 'rollback' 'db:dump' 'db:deploy' 'db:import'
-  'install' 'storage:dump' 'db:seed' 'password:create' 'password:view' 'password:edit'
+  'help' 'run' 'exec' 'dkim' 'rollback' 'db:dump' 'db:deploy' 'db:import' 'clean' 'storage:deploy'
+  'install' 'storage:dump' 'storage:import' 'db:seed' 'password:create' 'password:view' 'password:edit'
 )
 
 
@@ -57,7 +57,7 @@ if [ $TARGET == "install" ]
 then
     ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/install.yml --vault-password-file ${VAULT_PASS}  \
             --extra-vars " \n
-             		playbooks_directory_path='${PLAYBOOKS_DIR}'  zsh_plugins='${ZSH_PLUGINS}'
+             	playbooks_directory_path='${PLAYBOOKS_DIR}'  zsh_plugins='${ZSH_PLUGINS}'
                 application='${APPLICATION}' domain='${DOMAIN}' php_version='${PHP_VERSION}'
                 remote_server_user='${REMOTE_SERVER_USER}' nodejs_version='${NODEJS_VERSION}'
                 remote_default_user='${REMOTE_DEFAULT_USER}' domain='${DOMAIN}'
@@ -79,7 +79,7 @@ fi
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "run" ]
 then
-    ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/rollback.yml --vault-password-file ${VAULT_PASS} \
+    ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/deploy.yml --vault-password-file ${VAULT_PASS} \
             --extra-vars " \n
                 playbooks_directory_path='${PLAYBOOKS_DIR}' show_dkim_public_key='${SHOW_DKIM_PUBLIC_KEY}'
                 application='${APPLICATION}'  domain='${DOMAIN}' php_version='${PHP_VERSION}'
@@ -91,7 +91,7 @@ then
                 database_user='${DATABASE_USER}' keep_releases='${KEEP_RELEASES}'
                 build_javascript='${BUILD_JAVASCRIPT}' copy_strategy='${COPY_STRATEGY}'
                 scheduler='${SCHEDULER}' horizon='${HORIZON}' dkim_keys='${DKIM_KEYS}'
-            "
+            " -v
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
 
@@ -154,7 +154,7 @@ if [ $TARGET == "db:deploy" ]
 then
 	  ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/dbdeploy.yml --vault-password-file ${VAULT_PASS} \
             --extra-vars " \n
-                  playbooks_directory_path='${PLAYBOOKS_DIR}'
+                  playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                   user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
                   application='${APPLICATION}' domain='${DOMAIN}'
             "
@@ -169,7 +169,7 @@ if [ $TARGET == "db:import" ]
 then
 	  ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/dbimport.yml --vault-password-file ${VAULT_PASS} \
             --extra-vars " \n
-                  playbooks_directory_path='${PLAYBOOKS_DIR}'
+                  playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                   user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
                   application='${APPLICATION}' domain='${DOMAIN}'
             "
@@ -184,7 +184,7 @@ if [ $TARGET == "storage:dump" ]
 then
     ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/storagedump.yml --vault-password-file ${VAULT_PASS}  \
             --extra-vars " \n
-            	playbooks_directory_path='${PLAYBOOKS_DIR}'
+            	playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
               application='${APPLICATION}' domain='${DOMAIN}'
               user='${USER}' temporary_dir='${TEMPORARY_DIR}'
               path='${STORAGE_DUMP_PATH}'
@@ -200,11 +200,26 @@ if [ $TARGET == "storage:import" ]
 then
     ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/storageimport.yml --vault-password-file ${VAULT_PASS}  \
             --extra-vars " \n
-                playbooks_directory_path='${PLAYBOOKS_DIR}'
+                playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                 user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
                 application='${APPLICATION}' domain='${DOMAIN}'
                 storage_dump_path='${STORAGE_DUMP_PATH}'
-            "
+            " -v
+fi
+#------------------------------------------------------------------------------------------------------------------------------>
+
+#------------------------------------------------------------------------------------------------------------------------------>
+# Sync production  and local storage folder
+#------------------------------------------------------------------------------------------------------------------------------>
+if [ $TARGET == "storage:deploy" ]
+then
+    ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/storagedeploy.yml --vault-password-file ${VAULT_PASS}  \
+            --extra-vars " \n
+                playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
+                user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
+                application='${APPLICATION}' domain='${DOMAIN}'
+                storage_dump_path='${STORAGE_DUMP_PATH}'
+            " -v
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
 

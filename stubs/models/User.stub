@@ -13,7 +13,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
-    use HasFactory, Notifiable, CommenterTrait, MediaableTrait, ModelTrait;
+    use HasFactory;
+    use Notifiable;
+    use CommenterTrait;
+    use MediaableTrait;
+    use ModelTrait;
 
     /**
      * The attributes that are mass assignable.

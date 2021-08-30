@@ -43,12 +43,15 @@
 ##########             vault_database_password: password                                              #############
 ##########             vault_database_root_password: password                                         #############
 ##########             vault_ftp_password: password                                                   #############
+##########             vault_admin_local_password: password                                           #############
+##########             vault_admin_production_password: password                                      #############
+##########             vault_ftp_password: password                                                   #############
 ##########   vault_app_key: Copy and paste the output of php artisan key:generate --show command      #############                               #############
 ###################################################################################################################
 
 
 # The playbook folder
-PLAYBOOKS_DIR=$(pwd)/vendor/guysolamour/administrable/deployment
+PLAYBOOKS_DIR=$(pwd)/vendor/guysolamour/laravel-administrable/deployment
 
 # Le dossier où sera stocké les fichiers temporaires et les fichiers de mot de passe.
 # Ce dossier ne doit pas etre versionné
@@ -170,7 +173,7 @@ DB_DUMP_PATH=${pwd}
 
 
 # The path of the storage folder dump file
-STORAGE_DUMP_PATH=${pwd}
+STORAGE_DUMP_PATH=$(pwd)
 
 
 ###################################################################################################################

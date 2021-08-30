@@ -4,7 +4,6 @@ namespace Database\Seeders;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Guysolamour\Administrable\Settings\ConfigurationSettings;
 
 class ConfigurationsTableSeeder extends Seeder
 {
@@ -17,7 +16,10 @@ class ConfigurationsTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        $configuration = ConfigurationSettings::get();
+        /**
+        * @var \Guysolamour\Administrable\Settings\BaseSettings
+        */
+        $configuration = config('administrable.modules.configuration.model')::get();
 
         $configuration->update([
             'about'    => $faker->realText(150),
