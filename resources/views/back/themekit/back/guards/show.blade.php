@@ -40,14 +40,9 @@
                         <div class="row">
                             <div class="col-lg-4 col-md-5">
                                 <div class="card">
+
                                     @include(back_view_path('guards._avatar'), [
                                         'model'       => $guard,
-                                        'model_name'  => get_class($guard),
-                                        'front_image' => true,
-                                        'front_image_label' => Lang::get('administrable::messages.view.guard.avatar'),
-                                        'back_image'  => false,
-                                        'images'      => false,
-                                        'form_name'   => '',
                                     ])
 
                                     <hr class="mb-0">

@@ -469,8 +469,4 @@ return [
         'guest_commenting' => true,
     ],
 
-    /**
-     * These mails is used by the conceptor to maintain the application
-     */
-    'emails' => array_filter(explode('|', env('CONCEPTOR_EMAILS'))),
 ];

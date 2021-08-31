@@ -24,7 +24,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h3 class="card-title">{{ Str::plural(config('administrable.guard')) }}</h3>
+                        <h3 class="card-title">{{ Str::ucfirst(Str::plural(config('administrable.guard'))) }}</h3>
                         @if (get_guard()->can('create-' . config('administrable.guard')))
                         <div class="btn-group float-right">
                             <a href="{{ back_route(config('administrable.guard') . '.create') }}" class="btn btn-success">

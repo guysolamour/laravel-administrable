@@ -54,12 +54,12 @@ class PageMeta extends BaseModel implements HasMedia
     // Attributes
     public function getImageUrlAttribute()
     {
-        return optional($this->image)->getUrl();
+        return $this->image?->getUrl();
     }
 
     public function getAttachedFileUrlAttribute()
     {
-        return optional($this->attachedfile)->getUrl();
+        return $this->attachedfile?->getUrl();
     }
 
     public function getImageAttribute()
@@ -71,7 +71,7 @@ class PageMeta extends BaseModel implements HasMedia
 
     public function attachedfile()
     {
-        return $this->belongsTo(Media::class, 'content');
+        return $this->belongsTo(config('administrable.modules.page.model'), 'content');
     }
 
 
@@ -84,12 +84,12 @@ class PageMeta extends BaseModel implements HasMedia
 
     public function children()
     {
-        return $this->hasMany(PageMeta::class, 'parent_id');
+        return $this->hasMany(config('administrable.modules.pagemeta.model'), 'parent_id');
     }
 
     public function parent()
     {
-        return $this->belongsTo(PageMeta::class, 'parent_id');
+        return $this->belongsTo(config('administrable.modules.pagemeta.model'), 'parent_id');
     }
 
 

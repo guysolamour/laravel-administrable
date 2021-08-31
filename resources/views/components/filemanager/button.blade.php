@@ -1,5 +1,5 @@
 <x-administrable-filemanager
-    :model="$model" :target="$target" :collection="$collection" :type="$type"
+    :model="$model" :target="$target" :collection="$collection" :type="$type ?? 'image'"
 />
 
 

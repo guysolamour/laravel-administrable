@@ -60,7 +60,7 @@ class Page extends BaseModel
      */
     public function metatags()
     {
-        return $this->hasMany(PageMeta::class, 'page_id');
+        return $this->hasMany(config('administrable.modules.pagemeta.model'), 'page_id');
     }
 
     public function getRelatedForm(): string
@@ -100,7 +100,7 @@ class Page extends BaseModel
                 'code'    => 'defaultgroup',
                 'name'    => 'Groupe par défaut',
                 'title'   => 'Groupe par défaut',
-                'type'    =>  PageMeta::TYPES['group']['value'],
+                'type'    =>  config('administrable.modules.pagemeta.model')::TYPES['group']['value'],
             ]);
         });
     }

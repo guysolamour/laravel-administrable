@@ -169,7 +169,7 @@ MODEL_CACHE_ENABLED=true
 ###################################################################################################################
 
 # The path of the database dump file
-DB_DUMP_PATH=${pwd}
+DB_DUMP_PATH=$(pwd)
 
 
 # The path of the storage folder dump file

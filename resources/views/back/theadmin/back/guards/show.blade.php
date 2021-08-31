@@ -9,12 +9,6 @@
     <header class="header bg-img">
            @include(back_view_path('guards._avatar'), [
                 'model'       => $guard,
-                'model_name'  => get_class($guard),
-                'front_image' => true,
-                'front_image_label' => Lang::get('administrable::messages.view.guard.avatar'),
-                'back_image'  => false,
-                'images'      => false,
-                'form_name'   => '',
             ])
 
         <div class="header-action bg-white">

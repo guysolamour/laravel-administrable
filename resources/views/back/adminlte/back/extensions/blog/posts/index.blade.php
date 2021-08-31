@@ -120,7 +120,7 @@
                                                                 -
                                                             @endforelse
                                                         </td>
-                                                        <td>{{ $post->created_at->format('d/m/Y h:i') }}</td>
+                                                        <td>{{ $post->created_at?->format('d/m/Y h:i') }}</td>
                                                         {{-- add values here --}}
                                                         <td>
                                                             <div class="btn-group" role="group">

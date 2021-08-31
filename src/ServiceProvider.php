@@ -63,10 +63,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->packagePath('resources/lang') => resource_path('lang/vendor/administrable'),
         ], 'administrable-lang');
 
+        // View aliases
         Blade::include('administrable::front.comments.comments', 'comments');
         Blade::include('administrable::filemanager.image', 'imagemanager');
         Blade::include('administrable::filemanager.button', 'filemanagerButton');
         Blade::include('administrable::filemanager.show', 'filemanagerShow');
+        Blade::include('administrable::filemanager.guardavatar', 'guardavatar');
+
 
         $this->loadPolicies([
             config('administrable.modules.comment.model') => config('administrable.modules.comment.front.policy'),
