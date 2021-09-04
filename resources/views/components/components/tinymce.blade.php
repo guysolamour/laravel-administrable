@@ -17,7 +17,6 @@
         language: 'fr_FR',
 
         plugins: [
-        "imagemanager",
         "advlist autolink lists link image autoresize autosave charmap print preview hr anchor pagebreak",
         "searchreplace wordcount visualblocks visualchars code fullscreen help",
         "insertdatetime  nonbreaking save table contextmenu directionality",

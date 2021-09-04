@@ -71,7 +71,7 @@ class PageMeta extends BaseModel implements HasMedia
 
     public function attachedfile()
     {
-        return $this->belongsTo(config('administrable.modules.page.model'), 'content');
+        return $this->belongsTo(config('media-library.media_model'), 'content');
     }
 
 

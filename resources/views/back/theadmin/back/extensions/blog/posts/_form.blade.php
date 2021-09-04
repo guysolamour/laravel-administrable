@@ -158,10 +158,11 @@
                 {!! form_row($form->author_id) !!}
             </div>
         </div>
-        @imagemanager([
-            'front_image_label' => 'Image à la une',
-            'model'             => $form->getModel(),
-            'front_image'       => true,
+       @imagemanager([
+            'collection'  => 'front-image',
+            'type'        => 'image',
+            'label'       => 'Image à la une',
+            'model'       => $form->getModel(),
         ])
     </div>
 </div>

@@ -159,9 +159,10 @@
             </div>
         </div>
         @imagemanager([
-            'front_image_label' => 'Image à la une',
-            'model'             => $form->getModel(),
-            'front_image'       => true,
+            'collection'  => 'front-image',
+            'type'        => 'image',
+            'label'       => 'Image à la une',
+            'model'       => $form->getModel(),
         ])
     </div>
 </div>

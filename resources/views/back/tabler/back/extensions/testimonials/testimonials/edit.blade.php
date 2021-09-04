@@ -10,7 +10,7 @@
         <div class="d-flex justify-content-between">
             <ol class="breadcrumb breadcrumb-arrows" aria-label="breadcrumbs">
                 <li class="breadcrumb-item"><a href="{{ route( config('administrable.guard') . '.dashboard') }}">{{ Lang::get('administrable::messages.default.dashboard') }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ back_route('extensions.testimonial.testimonial.index') }}">{{ Lang::get('administrable::extensions.testomonial.label') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ back_route('extensions.testimonial.testimonial.index') }}">{{ Lang::get('administrable::extensions.testimonial.label') }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ back_route('extensions.testimonial.testimonial.show', $testimonial) }}">{{ $testimonial->name }}</a></li>
                 <li class="breadcrumb-item active">{{ Lang::get('administrable::messages.default.edition') }}</li>
             </ol>
@@ -34,12 +34,10 @@
                 @include(back_view_path('extensions.testimonials.testimonials._form'), ['edit' => true])
             </div>
             <div class="col-md-4">
-                @include(back_view_path('media._imagemanager'), [
-                    'front_image_label' => 'Photo',
-                    'model'             => $form->getModel(),
-                    'front_image'       => true,
-                    'back_image'        => false,
-                    'images'            => false,
+                @imagemanager([
+                    'collection' => 'front-image',
+                    'label'      => 'Photo',
+                    'model'      => $form->getModel(),
                 ])
             </div>
         </div>

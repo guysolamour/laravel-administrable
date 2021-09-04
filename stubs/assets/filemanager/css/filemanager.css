@@ -219,7 +219,7 @@
 
 .modal-zone {
     overflow:hidden scroll;
-    height: 50vh;
+    height: 45vh;
     z-index:9000
 }
 

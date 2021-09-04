@@ -1,7 +1,7 @@
 @extends(back_view_path('layouts.base'))
 
 
-@section('title', Lang::get('administrable::extensions.testimonial.label'));
+@section('title', Lang::get('administrable::extensions.testimonial.label'))
 
 
 @section('content')

@@ -84,6 +84,10 @@ class Helper {
     {
         $view =  $this->getViewPath($view, config('administrable.back_namespace'));
 
+        if (View::exists($view)) {
+            return $view;
+        }
+
         if (View::exists("administrable::{$view}")) {
             return "administrable::{$view}";
         }

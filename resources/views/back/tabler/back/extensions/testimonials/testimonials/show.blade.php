@@ -2,9 +2,7 @@
 
 @section('title', $testimonial->name)
 
-
 @section('content')
-
 <div class="row mb-5">
     <div class="col-12">
         <div class="d-flex justify-content-between">
@@ -68,8 +66,9 @@
                 </div>
              </div>
             <div class="col-md-4">
-                @include(back_view_path('media._show'), [
-                    'model' => $testimonial,
+                @filemanagerShow([
+                   'model'      => $testimonial,
+                   'collection' => 'front-image',
                 ])
             </div>
        </div>

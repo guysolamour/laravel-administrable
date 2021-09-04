@@ -11,9 +11,9 @@ class PostController extends BaseController
     {
         $page = get_meta_page('blog');
 
-        $posts = config('administrable.extensions.blog.post.model')::online()->with('categories')->last()->paginate(9);
+        $posts = config('administrable.extensions.blog.post.model')::online()->with('categories')->latest()->paginate(9);
 
-        $categories = config('administrable.extensions.blog.tag.model')::withCount('posts')->last()->get();
+        $categories = config('administrable.extensions.blog.tag.model')::withCount('posts')->latest()->get();
 
         return front_view('extensions.blog.index', compact('page', 'posts', 'categories'));
     }
@@ -29,7 +29,7 @@ class PostController extends BaseController
     {
         $category = config('administrable.extensions.blog.category.model')::where('slug', $slug)->firstOrFail();
 
-        $posts = $category->posts()->online()->with('categories', 'approvedComments')->last()->paginate(5);
+        $posts = $category->posts()->online()->with('categories', 'approvedComments')->latest()->paginate(5);
 
         return front_view('extensions.blog.category', compact('category', 'posts'));
     }
@@ -38,7 +38,7 @@ class PostController extends BaseController
     {
         $tag = config('administrable.extensions.blog.tag.model')::where('slug', $slug)->firstOrFail();
 
-        $posts = $tag->posts()->online()->with('tags', 'approvedComments')->last()->paginate(5);
+        $posts = $tag->posts()->online()->with('tags', 'approvedComments')->latest()->paginate(5);
 
         return front_view('extensions.blog.tag', compact('tag', 'posts'));
     }

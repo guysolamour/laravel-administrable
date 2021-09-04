@@ -1,7 +1,7 @@
 @php
     $component_name = 'image' . strtolower(Str::random(20));
 @endphp
-<div class="card" x-data="{{ $component_name }}" x-ref="root" x-cloak>
+<div class="card" x-data="{{ $component_name }}" x-ref="root">
     <div class="card-header bg-secondary">
         <h3 class="card-title text-white">
             {{ $label }}
@@ -61,9 +61,6 @@
 @once
     @push('css')
     <link rel="stylesheet" href="{{ asset('css/vendor/jquery.fancybox.min.css') }}">
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
     @endpush
 @endonce
 
