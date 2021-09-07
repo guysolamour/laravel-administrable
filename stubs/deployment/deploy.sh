@@ -58,7 +58,7 @@ PLAYBOOKS_DIR=$(pwd)/vendor/guysolamour/laravel-administrable/deployment
 TEMPORARY_DIR=$(pwd)/.deployment
 
 # The name of the file that will store the code to decrypt passwords
-VAULT_PASS=.vault-pass
+VAULT_PASS={{vault}}
 
 
 # User who will be used to launch the tasks on the server
@@ -73,7 +73,7 @@ REMOTE_SERVER_USER=www-data
 
 
 # Ip address for the remote server
-HOST=
+HOST={{server}}
 
 
 # The strategy used to get the source files (git clone or git archive)
@@ -90,7 +90,7 @@ APPLICATION={{appname}}
 
 
 
-# The website domain
+# The website domain without http or https
 DOMAIN={{appurl}}
 
 

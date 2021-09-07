@@ -101,13 +101,14 @@ class DeployCommand extends BaseCommand
             '{{ftphost}}'           =>  Str::lower(config('filesystems.disks.ftp.host', '')),
             '{{ftpusername}}'       =>  Str::lower(config('filesystems.disks.ftp.username', '')),
             '{{notifemail}}'        =>  Str::lower(config('mail.from.address', '')),
-            '{{vaultcode}}'         =>  Str::lower($this->password ?: ''),
+            '{{vaultcode}}'         =>  $this->password ?: '',
+            '{{vault}}'             =>  $this->option('vault'),
         ];
     }
 
     private function addPathFolderToGitignore() :void
     {
-        $this->filesystem->append(base_path('.gitignore'), DIRECTORY_SEPARATOR .  $this->option('path'));
+        $this->filesystem->append(base_path('.gitignore'), DIRECTORY_SEPARATOR .  $this->option('path') . PHP_EOL . $this->option('vault') );
     }
 
 	private function checkIfGenerationHasAlreadyBeenDone() :bool

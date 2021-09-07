@@ -218,7 +218,7 @@ then
                 playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                 user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
                 application='${APPLICATION}' domain='${DOMAIN}'
-                storage_dump_path='${STORAGE_DUMP_PATH}'
+                storage_dump_path='${STORAGE_DUMP_PATH}' remote_server_user='${REMOTE_SERVER_USER}
             " -v
 fi
 #------------------------------------------------------------------------------------------------------------------------------>

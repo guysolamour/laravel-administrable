@@ -24,6 +24,11 @@
       chdir: "{{ temporary_dir | dirname }}"
     delegate_to: localhost
 
+  - name: Create database snapshots folder
+    file:
+      path: "{{ current_realease_path }}/{{ database_dump_folder }}"
+      state: directory
+
   - name: Copy file from host to remote
     become: "{{ remote_default_user }}"
     copy:
