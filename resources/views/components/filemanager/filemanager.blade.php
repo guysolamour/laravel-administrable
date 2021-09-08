@@ -237,7 +237,7 @@ document.addEventListener('alpine:init', () => {
             return document.querySelector('#' + this[name + 'Modal'])
         },
         fetchTemporaryMedia(select_file = true){
-            axios.post(`/${this.routeprefix}/temporarymedia/option`, { collection: this.collection })
+            axios.post(`/${this.routeprefix}/temporarymedia/option`, { collection: this.collection, model: this.model_name })
                 .then(({ data }) => {
                    if (!data){
                        return

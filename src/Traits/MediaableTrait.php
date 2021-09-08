@@ -182,12 +182,12 @@ trait MediaableTrait
          */
         static::created(function ($model) {
 
-            if (!request()->has('filemanager')){
+            if (get_called_class() === config('administrable.modules.seo.model') || !request()->has('filemanager') ){
                 return;
             }
 
             $files = collect(request('filemanager'))->map(function ($item) {
-                return array_map(fn ($key) => config("administrable.modules.filemanager.temporary_model")::findOrFail($key), json_decode($item));
+                return array_map(fn ($key) => config("administrable.modules.filemanager.temporary_model")::find($key), json_decode($item));
             });
 
             if ($files->isEmpty()) {
@@ -201,6 +201,8 @@ trait MediaableTrait
                      */
                     $model
                         ->addMedia($file->getStorageUrl())
+                        ->preservingOriginal()
+
                         ->usingName($file->name)
                         ->usingFileName($file->file_name)
                         ->withCustomProperties($file->custom_properties)
@@ -208,7 +210,7 @@ trait MediaableTrait
 
                     $file->delete();
                 }
-                option_delete('filemanager' . $collection);
+                option_delete(config("administrable.modules.filemanager.temporary_model")::getMediaOptionsKey());
             });
         });
     }

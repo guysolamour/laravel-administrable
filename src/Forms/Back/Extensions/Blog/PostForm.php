@@ -21,6 +21,7 @@ class PostForm extends Form
             'method' => $method,
             'url'    => $url,
             'name'   => get_form_name($this->getModel()),
+            'id'   => get_form_name($this->getModel()),
         ];
 
 	    $this

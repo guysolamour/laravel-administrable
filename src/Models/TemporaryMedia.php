@@ -133,34 +133,56 @@ class TemporaryMedia extends Model
 
     public function getStorageUrl() :string
     {
+        //  return storage_path('app/public/administrable/temp/gallery-62021090806.jpg');
          return storage_path('app/public/' .   $this->getRawOriginal('url'));
     }
 
+    private function getMediaInOptions() :array
+    {
+        $option = json_decode(option_get(self::getMediaOptionsKey()), true);
 
-    public function registerMediaInOptions() :void
+        if (
+            empty($option) ||
+            $option['path'] !== request('path') ||
+            $option['model_name'] !== request('model')
+        ) {
+            return [];
+        }
+
+        return $option;
+    }
+
+    public static function getMediaOptionsKey() :string
+    {
+        return 'filemanager' . request('collection') . Str::lower(str_replace('\\', '', request('model')));
+    }
+
+
+    public function registerMediaInOptions()
     {
         $collection = request('collection');
 
-        $key   = 'filemanager' . $collection;
+        $key  = self::getMediaOptionsKey();
 
-        $option = json_decode(option_get($key), true);
-
-        $keys = $option ? $option['keys'] : [];
-
-        // append current media key
-        $keys[] = $this->getKey();
-
-        option_edit('filemanager' . $collection, json_encode([
+        $data = [
             'path'       => request('path'),
             'collection' => $collection,
             'model_name' => request('model'),
-            'keys'       => $keys,
-        ]));
-    }
+        ];
 
-    // public function removeMediaInOptions()
-    // {
-    // }
+
+        $option = $this->getMediaInOptions();
+
+        if (empty($option)){
+            return option_create($key, json_encode(array_merge($data, [
+                'keys'       => [$this->getKey()],
+            ])));
+        }
+
+        return option_edit($key, json_encode(array_merge($data, [
+            'keys'       => [...$option['keys'], $this->getKey()],
+        ])));
+    }
 
 
     /**

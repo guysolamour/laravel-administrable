@@ -30,7 +30,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h3 class="card-title">Articles</h3>
+                        <h3 class="card-title">Étiquettes</h3>
                         <div class="btn-group float-right">
                             <a href="{{ back_route('extensions.blog.tag.create') }}" class="btn btn-success">
                                 <i class="fa fa-plus"></i>Ajouter</a>

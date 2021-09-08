@@ -25,11 +25,11 @@ class TemporaryMediaController extends BaseController
     }
 
 
-    public function getOption(Request $request)
+    public function getOption()
     {
-        $option = json_decode(option_get('filemanager' . $request->input('collection')), true);
+        $key = config("administrable.modules.filemanager.temporary_model")::getMediaOptionsKey();
 
-        return response()->json($option);
+        return response()->json(json_decode(option_get($key), true));
     }
 
     public function store(MediaFormRequest $request)

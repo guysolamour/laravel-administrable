@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="card-body">
-                        @include(back_view_path('extensions.blog.posts._form'))
+                        @include(back_view_path('extensions.blog.posts._form2'))
                     </div>
                 </div>
             </div>

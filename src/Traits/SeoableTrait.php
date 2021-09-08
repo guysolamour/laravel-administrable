@@ -57,7 +57,8 @@ trait SeoableTrait
          * @param \Illuminate\Database\Eloquent\Model|\Guysolamour\Administrable\Traits\SeoableTrait $model
          */
         static::saved(function ($model) {
-            if (request('seo')) {
+            // dd( 'salut');
+            if (request()->has('seo')) {
                 $model->generateSeo();
             }
         });

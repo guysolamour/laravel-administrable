@@ -52,11 +52,15 @@ class PostController extends BaseController
     {
         $form = $this->getForm(new (config('administrable.extensions.blog.post.model')), config('administrable.extensions.blog.post.back.form'));
         $form->redirectIfNotValid();
+        // dd($request->all());
 
         config('administrable.extensions.blog.post.model')::create($request->all());
 
-        flashy('L\' élément a bien été ajouté');
+        // flashy('L\' élément a bien été ajouté');
 
+
+
+        // return redirect()->route(back_route_path('extensions.blog.post.index'));
         return redirect()->to(back_route('extensions.blog.post.index'));
     }
 

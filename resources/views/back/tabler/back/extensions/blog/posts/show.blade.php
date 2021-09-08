@@ -105,8 +105,10 @@
                         </div>
                     </div>
                 </div>
-                @include(back_view_path('media._show'), [
-                    'model' => $post,
+                @filemanagerShow([
+                    'collection' => 'front-image',
+                    'label'      => 'Image à la une',
+                    'model'      => $post,
                 ])
             </div>
         </div>

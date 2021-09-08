@@ -333,7 +333,7 @@ class GenerateViews extends BaseGenerate
             $partial .= <<<LABEL
                 @filemanagerShow([
                     'model'       =>  \${$model},
-                    'label'       =>  '$label'
+                    'label'       =>  '$label',
                     'collection'  =>  '$collection',
                 ])
 

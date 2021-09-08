@@ -16,8 +16,8 @@ use Guysolamour\Administrable\Casts\DaterangepickerCast;
 class Post extends BaseModel implements HasMedia
 {
     use Sluggable;
-    use SeoableTrait;
     use DaterangeTrait;
+    use SeoableTrait;
     use MediaableTrait;
     use DraftableTrait;
     use CommentableTrait;
@@ -140,7 +140,7 @@ class Post extends BaseModel implements HasMedia
 
     public function getRandomPosts(int $length = 3)
     {
-        $posts =  self::where('id', '!=', $this->id)->with(['media', 'categories'])->get()->shuffle();
+        $posts =  self::where('id', '!=', $this->getKey())->with(['media', 'categories'])->get()->shuffle();
 
         return random_elements($posts, $length);
     }
@@ -194,7 +194,7 @@ class Post extends BaseModel implements HasMedia
         parent::booted();
 
         /**
-         * @param BaseModel $model
+         * @param $this $model
          */
         static::saved(function ($model) {
             $model->saveCategories();
