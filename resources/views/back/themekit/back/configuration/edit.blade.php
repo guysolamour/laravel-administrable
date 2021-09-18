@@ -78,7 +78,7 @@
                         {!! form_row($form->youtube) !!}
                     </div>
                 </div>
-
+                {!! form_rest($form) !!}
                 {{-- add fields here --}}
                  <div class="col-md-12">
                   <div class="form-group">

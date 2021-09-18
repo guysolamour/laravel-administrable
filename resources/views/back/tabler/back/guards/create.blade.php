@@ -26,12 +26,10 @@
                     @include(back_view_path('guards._form'))
                 </div>
                 <div class="col-md-4">
-                   @include(back_view_path('media._imagemanager'), [
-                        'front_image_label' => Lang::get('administrable::messages.view.guard.avatar'),
+                   @imagemanager([
                         'model'             => new (AdminModule::getGuardModel()),
-                        'front_image'       => true,
-                        'back_image'        => false,
-                        'images'            => false,
+                        'collection'        =>  'front-image',
+                        'label'             => Lang::get('administrable::messages.view.guard.avatar'),
                     ])
                 </div>
             </div>

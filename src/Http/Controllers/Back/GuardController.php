@@ -69,7 +69,7 @@ class GuardController extends BaseController
     {
         $guard = Module::getGuardModel()::where('pseudo', $pseudo)->firstOrFail();
 
-        if (!get_guard()->can('update-' . config('administrable.guard') . 'password', $guard)) {
+        if (!get_guard()->can('update-' . config('administrable.guard') . '-password', $guard)) {
             abort(403);
         }
         // Validate the form
@@ -122,12 +122,12 @@ class GuardController extends BaseController
     {
         $guard = Module::getGuardModel()::find($request->get('id'));
 
-        if (!get_guard()->can('change-' . config('administrable.guard') . 'avatar', $guard)) {
+        if (!get_guard()->can('change-' . config('administrable.guard') . '-avatar', $guard)) {
             abort(403);
         }
 
         $guard->update([
-            'avatar' => $request->get('avatar')
+            'avatar' => $request->input('avatar')
         ]);
 
         return $guard;

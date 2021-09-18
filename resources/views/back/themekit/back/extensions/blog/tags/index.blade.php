@@ -1,6 +1,6 @@
 @extends(back_view_path('layouts.base'))
 
-@section('title','Etiquettes')
+@section('title', 'Etiquettes')
 
 
 
@@ -34,7 +34,7 @@
                         <div class="btn-group float-right">
                             <a href="{{ back_route('extensions.blog.tag.create') }}" class="btn btn-success">
                                 <i class="fa fa-plus"></i>Ajouter</a>
-                            <a href="#" class="btn btn-danger d-none" data-model="{{ config('administrable.extensions.blog.category.model') }}" id="delete-all">
+                            <a href="#" class="btn btn-danger d-none" data-model="{{ config('administrable.extensions.blog.tag.model') }}" id="delete-all">
                                 <i class="fa fa-trash"></i> Tous supprimer</a>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                                             <a href="{{ back_route('extensions.blog.tag.show', $tag) }}" class="btn btn-primary" data-toggle="tooltip"
                                                 data-placement="top" title="Afficher"><i class="fas fa-eye"></i></a>
 
-                                               <a href="{{ back_route('model.clone', get_clone_model_params($tag)) }}" class="btn btn-secondary"
+                                            <a href="{{ back_route('model.clone', get_clone_model_params($tag)) }}" class="btn btn-secondary"
                                             title="Cloner"><i class="fas fa-clone"></i></a>
 
 
