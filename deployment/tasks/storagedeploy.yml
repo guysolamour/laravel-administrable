@@ -16,10 +16,6 @@
   - name: Include variables
     include_vars: "{{ playbooks_directory_path }}/variables/vars.yml"
 
-  - debug:
-      var: remote_server_user
-
-
   - name: Zip host storage folder
     become_user: "{{ remote_default_user }}"
     archive:

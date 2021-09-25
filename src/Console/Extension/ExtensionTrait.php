@@ -71,7 +71,9 @@ trait ExtensionTrait
         $this->displayMessage('Models created at ' . $path);
     }
 
-    protected function loadMigrations(): void
+
+
+    protected function loadMigrations(bool $append_signature = true): void
     {
         $stubs = $this->getExtensionStubs('migrations');
 
@@ -83,10 +85,13 @@ trait ExtensionTrait
         $signature = now();
 
         foreach ($stubs as $stub) {
-
-            $name = Str::after($stub->getFilenameWithoutExtension(), '|');
-            $signature = $signature->addMinute();
-            $file_name = $path . $signature->format('Y_m_d_His') . '_' . $name . ".php";
+            if ($append_signature){
+                $name = Str::after($stub->getFilenameWithoutExtension(), '|');
+                $signature = $signature->addMinute();
+                $file_name = $path . $signature->format('Y_m_d_His') . '_' . $name . ".php";
+            }else {
+                $file_name = $path . $stub->getFilenameWithoutExtension() . ".php";
+            }
 
             $complied = $this->filesystem->compliedFile($stub->getRealPath());
 
@@ -170,7 +175,7 @@ trait ExtensionTrait
 
     }
 
-    protected function registerFrontUrlInHeader(string $route, array $set_active_routes = [])
+    protected function registerFrontUrlInHeader(string $route, array $set_active_routes = [], bool $prepend_name_twice = false, string $label = null)
     {
         $path =  resource_path("views/{$this->data_map['{{frontLowerNamespace}}']}/partials/_nav.blade.php");
 
@@ -184,6 +189,14 @@ trait ExtensionTrait
 
         $search = "{{-- insert extensions links here --}}";
 
+        if ($prepend_name_twice){
+            $full_route = "{$this->getSubfolder()}.{$this->name}.{$route}";
+        }else {
+            $full_route = "{$this->getSubfolder()}.{$this->name}.{$this->name}.{$route}";
+        }
+
+        $label = $label ?? $this->data_map['{{extensionLabel}}'];
+
         $this->filesystem->replaceAndWriteFile(
             $this->filesystem->get($path),
             $search,
@@ -191,7 +204,7 @@ trait ExtensionTrait
             {$search}
 
                     <li class="nav-item {{ set_active_link({$set_active_routes})  }}">
-                        <a class="nav-link" href="{{ front_route('{$this->getSubfolder()}.{$this->name}.{$this->name}.{$route}') }}">{$this->data_map['{{extensionLabel}}']}</a>
+                        <a class="nav-link" href="{{ front_route('{$full_route}') }}">{$label}</a>
                     </li>
             HTML,
             $path

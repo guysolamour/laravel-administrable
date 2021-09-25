@@ -1,0 +1,20 @@
+<section>
+    <p>Catégories</p>
+    <ul class="list-group">
+        @foreach ($categories as $cat)
+        <li class="list-group-item @if($cat->is($category ?? null)) active @endif">
+            <a  href="{{ front_route('extensions.shop.category.show', $cat) }}">{{ $cat->name }}</a>
+        </li>
+        @endforeach
+    </ul>
+</section>
+<section>
+    <p>Marques</p>
+    <ul class="list-group">
+        @foreach ($brands as $bra)
+        <li class="list-group-item @if($bra->is($brand ?? null)) active @endif">
+            <a href="{{ front_route('extensions.shop.brand.show', $bra) }}">{{ $bra->name }}</a>
+        </li>
+        @endforeach
+    </ul>
+</section>

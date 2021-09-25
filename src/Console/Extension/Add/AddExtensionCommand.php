@@ -13,7 +13,9 @@ class AddExtensionCommand extends BaseCommand
     use ExtensionTrait;
 
 
-    private const EXTENSIONS = ['livenews', 'blog', 'testimonial', 'mailbox'];
+    private const EXTENSIONS = [
+        'livenews', 'blog', 'testimonial', 'mailbox', 'shop',
+    ];
 
 
     /**
@@ -84,7 +86,6 @@ class AddExtensionCommand extends BaseCommand
         $extensions = collect();
 
         $configuration_extensions = $this->getExtensionConfiguration();
-
 
         foreach ($configuration_extensions as $key => $extension) {
             $key = array_key_first($extension);

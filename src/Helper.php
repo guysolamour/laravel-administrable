@@ -47,6 +47,27 @@ class Helper {
         return $guards;
     }
 
+    public function redirectFrontroute($route, $parameters = [], $status = 302, $headers = [])
+    {
+        return redirect()->route(
+            Str::start($route, Str::lower(config('administrable.front_namespace') . '.')),
+            $parameters,
+            $status,
+            $headers
+        );
+    }
+
+    public function redirectBackroute($route, $parameters = [], $status = 302, $headers = [])
+    {
+        return redirect()->route(
+            Str::start($route, Str::lower(config('administrable.back_namespace') . '.')),
+            $parameters,
+            $status,
+            $headers
+        );
+    }
+
+
     /**
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -67,6 +88,21 @@ class Helper {
 
         return $guards;
     }
+
+
+    /**
+     * @param string $dates
+     * @return array|string
+     */
+    public function parseRangeDates(string $dates)
+    {
+        $formated_dates =  array_map(function ($date) {
+            return \Carbon\Carbon::parse(str_replace('/', '-', str_replace(['AM', 'am', 'PM', 'pm'], '', $date)))->toDateTimeString();
+        }, explode(' - ', $dates));
+
+        return count($formated_dates) === 1 ? \Illuminate\Support\Arr::first($formated_dates) : $formated_dates;
+    }
+
 
     private function getViewPath(string $view, string $prefix) :string
     {
@@ -188,6 +224,11 @@ class Helper {
         return '';
     }
 
+    public function formatPrice($price, string $suffix = '')
+    {
+        return number_format($price, 0, ',', ' ') . " {$suffix}";
+    }
+
     public function getMetaPage(string $name) :?Page
     {
         return Module::model('page')::firstWhere('code', $name);
@@ -195,17 +236,19 @@ class Helper {
 
     public function configuration(?string $attribute = null, string $default = null)
     {
-        /**
-         * @var \Spatie\LaravelSettings\Settings
-         */
-        $configuration = app(config('administrable.modules.configuration.model'));
+        return $this->getSettings(config('administrable.modules.configuration.model'), $attribute, $default);
+    }
+
+    public function getSettings(string $class_name, ?string $attribute = null, $default = null)
+    {
+        $configuration = app($class_name);
 
         if (is_null($attribute)) {
             return $configuration;
         }
 
         if (property_exists($configuration, $attribute)) {
-            $default = $configuration->$attribute;
+            return $configuration->$attribute;
         }
 
         return $default;
@@ -290,7 +333,7 @@ class Helper {
      * @param  object $model
      * @return string
      */
-    function getFormName($model): string
+    public function getFormName($model): string
     {
         return 'entity-' .  strtolower(class_basename(($model)));
     }
@@ -337,7 +380,6 @@ class Helper {
     }
 
     /**
-     * isCollection
      *
      * @param  object $data
      * @return bool

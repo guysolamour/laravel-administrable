@@ -65,6 +65,7 @@ abstract class BaseExtension
     {
         return Str::ucfirst(self::SUBFOLDER);
     }
+
     protected function getSubfolder() :string
     {
         return self::SUBFOLDER;
@@ -106,16 +107,16 @@ abstract class BaseExtension
     public function getParsedName(?string $name = null): array
     {
         return array_merge($this->parseName($name), [
-            '{{modelsFolder}}'  => $this->getCrudModelsFolder(),
-            '{{extensionName}}'  => Arr::get($this->getExtension(), 'name', $this->name),
-            '{{extensionLabel}}' => Str::ucfirst(Arr::get($this->getExtension(), 'label', $this->name)),
-            '{{extensionsFolder}}' => $this->getSubfolder(),
+            '{{modelsFolder}}'          => $this->getCrudModelsFolder(),
+            '{{extensionName}}'         => Arr::get($this->getExtension(), 'name', $this->name),
+            '{{extensionLabel}}'        => Str::ucfirst(Arr::get($this->getExtension(), 'label', $this->name)),
+            '{{extensionsFolder}}'      => $this->getSubfolder(),
             '{{extensionsFolderClass}}' => Str::ucfirst($this->getSubfolder()),
-            '{{extensionClass}}' => Str::ucfirst($this->name),
-            '{{extensionPluralClass}}' => Str::ucfirst($this->getExtensionPlural($this->name)),
-            '{{extensionPluralSlug}}' => $this->getExtensionPlural($this->name),
+            '{{extensionClass}}'        => Str::ucfirst($this->name),
+            '{{extensionPluralClass}}'  => Str::ucfirst($this->getExtensionPlural($this->name)),
+            '{{extensionPluralSlug}}'   => $this->getExtensionPlural($this->name),
             '{{extensionSingularSlug}}' => Str::lower($this->name),
-            '{{extensionTableName}}' => $this->getSubfolder()  . '_' . $this->getExtensionPlural($this->name),
+            '{{extensionTableName}}'    => $this->getSubfolder()  . '_' . $this->getExtensionPlural($this->name),
         ]);
     }
 

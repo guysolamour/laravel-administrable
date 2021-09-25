@@ -1,0 +1,78 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
+
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use {{namespace}}\Http\Controllers\Controller;
+use Facades\Guysolamour\Administrable\Services\Shop\RecentlyView;
+
+class ShopController extends Controller
+{
+    public function index()
+    {
+        $products   = config('administrable.extensions.shop.models.product')::latest()->online()->principal()->with('media')->paginate(20);
+        $categories = config('administrable.extensions.shop.models.category')::principal()->with('children')->get();
+        $brands     = config('administrable.extensions.shop.models.brand')::get();
+
+        return front_view('{{extensionsFolder}}.{{extensionPluralSlug}}.index', compact('products', 'categories', 'brands'));
+    }
+
+    public function show(string $slug)
+    {
+        $product = config('administrable.extensions.shop.models.product')::findBySlug($slug)->first();
+
+        $product->load('attributes.terms', 'children');
+        $product->children->each->load(['attributes.terms']);
+        $product->children->each->append(['image', 'images']);
+        $product->append(['image', 'images']);
+
+        RecentlyView::push($product);
+
+        $recently_viewed_products = RecentlyView::loadWithout($product);
+
+        $categories = config('administrable.extensions.shop.models.category')::principal()->with('children')->get();
+        $brands     = config('administrable.extensions.shop.models.brand')::get();
+
+        return front_view('{{extensionsFolder}}.{{extensionPluralSlug}}.show', compact('product', 'categories', 'brands', 'recently_viewed_products'));
+    }
+
+    public function category(string $slug)
+    {
+        $category   = config('administrable.extensions.shop.models.category')::findBySlug($slug)->first();
+
+        $products   = $category->products()->with('media')->paginate(20);
+        $categories = config('administrable.extensions.shop.models.category')::principal()->with('children')->get();
+        $brands     = config('administrable.extensions.shop.models.brand')::get();
+
+        return front_view('{{extensionsFolder}}.{{extensionPluralSlug}}.category', compact('category', 'products', 'categories', 'brands'));
+    }
+
+    public function brand(string $slug)
+    {
+        $brand      = config('administrable.extensions.shop.models.brand')::findBySlug($slug)->first();
+
+        $products   = $brand->products()->with('media')->paginate(20);
+        $categories = config('administrable.extensions.shop.models.category')::principal()->with('children')->get();
+        $brands     = config('administrable.extensions.shop.models.brand')::get();
+
+        return front_view('{{extensionsFolder}}.{{extensionPluralSlug}}.brand', compact('brand', 'products', 'categories', 'brands'));
+    }
+
+    public function search(Request $request)
+    {
+        $q = Str::lower($request->input('q'));
+
+        $products = config('administrable.extensions.shop.models.product')::online()->with('categories',  'media')
+        ->where('name', 'LIKE', '%' . $q . '%')
+            ->orWhere('description', 'LIKE', '%' . $q . '%')
+            ->orWhere('short_description', 'LIKE', '%' . $q . '%')
+            ->paginate(9)->withQueryString();
+
+
+        $categories = config('administrable.extensions.shop.models.category')::principal()->with('children')->get();
+        $brands     = config('administrable.extensions.shop.models.brand')::get();
+
+        return front_view('{{extensionsFolder}}.{{extensionPluralSlug}}.search', compact( 'products', 'categories', 'brands'));
+    }
+}

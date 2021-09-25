@@ -17,6 +17,7 @@ extensions:
   - blog:         { label: blog }
   - testimonial:  { label: témoignages }
   - mailbox:      { label: messagerie de contact }
+  - shop:         { label: boutique }
 
 
 

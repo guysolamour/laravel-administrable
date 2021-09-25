@@ -1,0 +1,26 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Guysolamour\Administrable\Http\Middleware\RedirectIfEmptyCart;
+use {{namespace}}\Http\Controllers\{{frontNamespace}}\{{extensionsFolderClass}}\Shop\CartController;
+use {{namespace}}\Http\Controllers\{{frontNamespace}}\{{extensionsFolderClass}}\Shop\ShopController;
+
+
+Route::get('boutique', [ShopController::class, 'index'])->name('{{frontLowerNamespace}}.extensions.shop.shop.index');
+Route::get('boutique/panier', [CartController::class, 'show'])->name('{{frontLowerNamespace}}.extensions.shop.cart.show')->middleware(RedirectIfEmptyCart::class);
+
+Route::get('boutique/recherche', [ShopController::class, 'search'])->name('{{frontLowerNamespace}}.extensions.shop.search');
+
+Route::get('boutique/categorie/{category}', [ShopController::class, 'category'])->name('{{frontLowerNamespace}}.extensions.shop.category.show');
+Route::get('boutique/marques/{brand}', [ShopController::class, 'brand'])->name('{{frontLowerNamespace}}.extensions.shop.brand.show');
+
+Route::get('boutique/{product}', [ShopController::class, 'show'])->name('{{frontLowerNamespace}}.extensions.shop.show');
+
+Route::post('shop/command', [CartController::class, 'command'])->name('{{frontLowerNamespace}}.extensions.shop.command.store');
+Route::get('shop/checkout', [CartController::class, 'checkout'])->name('{{frontLowerNamespace}}.extensions.shop.checkout');
+
+// JS
+Route::put('shop/shoppingcart/{rowId}/update', [CartController::class, 'update'])->name('{{frontLowerNamespace}}.extensions.shop.cart.update');
+Route::post('shop/shoppingcart/{product:id}/add', [CartController::class, 'addToShoppingCart'])->name('{{frontLowerNamespace}}.extensions.shop.shoppingcart.add');
+Route::delete('shop/cart/{rowId}', [CartController::class, 'removeItemInCartList'])->name('{{frontLowerNamespace}}.extensions.shop.cart.destroy');
+Route::post('shop/cart/coupon', [CartController::class, 'coupon'])->name('{{frontLowerNamespace}}.extensions.shop.cart.coupon');

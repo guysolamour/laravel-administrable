@@ -52,6 +52,39 @@ if (!function_exists('random_elements')) {
     }
 }
 
+if (!function_exists('redirect_frontroute')) {
+    function redirect_frontroute($route, $parameters = [], $status = 302, $headers = [])
+    {
+        return Helper::redirectFrontroute($route, $parameters, $status, $headers);
+    }
+}
+
+if (!function_exists('redirect_backroute')) {
+    function redirect_backroute($route, $parameters = [], $status = 302, $headers = [])
+    {
+        return Helper::redirectBackroute($route, $parameters, $status, $headers);
+    }
+}
+
+if (!function_exists('redirect_backroute')) {
+    function formatPrice($price, string $suffix = '')
+    {
+        return Helper::formatPrice($price, $suffix);
+    }
+}
+
+
+if (!function_exists('parse_range_dates')) {
+    /**
+     *
+     * @param string $dates
+     * @return mixed
+     */
+    function parse_range_dates(string $dates)
+    {
+        return Helper::parseRangeDates($dates);
+    }
+}
 
 
 
@@ -134,13 +167,23 @@ if (!function_exists('configuration')) {
     }
 }
 
+if (!function_exists('get_settings')) {
+    function get_settings(string $class_name, ?string $attribute = null, $default = null)
+    {
+        return Helper::getSettings($class_name, $attribute, $default);
+    }
+}
+
+if (!function_exists('shop_settings')) {
+    function shop_settings(?string $attribute = null, string $default = null)
+    {
+        return Helper::getSettings(config('administrable.extensions.shop.models.setting'), $attribute, $default);
+    }
+}
+
+
 if (!function_exists('translate_model_field')) {
     /**
-     *
-     * @param string $field_name
-     * @param string|null $field_trans
-     * @param string|null $locale
-     * @param array|null $replace
      * @return string
      */
     function translate_model_field(string $field_name, ?string $field_trans, ?string $locale = null, ?array $replace = [])

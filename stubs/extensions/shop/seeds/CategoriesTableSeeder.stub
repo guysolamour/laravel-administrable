@@ -1,0 +1,74 @@
+<?php
+
+namespace Database\Seeders\{{extensionsFolderClass}}\Shop;
+
+use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
+
+
+class CategoriesTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // $faker = Faker::create();
+
+        $category = config('administrable.extensions.shop.models.category')::create([
+            'name'  => 'Ordinateurs',
+        ]);
+
+            $category->children()->create([
+                'name'  =>  'Portable',
+            ]);
+
+            $category->children()->create([
+                'name'  =>  'Bureau',
+            ]);
+
+        $category = config('administrable.extensions.shop.models.category')::create([
+            'name'  => 'Caméras',
+        ]);
+
+        $category = config('administrable.extensions.shop.models.category')::create([
+            'name'  => 'Smartphones',
+        ]);
+
+        $category = config('administrable.extensions.shop.models.category')::create([
+            'name'  => 'Tablettes',
+        ]);
+
+        $category = config('administrable.extensions.shop.models.category')::create([
+            'name'  => 'TV & Audio',
+        ]);
+
+        $category = config('administrable.extensions.shop.models.category')::create([
+            'name'  => 'Console jeux vidéos',
+        ]);
+
+        $category = config('administrable.extensions.shop.models.category')::create([
+            'name'  => 'Accessoires',
+        ]);
+
+        // for ($i = 0; $i < 5; $i++) {
+        //     $category = config('administrable.extensions.shop.models.category')::create([
+        //         'name'  => $faker->country,
+        //         'description'  => $faker->realText(150),
+        //     ]);
+
+        //     $has_children = $faker->randomElement([true, false]);
+
+        //     if ($has_children) {
+        //         for ($j=0; $j < rand(2,5); $j++) {
+        //             $category->children()->create([
+        //                 'name'         => $faker->city,
+        //                 'description'  => $faker->realText(150),
+        //             ]);
+        //         }
+        //     }
+        // }
+    }
+}

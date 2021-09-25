@@ -5,8 +5,6 @@ use Guysolamour\Administrable\Module;
 use Illuminate\Support\Facades\Route;
 use Spatie\Honeypot\ProtectAgainstSpam;
 use Guysolamour\Administrable\Extension;
-use Guysolamour\Administrable\Http\Controllers\Back\MediaController;
-use Guysolamour\Administrable\Http\Controllers\Back\TemporaryMediaController;
 
 Route::prefix(config('administrable.auth_prefix_path'))
     ->middleware(['web'])
@@ -81,7 +79,7 @@ Route::prefix(config('administrable.auth_prefix_path'))
             Route::post('configuration', [Module::backController('configuration'), 'store'])->name('configuration.store');
             /*
             |--------------------------------------------------------------------------
-            | PAGE
+            | USER
             |--------------------------------------------------------------------------
             */
             Route::resource('users', Module::backController('user'))->names([
@@ -141,10 +139,18 @@ Route::prefix(config('administrable.auth_prefix_path'))
                 'update'     => 'comment.update',
                 'destroy'    => 'comment.destroy',
                 ])->except(['create', 'store']);
-
-                Route::post('comments/{comment}/reply', [Module::backController('comment'), 'reply'])->name('comment.reply');
-                Route::get('comments/{comment}/approved', [Module::backController('comment'), 'approved'])->name('comment.approved');
             });
+
+            Route::post('comments/{comment}/reply', [Module::backController('comment'), 'reply'])->name('comment.reply');
+            Route::get('comments/{comment}/approved', [Module::backController('comment'), 'approved'])->name('comment.approved');
+            /*--------------------------------------------------------------------------
+            | NOTE
+            |--------------------------------------------------------------------------
+            */
+            Route::post('comments/notes', [Module::backController('note'), 'store'])->name('comment.note.store');
+            Route::put('comments/notes/{note}', [Module::backController('note'), 'update'])->name('comment.note.update');
+            Route::delete('comments/notes/{note}', [Module::backController('note'), 'destroy'])->name('comment.note.destroy');
+
             /*
             |--------------------------------------------------------------------------
             | FILEMANAGER
@@ -298,6 +304,134 @@ Route::prefix(config('administrable.auth_prefix_path'))
                         Route::post('posts/tag', [config('administrable.extensions.blog.post.back.controller'), 'addTag']);
                     });
                 });
+            }
+            /*
+            |--------------------------------------------------------------------------
+            | EXTENSIONS -> Shop
+            |--------------------------------------------------------------------------
+            */
+            if (Extension::state('shop')){
+                Route::name(Str::lower(config('administrable.back_namespace')) . '.extensions.shop.')->group(function () {
+                    Route::prefix('shop')->group(function () {
+
+                        Route::get('settings', [config('administrable.extensions.shop.controllers.back.setting'), 'edit'])->name('settings');
+                        Route::put('settings', [config('administrable.extensions.shop.controllers.back.setting'), 'update'])->name('settings.update');
+
+                        Route::resource('products', config('administrable.extensions.shop.controllers.back.product'))->names([
+                            'index'      => 'product.index',
+                            'create'     => 'product.create',
+                            'show'       => 'product.show',
+                            'store'      => 'product.store',
+                            'edit'       => 'product.edit',
+                            'update'     => 'product.update',
+                            'destroy'    => 'product.destroy',
+                        ])->except(['show']);
+
+                        // JS
+                        Route::post('commands/{command}/addproduct', [config('administrable.extensions.shop.controllers.back.command'), 'addProduct']);
+                        Route::post('commands/{command}/applydiscount', [config('administrable.extensions.shop.controllers.back.command'), 'applyDiscount']);
+                        Route::delete('commands/{command}/products', [config('administrable.extensions.shop.controllers.back.command'), 'removeProduct']);
+                        Route::put('commands/{command}/products', [config('administrable.extensions.shop.controllers.back.command'), 'updateProduct']);
+                        // END JS
+
+                        Route::get('statistic', [config('administrable.extensions.shop.controllers.back.command'), 'statistic'])->name('statistic.index');
+
+                        Route::post('commands/{command}/confirm', [config('administrable.extensions.shop.controllers.back.command'), 'confirmPayment'])->name('command.confirm');
+
+                        Route::resource('commands', config('administrable.extensions.shop.controllers.back.command'))->names([
+                            'index'      => 'command.index',
+                            'create'     => 'command.create',
+                            'show'       => 'command.show',
+                            'store'      => 'command.store',
+                            'edit'       => 'command.edit',
+                            'update'     => 'command.update',
+                            'destroy'    => 'command.destroy',
+                        ])->except(['show', 'store']);
+
+                        Route::resource('categories', config('administrable.extensions.shop.controllers.back.category'))->names([
+                            'index'      => 'category.index',
+                            'create'     => 'category.create',
+                            'show'       => 'category.show',
+                            'store'      => 'category.store',
+                            'edit'       => 'category.edit',
+                            'update'     => 'category.update',
+                            'destroy'    => 'category.destroy',
+                        ]);
+
+                        Route::resource('brands', config('administrable.extensions.shop.controllers.back.brand'))->names([
+                            'index'      => 'brand.index',
+                            'create'     => 'brand.create',
+                            'show'       => 'brand.show',
+                            'store'      => 'brand.store',
+                            'edit'       => 'brand.edit',
+                            'update'     => 'brand.update',
+                            'destroy'    => 'brand.destroy',
+                        ]);
+
+                        Route::resource('users', config('administrable.extensions.shop.controllers.back.client'))->names([
+                            'index'      => 'user.index',
+                            'create'     => 'user.create',
+                            'show'       => 'user.show',
+                            'store'      => 'user.store',
+                            'edit'       => 'user.edit',
+                            'update'     => 'user.update',
+                            'destroy'    => 'user.destroy',
+                        ]);
+
+                        Route::resource('attributes', config('administrable.extensions.shop.controllers.back.attribute'))->names([
+                            'index'      => 'attribute.index',
+                            'create'     => 'attribute.create',
+                            'show'       => 'attribute.show',
+                            'store'      => 'attribute.store',
+                            'edit'       => 'attribute.edit',
+                            'update'     => 'attribute.update',
+                            'destroy'    => 'attribute.destroy',
+                        ]);
+
+                        Route::resource('coupons', config('administrable.extensions.shop.controllers.back.coupon'))->names([
+                            'index'      => 'coupon.index',
+                            'create'     => 'coupon.create',
+                            'show'       => 'coupon.show',
+                            'store'      => 'coupon.store',
+                            'edit'       => 'coupon.edit',
+                            'update'     => 'coupon.update',
+                            'destroy'    => 'coupon.destroy',
+                        ])->except(['show']);
+
+                        Route::resource('delivers', config('administrable.extensions.shop.controllers.back.deliver'))->names([
+                            'index'      => 'deliver.index',
+                            'create'     => 'deliver.create',
+                            'show'       => 'deliver.show',
+                            'store'      => 'deliver.store',
+                            'edit'       => 'deliver.edit',
+                            'update'     => 'deliver.update',
+                            'destroy'    => 'deliver.destroy',
+                        ]);
+
+                        Route::resource('coverageareas', config('administrable.extensions.shop.controllers.back.coveragearea'))->names([
+                            'index'      => 'coveragearea.index',
+                            'create'     => 'coveragearea.create',
+                            'show'       => 'coveragearea.show',
+                            'store'      => 'coveragearea.store',
+                            'edit'       => 'coveragearea.edit',
+                            'update'     => 'coveragearea.update',
+                            'destroy'    => 'coveragearea.destroy',
+                        ]);
+
+                        Route::resource('reviews', config('administrable.extensions.shop.controllers.back.review'))->names([
+                            'index'      => 'review.index',
+                            'create'     => 'review.create',
+                            'show'       => 'review.show',
+                            'store'      => 'review.store',
+                            'edit'       => 'review.edit',
+                            'update'     => 'review.update',
+                            'destroy'    => 'review.destroy',
+                        ]);
+
+                        Route::post('reviews/{review}/approve', [config('administrable.extensions.shop.controllers.back.review'), 'approve'])->name('review.approve');
+                    });
+                });
+
             }
         });
     }

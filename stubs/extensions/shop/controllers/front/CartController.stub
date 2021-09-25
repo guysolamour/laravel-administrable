@@ -1,0 +1,140 @@
+<?php
+
+namespace {{namespace}}\Http\Controllers\{{frontNamespace}}\{{extensionsFolderClass}}\{{extensionClass}};
+
+use Illuminate\Http\Request;
+use {{namespace}}\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Guysolamour\Administrable\Facades\Cart;
+use Illuminate\Support\Facades\Notification;
+
+
+
+class CartController extends Controller
+{
+    public function addToShoppingCart(int $productId, Request $request)
+    {
+        $product = config('administrable.extensions.shop.models.product')::findOrFail($productId);
+
+        Cart::add($product, $request->input('quantity', 1));
+
+        if ($request->ajax()){
+            return Cart::content();
+        }
+
+        flashy("Le produit {$product->name} a bien éyé ajouté au panier!");
+
+        return back();
+    }
+
+    public function show()
+    {
+        $cart           = Cart::content();
+        $categories     = config('administrable.extensions.shop.models.category')::principal()->with('children')->get();
+        $coverage_areas = config('administrable.extensions.shop.models.coveragearea')::has('delivers')->with('delivers')->get();
+        $brands         = config('administrable.extensions.shop.models.brand')::get();
+
+        return front_view('{{extensionsFolder}}.{{extensionPluralSlug}}.cart', compact('cart', 'coverage_areas','categories', 'brands'));
+    }
+
+    public function update(int $rowId, Request $request)
+    {
+        $request->validate([
+            'quantity' => 'required|integer',
+            'instance' => 'required|string',
+        ]);
+
+        Cart::from($request->input('instance'))->update($rowId, ['quantity' => $request->input('quantity')]);
+
+        return response()->json(['cart' => Cart::from($request->input('instance'))->content()]);
+    }
+
+    public function coupon(Request $request)
+    {
+        [$type, $message] = config('administrable.extensions.shop.models.coupon')::apply($request->input('code'));
+
+        flashy()->$type($message);
+
+        return back();
+    }
+
+    public function removeItemInCartList($rowId, Request $request)
+    {
+        Cart::remove($rowId);
+
+        if ($request->ajax()) {
+            return response()->json(['cart' =>  Cart::content()]);
+        }
+
+        flashy('Le produit a bien été retiré du panier');
+
+        return back();
+    }
+
+    public function checkout(Request $request)
+    {
+        $deliver = config('administrable.extensions.shop.models.deliver')::find($request->input('deliver_id'));
+
+        if (!$deliver){
+            flashy()->error("Ce livreur n'est pas disponible pour le moment.");
+            return redirect_frontroute('shop.cart.show');
+        }
+
+        $area = $deliver->areas()->where('id', $request->input('deliver_area'))->first();
+
+        if (!$area) {
+            flashy()->error("Cette zone de livraison n'est pas déservie par cet livreur.");
+            return redirect_frontroute('shop.cart.show');
+        }
+
+        $user           = auth()->user();
+        $shopping_cart  = $user ? $user->shopping_cart : Cart::content();
+
+        $categories     = config('administrable.extensions.shop.models.category')::principal()->with('children')->get();
+        $brands         = config('administrable.extensions.shop.models.brand')::get();
+
+        return front_view("{{extensionsFolder}}.{{extensionPluralSlug}}.checkout", compact(
+            'user',  'shopping_cart', 'area',
+            'categories', 'brands', 'deliver'));
+    }
+
+    public function command(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name'           => 'required',
+            'phone_number'   => 'required',
+            'deliver'        => 'required',
+            'deliver'        => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            flashy()->error('Erreur lors de la validation du formulaire');
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $command = config('administrable.extensions.shop.models.command')::create([
+            'name'         => $request->input('name'),
+            'phone_number' => $request->input('phone_number'),
+            // 'email'        => $request->input('email'),
+            'address'      => $request->input('address'),
+            // 'city'         => $request->input('city'),
+            // 'country'      => $request->input('country'),
+            'products'     => Cart::rawContent(),
+            'globals'      => Cart::rawGlobals(),
+            'deliver'      => $request->input('deliver'),
+            'user_id'      => $request->user() ?? null,
+        ]);
+
+        $notif = config('administrable.extensions.shop.notifications.back.commandsent');
+        Notification::send(get_guard_notifiers(), new $notif($command));
+
+        // empty cart
+        Cart::clear();
+
+        flashy("Votre commande a bien été effectuée");
+
+        return redirect_frontroute('{{extensionsFolder}}.{{extensionPluralSlug}}.index')->with('success', 'Votre commande a bien été effectuée');
+    }
+}

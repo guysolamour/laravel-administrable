@@ -67,6 +67,7 @@
     <script src="{{ asset('vendor/{{theme}}/js/app.min.js') }}"></script>
     <script src="{{ asset('vendor/{{theme}}/js/script.min.js') }}"></script>
     <script src="{{ asset('js/vendor/axios.js') }}"></script>
+    <script src="{{ asset('js/vendor/helpers.js') }}"></script>
     <script defer src="{{ asset('js/vendor/alpine.js') }}"></script>
     <script src="{{ asset('js/vendor/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/vendor/larails-alert.js') }}"></script>

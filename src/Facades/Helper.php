@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Guysolamour\Administrable\Helper getAppNamespace()
  * @method static \Guysolamour\Administrable\Helper getTemplatePath()
  * @method static \Guysolamour\Administrable\Helper configuration(?string $attribute = null, string $default = null)
+ * @method static \Guysolamour\Administrable\Helper getSettings(string $class_name, ?string $attribute = null, $default = null)
+ * @method static \Guysolamour\Administrable\Helper shopSettings(?string $attribute = null, string $default = null)
  * @method static \Guysolamour\Administrable\Helper getMetaPage(string $name)
  * @method static \Guysolamour\Administrable\Helper getMetaTag(string $page_name, string $code, ?string $key = null)
  * @method static \Guysolamour\Administrable\Helper getMetaType(int $id)
@@ -41,6 +43,10 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Guysolamour\Administrable\Helper frontView($view = null, $data = [], $mergeData = [])
  * @method static \Guysolamour\Administrable\Helper filemanagerIsMultipleCollection(string $collection_name)
  * @method static \Guysolamour\Administrable\Helper filemanagerCollectionLabel(string $collection_name)
+ * @method static \Illuminate\Http\RedirectResponse redirectFrontroute($route, $parameters = [], $status = 302, $headers = [])
+ * @method static \Illuminate\Http\RedirectResponse redirectBackroute($route, $parameters = [], $status = 302, $headers = [])
+ * @method static \Guysolamour\Administrable\Helper parseRangeDates(string $dates)
+ * @method static string formatPrice($price, $suffix)
  *
  */
 class Helper extends Facade

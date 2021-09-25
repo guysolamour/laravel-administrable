@@ -1,0 +1,60 @@
+<?php
+
+namespace Database\Seeders\{{extensionsFolderClass}}\Shop;
+
+use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
+
+
+class BrandsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // $faker = Faker::create();
+
+        config('administrable.extensions.shop.models.brand')::create([
+            'name'  => 'samsung',
+            // 'description'  => $faker->realText(150),
+        ]);
+
+        config('administrable.extensions.shop.models.brand')::create([
+            'name'  => 'huawei',
+            // 'description'  => $faker->realText(150),
+        ]);
+
+        config('administrable.extensions.shop.models.brand')::create([
+            'name'  => 'hp',
+            // 'description'  => $faker->realText(150),
+        ]);
+
+        config('administrable.extensions.shop.models.brand')::create([
+            'name'  => 'nokia',
+            // 'description'  => $faker->realText(150),
+        ]);
+
+        config('administrable.extensions.shop.models.brand')::create([
+            'name'  => 'zte',
+            // 'description'  => $faker->realText(150),
+        ]);
+
+        config('administrable.extensions.shop.models.brand')::create([
+            'name'  => 'lenovo',
+            // 'description'  => $faker->realText(150),
+        ]);
+
+        config('administrable.extensions.shop.models.brand')::create([
+            'name'  => 'itel',
+            // 'description'  => $faker->realText(150),
+        ]);
+
+        config('administrable.extensions.shop.models.brand')::create([
+            'name'         => 'techno',
+            // 'description'  => $faker->realText(150),
+        ]);
+    }
+}

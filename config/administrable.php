@@ -125,7 +125,7 @@ return [
             'post' => [
                 'model' => \Guysolamour\Administrable\Models\Extensions\Blog\Post::class,
                 'back' => [
-                    'form' => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\PostForm::class,
+                    'form'       => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\PostForm::class,
                     'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Blog\PostController::class,
                 ],
                 'front' => [
@@ -134,16 +134,16 @@ return [
             ],
             'category' => [
                 'model' => \Guysolamour\Administrable\Models\Extensions\Blog\Category::class,
-                'back' => [
+                'back'  => [
                     'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Blog\CategoryController::class,
-                    'form' => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\CategoryForm::class,
+                    'form'       => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\CategoryForm::class,
                 ],
             ],
             'tag' => [
                 'model' => \Guysolamour\Administrable\Models\Extensions\Blog\Tag::class,
-                'back' => [
+                'back'  => [
                     'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Blog\TagController::class,
-                    'form' => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\TagForm::class,
+                    'form'       => \Guysolamour\Administrable\Forms\Back\Extensions\Blog\TagForm::class,
                 ],
             ],
         ],
@@ -162,16 +162,93 @@ return [
             'activate'    => false,
             'model'       => \Guysolamour\Administrable\Models\Extensions\Mailbox\Mailbox::class,
             'back'     => [
-                'notification' => \Guysolamour\Administrable\Notifications\Back\Extensions\Mailbox\ContactNotification::class,
-                'mail'       => \Guysolamour\Administrable\Mail\Back\Extensions\Mailbox\ContactMail::class,
+                'notification'    => \Guysolamour\Administrable\Notifications\Back\Extensions\Mailbox\ContactNotification::class,
+                'mail'            => \Guysolamour\Administrable\Mail\Back\Extensions\Mailbox\ContactMail::class,
                 'note_mail'       => \Guysolamour\Administrable\Mail\Front\NoteAnswerMail::class,
-                'controller' => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Mailbox\MailboxController::class,
+                'controller'      => \Guysolamour\Administrable\Http\Controllers\Back\Extensions\Mailbox\MailboxController::class,
             ],
             'front'     => [
                 'note_mail'       => \Guysolamour\Administrable\Mail\Front\NoteAnswerMail::class,
-                'form'       => \Guysolamour\Administrable\Forms\Front\Extensions\Mailbox\ContactForm::class,
-                'controller' => \Guysolamour\Administrable\Http\Controllers\Front\Extensions\Mailbox\ContactController::class,
-                'mail' => \Guysolamour\Administrable\Mail\Front\Extensions\Mailbox\SendMeContactMessageMail::class,
+                'form'            => \Guysolamour\Administrable\Forms\Front\Extensions\Mailbox\ContactForm::class,
+                'controller'      => \Guysolamour\Administrable\Http\Controllers\Front\Extensions\Mailbox\ContactController::class,
+                'mail'            => \Guysolamour\Administrable\Mail\Front\Extensions\Mailbox\SendMeContactMessageMail::class,
+            ],
+        ],
+        'shop' => [
+            'activate'          => false,
+            'cart_dbname'       => 'shop_cart',
+            'destroy_on_logout' => false,
+            /**
+             * Where to redirect when cart is empty
+             */
+            'redirect_empty_cart' => '/',
+            /**
+             * Each time a product is visited, it is saved as a cookie
+             * to display them later in the recently viewed product section.
+             */
+            'recently_view_cookie_duration'      =>  525600, // one year in minutes
+            /**
+             * To display the imagemanager.
+             * To activate a collection remove the false and add a label or to remove a model set the label to false
+             */
+            'media_collections' => ['front-image' => 'Image du produit', 'back-image' => false, 'images' => 'Gallerie'],
+            'custom_fields'   => [
+                // 'product' => [
+                //     ['name' => 'display_in_slider',      'type' => 'boolean',   'label' => 'Mise en avant sous le menu'],
+                //     ['name' => 'week_deal',              'type' => 'boolean',   'label' => 'Deal de la semaime'],
+                //     ['name' => 'tendance',               'type' => 'boolean',   'label' => 'Tendance'],
+                //     ['name' => 'display_in_home_slider', 'type' => 'boolean',   'label' => "Diaporama page d'accueil"],
+                // ]
+            ],
+            'models'  => [
+                'brand'          => Guysolamour\Administrable\Models\Extensions\Shop\Brand::class,
+                'order'          => Guysolamour\Administrable\Models\Extensions\Shop\Order::class,
+                'coupon'         => Guysolamour\Administrable\Models\Extensions\Shop\Coupon::class,
+                'review'         => Guysolamour\Administrable\Models\Extensions\Shop\Review::class,
+                'product'        => Guysolamour\Administrable\Models\Extensions\Shop\Product::class,
+                'command'        => Guysolamour\Administrable\Models\Extensions\Shop\Command::class,
+                'setting'        => Guysolamour\Administrable\Settings\ShopSettings::class,
+                'deliver'        => Guysolamour\Administrable\Models\Extensions\Shop\Deliver::class,
+                'category'       => Guysolamour\Administrable\Models\Extensions\Shop\Category::class,
+                'attribute'      => Guysolamour\Administrable\Models\Extensions\Shop\Attribute::class,
+                'deliverprice'   => Guysolamour\Administrable\Models\Extensions\Shop\DeliverPrice::class,
+                'coveragearea'   => Guysolamour\Administrable\Models\Extensions\Shop\CoverageArea::class,
+                'attributeterm'  => Guysolamour\Administrable\Models\Extensions\Shop\AttributeTerm::class,
+            ],
+            'controllers' => [
+                'back' => [
+                    'brand'         => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\BrandController::class,
+                    'order'         => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\OrderController::class,
+                    'client'        => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\ClientController::class,
+                    'coupon'        => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\CouponController::class,
+                    'review'        => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\ReviewController::class,
+                    'product'       => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\ProductController::class,
+                    'command'       => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\CommandController::class,
+                    'setting'       => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\SettingController::class,
+                    'deliver'       => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\DeliverController::class,
+                    'category'      => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\CategoryController::class,
+                    'attribute'     => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\AttributeController::class,
+                    'deliverprice'  => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\DeliverPriceController::class,
+                    'coveragearea'  => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\CoverageAreaController::class,
+                    'attributeterm' => Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop\AttributeTermController::class,
+                ]
+            ],
+            'forms' => [
+                'back' => [
+                    'attribute'     => Guysolamour\Administrable\Forms\Back\Extensions\Shop\AttributeForm::class,
+                    'brand'         => Guysolamour\Administrable\Forms\Back\Extensions\Shop\BrandForm::class,
+                    'category'      => Guysolamour\Administrable\Forms\Back\Extensions\Shop\CategoryForm::class,
+                    'coupon'        => Guysolamour\Administrable\Forms\Back\Extensions\Shop\CouponForm::class,
+                    'coveragearea'  => Guysolamour\Administrable\Forms\Back\Extensions\Shop\CoverageAreaForm::class,
+                    'deliver'       => Guysolamour\Administrable\Forms\Back\Extensions\Shop\DeliverForm::class,
+                    'product'       => Guysolamour\Administrable\Forms\Back\Extensions\Shop\ProductForm::class,
+                    'review'        => Guysolamour\Administrable\Forms\Back\Extensions\Shop\ReviewForm::class,
+                ]
+            ],
+            'notifications' => [
+                'back' => [
+                    'commandsent' => Guysolamour\Administrable\Notifications\Back\Extensions\Shop\CommandSentNotification::class,
+                ],
             ],
         ],
     ],
@@ -250,6 +327,11 @@ return [
                 'form'         => Guysolamour\Administrable\Forms\Back\CommentForm::class,
                 'mail'         => Guysolamour\Administrable\Mail\Back\CommentMail::class,
                 'notification' => Guysolamour\Administrable\Notifications\Back\CommentNotification::class,
+            ],
+        ],
+        'note' => [
+            'back' => [
+                'controller'  => \Guysolamour\Administrable\Http\Controllers\Back\NoteController::class,
             ],
         ],
         'filemanager'     => [

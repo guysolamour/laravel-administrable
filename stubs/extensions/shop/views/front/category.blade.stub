@@ -1,0 +1,22 @@
+@extends('front.layouts.default')
+
+{{-- <x-administrable::seotags :model="$page" /> --}}
+
+@section('content')
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+			<h2>{{ Str::ucfirst($category->name) }}</i> </h2>
+        </div>
+        <div class="col-md-4">
+            @include('front.extensions.shops._sidebar')
+        </div>
+        <div class="col-md-8">
+            @include('front.extensions.shops._products')
+        </div>
+    </div>
+</div>
+@endsection
+
+
+

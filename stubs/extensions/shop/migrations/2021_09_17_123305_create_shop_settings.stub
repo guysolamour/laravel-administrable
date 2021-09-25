@@ -1,0 +1,39 @@
+<?php
+
+use Spatie\LaravelSettings\Migrations\SettingsMigration;
+
+
+return new class extends SettingsMigration
+{
+    public function up(): void
+    {
+        $this->migrator->add('shop_settings.tva', false);
+        $this->migrator->add('shop_settings.tva_percentage', null);
+        $this->migrator->add('shop_settings.coupon', true);
+        $this->migrator->add('shop_settings.review', true);
+        $this->migrator->add('shop_settings.stock_management', true);
+        $this->migrator->add('shop_settings.invoice_management', true);
+        $this->migrator->add('shop_settings.command_prefix', 'CM');
+        $this->migrator->add('shop_settings.command_length', 8);
+        $this->migrator->add('shop_settings.command_suffix', date('Y'));
+        $this->migrator->add('shop_settings.invoice_note', null);
+        $this->migrator->add('shop_settings.note', true);
+        $this->migrator->add('shop_settings.required_note', true);
+    }
+
+    public function down(): void
+    {
+        $this->migrator->delete('shop_settings.tva');
+        $this->migrator->delete('shop_settings.tva_percentage');
+        $this->migrator->delete('shop_settings.coupon');
+        $this->migrator->delete('shop_settings.review');
+        $this->migrator->delete('shop_settings.stock_management');
+        $this->migrator->delete('shop_settings.invoice_management');
+        $this->migrator->delete('shop_settings.command_prefix');
+        $this->migrator->delete('shop_settings.command_length');
+        $this->migrator->delete('shop_settings.command_suffix');
+        $this->migrator->delete('shop_settings.invoice_note');
+        $this->migrator->delete('shop_settings.note');
+        $this->migrator->delete('shop_settings.required_note');
+    }
+};

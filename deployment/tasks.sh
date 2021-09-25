@@ -16,7 +16,7 @@ then
     if [[ " ${ALL_COMMANDS[*]} " =~ " ${1,,} " ]]; then
         TARGET=${1,,}
     else
-        echo ${1,,} 'is not valid. Available commands ares' ${ALL_COMMANDS[*]}
+        echo ${1,,} 'is not valid. Available commands are' ${ALL_COMMANDS[*]}
         exit 1
     fi
 else
@@ -204,7 +204,7 @@ then
                 user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
                 application='${APPLICATION}' domain='${DOMAIN}'
                 storage_dump_path='${STORAGE_DUMP_PATH}'
-            " -v
+            "
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
 
@@ -218,8 +218,8 @@ then
                 playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                 user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
                 application='${APPLICATION}' domain='${DOMAIN}'
-                storage_dump_path='${STORAGE_DUMP_PATH}' remote_server_user='${REMOTE_SERVER_USER}
-            " -v
+                storage_dump_path='${STORAGE_DUMP_PATH}' remote_server_user='${REMOTE_SERVER_USER}'
+            "
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
 
@@ -235,7 +235,7 @@ fi
 
 
 #------------------------------------------------------------------------------------------------------------------------------>
-# Display dkim publick key
+# Display dkim public key
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "dkim" ]
 then
@@ -245,7 +245,7 @@ fi
 
 
 #------------------------------------------------------------------------------------------------------------------------------>
-# Remove deploy temporary files
+# Remove deployed temporary files
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "clean" ]
 then
@@ -256,7 +256,7 @@ fi
 
 
 #------------------------------------------------------------------------------------------------------------------------------>
-# Create passwords file
+# Create password file
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "password:create" ]
 then
@@ -266,7 +266,7 @@ fi
 
 
 #------------------------------------------------------------------------------------------------------------------------------>
-# View passwords file
+# View password file
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "password:view" ]
 then
@@ -276,7 +276,7 @@ fi
 
 
 #------------------------------------------------------------------------------------------------------------------------------>
-# Edit passwords file
+# Edit password file
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "password:edit" ]
 then

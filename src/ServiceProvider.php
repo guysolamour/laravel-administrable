@@ -3,15 +3,19 @@
 namespace Guysolamour\Administrable;
 
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use Guysolamour\Administrable\Console\DeployCommand;
+use Guysolamour\Administrable\Models\Extensions\Shop\Cart;
+use Guysolamour\Administrable\View\Components\Filemanager;
 use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
 use Guysolamour\Administrable\Console\Crud\AppendCrudCommand;
 use Guysolamour\Administrable\Jobs\PublishProgrammaticalyPost;
+use Guysolamour\Administrable\Jobs\RemoveOrphanTemporaryFiles;
 use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
 use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
@@ -19,8 +23,6 @@ use Guysolamour\Administrable\Console\Administrable\CreateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
 use Guysolamour\Administrable\Console\Extension\Add\AddExtensionCommand;
-use Guysolamour\Administrable\Jobs\RemoveOrphanTemporaryFiles;
-use Guysolamour\Administrable\View\Components\Filemanager;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -28,6 +30,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $this->app->bind('administrable-helper', fn () => new Helper);
+        $this->app->bind('administrable-cart', fn () => new Cart);
 
         $this->scheduleCommands();
 
@@ -53,10 +56,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->publishes([
             $this->packagePath('/resources/views/back/' . config('administrable.theme') . '/back') => resource_path('views/vendor/administrable/' . strtolower(config('administrable.back_namespace'))),
-            $this->packagePath('/resources/views/front') => resource_path('views/vendor/administrable'),
-            $this->packagePath('/resources/views/components') => resource_path('views/vendor/administrable/components'),
+            $this->packagePath('/resources/views/front')       => resource_path('views/vendor/administrable'),
+            $this->packagePath('/resources/views/components')  => resource_path('views/vendor/administrable/components'),
             $this->packagePath('/resources/views/filemanager') => resource_path('views/vendor/administrable/filemanager'),
-            $this->packagePath('/resources/views/emails') => resource_path('views/vendor/administrable/emails'),
+            $this->packagePath('/resources/views/emails')      => resource_path('views/vendor/administrable/emails'),
         ], 'administrable-views');
 
         $this->publishes([
@@ -70,7 +73,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         Blade::include('administrable::filemanager.show', 'filemanagerShow');
         Blade::include('administrable::filemanager.guardavatar', 'guardavatar');
 
-
         $this->loadPolicies([
             config('administrable.modules.comment.model') => config('administrable.modules.comment.front.policy'),
         ]);
@@ -80,6 +82,20 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadGuardGates();
 
         $this->loadValidationRules();
+
+        $this->registerEvents();
+    }
+
+    private function registerEvents() :void
+    {
+        Event::listen(
+            \Guysolamour\Administrable\Events\Shop\ConfirmCommandPayment::class,
+            [\Guysolamour\Administrable\Listeners\Extensions\Shop\CreateCommandOrder::class, 'handle']
+        );
+        Event::listen(
+            \Guysolamour\Administrable\Events\Shop\ConfirmCommandPayment::class,
+            [\Guysolamour\Administrable\Listeners\Extensions\Shop\IncrementProductSoldCount::class, 'handle']
+        );
     }
 
     private function scheduleCommands() :void
@@ -156,6 +172,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->booting(function () {
             $loader = AliasLoader::getInstance();
             $loader->alias('AdminModule', Module::class);
+            $loader->alias('Cart', \Guysolamour\Administrable\Facades\Cart::class);
             $loader->alias('AdminExtension', Extension::class);
         });
 
