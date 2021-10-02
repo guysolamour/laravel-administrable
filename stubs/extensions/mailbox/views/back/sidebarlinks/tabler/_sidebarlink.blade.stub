@@ -1,5 +1,5 @@
-                    <li class="nav-item {{ set_active_link(back_view_path('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index')) }}">
-                        <a class="nav-link" href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index') }}">
+                    <li class="nav-item {{ set_active_link(back_view_path('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index')) }}">
+                        <a class="nav-link" href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="fa fa-envelope icon"></i>&nbsp;
                             </span>

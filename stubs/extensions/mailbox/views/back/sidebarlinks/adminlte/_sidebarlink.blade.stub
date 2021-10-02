@@ -1,6 +1,6 @@
            <li class="nav-item">
              <a href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index') }}"
-             class="nav-link {{ set_active_link(back_view_path('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index')) }}">
+             class="nav-link {{ set_active_link(back_view_path('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index')) }}">
                <i class="nav-icon far fa-envelope"></i>
                  Messagerie
                <p>

@@ -86,7 +86,7 @@
                                             <div class="btn-group">
                                                 <a href="{{ back_route('extensions.shop.command.edit', $order->command) }}" class="btn btn-info ">Voir la
                                                 commande</a>
-                                                <a href="{{ asset($order->invoice) }}" class="btn btn-primary " target="_blank">Voir la
+                                                <a href="{{ Storage::url($order->invoice) }}" class="btn btn-primary " target="_blank">Voir la
                                                 facture</a>
                                             </div>
                                         </td>

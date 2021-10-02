@@ -193,11 +193,9 @@
                         return
                     }
 
-
                     this.appendDataToRequest(
                         { name: `filemanager[${this.collection}]`, value: this.files.map(file => file.id)
                     })
-                    alert('append data')
                 })
             },
             get form(){

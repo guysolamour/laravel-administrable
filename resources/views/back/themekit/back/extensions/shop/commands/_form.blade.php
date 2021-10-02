@@ -149,7 +149,7 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        @if($command->isPaid() || $command->isNotCompleted())
+                        @if($command->isPaid() || $command->isCompleted())
                         <div class="alert alert-warning">
                             Cette commande a été complétée et/ou payé, vous ne devriez plus la modifier.
                         </div>

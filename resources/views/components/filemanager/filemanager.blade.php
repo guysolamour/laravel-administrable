@@ -398,7 +398,6 @@ document.addEventListener('alpine:init', () => {
         },
         viewImage(file){
             this.openViewimageModal(file)
-            // alert('on view image')
         },
         rename(file){
             const url = this.isCreateMode() ?
@@ -903,12 +902,12 @@ document.addEventListener('alpine:init', () => {
                     </div>
                 </div>
                 <div class="modal-footer bg-light text-white">
-                    <div class="col-12 col-md-6 col-lg-6 order-md-2 order-lg-1" data-modal="footer">
+                    <div class="col-12 col-md-6 col-lg-6 order-md-2 order-lg-1">
                         <div class="col-12 border p-2 bg-secondary text-center" >
                             <i class='fas fa-clock'></i> Collection: {{ $collection }} | <span x-text="' Fichiers: ' + files.uploaded.length "></span> | <span x-text="' Taille: ' + getFileSize(uploadedFileSize) "></span>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-6 order-md-1 order-lg-2" data-modal="alert">
+                    <div class="col-12 col-md-6 col-lg-6 order-md-1 order-lg-2">
                     </div>
                 </div>
             </div>
@@ -1112,7 +1111,7 @@ document.addEventListener('alpine:init', () => {
         </div>
     </div>
 
-    <div class="modal fade" :id="imageviewModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div :id="imageviewModal" class="modal fade"  tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content" x-show='view_image'>
                     <div class="modal-header">

@@ -313,7 +313,7 @@ return [
                 'form'        => Guysolamour\Administrable\Forms\Back\GuardForm::class,
                 'createform'  => Guysolamour\Administrable\Forms\Back\CreateGuardForm::class,
                 'resetpasswordform'  => Guysolamour\Administrable\Forms\Back\ResetGuardPasswordForm::class,
-            ],//0759956172
+            ],
         ],
         'comment' => [
             'model' => Guysolamour\Administrable\Models\Comment::class,

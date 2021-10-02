@@ -57,10 +57,11 @@ class CommandSentNotification extends Notification
      * @return array
      */
     public function toArray($notifiable)
+    public function toArray($notifiable)
     {
         return [
             'client' => $this->command->client->name,
-            'url'    => back_route('shop.command.show', $this->command),
+            'url'    => back_route('extensions.shop.command.edit', $this->command),
         ];
     }
 }

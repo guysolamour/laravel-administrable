@@ -94,10 +94,10 @@
                                 <td>{{ $command->state_label }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        @if($command->isNotPaid() && $command->isNotCompleted())
+                                        @if($command->isNotPaid())
                                         <a href="{{ back_route('extensions.shop.command.confirm', $command) }}" class="btn btn-success"
                                             data-type="success" data-method="post" data-title="Confirmation"
-                                            data-confirm="Etes vous sûr de confirmer le paiement de cette commande ?"
+                                            data-confirm="Etes vous sûr de confirmer le paiement de cette commande ? Ce qui signifie qui signifie que le client a soldé sa commande qui s'élève à {{ format_price($command->amount) }}"
                                             title="Valider le paiement"><i class="fas fa-check"></i></a>
                                         @endif
                                           <a href="{{ back_route('extensions.shop.command.edit', $command) }}" class="btn btn-info"

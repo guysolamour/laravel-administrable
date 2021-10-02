@@ -102,16 +102,16 @@ class Field
 
     /** @var array */
     private $relation = [
-        'references'   => 'id',
-        'type'         => null,
-        'onDelete'     => 'cascade',
-        'name'         => null,
-        'related'      => null,
-        'model_id'     => null,
-        'model_type'   => null,
-        'morph_name'   => null,
-        'local_keys'   => [],
-        'related_keys'   => [],
+        'references'           => 'id',
+        'type'                 => null,
+        'onDelete'             => 'cascade',
+        'name'                 => null,
+        'related'              => null,
+        'model_id'             => null,
+        'model_type'           => null,
+        'morph_name'           => null,
+        'local_keys'           => [],
+        'related_keys'         => [],
         'intermediate_table'   => null,
     ];
 
@@ -123,7 +123,6 @@ class Field
 
      /** @var Cruf */
     private $crud;
-
 
 
 
@@ -156,6 +155,7 @@ class Field
 
         $this->setConstraints($attributes);
 
+        dd($this);
     }
 
     // SETTERS
@@ -478,7 +478,7 @@ class Field
         if ($this->checkIfExistsRuleIsDefined() || $this->isPolymorphicRelation()){
             return;
         }
-        $this->rules[] = "exists:{$this->crud->getTableName()},{$this->getRelationReferences()}";
+        $this->rules[] = "exists:{$this->getRelationRelatedModelTableName()},{$this->getRelationReferences()}";
     }
 
 
@@ -627,7 +627,6 @@ class Field
             }
         }
 
-
         $this->constraints = $constraints;
     }
 
@@ -656,7 +655,6 @@ class Field
         if ($this->hasRules('nullable')){
             $nullable = true;
         }
-
 
         if ($nullable){
             $this->nullable = $nullable;
@@ -707,7 +705,7 @@ class Field
             return;
         }
 
-        // remove the | end in case the user forgot it
+        // remove the |  in case the user forgot it
         $rules = rtrim($rules, '|');
 
         $rules = array_filter(explode('|', $rules));

@@ -1,6 +1,6 @@
 
-            <li class="menu-item {{ set_active_link(back_view_path('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index')) }}">
-                <a class="menu-link" href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index') }}">
+            <li class="menu-item {{ set_active_link(back_view_path('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index')) }}">
+                <a class="menu-link" href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index') }}">
                     <span class="icon far fa-envelope"></span>
                     <span class="title">Messagerie</span>
 
