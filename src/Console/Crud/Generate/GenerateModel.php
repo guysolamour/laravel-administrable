@@ -384,30 +384,30 @@ class GenerateModel extends BaseGenerate
     protected function loadSluggableTrait(string $model): string
     {
         if (!$this->crud->getSlug()) {
-            return str_replace('// add sluggable methods below', '', $model);
+            return str_replace('{{sluggable}}', '', $model);
         }
 
         $data_map = $this->getParsedName();
 
         // the namespace
-        $namespace = 'use Cviebrock\EloquentSluggable\Sluggable;';
+        $namespace = 'use Guysolamour\Administrable\Traits\SluggableTrait;';
         $search = sprintf("namespace %s\%s;", $data_map['{{namespace}}'], $data_map['{{modelsNamespace}}']);
         $model = str_replace($search, $search . PHP_EOL . PHP_EOL . $namespace, $model);
 
 
-        $sluggable_trait = '    use Sluggable;';
+        $sluggable_trait = '    use SluggableTrait;';
         $search = "use ModelTrait;";
         // insert the namespace in the model
         $model = str_replace($search, $search . PHP_EOL . $sluggable_trait , $model);
 
+
         // sluggable stub
         $sluggable = $this->crud->filesystem->compliedFile($this->crud->getCrudTemplatePath('/models/sluggable.stub'), true, $data_map);
 
-
         // insert in the model
-        $search = '// add sluggable methods below' .  PHP_EOL . PHP_EOL;
+        $model =  str_replace('{{sluggable}}', $sluggable, $model);
 
-        return str_replace($search, $search . $sluggable, $model);
+        return $model;
     }
 
 

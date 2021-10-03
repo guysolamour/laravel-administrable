@@ -20,7 +20,7 @@ trait SluggableTrait
             return $this->sluggablefield;
         }
 
-        return config('administrable.modules.sluggable.field');
+        return config('administrable.modules.sluggable.field', 'title');
     }
 
 

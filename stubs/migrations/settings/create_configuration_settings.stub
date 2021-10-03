@@ -19,6 +19,7 @@ class CreateConfigurationSettings extends SettingsMigration
         $this->migrator->add('configuration.linkedin', null);
         $this->migrator->add('configuration.whatsapp', null);
         $this->migrator->add('configuration.logo', null);
+        $this->migrator->add('configuration.custom_fields', null);
     }
 
     public function down(): void
@@ -35,5 +36,6 @@ class CreateConfigurationSettings extends SettingsMigration
         $this->migrator->delete('configuration.linkedin');
         $this->migrator->delete('configuration.whatsapp');
         $this->migrator->delete('configuration.logo');
+        $this->migrator->delete('configuration.custom_fields');
     }
 }

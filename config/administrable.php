@@ -299,6 +299,11 @@ return [
                 'form'        => Guysolamour\Administrable\Forms\Back\ConfigurationForm::class,
                 'controller'  => Guysolamour\Administrable\Http\Controllers\Back\ConfigurationController::class,
             ],
+            'custom_fields'   => [
+                ['name' => 'display_in_slider',      'type' => 'text',   'label' => 'Mise en avant sous le menu'],
+                ['name' => 'week_deal',              'type' => 'text',   'label' => 'Deal de la semaime'],
+                ['name' => 'tendance',               'type' => 'text',   'label' => 'Tendance'],
+            ],
         ],
         'user' => [
             'back' => [

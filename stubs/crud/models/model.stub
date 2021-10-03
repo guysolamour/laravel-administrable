@@ -20,12 +20,10 @@ class {{singularClass}} extends BaseModel
 
     {{datepicker}}
 
+    {{sluggable}}
+    
+
     // add relation methods below
-
-
-
-
-    // add sluggable methods below
 
 
 

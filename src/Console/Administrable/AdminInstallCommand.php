@@ -340,6 +340,140 @@ class AdminInstallCommand extends BaseCommand
         $auth_config_path
         );
 
+        // Settings config
+        $this->call('vendor:publish', [
+            '--provider' => 'Spatie\LaravelSettings\LaravelSettingsServiceProvider',
+            '--tag'      => 'settings',
+        ]);
+        $path = config_path('settings.php');
+        $search =  "'settings' => [";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            $search
+                    \Guysolamour\Administrable\Settings\ConfigurationSettings::class,
+            TEXT,
+            $path
+        );
+
+        $search =  "app()->path(),";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            // $search
+            TEXT,
+            $path
+        );
+
+        // Backup config
+        $this->call('vendor:publish', [
+            '--provider' => 'Spatie\Backup\BackupServiceProvider',
+            '--tag'      => 'backup-config',
+        ]);
+
+        $path = config_path('backup.php');
+        $search =  "'disks' => [";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            $search
+                            'ftp',
+            TEXT,
+            $path
+        );
+        $search =  "'your@example.com'";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            env('BACKUP_MAIL_TO')
+            TEXT,
+            $path
+        );
+
+        // Media library config
+        $this->call('vendor:publish', [
+            '--provider' => 'Spatie\MediaLibrary\MediaLibraryServiceProvider',
+            '--tag'      => 'config',
+        ]);
+
+        $path = config_path('media-library.php');
+        $search =  "Spatie\MediaLibrary\MediaCollections\Models\Media::class,";
+
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            Guysolamour\Administrable\Models\Media::class,
+            TEXT,
+            $path
+        );
+
+        $search =  "'queue_name' => ''";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            $search,
+
+                /**
+                 * Default disc name
+                 */
+                'collections_disc' => 'media'
+            TEXT,
+            $path
+        );
+
+        // Seotools config
+        $this->call('vendor:publish', [
+            '--provider' => 'Artesaos\SEOTools\Providers\SEOToolsServiceProvider',
+        ]);
+
+        $path = config_path('seotools.php');
+
+        $search =  '"It\'s Over 9000!"';
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            config('app.name')
+            TEXT,
+            $path
+        );
+
+        $search =  "' - '";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            ' | '
+            TEXT,
+            $path
+        );
+
+        $search =  "'Over 9000 Thousand!'";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            false
+            TEXT,
+            $path
+        );
+
+        $search =  "'For those who helped create the Genki Dama'";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            false
+            TEXT,
+            $path
+        );
+
         return $config_path;
     }
 
@@ -957,6 +1091,10 @@ class AdminInstallCommand extends BaseCommand
 
             MODEL_CACHE_ENABLED=false
             COOKIE_CONSENT_ENABLED=true
+
+            SETTINGS_CACHE_ENABLED=false
+
+            BACKUP_MAIL_TO=
 
             MAIL_DKIM_SELECTOR=dkim
             MAIL_DKIM_DOMAIN=

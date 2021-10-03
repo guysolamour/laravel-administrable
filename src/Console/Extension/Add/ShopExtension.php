@@ -14,6 +14,7 @@ class ShopExtension extends BaseExtension
 
         $this->loadViews();
         $this->loadAssets();
+        $this->registerSettings();
         $this->loadMigrations(false);
         $this->loadControllers();
         $this->loadRoutes();
@@ -21,6 +22,23 @@ class ShopExtension extends BaseExtension
         $this->runMigrateArtisanCommand();
 
         $this->extension->info("{$this->name} extension added successfully.");
+    }
+
+    public function registerSettings()
+    {
+        $path = config_path('settings.php');
+        $search =  "'settings' => [";
+        $this->filesystem->replaceAndWriteFile(
+            $this->filesystem->get($path),
+            $search,
+            <<<TEXT
+            $search
+                   \Guysolamour\Administrable\Settings\ShopSettings::class,
+            TEXT,
+            $path
+        );
+
+        $this->displayMessage('Settings registered at ' . $path);
     }
 
 

@@ -1,12 +1,2 @@
-   public function getRouteKeyName()
-   {
-       return 'slug';
-   }
 
-   // Return the sluggable configuration array for this model.
-   public function sluggable(): array
-   {
-       return [
-           'slug' => ['source' => '{{slugField}}']
-       ];
-   }
+    protected $sluggablefield = '{{slugField}}';

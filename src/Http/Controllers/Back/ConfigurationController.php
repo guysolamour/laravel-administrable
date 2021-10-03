@@ -11,7 +11,6 @@ use Guysolamour\Administrable\Http\Controllers\BaseController;
 class ConfigurationController extends BaseController
 {
     use FormBuilderTrait;
-    
 
     public function edit()
     {

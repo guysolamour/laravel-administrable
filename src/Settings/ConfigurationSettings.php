@@ -2,10 +2,13 @@
 
 namespace Guysolamour\Administrable\Settings;
 
+use Guysolamour\Administrable\Traits\CustomFieldsTrait;
 use Illuminate\Support\Facades\Storage;
 
 class ConfigurationSettings extends BaseSettings
 {
+    use CustomFieldsTrait;
+    
     public ?string $email;
     public ?string $postal;
     public ?string $area;
@@ -18,6 +21,7 @@ class ConfigurationSettings extends BaseSettings
     public ?string $linkedin;
     public ?string $whatsapp;
     public ?string $logo;
+    public ?array $custom_fields;
 
 
     public static function group(): string

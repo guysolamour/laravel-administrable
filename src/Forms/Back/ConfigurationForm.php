@@ -14,7 +14,7 @@ class ConfigurationForm extends Form
             'url'    => back_route('configuration.store'),
         ];
 
-        $this
+        $form = $this
             // add fields here
             ->add('email', 'email', [
                 'label' => Lang::get("administrable::messages.view.configuration.email"),
@@ -67,15 +67,26 @@ class ConfigurationForm extends Form
                 'rules' => 'nullable|url',
                 'value' => $this->getModel()->linkedin,
             ])
+
             ->add('logo', 'file', [
                 'label' => Lang::get("administrable::messages.view.configuration.logo"),
                 'rules' => 'nullable|image',
                 'value' => $this->getModel()->logo,
-            ])
-            ->add('about', 'textarea', [
+            ]);
+
+            // custom fields
+            foreach (config('administrable.modules.configuration.custom_fields') as $field) {
+                $form->add("custom_fields[{$field['name']}]", $field['type'], [
+                    'label' => $field['label'],
+                    'value' => $this->getModel()->getCustomField($field['name']),
+                ]);
+            }
+
+            $form->add('about', 'textarea', [
                 'label' => Lang::get("administrable::messages.view.configuration.about"),
                 'rules' => 'nullable|string',
                 'value' => $this->getModel()->about,
             ]);
     }
 }
+
