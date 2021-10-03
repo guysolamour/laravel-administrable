@@ -116,7 +116,29 @@ class MediaController extends BaseController
             })
             ->withCustomProperties([
                 'order'  => (int) $request->get('order'),
-                'select' => true,
+                'select' => false,
+            ])
+            ->toMediaCollection($collection);
+
+        return response()->json($media);
+    }
+
+
+    public function remote(string $model, int $id, string $collection, Request $request)
+    {
+        /**
+         * @var \Guysolamour\Administrable\Traits\MediaableTrait|string $model
+         */
+        $model = base64_decode($model)::find($id);
+
+        $media = $model
+            ->addMediaFromUrl($request->input('url'), config("administrable.media.valid_mimetypes." . $request->input('type')))
+            ->sanitizingFileName(function ($fileName) {
+                return str_replace(["'", " "], '', $fileName);
+            })
+            ->withCustomProperties([
+                'order'  => (int) $request->get('order'),
+                'select' => false,
             ])
             ->toMediaCollection($collection);
 

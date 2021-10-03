@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Guysolamour\Administrable\Traits\HasMediaTrait;
+use Illuminate\Http\UploadedFile;
 
 class TemporaryMedia extends Model
 {
@@ -35,12 +36,6 @@ class TemporaryMedia extends Model
         'size'               => 'int',
         'custom_properties'  => 'array',
     ];
-
-
-    // public function getMedia(string $collection)
-    // {
-
-    // }
 
 
     public function getUrlAttribute($value)
@@ -96,6 +91,35 @@ class TemporaryMedia extends Model
         $this->custom_properties = $customProperties;
 
         return $this;
+    }
+
+    public static function store(UploadedFile $uploaded_file) :self
+    {
+        $url = $uploaded_file->storeAs(
+            config('administrable.media.temporary_files.folder'),
+            static::getUploadedFileName($uploaded_file, true),
+            'public'
+        );
+        /**
+         * @var self
+         */
+        $media = new static();
+
+        $media->name            = static::getUploadedFileNameWithoutExtension($uploaded_file);
+        $media->file_name       = static::getUploadedFileName($uploaded_file);
+        $media->collection_name = request('collection');
+        $media->url             = $url;
+        $media->mime_type       = $uploaded_file->getMimeType();
+        $media->size            = $uploaded_file->getSize();
+        $media->model           = request('model');
+        $media->withCustomProperties([
+            'order'  => (int) request('order'),
+            'select' => (bool) config('administrable.media.select_uploaded_file'),
+        ]);
+
+        $media->save();
+
+        return $media;
     }
 
 
@@ -170,7 +194,6 @@ class TemporaryMedia extends Model
             'model_name' => request('model'),
         ];
 
-
         $option = $this->getMediaInOptions();
 
         if (empty($option)){
@@ -196,14 +219,14 @@ class TemporaryMedia extends Model
 
         static::created(function ($model) {
             /**
-             * @var \App\Models\TemporaryMedia $model
+             * @var \Guysolamour\Administrable\Models\TemporaryMedia $model
              */
             $model->registerMediaInOptions();
         });
 
         static::deleted(function ($model) {
             /**
-             * @var \App\Models\TemporaryMedia $model
+             * @var \Guysolamour\Administrable\Models\TemporaryMedia $model
              */
             Storage::disk('public')->delete($model->getRawOriginal('url'));
         });

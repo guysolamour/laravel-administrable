@@ -154,8 +154,6 @@ class Field
         $this->validateType();
 
         $this->setConstraints($attributes);
-
-        dd($this);
     }
 
     // SETTERS

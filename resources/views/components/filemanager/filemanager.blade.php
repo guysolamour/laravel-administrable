@@ -22,6 +22,10 @@
         $(document).on('hidden.bs.modal', '.modal', function () {
             $('.modal:visible').length && $(document.body).addClass('modal-open');
         });
+
+
+
+
     </script>
     @endpush
 @endonce
@@ -37,6 +41,11 @@ document.addEventListener('alpine:init', () => {
         type:       '{{ $type }}',
         config:     @json($config),
         search: '',
+        remote: {
+            url: '',
+            error: false,
+            loading: false,
+        },
         files: {
             droped: [],
             uploaded: [],
@@ -431,7 +440,7 @@ document.addEventListener('alpine:init', () => {
                 return `/${this.routeprefix}/temporarymedia`
             }
         },
-        uploadFile(file, resolve, reject){
+        viaUrl(file, resolve, reject){
             this.isUploading = true
             this.uploadingFilename = file.name
 
@@ -479,8 +488,38 @@ document.addEventListener('alpine:init', () => {
 
             const file = this.files.droped[0]
 
-            this.uploadFile(file, () => {
+            this.viaUrl(file, () => {
                 this.upload()
+            })
+        },
+
+        uploadRemoteFile(){
+            this.remote.loading = true
+            this.remote.error   = false
+
+            const url = this.isCreateMode() ?
+                        `/${this.routeprefix}/temporarymedia/remote` :
+                        this.getUrl('/remote')
+
+            axios.post(url, {
+                url: this.remote.url,
+                order:  this.files.uploaded.length + 1,
+                collection: this.collection,
+                type: this.type,
+                path:  window.location.pathname,
+                model: this.model_name,
+            })
+            .then(({ data }) => {
+                this.remote.loading = false
+                this.remote.error   = false
+                this.files.uploaded = [data, ...this.files.uploaded]
+
+                this.setSelectedImage()
+                this.closeUploadRemoteModal()
+            })
+            .catch(data => {
+                this.remote.loading = false
+                this.remote.error   = true
             })
         },
         resetUpload(){
@@ -490,6 +529,9 @@ document.addEventListener('alpine:init', () => {
         },
         openUploadModal(){
             jQuery('#' + this.uploadModal).modal('show')
+        },
+        openUploadRemoteModal(){
+            jQuery('#' + this.uploadRemoteModal).modal('show')
         },
         openViewimageModal(file){
             this.view_image = file
@@ -538,6 +580,10 @@ document.addEventListener('alpine:init', () => {
         },
         closeUploadModal(){
             jQuery('#' + this.uploadModal).modal('hide')
+        },
+        closeUploadRemoteModal(){
+            jQuery('#' + this.uploadRemoteModal).modal('hide')
+            this.remote.url = ''
         },
         closeCropModal(){
             this.croping_file = {}
@@ -637,6 +683,27 @@ document.addEventListener('alpine:init', () => {
             return this.config.collections[collection_name];
         },
         // Computed
+        strBeginsWith (string, start) {
+            if (start.length === 0){
+                return false
+            }
+            return(string.indexOf(start) === 0)
+        },
+
+        validURL(string) {
+            let url;
+
+            try {
+                url = new URL(string);
+            } catch (_) {
+                return false;
+            }
+
+            return url.protocol === "http:" || url.protocol === "https:";
+        },
+        get invalidRemoteUrl(){
+           return this.remote.url.length >  0 && !(this.strBeginsWith(this.remote.url, 'http') || this.strBeginsWith(this.remote.url, 'https'))
+        },
         get isMultipleCollection(){
             return this.getCollection()['multiple'] || false;
         },
@@ -691,6 +758,9 @@ document.addEventListener('alpine:init', () => {
         get uploadModal(){
             return "uploadModal" + this.collection
         },
+        get uploadRemoteModal(){
+            return "uploadRemoteModal" + this.collection
+        },
         get form(){
             return document.querySelector(`form[name=${this.form_name}]`)
         },
@@ -701,7 +771,7 @@ document.addEventListener('alpine:init', () => {
 });
 </script>
 @endpush
-<div x-ref="root" x-data="{{ $name }}">
+<div x-data="{{ $name }}">
     <!-- Modal -->
     <div class="modal fade" :id="mediaModal" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 90%">
@@ -730,6 +800,9 @@ document.addEventListener('alpine:init', () => {
                                     <div class="btn-group" role="group">
                                         <button type="button" class="btn btn-secondary" @click.prevent="openUploadModal" title="Envoyer"><i
                                             class="fa fa-upload"></i></button>
+
+                                        <button type="button" class="btn btn-secondary" @click.prevent="openUploadRemoteModal" title="Envoyer par url"><i
+                                            class="fa fa-cloud-upload-alt"></i></button>
 
                                         <button type="button" class="btn btn-secondary" @click.prevent="downloadAll"  title="Tous télécharger"><i
                                             class="fa fa-download"></i></button>
@@ -781,9 +854,9 @@ document.addEventListener('alpine:init', () => {
                             <div class="row mt-4">
                                 <div x-show="filteredUploadFiles.length > 0" class="col-12 col-md-8 col-xl-8 row order-sm-2 order-md-1  order-xl-1 modal-zone modal-container">
                                     <template x-for="(file, index) in filteredUploadFiles" :key="index">
-                                        <div @contextmenu="handleRightClick" @dblclick="toggleSelect(file)" :data-id="file.id" class="imagebox col-12 col-sm-6 col-md-6 col-lg-4"  :class="{ 'choosed-image': file.select }">
+                                        <div @contextmenu="handleRightClick" @dblclick="toggleSelect(file)" :data-id="file.id" class="filemanagerimagebox col-12 col-sm-6 col-md-6 col-lg-4"  :class="{ 'choosed-image': file.select }">
                                             <div class="file-man-box">
-                                                <a href="#" class="file-close">
+                                                <a href="#" @click.prevent="unSelect(file)" class="file-close">
                                                     <i class="fa fa-check"></i>
                                                 </a>
 
@@ -975,7 +1048,7 @@ document.addEventListener('alpine:init', () => {
                             </div>
                         </div>
                         <template x-for="(file, index) in files.droped" :key="index">
-                            <div class="imagebox col-12 col-sm-4">
+                            <div class="filemanagerimagebox col-12 col-sm-4">
                                 <div class="card">
                                     <a @click.prevent="removeDropedFile(index)" href="#" class="file-close">
                                         <i class="fa fa-times"></i>
@@ -997,7 +1070,7 @@ document.addEventListener('alpine:init', () => {
                                         <span x-text="getFileSize(file.size)"></span>
                                         </li>
                                          <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <button class="btn btn-info btn-sm" @click.prevent="uploadFile(file)">Envoyer</button>
+                                            <button class="btn btn-info btn-sm" @click.prevent="viaUrl(file)">Envoyer</button>
                                             <button class="btn btn-danger btn-sm btn-block" @click.prevent="removeDropedFile(index)">Supprimer</button>
                                         </li>
                                     </ul>
@@ -1016,6 +1089,47 @@ document.addEventListener('alpine:init', () => {
                         <div :class="'progress-bar bg-' + uploadMessageType"  role="progressbar" :style="{ width: uploadingPercentage + '%' }" :aria-valuenow="uploadingPercentage" aria-valuemin="0"
                             aria-valuemax="100" x-text="uploadMessage"></div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div :id="uploadRemoteModal" class="modal  fade upload-modal"  tabindex="-1" data-backdrop="static" role="dialog" :aria-labelledby="'uploadModalLabel' + collection"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content" style="height: 45vh">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-center text-uppercase" :id="'uploadModalLabel' + collection">
+                        Téléversement par url
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="Fermer">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                              <label for="">Url du fichier</label>
+                              <input type="text" x-model='remote.url'
+                                class="form-control" :class="{ 'is-invalid': invalidRemoteUrl }" name="uploadurl" id="uploadurl" placeholder="https://domaine.com/image.jpg" aria-describedby="helpRemoteUploadId">
+                                <div  class="invalid-feedback">
+                                    Le lien doit commencer par le protocole [http] ou [https]
+                                </div>
+                            </div>
+                            <div x-show="remote.loading" x.transition class="fa-3x text-center">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                            </div>
+
+                            <div class="alert alert-danger" x-show='remote.error'>
+                                Erreur lors de l'ajout merci de vérifier le lien du fichier
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @click.prevent='uploadRemoteFile' :disabled='!validURL(remote.url)' class="btn btn-primary btn-sm btn-block"><i class="fa fa-location-arrow"></i> Téléverser</button>
                 </div>
             </div>
         </div>

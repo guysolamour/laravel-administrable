@@ -156,6 +156,8 @@ Route::prefix(config('administrable.auth_prefix_path'))
             | FILEMANAGER
             |--------------------------------------------------------------------------
             */
+
+            Route::post('temporarymedia/remote', [config("administrable.modules.filemanager.back.temporary_controller"), 'remote']);
             Route::post('temporarymedia/option', [config("administrable.modules.filemanager.back.temporary_controller"), 'getOption']);
             Route::post('temporarymedia/order', [config("administrable.modules.filemanager.back.temporary_controller"), 'order']);
             Route::post('temporarymedia', [config("administrable.modules.filemanager.back.temporary_controller"), 'store']);
@@ -168,6 +170,7 @@ Route::prefix(config('administrable.auth_prefix_path'))
             Route::post('temporarymedia/{temporaryMedia}/modify', [config("administrable.modules.filemanager.back.temporary_controller"), 'modify']);
             Route::delete('temporarymedia/{temporaryMedia}', [config("administrable.modules.filemanager.back.temporary_controller"), 'destroy']);
 
+            Route::post('media/{model}/{id}/{collection}/remote', [config("administrable.modules.filemanager.back.controller"), 'remote']);
             Route::post('media/{model}/{id}/{collection}/unselectall', [config("administrable.modules.filemanager.back.controller"), 'unSelectAll']);
             Route::get('media/{model}/{id}/{collection}', [config("administrable.modules.filemanager.back.controller"), 'index']);
             Route::post('media/{model}/{id}/{collection}', [config("administrable.modules.filemanager.back.controller"), 'store']);

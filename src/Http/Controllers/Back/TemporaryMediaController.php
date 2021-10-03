@@ -2,10 +2,13 @@
 
 namespace Guysolamour\Administrable\Http\Controllers\Back;
 
+use Illuminate\Http\File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Guysolamour\Administrable\Http\Requests\MediaFormRequest;
 use Guysolamour\Administrable\Http\Controllers\BaseController;
 
@@ -34,29 +37,65 @@ class TemporaryMediaController extends BaseController
 
     public function store(MediaFormRequest $request)
     {
-        $uploaded_file = $request->file('file');
-
-        $url = $uploaded_file->storeAs(
-            config('administrable.media.temporary_files.folder'),
-            config("administrable.modules.filemanager.temporary_model")::getUploadedFileName($uploaded_file, true),
-            'public'
+        $media = config("administrable.modules.filemanager.temporary_model")::store(
+            $request->file('file')
         );
 
-        $media = new (config("administrable.modules.filemanager.temporary_model"));
+        return response()->json($media);
+    }
 
-        $media->name            = config("administrable.modules.filemanager.temporary_model")::getUploadedFileNameWithoutExtension($uploaded_file);
-        $media->file_name       = config("administrable.modules.filemanager.temporary_model")::getUploadedFileName($uploaded_file);
-        $media->collection_name = $request->input('collection');
-        $media->url             = $url;
-        $media->mime_type       = $uploaded_file->getMimeType();
-        $media->size            = $uploaded_file->getSize();
-        $media->model           = $request->input('model');
-        $media->withCustomProperties([
-            'order'  => (int) $request->input('order'),
-            'select' => (bool) config('administrable.media.select_uploaded_file'),
-        ]);
+    public function getTempFile(string $url): string
+    {
+        if (!$stream = @fopen($url, 'r')) {
+            throw UnreachableUrl::create($url);
+        }
 
-        $media->save();
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'temporary-media');
+
+        // return $temporaryFile;
+
+        file_put_contents($temporaryFile, $stream);
+
+        return $temporaryFile;
+    }
+
+
+    public function remote(Request $request)
+    {
+        $url = $request->input('url');
+
+        abort_unless(
+            Str::startsWith($url, $protocols =  ['http://', 'https://']),
+            419,
+            'The file url must start with ' . join(' or ', $protocols)
+        );
+
+        abort_unless(
+            $stream = @fopen($url, 'r'),
+            419,
+            'The file can not be downloaded'
+        );
+
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'temporary-media');
+
+        file_put_contents($temporaryFile, $stream);
+
+        $allowedMimeTypes = join(',', config("administrable.media.valid_mimetypes." . $request->input('type')));
+
+        $validation = Validator::make(
+            ['file' => new File($temporaryFile)],
+            ['file' => 'mimetypes:' . $allowedMimeTypes]
+        );
+
+        if ($validation->fails()) {
+            throw new \Exception(
+                sprintf("File has a mime type of %s, while only %s are allowed", mime_content_type($temporaryFile), $allowedMimeTypes)
+            );
+        }
+
+        $media = config("administrable.modules.filemanager.temporary_model")::store(
+            new UploadedFile($temporaryFile, urldecode(basename(parse_url($url, PHP_URL_PATH))?: Str::random(40) ))
+        );
 
         return response()->json($media);
     }

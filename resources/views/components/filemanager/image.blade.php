@@ -156,22 +156,26 @@
                 return selected_images
             },
             handleMouseEnter(event) {
-                if (jQuery(this).hasClass('selected')) {
-                    jQuery(this).find('.close-icon').hide()
+                const target = jQuery(event.currentTarget)
+
+                if (target.hasClass('selected')) {
+                    target.find('.close-icon').hide()
                     return
                 }
 
-                jQuery(this).find('.close-icon').show()
-                jQuery(this).find('img').css('border', '3px solid red')
+                target.find('.close-icon').show()
+                target.find('img').css('border', '3px solid red')
             },
             handleMouseLeave(event) {
-                if (jQuery(this).hasClass('selected')) {
-                    jQuery(this).find('.close-icon').hide()
+                const target = jQuery(event.currentTarget)
+
+                if (target.hasClass('selected')) {
+                    target.find('.close-icon').hide()
                     return
                 }
 
-                jQuery(this).find('.close-icon').hide()
-                jQuery(this).find('img').css('border', 'none')
+                target.find('.close-icon').hide()
+                target.find('img').css('border', 'none')
             },
 
             appendDataToRequest(data){

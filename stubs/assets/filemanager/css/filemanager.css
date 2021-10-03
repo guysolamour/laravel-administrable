@@ -37,7 +37,7 @@
     text-align: center;
 }
 
-.imagebox.selected .close-icon {
+.imagebox.selected .close-icon, .filemanagerimagebox.selected .close-icon  {
   display: none;
 }
 
@@ -88,7 +88,7 @@
   visibility: hidden;
 } */
 
-.preview .imagebox:hover .file-close {
+.preview .imagebox:hover .file-close, .preview .filemanagerimagebox:hover .file-close {
   visibility: visible;
 }
 
@@ -150,12 +150,12 @@
   overflow: hidden;
 }
 
-.imagebox {
+.imagebox, .filemanagerimagebox {
   position: relative;
   max-height: 300px;
 }
 
-.imagebox .close-icon {
+.imagebox .close-icon, .filemanagerimagebox .close-icon {
   position: absolute;
   top: 5%;
   right: 10%;
