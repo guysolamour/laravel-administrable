@@ -460,7 +460,7 @@ return [
         /**
          * Url to redirect
          */
-        'url' => 'http:://youtube.com',
+        'url' => 'https://youtube.com', // must start with https
         /**
          * Be sure that auth_prefix_path is not in the list
          */

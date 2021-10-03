@@ -31,4 +31,9 @@ class RedirectController extends BaseController
 	public function youtube() {
         return Redirect::to($this->config->youtube);
     }
+
+    public function rickroll()
+    {
+        return Redirect::to(config('administrable.rickroll.url', 'https://youtube.com'));
+    }
 }

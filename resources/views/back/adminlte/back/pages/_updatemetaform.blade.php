@@ -107,7 +107,7 @@
                     </div>
                     <div class="thumbnail">
                         <img src="{{ $meta->isImage() ? $meta->image_url : '' }}" class="img-fluid img-thumbnail"
-                            style="display: {{ $meta->isImage() ? 'block' : 'none' }}"">
+                            style="height: 145px; overflow: scroll; display: {{ $meta->isImage() ? 'block' : 'none' }}"">
                             <div class=" embed-responsive embed-responsive-16by9"
                             style="display: {{ $meta->isVideo() ? 'block' : 'none' }}"">
                                 <iframe class=" embed-responsive-item"

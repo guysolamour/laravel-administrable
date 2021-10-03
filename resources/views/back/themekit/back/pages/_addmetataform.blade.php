@@ -129,7 +129,7 @@
                         </div>
 
                         <div class="thumbnail">
-                            <img src="" alt="" class="img-fluid img-thumbnail" style="display: none">
+                            <img src="" alt="" class="img-fluid img-thumbnail" style="height: 145px; overflow: scroll; display: none">
                             <div class="embed-responsive embed-responsive-16by9" style="display: none">
                                 <iframe class="embed-responsive-item" src="" allowfullscreen></iframe>
                             </div>

@@ -105,14 +105,15 @@
                         <input type="url" class="form-control" id="videoField" name="videocontent"
                             placeholder="https://youtube.com?v=74df8g585" value="{{ $meta->video_url }}">
                     </div>
-                    <div class="thumbnail">
-                        <img src="{{ $meta->isImage() ? $meta->image_url : '' }}" class="img-fluid img-thumbnail"
-                            style="display: {{ $meta->isImage() ? 'block' : 'none' }}"">
-                            <div class=" embed-responsive embed-responsive-16by9"
+                    <div class="thumbnail" >
+                        <img  src="{{ $meta->isImage() ? $meta->image_url : '' }}" class="img-fluid img-thumbnail"
+                            style="height: 145px; overflow: scroll; display: {{ $meta->isImage() ? 'block' : 'none' }}">
+                        <div class=" embed-responsive embed-responsive-16by9"
                             style="display: {{ $meta->isVideo() ? 'block' : 'none' }}"">
                                 <iframe class=" embed-responsive-item"
-                            src="{{ $meta->isVideo() ? $meta->video_url : '' }}" allowfullscreen></iframe>
-                    </div>
+                                    src="{{ $meta->isVideo() ? $meta->video_url : '' }}" allowfullscreen>
+                                </iframe>
+                        </div>
                 </div>
 
         </div>

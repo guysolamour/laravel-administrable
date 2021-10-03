@@ -27,8 +27,8 @@ Route::name(Str::lower(config('administrable.front_namespace') . '.'))
         | SOCIAL REDIRECT
         |--------------------------------------------------------------------------
         */
-        $networks = config('administrable.modules.social_redirect.networks');
 
+        $networks = config('administrable.modules.social_redirect.networks');
         foreach ($networks as $network ) {
             Route::get($network, [Module::controller('social_redirect'), $network])->name($network);
         }
@@ -37,12 +37,12 @@ Route::name(Str::lower(config('administrable.front_namespace') . '.'))
         | RICKROLL
         |--------------------------------------------------------------------------
         */
-        $redirect_url = config('administrable.rickroll.url', 'http://youtube.com');
+
         $routes = config('administrable.rickroll.routes', []);
 
         foreach ($routes as $route) {
             if ($route !== config('administrable.auth_prefix_path', 'administrable')) {
-                Route::redirect($route, $redirect_url);
+                Route::get($route, [Module::controller('social_redirect'), 'rickroll']);
             }
         }
 

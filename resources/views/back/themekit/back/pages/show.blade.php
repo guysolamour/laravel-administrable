@@ -294,8 +294,8 @@
             this.imageField.attr('disabled', false).parents('.form-group').hide()
             this.attachedFileField.attr('disabled', false).parents('.form-group').show()
             this.groupField.parent().show()
-        this.thumbnail.find('div').hide()
-        this.thumbnail.find('img').hide()
+            this.thumbnail.find('div').hide()
+            this.thumbnail.find('img').hide()
             // this.previewImage()
 
         }
