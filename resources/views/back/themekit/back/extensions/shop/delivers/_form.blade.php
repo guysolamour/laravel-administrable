@@ -1,8 +1,8 @@
 <form
 @if($form->getModel() && $form->getModel()->getKey())
-    action="{{ back_route('shop.deliver.update', $form->getModel() ) }}"
+    action="{{ back_route('extensions.shop.deliver.update', $form->getModel() ) }}"
 @else
-    action="{{ back_route('shop.deliver.store' ) }}"
+    action="{{ back_route('extensions.shop.deliver.store' ) }}"
 @endif
 @submit="$refs.area_prices.value = JSON.stringify(form.area_prices)"
 x-data="DeliverZone()" x-init="init()"
@@ -14,6 +14,7 @@ method="post" accept-charset="UTF-8" name="{{ get_form_name($form->getModel()) }
     {!! form_row($form->getField('name')) !!}
     {!! form_row($form->getField('phone_number')) !!}
     {!! form_row($form->getField('email')) !!}
+    {!! form_row($form->getField('default_deliver')) !!}
 
 <div>
     <input type="hidden" name="area_prices" x-ref="area_prices">

@@ -31,6 +31,7 @@
     <div class='col-md-6'>
         {!! form_row($form->phone_number) !!}
     </div>
+   
 </div>
 <div class='row'>
 

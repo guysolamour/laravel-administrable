@@ -12,6 +12,9 @@
     if ($model && is_object($model)){
         $seo = $model->seo;
     }else {
+
+        $force = true;
+
         $seo = new (config('administrable.modules.seo.model'));
 
         if ($title){
@@ -30,7 +33,6 @@
             $seo->setAttribute('og:image', $image);
         }
     }
-
 @endphp
 
 @section('seo')

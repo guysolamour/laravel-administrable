@@ -127,7 +127,7 @@
                 })
             },
             route(url){
-                return `/${this.auth_prefix_path}/shop/commands/${url}`
+                return `/${this.auth_prefix_path}/extensions/shop/commands/${url}`
             }
         }
     }
@@ -271,7 +271,7 @@
                                                                     <img :src="item.image" :alt="item.name" width="50">
                                                                 </td>
                                                                 <td>
-                                                                    <a :href="'/administrable/shop/products/' + item.model.slug + '/edit'" x-text="item.name"></a>
+                                                                    <a :href="'/administrable/extensions/shop/products/' + item.model.slug + '/edit'" x-text="item.name"></a>
                                                                 </td>
                                                                 <td x-text="Helper.formatPrice(item.price)"></td>
                                                                 <td>
@@ -313,14 +313,14 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td>Livraison</td>
-                                                            <td x-text="Helper.formatPrice(command.deliver.area ? command.deliver.area.pivot.price : 0)"></td>
+                                                            <td x-text="Helper.formatPrice( command.deliver.price || 0)"></td>
                                                         </tr>
                                                         <tr>
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
                                                             <td>Total</td>
-                                                            <td x-text="Helper.formatPrice(cart.total + parseInt(command.deliver.area ? command.deliver.area.pivot.price : 0))"
+                                                            <td x-text="Helper.formatPrice(cart.total + parseInt(command.deliver.price || 0))"
                                                             class="bg-success font-weight-bold text-center">
                                                         </td>
                                                     </tr>

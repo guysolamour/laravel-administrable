@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Guysolamour\Administrable\Facades\Cart;
+use Guysolamour\Administrable\Facades\Shop;
+use Illuminate\Support\Facades\Notification;
 use Guysolamour\Administrable\Traits\HasNote;
 use Guysolamour\Administrable\Models\BaseModel;
 use Guysolamour\Administrable\Traits\DraftableTrait;
@@ -41,7 +43,7 @@ class Command extends BaseModel
      *
      * @var array
      */
-    protected $appends = ['formated_products', 'state_label'];
+    protected $appends = ['formated_products', 'state_label', 'total', 'total_with_shipping'];
 
     /**
      * The attributes that should be cast to native types.
@@ -98,6 +100,11 @@ class Command extends BaseModel
         return Arr::get($this->formated_products, 'total', 0);
     }
 
+    public function getTotalWithShippingAttribute() :int
+    {
+        return $this->total +  +Arr::get($this->deliver, 'price', 0);
+    }
+
     public function getDeliverNameAttribute() :string
     {
         return $this->deliver->get('deliver')->name;
@@ -119,6 +126,10 @@ class Command extends BaseModel
         return $this->state;
     }
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function client()
     {
         return $this->belongsTo(User::class, 'user_id')->withDefault(function ($user, $command) {
@@ -131,6 +142,10 @@ class Command extends BaseModel
         });
     }
 
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->client();
@@ -148,7 +163,7 @@ class Command extends BaseModel
 
     public function order()
     {
-        return $this->hasOne(Order::class);
+        return $this->hasOne(config('administrable.extensions.shop.models.order'));
     }
 
     public function confirmPayment(bool $paid = true)
@@ -193,7 +208,8 @@ class Command extends BaseModel
 
         return collect([
             'deliver' => $deliver,
-            'area'    => $deliver->areas->first()
+            'area'    => $deliver->areas->first(),
+            'price'   => $value['price'],
         ]);
     }
 
@@ -270,6 +286,24 @@ class Command extends BaseModel
         return  Cart::hydrate($this->products, $this->globals);
     }
 
+    public function createClient()
+    {
+        if ($this->user_id){
+            return;
+        }
+        // create user
+        $client = $this->client()->create([
+            'name'           => $this->name,
+            'pseudo'         => $this->name,
+            'phone_number'   => $this->phone_number,
+            'email'          => $this->email,
+            'password'       => bcrypt(Shop::defaultClientPassword()),
+        ]);
+
+        $this->update(['user_id' => $client->getKey()]);
+
+    }
+
     /**
      * The "booting" method of the model.
      *
@@ -279,14 +313,19 @@ class Command extends BaseModel
     {
         parent::booted();
 
-        /**
-         * @param self
-         */
         static::created(function ($command) {
+            /**
+             * @var Command $command
+             */
             $command->update([
                 'reference' => $command::getCreatedCommandReference(),
                 'ip'        => request()->ip(),
             ]);
+
+            $command->createClient();
+
+            $notif = config('administrable.extensions.shop.notifications.back.commandsent');
+            Notification::send(get_guard_notifiers(), new $notif($command));
         });
     }
 }

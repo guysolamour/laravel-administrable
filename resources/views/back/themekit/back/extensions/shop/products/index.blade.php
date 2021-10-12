@@ -57,8 +57,8 @@
 
                             <th>Nom</th>
                             <th>Type</th>
-                            <th>Price</th>
-                            <th>Achat</th>
+                            <th>prix</th>
+                            <th>Nbr. achats</th>
                             <th>En ligne</th>
                             <th>Actions</th>
                         </thead>
@@ -77,7 +77,9 @@
                                     </div>
                                   </td>
 
-                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" width="50">
+                                </td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->type_label }}</td>
                                 <td>{{ format_price($product->price) }}</td>

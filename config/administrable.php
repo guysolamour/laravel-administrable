@@ -199,6 +199,9 @@ return [
                 //     ['name' => 'tendance',               'type' => 'boolean',   'label' => 'Tendance'],
                 //     ['name' => 'display_in_home_slider', 'type' => 'boolean',   'label' => "Diaporama page d'accueil"],
                 // ]
+                'settings' => [
+                    ['name' => 'send_order_confirmed_client_email', 'type' => 'boolean',   'label' => "Envoyer un mail au client lors de la confirmation de la commande"],
+                ],
             ],
             'models'  => [
                 'brand'          => Guysolamour\Administrable\Models\Extensions\Shop\Brand::class,
@@ -300,10 +303,11 @@ return [
                 'controller'  => Guysolamour\Administrable\Http\Controllers\Back\ConfigurationController::class,
             ],
             'custom_fields'   => [
-                ['name' => 'display_in_slider',      'type' => 'text',   'label' => 'Mise en avant sous le menu'],
-                ['name' => 'week_deal',              'type' => 'text',   'label' => 'Deal de la semaime'],
-                ['name' => 'tendance',               'type' => 'text',   'label' => 'Tendance'],
+                // ['name' => 'display_in_slider',      'type' => 'text',   'label' => 'Mise en avant sous le menu'],
+                // ['name' => 'week_deal',              'type' => 'text',   'label' => 'Deal de la semaime'],
+                // ['name' => 'tendance',               'type' => 'text',   'label' => 'Tendance'],
             ],
+
         ],
         'user' => [
             'back' => [

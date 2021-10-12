@@ -1,7 +1,7 @@
 @extends(back_view_path('layouts.base'))
 
 
-@section('title','Zone de couvertures')
+@section('title', 'Zones de livraison')
 
 
 @section('content')
@@ -18,8 +18,7 @@
                             <a href="{{ route(config('administrable.guard') . '.dashboard') }}"><i class="ik ik-home"></i></a>
                         </li>
                         <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.statistic.index') }}">Boutique</a></li>
-                        <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.coveragearea.index') }}">Zones</a></li>
-                        <li class="breadcrumb-item active"><a href="{{ back_route('extensions.shop.coveragearea.show', $coveragearea) }}">{{ $coveragearea->name }}</a></li>
+                        <li class="breadcrumb-item active"><a href="{{ back_route('extensions.shop.coveragearea.index') }}">Zones de livraisons</a></li>
                     </ol>
                 </nav>
             </div>
@@ -30,7 +29,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3 class="card-title">Zone de couvertures</h3>
+                    <h3 class="card-title">Zone de livraisons</h3>
                     <div class="btn-group float-right">
                         <a href="{{ back_route('extensions.shop.coveragearea.create') }}" class="btn  btn-primary"> <i
                                 class="fa fa-plus"></i> Ajouter</a>

@@ -20,12 +20,15 @@ class Deliver extends BaseModel implements HasMedia
     protected $table = 'shop_delivers';
 
 
+
     /**
      * The field to use for sluggable
      *
      * @var string
      */
     protected $sluggablefield = 'name';
+
+
 
 
     public function getAreaPricesAttribute()

@@ -18,7 +18,6 @@
                                 <a href="{{ route(config('administrable.guard') . '.dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
                             <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.statistic.index') }}">Boutique</a></li>
-                            <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.coupon.show', $coupon) }}">{{ $coupon->code }}</a></li>
                             <li class="breadcrumb-item active" aria-current="page"><a href="#">Edition</a></li>
                         </ol>
                     </nav>

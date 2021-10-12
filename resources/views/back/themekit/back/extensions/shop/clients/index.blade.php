@@ -50,6 +50,7 @@
                             <th>Commandes</th>
                             <th>Dépense totale</th>
                             <th>Inscrit le</th>
+                            <th>Actions</th>
 
                             {{-- add fields here --}}
 
@@ -66,6 +67,18 @@
                                 <td>{{ $user->commands->count() }}</td>
                                 <td>{{ format_price($user->total_expense) }}</td>
                                 <td>{{ $user->created_at->format('d/m/Y') }}</td>
+                                <td>
+                                      <div class="btn-group" role="group">
+                                        <a href="{{ back_route('extensions.shop.user.show', $user) }}" class="btn btn-primary"
+                                            data-toggle="tooltip" data-placement="top" title="{{ Lang::get('administrable::messages.default.show') }}"><i class="fas fa-eye"></i></a>
+
+
+
+                                        <a href="{{ back_route('extensions.shop.user.edit', $user) }}" class="btn btn-info"
+                                            data-toggle="tooltip" data-placement="top" title="{{ Lang::get('administrable::messages.default.edit') }}"><i class="fas fa-edit"></i></a>
+
+                                    </div>
+                                </td>
                                 {{-- add values here --}}
 
                             </tr>

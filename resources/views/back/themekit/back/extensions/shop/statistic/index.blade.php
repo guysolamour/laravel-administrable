@@ -142,6 +142,7 @@
                             </table>
 
                        </div>
+                       @if(shop_settings('stock_management'))
                        <div>
                            <h6>Stock des produits faible</h6>
                             <table class="table table-striped">
@@ -165,7 +166,7 @@
                                 </tbody>
                             </table>
                        </div>
-
+                       @endif
                     </div>
                 </div>
             </div>

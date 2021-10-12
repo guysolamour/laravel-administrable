@@ -84,7 +84,7 @@
                                 <td>{{ Str::ucfirst($coupon->remise_type_label) }}</td>
                                 <td>{{ $coupon->formated_value }}</td>
                                 <td>{{ $coupon->used_count }}</td>
-                                <td>{{ $coupon->expires_at->format('d/m/y h:i') }}</td>
+                                <td>{{ $coupon->expires_at?->format('d/m/y h:i') }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
 

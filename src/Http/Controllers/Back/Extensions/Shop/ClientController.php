@@ -21,7 +21,7 @@ class ClientController extends BaseController
      */
     public function index()
     {
-        $users = User::sortByTotalExpense();
+        $users = User::latest()->with('orders')->get();
 
         return back_view('extensions.shop.clients.index', compact('users'));
     }
@@ -82,7 +82,7 @@ class ClientController extends BaseController
      */
     public function edit(User $user)
     {
-        $form = $this->getForm($user, config('administrable.extensions.shop.forms.back.client'));
+        $form = $this->getForm($user, $user->form);
 
         return back_view('extensions.shop.clients.edit', compact('user', 'form'));
     }
@@ -112,19 +112,6 @@ class ClientController extends BaseController
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        $user->delete();
-        flashy('L\' utilisateur a bien été supprimé');
-
-        return redirect()->to(back_route_path('extensions.shop.user.index'));
-    }
 
     /**
      * @param Request $request

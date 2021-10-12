@@ -11,6 +11,10 @@ class CommandSentNotification extends Notification
 {
     use Queueable;
 
+    /**
+     *
+     * @var \Guysolamour\Administrable\Models\Extensions\Shop\Command
+     */
     public $command;
 
     /**
@@ -26,12 +30,21 @@ class CommandSentNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  \App\Models\Admin  $notifiable
      * @return array
      */
     public function via($notifiable)
     {
-        return ['mail','database'];
+        $drivers = ['mail', 'database'];
+
+        if (
+            $notifiable->getCustomField('notify_via_whatsapp') &&
+            $notifiable->getCustomField('cb_whatsapp_apikey')
+            ){
+            $drivers[] = 'cbwhatsapp';
+        }
+
+        return $drivers;
     }
 
     /**
@@ -56,7 +69,16 @@ class CommandSentNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toCbWhatsapp($notifiable)
+    {
+        return "Bonjour *" . $notifiable->full_name . "*, une nouvelle commande  sur la boutique *" . config('app.name') . "* par *" . $this->command->client->name . "* pour un montant de *" . format_price($this->command->total_with_shipping) ."* et joignable au *". $this->command->client->phone_number ."*. Merci de traiter cette commande.";
+    }
+    /**
+     * Get the array representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
     public function toArray($notifiable)
     {
         return [

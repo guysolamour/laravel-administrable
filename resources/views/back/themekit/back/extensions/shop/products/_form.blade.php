@@ -142,8 +142,12 @@
                                         <div class="form-group">
                                             <label for="product_type">Type de produit</label>
                                             <template x-if="edit_mode">
-                                                <input type="text" class="form-control" name="type" id="product_type"
-                                                    :value="product.type" readonly>
+                                                <div>
+                                                    <input type="text" class="form-control"  id="product_type"
+                                                    :value="getProductTypeLabel(product.type)" readonly>
+
+                                                    <input type="hidden"  name="type" :value="product.type" >
+                                                </div>
                                             </template>
 
                                             <template x-if="!edit_mode">
@@ -433,7 +437,7 @@
                                             </button>
                                         </div>
                                         <div class="accordion" id="variation_accordion">
-                                            <template x-for="(variation, index) in new_variations" :key="variation">
+                                            <template x-for="(variation, index) in new_variations" :key="index">
                                                 <div class="card">
                                                     <div class="card-header" id="headingOne">
                                                         <h2 class="mb-0">
@@ -451,7 +455,6 @@
                                                                 <template x-if="variation.id != null">
                                                                     <span>
                                                                         <span x-text="variation.attribute.name"></span>
-                                                                        | <span x-text="variation.name"></span>
                                                                     </span>
                                                                 </template>
                                                             </button>
@@ -887,7 +890,7 @@
                 this.form.command_note     = this.product.command_note
                 this.form.variable         = this.product.variable
                 this.new_variations        = this.product.children
-                this.new_attributes        = this.product.attributes
+                this.new_attributes        = this.edit_mode ? this.product.attributes : this.attributes
 
                 this.new_deliver_coverage_areas = this.product.delivers_coverage_areas
             },
@@ -935,26 +938,28 @@
                     const attribute = this.new_attributes.filter(attr => attr.name == variation)[0]
                         attribute.value.split(',').forEach(value => {
 
-                            if (confirm("Voulez-vous enregistrer une variation pour " + value)){
-                                this.new_variations = [
-                                    {
-                                        name: this.form.name + ' ' + value,
-                                        description: '',
-                                        price: this.form.price,
-                                        promotion_price: this.form.promotion_price,
-                                        stock: this.form.stock,
-                                        safety_stock: this.form.safety_stock,
-                                        gallery: {
-                                            front:   {id: null, name: '', url: '', collection: {label: 'front-image'}},
-                                            back:    {id: null, name: '', url: '', collection: {label: 'back-image'}},
-                                            images:  {urls: [], collection: {label: 'back-image'}},
-                                        },
-                                        value,
-                                        attribute: attribute.name,
-                                        term: value,
-                                    }, ...this.new_variations]
-
+                            if (!confirm("Voulez-vous enregistrer une variation pour " + value)){
+                                return
                             }
+
+                            this.new_variations = [
+                                {
+                                    name: this.form.name + ' ' + value,
+                                    description: '',
+                                    // price: this.form.price,
+                                    promotion_price: this.form.promotion_price,
+                                    stock: this.form.stock,
+                                    safety_stock: this.form.safety_stock,
+                                    gallery: {
+                                        front:   {id: null, name: '', url: '', collection: {label: 'front-image'}},
+                                        back:    {id: null, name: '', url: '', collection: {label: 'back-image'}},
+                                        images:  {urls: [], collection: {label: 'images'}},
+                                    },
+                                    value,
+                                    attribute: attribute.name,
+                                    term: value,
+                                }, ...this.new_variations
+                            ]
                         })
                 })
 
@@ -1097,6 +1102,10 @@
                 this.new_variations.filter(item => item.attribute == attribute.name).forEach(item => this.removeVariation(item))
             },
             removeVariation(variation){
+                if (!confirm('Etes vous sur de supprimer la variation')){
+                    return
+                }
+
                 this.deleted_variations_id.push(variation.id)
                 this.new_variations = this.new_variations.filter(item => item.name != variation.name)
             },
@@ -1115,7 +1124,6 @@
                 this.deleted_variation_images_id.push(image.id)
 
                 if (collection === 'images'){
-
                     variation.gallery[collection]['urls'] = variation.gallery[collection]['urls'].filter(item => item.name != image.name)
                 }
                 else {
@@ -1130,6 +1138,13 @@
                 this.add_attribute_form.name  = attribute.name
                 this.add_attribute_form.value = attribute.value
                 this.show_attribute_form      = true
+            },
+            getProductTypeLabel(value){
+                // alert(value)
+                // console.log(this.types);
+                const type = this.types.filter(item => item.name == value)[0]
+
+                return type.label
             },
             appendDataToRequest(data){
                 data.forEach(item => {

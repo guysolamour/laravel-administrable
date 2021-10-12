@@ -403,11 +403,12 @@ class Coupon extends BaseModel
     public static function booted()
     {
         parent::booted();
+
         /**
          * @param self $model
          */
         static::saving(function ($model) {
-
+            // dd($model);
             $model->products           = request('products') ? json_encode(request('products')) : "";
             $model->exclude_products   = request('exclude_products') ? json_encode(request('exclude_products')) : "";
             $model->categories         = request('categories') ? json_encode(request('categories')) : "";

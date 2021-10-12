@@ -56,11 +56,3 @@
     </div>
 </div>
 @endsection
-
-@push('css')
-@livewireStyles
-@endpush
-
-@push('js')
-@livewireScripts
-@endpush

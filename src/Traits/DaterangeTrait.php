@@ -2,6 +2,8 @@
 
 namespace Guysolamour\Administrable\Traits;
 
+use Illuminate\Support\Arr;
+
 
 trait DaterangeTrait
 {
@@ -29,18 +31,40 @@ trait DaterangeTrait
      */
     private function proccesDateranges()
     {
-        $attributes = $this->dateranges;
+        $attributes = $this->getDateranges();
 
-        if (!empty($attributes)) {
-            foreach ($attributes as $attribute) {
-                if ($dates = request($attribute)) {
-                    [$start_at, $end_at] = $this->parseRangeDates($dates);
-
-                    $this->setAttribute("{$attribute}_" . config('administrable.daterange.start'), $start_at);
-                    $this->setAttribute("{$attribute}_" . config('administrable.daterange.end'), $end_at);
-                }
-            }
+        if (empty($attributes)){
+            return;
         }
+
+        foreach ($attributes as $key => $attribute){
+
+            $dates = is_array($attribute) ? $dates = request($key) : request($attribute);
+
+            if (!$dates){
+                continue;
+            }
+
+            [$start_at, $end_at] = $this->parseRangeDates($dates);
+
+            $this->setAttribute($this->getDaterangeStartAtFieldName($attribute), $start_at);
+            $this->setAttribute($this->getDaterangeEndAtFieldName($attribute), $end_at);
+        }
+
+    }
+
+    private function getDaterangeStartAtFieldName($attribute) :string
+    {
+        return is_array($attribute)
+                    ? Arr::first($attribute)
+                    : "{$attribute}_" . config('administrable.daterange.start');
+    }
+
+    private function getDaterangeEndAtFieldName($attribute) :string
+    {
+        return is_array($attribute)
+                    ? Arr::last($attribute)
+                    : "{$attribute}_" . config('administrable.daterange.end');
     }
 
     /**
@@ -48,13 +72,15 @@ trait DaterangeTrait
      */
     private function proccesDatepickers()
     {
-        $attributes = $this->datepickers;
+        $attributes = $this->getDatepickers();
 
-        if (!empty($attributes)) {
-            foreach ($attributes as $attribute) {
-                if ($date = request($attribute)) {
-                    $this->setAttribute($attribute, $date);
-                }
+        if (empty($attributes)) {
+            return;
+        }
+
+        foreach ($attributes as $attribute) {
+            if ($date = request($attribute)) {
+                $this->setAttribute($attribute, $date);
             }
         }
     }
@@ -69,7 +95,6 @@ trait DaterangeTrait
          * @param \Illuminate\Database\Eloquent\Model $model
          */
         static::saving(function ($model) {
-            // daterange
             $model->proccesDateranges();
             $model->proccesDatepickers();
         });

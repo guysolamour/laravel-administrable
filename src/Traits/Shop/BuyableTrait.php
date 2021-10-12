@@ -174,7 +174,7 @@ trait BuyableTrait
         $this->children()->whereIn('id', $variations_id)->get()->each->delete();
     }
 
-    public function saveVariations(string $variations)
+    public function saveVariations(string $variations) :void
     {
         $variations = json_decode($variations, true);
 
@@ -232,8 +232,8 @@ trait BuyableTrait
             'has_review'         => $this->has_review,
             'online'             => $this->online,
             'brand_id'           => $this->brand_id,
-            'attribute_id'       => config('administrable.extensions.shop.models.attribute')::findByName(Arr::get($variation, 'attribute'))->first()->getKey(),
-            'term_id'            => config('administrable.extensions.shop.models.attributeterm')::findByName(Arr::get($variation, 'term'))->first()->getKey(),
+            'attribute_id'       => config('administrable.extensions.shop.models.attribute')::findByName(Arr::get($variation, 'attribute'))->first()?->getKey(),
+            'term_id'            => config('administrable.extensions.shop.models.attributeterm')::findByName(Arr::get($variation, 'term'))->first()?->getKey(),
         ]));
     }
 
@@ -351,7 +351,19 @@ trait BuyableTrait
      */
     public static function mostSales(int $limit = 10)
     {
-        return self::get()->sortByDesc('sold_count')->filter(fn ($product) => $product->sold_count > 0)->take($limit);
+        return self::online()->get()->sortByDesc('sold_count')->filter(fn ($product) => $product->sold_count > 0)->take($limit);
+    }
+
+
+    /**
+     * Scope a query to only include
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeMostSale($query)
+    {
+        return $query->online()->orderByDesc('sold_count');
     }
 
 }

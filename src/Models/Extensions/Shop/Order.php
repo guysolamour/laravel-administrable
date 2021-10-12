@@ -36,7 +36,7 @@ class Order extends BaseModel implements HasPdfInvoiceContract
     protected $appends = ['total'];
 
 
-    public $fillable = ['title','amount','deliver_name', 'deliver_price', 'invoice', 'command_id', 'user_id'];
+    public $fillable = ['title', 'amount','deliver_name', 'deliver_price', 'invoice', 'command_id', 'user_id'];
 
 
     public function getTotalAttribute() :int
@@ -48,6 +48,16 @@ class Order extends BaseModel implements HasPdfInvoiceContract
     {
         return $this->belongsTo(config('administrable.extensions.shop.models.command'));
     }
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function client()
+    {
+        return $this->user();
+    }
+
 
     public function user()
     {

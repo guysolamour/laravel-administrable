@@ -59,6 +59,7 @@
                         </div>
                         <div class="col-md-4">
                             @filemanagerShow([
+                                'collection' => 'front-image',
                                 'model' => $deliver,
                                 'label' => 'Photo',
                             ])

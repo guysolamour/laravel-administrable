@@ -351,6 +351,16 @@ Route::prefix(config('administrable.auth_prefix_path'))
                             'destroy'    => 'command.destroy',
                         ])->except(['show', 'store']);
 
+                        Route::resource('orders', config('administrable.extensions.shop.controllers.back.order'))->names([
+                            'index'      => 'order.index',
+                            'create'     => 'order.create',
+                            'show'       => 'order.show',
+                            'store'      => 'order.store',
+                            'edit'       => 'order.edit',
+                            'update'     => 'order.update',
+                            'destroy'    => 'order.destroy',
+                        ])->only(['index']);
+
                         Route::resource('categories', config('administrable.extensions.shop.controllers.back.category'))->names([
                             'index'      => 'category.index',
                             'create'     => 'category.create',
@@ -379,7 +389,7 @@ Route::prefix(config('administrable.auth_prefix_path'))
                             'edit'       => 'user.edit',
                             'update'     => 'user.update',
                             'destroy'    => 'user.destroy',
-                        ]);
+                        ])->except(['destroy']);
 
                         Route::resource('attributes', config('administrable.extensions.shop.controllers.back.attribute'))->names([
                             'index'      => 'attribute.index',

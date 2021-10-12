@@ -75,9 +75,10 @@ class Invoice
     {
         $email = Arr::get($this->buyer->custom_fields, 'email');
 
-        if (!$email) {
+        if (!$email || !shop_settings()->getCustomField('send_order_confirmed_client_email')) {
             return;
         }
+
         Notification::route('mail', [$email => $this->buyer->name])
             ->notify(new InvoicePaid($this->order));
     }

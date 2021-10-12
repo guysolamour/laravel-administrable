@@ -75,7 +75,7 @@ class ConfigurationForm extends Form
             ]);
 
             // custom fields
-            foreach (config('administrable.modules.configuration.custom_fields') as $field) {
+            foreach (config('administrable.modules.configuration.custom_fields', []) as $field) {
                 $form->add("custom_fields[{$field['name']}]", $field['type'], [
                     'label' => $field['label'],
                     'value' => $this->getModel()->getCustomField($field['name']),

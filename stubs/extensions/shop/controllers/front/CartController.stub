@@ -77,14 +77,14 @@ class CartController extends Controller
 
         if (!$deliver){
             flashy()->error("Ce livreur n'est pas disponible pour le moment.");
-            return redirect_frontroute('shop.cart.show');
+            return redirect_frontroute('extensions.shop.cart.show');
         }
 
         $area = $deliver->areas()->where('id', $request->input('deliver_area'))->first();
 
         if (!$area) {
             flashy()->error("Cette zone de livraison n'est pas déservie par cet livreur.");
-            return redirect_frontroute('shop.cart.show');
+            return redirect_frontroute('extensions.shop.cart.show');
         }
 
         $user           = auth()->user();

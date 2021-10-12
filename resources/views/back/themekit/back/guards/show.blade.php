@@ -122,9 +122,27 @@
                                                     <div class='col-md-6'>
                                                         {!! form_row($edit_form->phone_number) !!}
                                                     </div>
+                                                    <div class="col-md-12">
+                                                        @foreach ($edit_form->getModel()->custom_form_fields ?? [] as $field)
+                                                            @if(Arr::get($field, 'type') === 'boolean')
+                                                                <div class="form-group">
+                                                                    <label for="{{  Arr::get($field, 'name') }}">{{ Arr::get($field, 'label') }}</label>
+                                                                    <select name="custom_fields[{{  Arr::get($field, 'name') }}]" id="{{  Arr::get($field, 'name') }}" class="custom-select">
+                                                                        <option value="0" @if($edit_form->getModel()->getCustomField(Arr::get($field, 'name')) == 0) selected @endif>Non</option>
+                                                                        <option value="1" @if($edit_form->getModel()->getCustomField(Arr::get($field, 'name')) == 1) selected @endif>Oui</option>
+                                                                    </select>
+                                                                </div>
+                                                            @else
+                                                                <div class="form-group">
+                                                                    <label for="{{  Arr::get($field, 'name') }}">{{ Arr::get($field, 'label') }}</label>
+                                                                    <input type="{{ Arr::get($field, 'type') }}" name="custom_fields[{{  Arr::get($field, 'name') }}]" class="form-control" value="{{ $edit_form->getModel()->getCustomField(Arr::get($field, 'name')) }}">
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
                                                 </div>
-                                                <div class='row'>
 
+                                                <div class='row'>
                                                     <div class='col-md-4'>
                                                         {!! form_row($edit_form->facebook) !!}
                                                     </div>

@@ -28,9 +28,9 @@ return new class extends Migration
             $table->boolean('paid')->default(false);
             $table->boolean('online')->default(true);
             // expedition
-            $table->longText('products');
-            $table->text('globals');
-            $table->text('deliver')->nullable();
+            $table->json('products');
+            $table->json('globals');
+            $table->json('deliver')->nullable();
             // $table->text('note'); // ajouter systeme de gestion de note
             // $table->boolean('delivered')->default(false);
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');

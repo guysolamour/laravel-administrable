@@ -9,12 +9,11 @@ class SettingController extends BaseController
 {
     public function edit()
     {
-        /**
-         * @var \Guysolamour\Administrable\Settings\BaseSettings
-         */
-        $settings = shop_settings();
 
-        return back_view('extensions.shop.settings.index', compact('settings'));
+        $settings  = shop_settings();
+        $delivers  = config('administrable.extensions.shop.models.deliver')::with('areas')->last()->get();
+
+        return back_view('extensions.shop.settings.index', compact('settings', 'delivers'));
     }
 
     public function update(Request $request)

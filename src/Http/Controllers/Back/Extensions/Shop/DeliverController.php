@@ -18,9 +18,8 @@ class DeliverController extends BaseController
     public function index()
     {
         $delivers       = config('administrable.extensions.shop.models.deliver')::last()->get();
-        $coverage_areas = config('administrable.extensions.shop.models.coveragearea')::last()->get();
 
-        return back_view('extensions.shop.delivers.index', compact('delivers', 'coverage_areas'));
+        return back_view('extensions.shop.delivers.index', compact('delivers'));
     }
 
 
@@ -32,7 +31,7 @@ class DeliverController extends BaseController
      */
     public function create()
     {
-        $form = $this->getForm();
+        $form = $this->getForm(config('administrable.extensions.shop.models.deliver'), config('administrable.extensions.shop.forms.back.deliver'));
 
         $coverage_areas = config('administrable.extensions.shop.models.coveragearea')::last()->get();
 
@@ -51,15 +50,13 @@ class DeliverController extends BaseController
     public function store(Request $request)
     {
         $form = $this->getForm(config('administrable.extensions.shop.models.deliver'), config('administrable.extensions.shop.forms.back.deliver'));
-
-       $form = $this->getForm();
        $form->redirectIfNotValid();
 
        config('administrable.extensions.shop.models.deliver')::create($request->all());
 
        flashy('L\' élément a bien été ajouté');
 
-        return redirect()->to(back_route_path('extensions.shop.deliver.index'));
+        return redirect_backroute(back_route_path('extensions.shop.deliver.index'));
     }
 
 

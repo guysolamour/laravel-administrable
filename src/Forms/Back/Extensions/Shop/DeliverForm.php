@@ -36,6 +36,11 @@ class DeliverForm extends Form
                 'label'  => 'Adresse courriel',
                 'rules' => ['nullable',],
             ])
+            ->add('default_deliver', 'select', [
+                'choices' => ['1' => 'Oui', '0' => 'Non'],
+                'rules' => 'required',
+                'label' => 'Livreur par défaut'
+            ])
 
             ->add('description', 'textarea', [
                 'label'  => 'Description',

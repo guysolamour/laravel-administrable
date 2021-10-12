@@ -14,6 +14,7 @@ class DeliverPrice extends Pivot
     protected $appends = ['formated_price'];
 
 
+
     public function getFormatedPriceAttribute() :string
     {
         return format_price($this->attributes['price']);

@@ -17,7 +17,7 @@ use Guysolamour\Administrable\Contracts\Shop\ShopContract;
 use Guysolamour\Administrable\Traits\Shop\RecentlyViewTrait;
 use Guysolamour\Administrable\Contracts\Shop\RecentlyViewContract;
 
-class Product extends BaseModel implements HasMedia, ShopContract, RecentlyViewContract
+class Product extends BaseModel implements HasMedia,  RecentlyViewContract , ShopContract
 {
     use ModelTrait;
     use SeoableTrait;

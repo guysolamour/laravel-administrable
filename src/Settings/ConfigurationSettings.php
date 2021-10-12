@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 class ConfigurationSettings extends BaseSettings
 {
     use CustomFieldsTrait;
-    
+
     public ?string $email;
     public ?string $postal;
     public ?string $area;

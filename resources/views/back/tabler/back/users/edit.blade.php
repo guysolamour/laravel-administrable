@@ -34,7 +34,7 @@
                 @imagemanager([
                     'model'             =>  $user,
                     'label'             =>  Lang::get('administrable::messages.view.user.avatar'),
-                    'type'              =>  'image'
+                    'type'              =>  'image',
                     'collection'        => 'front-image',
                 ])
             </div>

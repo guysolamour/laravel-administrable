@@ -186,6 +186,7 @@ trait MediaableTrait
                 return;
             }
 
+
             $files = collect(request('filemanager'))->map(function ($item) {
                 return array_map(fn ($key) => config("administrable.modules.filemanager.temporary_model")::find($key), json_decode($item));
             });
@@ -196,6 +197,11 @@ trait MediaableTrait
 
             $files->each(function ($files, $collection) use ($model) {
                 foreach ($files as $file) {
+
+                    if (is_null($file)){
+                        continue;
+                    }
+
                     /**
                      * @var \Guysolamour\Administrable\Models\TemporaryMedia $file
                      */

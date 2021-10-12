@@ -29,14 +29,13 @@ class CouponController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(int $id)
+    public function create()
     {
-        $coupon = config('administrable.extensions.shop.models.coupon')::where('id', $id)->firstOrFail();
+        $coupon = new (config('administrable.extensions.shop.models.coupon'));
         $form = $this->getForm(config('administrable.extensions.shop.models.coupon'), config('administrable.extensions.shop.forms.back.coupon'));
 
-        return back_view('extensions.shop.coupons.create',compact('form'));
+        return back_view('extensions.shop.coupons.create', compact('form'));
     }
-
 
 
 

@@ -68,59 +68,8 @@ class ProductController extends BaseController
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name'             => 'required',
-            'price'            => 'required',
-            'stock_management' => 'required',
-        ]);
-
-        $data = [
-            'name'                    => $request->input('name'),
-            'description'             => $request->input('description'),
-            'price'                   => $request->input('price'),
-            'type'                    => $request->input('type'),
-            'width'                   => $request->input('width'),
-            'height'                  => $request->input('height'),
-            'weight'                  => $request->input('weight'),
-            'download'                => $request->input('download'),
-            'complementary_products'  => $request->input('complementary_products'),
-            'command_note'            => $request->input('command_note'),
-            'short_description'       => $request->input('short_description'),
-            'has_review'              => $request->has('has_review'),
-            'variable'                => $request->has('variable'),
-            'online'                  => $request->has('online'),
-            'brand_id'                => $request->input('brand_id'),
-            'custom_fields'           => $request->input('custom_fields'),
-        ];
-
-        // si l'article n'est pas en promo, alors on passe le prix de promo à null et les dates
-        // de debut et de fin
-        if ($request->has('is_in_promotion')) {
-            // valider si le prix de promotion est supereieur ou egale au prix actuel
-            $data['promotion_price']    = $request->get('promotion_price');
-
-            $start_end_promotion_dates = $this->getDatePickerFormatedDate('promotion_start_end_date');
-
-            $data['promotion_start_at'] = Arr::first($start_end_promotion_dates);
-            $data['promotion_end_at']   = Arr::last($start_end_promotion_dates);
-        } else {
-            $data['promotion_price']    = null;
-            $data['promotion_start_at'] = null;
-            $data['promotion_end_at']   = null;
-        }
-
-
-        // gestion du stock,
-        if ($request->get('stock_management')) {
-            $data['stock_management'] = true;
-            $data['stock']            = $request->get('stock');
-            $data['safety_stock']     = $request->get('safety_stock');
-        } else {
-            $data['stock_management'] = false;
-            $data['stock']            = null;
-            $data['safety_stock']     = null;
-        }
-
+        $data = $this->validateSubmitData();
+        
         /**
          * @var \Guysolamour\Administrable\Models\Shop\Product
          */
@@ -139,7 +88,6 @@ class ProductController extends BaseController
         $product->saveVariations($request->input('new_variations'));
 
         // Delivers Coverage Area Ptoces
-        // $product->removeVariations($request->input('deleted_variations_id'));
         $product->saveDeliversCoverageAreas($request->input('new_deliver_coverage_areas'));
 
         // Suppression image variations
@@ -165,9 +113,9 @@ class ProductController extends BaseController
 
         $product->append(['complementary', 'gallery' ,'delivers_coverage_areas']);
 
-        $product_attributes = config('administrable.extensions.shop.models.product')::get();
-        $categories = config('administrable.extensions.shop.models.category')::get();
-        $brands     = config('administrable.extensions.shop.models.brand')::get();
+        $product_attributes = config('administrable.extensions.shop.models.attribute')::get();
+        $categories         = config('administrable.extensions.shop.models.category')::get();
+        $brands             = config('administrable.extensions.shop.models.brand')::get();
 
         $product->children->each->append('gallery');
 
@@ -230,7 +178,6 @@ class ProductController extends BaseController
             $data['promotion_start_at'] = null;
             $data['promotion_end_at']   = null;
         }
-
 
 
         // gestion du stock,

@@ -1,6 +1,6 @@
 ---
 - name: Add crontab entry for Laravel scheduler
-  become: "{{ user }}"
+  become_user: "{{ user }}"
   cron:
       name: "Run Laravel scheduler"
       job: "php {{ deploy_path }}/current/artisan schedule:run --quiet"

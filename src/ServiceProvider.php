@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Validator;
+use Guysolamour\Administrable\Services\Shop\Shop;
 use Illuminate\Console\Scheduling\Schedule;
 use Guysolamour\Administrable\Console\DeployCommand;
 use Guysolamour\Administrable\Models\Extensions\Shop\Cart;
@@ -26,11 +27,16 @@ use Guysolamour\Administrable\Console\Extension\Add\AddExtensionCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
+    const PACKAGE_NAME = 'administrable';
 
     public function boot()
     {
         $this->app->bind('administrable-helper', fn () => new Helper);
-        $this->app->bind('administrable-cart', fn () => new Cart);
+
+        if (config('administrable.extensions.shop.activate')){
+            $this->app->bind('administrable-cart', fn () => new Cart);
+            $this->app->bind(self::PACKAGE_NAME . '-shop', fn () => new Shop);
+        }
 
         $this->scheduleCommands();
 
@@ -69,9 +75,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // View aliases
         Blade::include('administrable::front.comments.comments', 'comments');
         Blade::include('administrable::filemanager.image', 'imagemanager');
-        Blade::include('administrable::filemanager.front', 'frontimagemanager');
-        Blade::include('administrable::filemanager.back', 'backimagemanager');
-        Blade::include('administrable::filemanager.images', 'imagesmanager');
         Blade::include('administrable::filemanager.button', 'filemanagerButton');
         Blade::include('administrable::filemanager.show', 'filemanagerShow');
         Blade::include('administrable::filemanager.guardavatar', 'guardavatar');
@@ -91,14 +94,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     private function registerEvents() :void
     {
-        Event::listen(
-            \Guysolamour\Administrable\Events\Shop\ConfirmCommandPayment::class,
-            [\Guysolamour\Administrable\Listeners\Extensions\Shop\CreateCommandOrder::class, 'handle']
-        );
-        Event::listen(
-            \Guysolamour\Administrable\Events\Shop\ConfirmCommandPayment::class,
-            [\Guysolamour\Administrable\Listeners\Extensions\Shop\IncrementProductSoldCount::class, 'handle']
-        );
+        if (config('administrable.extensions.shop.activate')){
+            Event::listen(
+                \Guysolamour\Administrable\Events\Shop\ConfirmCommandPayment::class,
+                [\Guysolamour\Administrable\Listeners\Extensions\Shop\CreateCommandOrder::class, 'handle']
+            );
+            Event::listen(
+                \Guysolamour\Administrable\Events\Shop\ConfirmCommandPayment::class,
+                [\Guysolamour\Administrable\Listeners\Extensions\Shop\IncrementProductSoldCount::class, 'handle']
+            );
+        }
     }
 
     private function scheduleCommands() :void
@@ -175,7 +180,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->booting(function () {
             $loader = AliasLoader::getInstance();
             $loader->alias('AdminModule', Module::class);
-            $loader->alias('Cart', \Guysolamour\Administrable\Facades\Cart::class);
+
+            if (config('administrable.extensions.shop.activate')){
+                $loader->alias('Cart', \Guysolamour\Administrable\Facades\Cart::class);
+                $loader->alias('Shop', \Guysolamour\Administrable\Facades\Shop::class);
+            }
             $loader->alias('AdminExtension', Extension::class);
         });
 
