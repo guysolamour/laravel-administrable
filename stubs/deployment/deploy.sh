@@ -51,11 +51,21 @@
 
 
 # The playbook folder
-PLAYBOOKS_DIR=$(pwd)/vendor/guysolamour/laravel-administrable/deployment
+PLAYBOOKS_DIR=$(pwd)/vendor/guysolamour/administrable/deployment
+# Uncomment this for production and comment previous line
+# PLAYBOOKS_DIR=$(pwd)/vendor/guysolamour/laravel-administrable/deployment
 
-# Le dossier où sera stocké les fichiers temporaires et les fichiers de mot de passe.
+# Le fichier où sera stocké les mot de passe à la racine du projet
+# Ce fichir ne doit pas etre versionné
+PLAYBOOK_PASSWORD_FILE=deploy-passwords.yml
+
+# Le dossier par défaut du projet
+PROJECT_PATH=$(pwd)
+
+
+# Le dossier où sera stocké les fichiers temporaires
 # Ce dossier ne doit pas etre versionné
-TEMPORARY_DIR=$(pwd)/.deployment
+TEMPORARY_DIR=$(pwd)/storage/app/deploy
 
 # The name of the file that will store the code to decrypt passwords
 VAULT_PASS={{vault}}
@@ -138,6 +148,8 @@ HORIZON=no
 # Le mail qui sera utilisé pour redirigére tous les mails envoyer à l'utilisateur root
 # No ou false pour désactiver  ou le mail pour envoyer
 FORWARD_ROOT_EMAILS=no
+
+
 
 ###################################################################################################################
 ##########                                                                                            #############

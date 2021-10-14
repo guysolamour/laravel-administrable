@@ -8,9 +8,9 @@
     ansible_python_interpreter: /usr/bin/python3
     ansible_winrm_server_cert_validation: ignore
     current_realease_path:  "/home/{{ user }}/{{ domain }}/current"
-    dump_path: "{{ temporary_dir | dirname }}/{{ application }}storage.zip"
+    dump_path: "{{ project_path }}/{{ application }}storage.zip"
     storage_dump_folder: "{{ current_realease_path }}/storage/app/public"
-    local_storage_folder: "{{ temporary_dir | dirname }}/storage/app/public"
+    local_storage_folder: "{{ project_path }}/storage/app/public"
 
   tasks:
   - name: Include variables

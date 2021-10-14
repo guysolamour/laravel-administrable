@@ -1099,8 +1099,6 @@ class AdminInstallCommand extends BaseCommand
             DKIM_DOMAIN=
             DKIM_PRIVATE_KEY=
 
-            CONCEPTOR_EMAILS=
-
             {$search}
             TEXT,
             $env_path

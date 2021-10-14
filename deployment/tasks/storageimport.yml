@@ -9,7 +9,7 @@
     current_realease_path:  "/home/{{ user }}/{{ domain }}/current"
     dump_path: "{{ current_realease_path }}/{{ application }}storage.zip"
     storage_dump_folder: "{{ current_realease_path }}/storage/app/public"
-    local_storage_folder: "{{ temporary_dir | dirname }}/storage/app/public"
+    local_storage_folder: "{{ project_path }}/storage/app/public"
 
   tasks:
   - name: Include variables
@@ -46,7 +46,7 @@
     unarchive:
       copy: no
       src: "{{ storage_dump_path }}/{{ application }}storage.zip"
-      dest: "{{ temporary_dir | dirname }}/storage/app/"
+      dest: "{{ project_path }}/storage/app/"
     delegate_to: localhost
 
   - name: Ensure correct folder ownership

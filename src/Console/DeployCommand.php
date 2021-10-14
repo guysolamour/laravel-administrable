@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 
 class DeployCommand extends BaseCommand
 {
-    protected const FOLDERS_TO_CREATE = ['tmp', 'variables'];
 
     private $filesystem;
 
@@ -24,9 +23,8 @@ class DeployCommand extends BaseCommand
      * @var string
      */
     protected $signature = 'administrable:deploy:scripts
-                             {--d|path=.deployment : Relative to the current path }
                              {--s|server= : Server IP adress }
-                             {--p|vault=.vault-pass : File name to decrypt ansible protected variables }
+                             {--p|vault=deploy-vault-pass : File name to decrypt ansible protected variables }
                              ';
 
     /**
@@ -37,11 +35,11 @@ class DeployCommand extends BaseCommand
     protected $description = 'Generate deployment scripts';
 
 
-    public function __construct()
+    public function __construct(Filesystem $filesystem)
     {
         parent::__construct();
 
-        $this->filesystem = new Filesystem;
+        $this->filesystem = $filesystem;
     }
 
 
@@ -51,9 +49,9 @@ class DeployCommand extends BaseCommand
             $this->triggerError("Scripts has already been generated. You can delete all files and run this command again!");
         }
 
-        $this->password = $this->secret('Give vault code for decrypting password file');
+        $this->password =  $this->secret('Give vault code for decrypting password file');
 
-        $this->createPathFolderDirectories();
+        $this->createTemporaryFolder();
 
         $this->compliedAndMoveScriptsFile();
 
@@ -62,20 +60,10 @@ class DeployCommand extends BaseCommand
         $this->info("Deploy scripts generated successfuly.");
     }
 
-    private function getPath() :string
-    {
-        return base_path($this->option('path'));
-    }
 
-    private function createPathFolderDirectories() :void
+    private function createTemporaryFolder() :void
     {
-        if(!self::FOLDERS_TO_CREATE){
-            return;
-        }
-
-        foreach (self::FOLDERS_TO_CREATE as $folder) {
-            $this->filesystem->createDirectoryIfNotExists($this->getPath() . DIRECTORY_SEPARATOR . $folder);
-        }
+        $this->filesystem->createDirectoryIfNotExists(storage_path('app/deploy/tmp'));
     }
 
     private function compliedAndMoveScriptsFile() :void
@@ -94,10 +82,9 @@ class DeployCommand extends BaseCommand
         return [
             '{{server}}'            =>  Str::lower($this->getServer() ?: ''),
             '{{appname}}'           =>  Str::lower(config('app.name', '')),
-            '{{path}}'              =>  Str::lower($this->getPath()),
-            '{{appurl}}'            =>  Str::lower(config('app.url', '')),
-            '{{appfirstname}}'      =>  Str::lower(config('app.first_name', '')),
-            '{{applastname}}'       =>  Str::lower(config('app.last_name', '')),
+            '{{appurl}}'            =>  Str::afterLast(Str::lower(config('app.url', '')), '//'),
+            '{{appfirstname}}'      =>  Str::lower(config('administrable.app_first_name', '')),
+            '{{applastname}}'       =>  Str::lower(config('administrable.app_last_name', '')),
             '{{ftphost}}'           =>  Str::lower(config('filesystems.disks.ftp.host', '')),
             '{{ftpusername}}'       =>  Str::lower(config('filesystems.disks.ftp.username', '')),
             '{{notifemail}}'        =>  Str::lower(config('mail.from.address', '')),
@@ -108,12 +95,12 @@ class DeployCommand extends BaseCommand
 
     private function addPathFolderToGitignore() :void
     {
-        $this->filesystem->append(base_path('.gitignore'), DIRECTORY_SEPARATOR .  $this->option('path') . PHP_EOL . $this->option('vault') );
+        $this->filesystem->append(base_path('.gitignore'), DIRECTORY_SEPARATOR .  'deploy-passwords.yml' . PHP_EOL . $this->option('vault') );
     }
 
 	private function checkIfGenerationHasAlreadyBeenDone() :bool
 	{
-        return $this->filesystem->exists($this->getPath());
+        return $this->filesystem->exists(base_path('deploy.sh'));
 	}
 
 	private function getServer() :?string

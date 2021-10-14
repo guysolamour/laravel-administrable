@@ -15,13 +15,13 @@
     include_vars: "{{ playbooks_directory_path }}/variables/vars.yml"
 
   - name: Include password file
-    include_vars: "{{ temporary_dir }}/variables/passwords.yml"
+    include_vars: "{{ project_path }}/deploy-passwords.yml"
 
   - name: Dump remote database
     become: "{{ remote_default_user }}"
     shell: "php artisan snapshot:create {{ database_dump_filename }}"
     args:
-      chdir: "{{ temporary_dir | dirname }}"
+      chdir: "{{ project_path }}"
     delegate_to: localhost
 
   - name: Create database snapshots folder
@@ -32,7 +32,7 @@
   - name: Copy file from host to remote
     become: "{{ remote_default_user }}"
     copy:
-      src: "{{ temporary_dir | dirname }}/{{ database_dump_folder }}"
+      src: "{{ project_path }}/{{ database_dump_folder }}"
       dest: "{{ current_realease_path }}/{{ database_dump_folder }}"
 
   - name: Import host database in remote
@@ -48,7 +48,7 @@
   - name: Remove host dump file
     command: "php artisan snapshot:delete {{ database_dump_filename }}"
     args:
-      chdir: "{{ temporary_dir | dirname }}"
+      chdir: "{{ project_path }}"
     delegate_to: localhost
 
   - name: Change admin password

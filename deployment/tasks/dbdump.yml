@@ -10,7 +10,7 @@
   tasks:
 
   - name: Include password file
-    include_vars: "{{ temporary_dir }}/variables/passwords.yml"
+    include_vars: "{{ project_path }}/deploy-passwords.yml"
 
   - name: Dump database
     mysql_db:
@@ -23,7 +23,7 @@
   - name: Copy file from remote to host
     fetch:
       src: "{{ dump_path }}"
-      dest: "{{ temporary_dir | dirname }}/"
+      dest: "{{ project_path }}/"
       flat: yes
 
   - name: Delete remote archive

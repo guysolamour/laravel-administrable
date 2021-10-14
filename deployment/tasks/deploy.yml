@@ -14,7 +14,7 @@
       include_vars: "{{ playbooks_directory_path }}/variables/vars.yml"
 
     - name: Include password file
-      include_vars: "{{ temporary_dir }}/variables/passwords.yml"
+      include_vars: "{{ project_path }}/deploy-passwords.yml"
 
     - include_role:
         name: ansistrano.deploy

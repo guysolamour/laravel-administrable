@@ -3,11 +3,11 @@
   become_user: "{{ remote_default_user }}"
   shell: "git archive master | gzip > {{ archive }}.tgz"
   args:
-    chdir: "{{ temporary_dir | dirname  }}"
+    chdir: "{{ project_path  }}"
   delegate_to: localhost
   when: copy_strategy == 'archive'
 
 - name: Move archive to playbook directory
-  command: mv "{{ temporary_dir | dirname  }}/{{ archive }}.tgz"  "{{ temporary_dir }}/tmp"
+  command: mv "{{ project_path  }}/{{ archive }}.tgz"  "{{ temporary_dir }}/tmp"
   delegate_to: localhost
   when: copy_strategy == 'archive'

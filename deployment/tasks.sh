@@ -60,13 +60,13 @@ then
              	playbooks_directory_path='${PLAYBOOKS_DIR}'  zsh_plugins='${ZSH_PLUGINS}'
                 application='${APPLICATION}' domain='${DOMAIN}' php_version='${PHP_VERSION}'
                 remote_server_user='${REMOTE_SERVER_USER}' nodejs_version='${NODEJS_VERSION}'
-                remote_default_user='${REMOTE_DEFAULT_USER}' domain='${DOMAIN}'
+                remote_default_user='${REMOTE_DEFAULT_USER}' domain='${DOMAIN}' project_path='${PROJECT_PATH}'
                 user='${USER}' database_name='${DATABASE_NAME}' zsh_theme='${ZSH_THEME}'
                 database_user='${DATABASE_USER}' default_nginx_serveur='${DEFAULT_NGINX_SERVEUR}'
                 ftp_host='${FTP_HOST}' ftp_username='${FTP_USERNAME}' vim_rc_url='${VIM_RC_URL}'
                 model_cache_enabled='${MODEL_CACHE_ENABLED}' vim_set_number='${VIM_SET_NUMBER}'
                 mail_from_address='${MAIL_FROM_ADDRESS}' app_first_name='${APP_FIRST_NAME}'
-                app_last_name='${APP_LAST_NAME}' memory_limit='${MEMORY_LIMIT}'
+                app_last_name='${APP_LAST_NAME}' memory_limit='${MEMORY_LIMIT}' project_path='${PROJECT_PATH}'
                 upload_max_filesize='${UPLOAD_MAX_FILESIZE}' post_max_size='${POST_MAX_SIZE}'
                 forward_root_emails='${FORWARD_ROOT_EMAILS}' temporary_dir='${TEMPORARY_DIR}'
             "
@@ -79,19 +79,20 @@ fi
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "run" ]
 then
+    bash deploy.sh clean
     ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/deploy.yml --vault-password-file ${VAULT_PASS} \
             --extra-vars " \n
                 playbooks_directory_path='${PLAYBOOKS_DIR}' show_dkim_public_key='${SHOW_DKIM_PUBLIC_KEY}'
                 application='${APPLICATION}'  domain='${DOMAIN}' php_version='${PHP_VERSION}'
                 remote_default_user='${REMOTE_DEFAULT_USER}' remote_server_user='${REMOTE_SERVER_USER}'
                 archive='${ARCHIVE}' repository='${REPOSITORY}' temporary_dir='${TEMPORARY_DIR}'
-                user='${USER}' database_name='${DATABASE_NAME}'
+                user='${USER}' database_name='${DATABASE_NAME}' project_path='${PROJECT_PATH}'
                 dkim_storage_private_key_path='${DKIM_STORAGE_PRIVATE_KEY_PATH}'
                 dkim_storage_public_key_path='${DKIM_STORAGE_PUBLIC_KEY_PATH}'
                 database_user='${DATABASE_USER}' keep_releases='${KEEP_RELEASES}'
                 build_javascript='${BUILD_JAVASCRIPT}' copy_strategy='${COPY_STRATEGY}'
                 scheduler='${SCHEDULER}' horizon='${HORIZON}' dkim_keys='${DKIM_KEYS}'
-            " -v
+            "
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
 
@@ -106,7 +107,7 @@ then
                	playbooks_directory_path='${PLAYBOOKS_DIR}' show_dkim_public_key='${SHOW_DKIM_PUBLIC_KEY}'
                 application='${APPLICATION}' domain='${DOMAIN}' php_version='${PHP_VERSION}'
                 remote_default_user='${REMOTE_DEFAULT_USER}' temporary_dir='${TEMPORARY_DIR}'
-                remote_server_user='${REMOTE_SERVER_USER}'
+                remote_server_user='${REMOTE_SERVER_USER}' project_path='${PROJECT_PATH}'
                 archive='${ARCHIVE}' repository='${REPOSITORY}'
                 user='${USER}' database_name='${DATABASE_NAME}'
                 database_user='${DATABASE_USER}' keep_releases='${KEEP_RELEASES}'
@@ -125,7 +126,7 @@ then
     ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/dbseed.yml --vault-password-file ${VAULT_PASS}  \
             --extra-vars " \n
             	seed_file='${ARGUMENT}' user='${USER}'
-              domain='${DOMAIN}'
+              domain='${DOMAIN}' project_path='${PROJECT_PATH}'
             "
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
@@ -140,7 +141,7 @@ then
             --extra-vars " \n
               playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
               application='${APPLICATION}' domain='${DOMAIN}'
-              user='${USER}' database_name='${DATABASE_NAME}'
+              user='${USER}' database_name='${DATABASE_NAME}' project_path='${PROJECT_PATH}'
               database_user='${DATABASE_USER}' path='${DB_DUMP_PATH}'
             "
 fi
@@ -152,11 +153,12 @@ fi
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "db:deploy" ]
 then
+
 	  ansible-playbook -i "${HOST}," ${PLAYBOOKS_DIR}/tasks/dbdeploy.yml --vault-password-file ${VAULT_PASS} \
             --extra-vars " \n
                   playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                   user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
-                  application='${APPLICATION}' domain='${DOMAIN}'
+                  application='${APPLICATION}' domain='${DOMAIN}' project_path='${PROJECT_PATH}'
             "
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
@@ -171,7 +173,7 @@ then
             --extra-vars " \n
                   playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                   user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
-                  application='${APPLICATION}' domain='${DOMAIN}'
+                  application='${APPLICATION}' domain='${DOMAIN}' project_path='${PROJECT_PATH}'
             "
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
@@ -187,7 +189,7 @@ then
             	playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
               application='${APPLICATION}' domain='${DOMAIN}'
               user='${USER}' temporary_dir='${TEMPORARY_DIR}'
-              path='${STORAGE_DUMP_PATH}'
+              path='${STORAGE_DUMP_PATH}' project_path='${PROJECT_PATH}'
             "
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
@@ -203,7 +205,7 @@ then
                 playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                 user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
                 application='${APPLICATION}' domain='${DOMAIN}'
-                storage_dump_path='${STORAGE_DUMP_PATH}'
+                storage_dump_path='${STORAGE_DUMP_PATH}' project_path='${PROJECT_PATH}'
             "
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
@@ -217,7 +219,7 @@ then
             --extra-vars " \n
                 playbooks_directory_path='${PLAYBOOKS_DIR}' temporary_dir='${TEMPORARY_DIR}'
                 user='${USER}' remote_default_user='${REMOTE_DEFAULT_USER}'
-                application='${APPLICATION}' domain='${DOMAIN}'
+                application='${APPLICATION}' domain='${DOMAIN}' project_path='${PROJECT_PATH}'
                 storage_dump_path='${STORAGE_DUMP_PATH}' remote_server_user='${REMOTE_SERVER_USER}'
             "
 fi
@@ -260,7 +262,7 @@ fi
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "password:create" ]
 then
-    ansible-vault create ${TEMPORARY_DIR}/variables/passwords.yml --vault-password-file=${VAULT_PASS}
+    ansible-vault create ${PLAYBOOK_PASSWORD_FILE} --vault-password-file=${VAULT_PASS}
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
 
@@ -270,7 +272,7 @@ fi
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "password:view" ]
 then
-    ansible-vault view ${TEMPORARY_DIR}/variables/passwords.yml --vault-password-file=${VAULT_PASS}
+    ansible-vault view ${PLAYBOOK_PASSWORD_FILE} --vault-password-file=${VAULT_PASS}
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
 
@@ -280,6 +282,6 @@ fi
 #------------------------------------------------------------------------------------------------------------------------------>
 if [ $TARGET == "password:edit" ]
 then
-    ansible-vault edit ${TEMPORARY_DIR}/variables/passwords.yml --vault-password-file=${VAULT_PASS}
+    ansible-vault edit ${PLAYBOOK_PASSWORD_FILE} --vault-password-file=${VAULT_PASS}
 fi
 #------------------------------------------------------------------------------------------------------------------------------>
