@@ -251,16 +251,6 @@ class AdminInstallCommand extends BaseCommand
 
         $this->filesystem->replaceAndWriteFile(
             $this->filesystem->get($composer_path),
-            $search = '"require": {',
-            <<<TEXT
-            $search
-                    "simonschaufi/laravel-dkim": "^1.0",
-            TEXT,
-            $composer_path
-        );
-
-        $this->filesystem->replaceAndWriteFile(
-            $this->filesystem->get($composer_path),
             $search = '"require-dev": {',
             <<<TEXT
             $search
@@ -1047,6 +1037,16 @@ class AdminInstallCommand extends BaseCommand
             $app_path
         );
 
+
+        // comment default mail service provider because administrable package will registered Dkim mail service provider
+
+        $this->filesystem->replaceAndWriteFile(
+            $app,
+            $search = "Illuminate\Mail\MailServiceProvider::class",
+            '// ' .  $search,
+            $app_path
+        );
+
         return $app_path;
     }
 
@@ -1096,11 +1096,8 @@ class AdminInstallCommand extends BaseCommand
 
             BACKUP_MAIL_TO=
 
-            MAIL_DKIM_SELECTOR=dkim
-            MAIL_DKIM_DOMAIN=
-            MAIL_DKIM_PASSPHRASE=''
-            MAIL_DKIM_ALGORITHM=rsa-sha256
-            MAIL_DKIM_IDENTITY=null
+            DKIM_DOMAIN=
+            DKIM_PRIVATE_KEY=
 
             CONCEPTOR_EMAILS=
 

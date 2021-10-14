@@ -90,6 +90,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadValidationRules();
 
         $this->registerEvents();
+
+        $this->loadDkimMailServiceProvider();
     }
 
     private function registerEvents() :void
@@ -190,6 +192,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     }
 
+    private function loadDkimMailServiceProvider(): void
+    {
+        if ($this->app->environment('production')) {
+            $this->app->register(\SimonSchaufi\LaravelDKIM\DKIMMailServiceProvider::class);
+        } else {
+            $this->app->register(\Illuminate\Mail\MailServiceProvider::class);
+        }
+    }
+
     private function loadHelperFile(): void
     {
         require $this->srcPath('/Helpers/helpers.php');
@@ -204,5 +215,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         return  __DIR__ . $path;
     }
+
+
 }
 

@@ -382,14 +382,14 @@
                         <label for="created_at">Date de création</label>
                         <input type="string" name="created_at" id="created_at" class="form-control">
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label>Actions de la commande</label>
                         <select name="actions" id="actions" class="custom-select">
                             <option value="">Email de facturation / détails de la commande au client</option>
                             <option value="">Envoyer à nouveau une notification de mouvelle commande</option>
                             <option value="">Régénérer les autorisations de téléchargement</option>
                         </select>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

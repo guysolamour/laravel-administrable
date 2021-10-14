@@ -126,8 +126,8 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">title="{{ Lang::get('administrable::messages.default.cancel') }}"</button>
-                                <button type="submit" class="btn btn-primary">title="{{ Lang::get('administrable::messages.default.save') }}"</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ Lang::get('administrable::messages.default.cancel') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ Lang::get('administrable::messages.default.save') }}</button>
                             </div>
                         </form>
                         </div>
