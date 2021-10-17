@@ -8,6 +8,24 @@ use Illuminate\Support\Str;
 trait AccessorsTrait
 {
     /**
+     * @return string
+     */
+    public function getCurrentPriceAttribute()
+    {
+        return $this->getPrice();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getFormatedCurrentPriceAttribute()
+    {
+        return format_price($this->current_price);
+    }
+
+
+    /**
      * @return boolean
      */
     public function getIsInPromotionAttribute()
@@ -50,7 +68,7 @@ trait AccessorsTrait
     }
 
 
-    public function getDescription(?int $length = null) :?string
+    public function getDescription(?int $length = null): ?string
     {
         $description = $this->description ?: $this->short_description;
 
@@ -104,7 +122,7 @@ trait AccessorsTrait
     }
 
 
-    public function getDeliversCoverageAreasAttribute() :array
+    public function getDeliversCoverageAreasAttribute(): array
     {
         $coverage_areas = json_decode($this->coverage_areas, true);
 
@@ -139,14 +157,14 @@ trait AccessorsTrait
     /**
      * @return integer
      */
-    public function getPrice() :int
+    public function getPrice(): int
     {
         return $this->isInPromotion() ? $this->promotion_price : $this->price;
     }
 
 
 
-    public function getName() :string
+    public function getName(): string
     {
         return $this->attributes['name'];
     }
@@ -171,5 +189,4 @@ trait AccessorsTrait
 
         return $types;
     }
-
 }

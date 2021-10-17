@@ -13,11 +13,11 @@
                         <a href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.user.index') }}" class="menu-item {{ set_active_link(back_route_path('{{extensionsFolder}}.{{extensionSingularSlug}}.user.index')) }}">
                             Clients
                         </a>
-                        <a href="{{ back_route('{extensionsFolder}.shop.deliver.index') }}" class="menu-item {{ set_active_link(back_route_path('{{extensionsFolder}}.{{extensionSingularSlug}}.deliver.index')) }}">
+                        <a href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.deliver.index') }}" class="menu-item {{ set_active_link(back_route_path('{{extensionsFolder}}.{{extensionSingularSlug}}.deliver.index')) }}">
                             Livreurs
                         </a>
 
-                        <a href="{{ back_route('{extensionsFolder}.shop.coveragearea.index') }}" class="menu-item {{ set_active_link(back_route_path('{{extensionsFolder}}.{{extensionSingularSlug}}.deliver.index')) }}">
+                        <a href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.coveragearea.index') }}" class="menu-item {{ set_active_link(back_route_path('{{extensionsFolder}}.{{extensionSingularSlug}}.deliver.index')) }}">
                             Zones de livraison
                         </a>
                         @if(shop_settings('coupon'))

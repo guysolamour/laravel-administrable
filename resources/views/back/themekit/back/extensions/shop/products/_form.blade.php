@@ -732,7 +732,7 @@
                     </div>
                     <div class="card-body">
                         <div class="front-image-box image-container">
-                            @foreach (config('administrable.extensions.shop.custom_fields.product') as $field)
+                            @foreach (config('administrable.extensions.shop.custom_fields.product', []) as $field)
                                 @if(Arr::get($field, 'type') === 'boolean')
                                     <div class="form-group">
                                         <label for="{{  Arr::get($field, 'name') }}">{{  Arr::get($field, 'label') }}</label>

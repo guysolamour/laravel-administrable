@@ -43,8 +43,8 @@ class CartItem
         $this->name           = $this->getName(Arr::get($item, 'name'));
         $this->price          = Arr::get($item, 'price');
         $this->image          = Arr::get($item, 'image');
-        $this->tax            = Arr::get($item, 'tax');
-        $this->discount       = Arr::get($item, 'discount');
+        $this->tax            = Arr::get($item, 'tax', 0);
+        $this->discount       = Arr::get($item, 'discount', 0);
 
         $this->subtotal       = $this->calculateSubtotal();
         $this->tax_total      = $this->calculateTaxTotal();

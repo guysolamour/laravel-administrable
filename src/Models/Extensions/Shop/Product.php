@@ -17,7 +17,7 @@ use Guysolamour\Administrable\Contracts\Shop\ShopContract;
 use Guysolamour\Administrable\Traits\Shop\RecentlyViewTrait;
 use Guysolamour\Administrable\Contracts\Shop\RecentlyViewContract;
 
-class Product extends BaseModel implements HasMedia,  RecentlyViewContract , ShopContract
+class Product extends BaseModel implements HasMedia,  RecentlyViewContract, ShopContract
 {
     use ModelTrait;
     use SeoableTrait;
@@ -65,9 +65,9 @@ class Product extends BaseModel implements HasMedia,  RecentlyViewContract , Sho
      * @var array
      */
     public $fillable = [
-        'name','type','description','short_description','price','promotion_price',
-        'stock_management','stock','safety_stock','has_review','online', 'download',
-        'show_attributes','complementary_products','parent_id','slug', 'brand_id',
+        'name', 'type', 'description', 'short_description', 'price', 'promotion_price',
+        'stock_management', 'stock', 'safety_stock', 'has_review', 'online', 'download',
+        'show_attributes', 'complementary_products', 'parent_id', 'slug', 'brand_id',
         'promotion_start_at', 'promotion_end_at', 'command_note', 'stars', 'width',
         'height', 'weight', 'attribute_id', 'variable', 'coverage_areas', 'term_id',
         'sold_count', 'sold_amount', 'custom_fields'
@@ -81,7 +81,8 @@ class Product extends BaseModel implements HasMedia,  RecentlyViewContract , Sho
      */
     protected $appends = [
         'is_in_promotion', 'formated_price', 'formated_promotion_price',
-        'promotion_percentage', 'title', 'type_label',
+        'promotion_percentage', 'title', 'type_label', 'current_price',
+        'formated_current_price',
     ];
 
 
@@ -125,18 +126,18 @@ class Product extends BaseModel implements HasMedia,  RecentlyViewContract , Sho
 
 
 
-    public function promotionIsEnded() :?bool
+    public function promotionIsEnded(): ?bool
     {
         return $this->promotion_end_at?->isPast();
     }
 
 
-    public function promotionIsStarted() :?bool
+    public function promotionIsStarted(): ?bool
     {
         return $this->promotion_start_at?->isPast();
     }
 
-    public function isNew() :bool
+    public function isNew(): bool
     {
         return $this->created_at->isPast() && $this->created_at->diffInWeeks(now()) == 0;
     }
@@ -145,7 +146,7 @@ class Product extends BaseModel implements HasMedia,  RecentlyViewContract , Sho
      *
      * @return boolean
      */
-    public function isInPromotion() :bool
+    public function isInPromotion(): bool
     {
         return !is_null($this->promotion_price);
     }

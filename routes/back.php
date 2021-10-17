@@ -349,7 +349,7 @@ Route::prefix(config('administrable.auth_prefix_path'))
                             'edit'       => 'command.edit',
                             'update'     => 'command.update',
                             'destroy'    => 'command.destroy',
-                        ])->except(['show', 'store']);
+                        ])->except(['show']);
 
                         Route::resource('orders', config('administrable.extensions.shop.controllers.back.order'))->names([
                             'index'      => 'order.index',

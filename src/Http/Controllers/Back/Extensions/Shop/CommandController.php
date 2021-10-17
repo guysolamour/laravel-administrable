@@ -1,5 +1,4 @@
 <?php
-
 namespace Guysolamour\Administrable\Http\Controllers\Back\Extensions\Shop;
 
 use App\Models\User;
@@ -22,6 +21,105 @@ class CommandController extends BaseController
         return back_view('extensions.shop.commands.index', compact('commands'));
     }
 
+    public function create()
+    {
+        $command  = new (config('administrable.extensions.shop.models.command'));
+
+        $products = config('administrable.extensions.shop.models.product')::with('media')->principal()->last()->get()->each->append(['gallery']);
+        $clients  = User::all();
+        $states   = $command->getStates();
+        $delivers = config('administrable.extensions.shop.models.deliver')::with('areas')->get();
+
+        return back_view('extensions.shop.commands.create', compact(
+            'command',
+            'products',
+            'clients',
+            'states',
+            'delivers'
+        ));
+    }
+
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'command_state'  => 'required|string',
+            'client'         => 'required|array',
+            'deliver'        => 'required|array',
+            'products'       => 'required',
+            'globals'        => 'required',
+            'created_at'     => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            flashy()->error("Erreur lors de la validation du formulaire");
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $deliver  = config('administrable.extensions.shop.models.deliver')::where('id', $request->input('deliver.id'))->with([
+            'areas' => fn ($query) => $query->where('id', $request->input('deliver.area')),
+        ])->first();
+
+        $products = array_map(function ($item) {
+            return [
+                'rowId'    => $item['product']['id'],
+                'name'     => null,
+                'model'    => config('administrable.extensions.shop.models.product'),
+                'image'    => $item['product']['gallery']['front']['url'],
+                'price'    => $item['product']['current_price'],
+                'quantity' => $item['quantity'] ?? 1,
+                'tax'      => $item['tax'] ?? 0,
+                'discount' => $item['discount'] ?? 0,
+            ];
+        }, json_decode($request->products, true));
+
+
+        $data = [
+            'state'          => $request->input('command_state'),
+            'user_id'        => $request->input('client')['id'] ?: null,
+            'name'           => $request->input('client')['name'],
+            'email'          => $request->input('client')['email'],
+            'address'        => $request->input('deliver')['address'],
+            'phone_number'   => $request->input('client')['phone_number'],
+            'city'           => $request->input('client')['city'],
+            'country'        => $request->input('client')['country'],
+            'created_at'     => parse_range_dates($request->input('created_at')),
+            'online'         => $request->input('online', true),
+            'products'       => $products,
+            'globals'        => json_decode($request->globals, true),
+
+        ];
+
+        if ($request->input('deliver.id') && $request->deliver('deliver.area')) {
+            $data['deliver'] = [
+                'deliver_id' => $request->input('deliver.id'),
+                'area_id'    => $request->input('deliver.area'),
+                'price'      => (int) $deliver->areas->first()->pivot->price,
+            ];
+        }
+        /**
+         * @var \Guysolamour\Administrable\Models\Extensions\Shop\Command
+         */
+        $command = config('administrable.extensions.shop.models.command')::create($data);
+
+        // save notes
+        $notes = array_map(function ($note) use ($command) {
+            return [
+                'commenter_id'     => $note['commenter']['id'],
+                'commenter_type'   => get_class(get_guard()),
+                'commentable_id'   => $command->id,
+                'commentable_type' => $note['commentable_type'],
+                'comment'          => $note['comment'],
+            ];
+        }, json_decode($request->input('notes'), true));
+
+        $command->notes()->createMany($notes);
+
+        flashy("La commande a été bien ajoutée");
+
+        return redirect_backroute('extensions.shop.command.index');
+    }
+
 
 
     /**
@@ -40,19 +138,19 @@ class CommandController extends BaseController
 
         $clients = User::all();
 
-        $states = [];
-
-        foreach (config('administrable.extensions.shop.models.command')::STATE as $state) {
-            $states[] = $state;
-        }
+        $states   = $command->getStates();
 
         $notes = $command->notes->each->load('author');
 
         $delivers = config('administrable.extensions.shop.models.deliver')::with('areas')->get();
 
         return back_view('extensions.shop.commands.edit', compact(
-            'command', 'products', 'clients', 'delivers',
-            'states', 'notes'
+            'command',
+            'products',
+            'clients',
+            'delivers',
+            'states',
+            'notes'
         ));
     }
 
@@ -67,8 +165,8 @@ class CommandController extends BaseController
     {
         $command = config('administrable.extensions.shop.models.command')::where('id', $id)->firstOrFail();
 
-        if ($command->isPaid() || $command->isCompleted()) {
-            flashy()->error("Cette commande a été complétée et/ou payé, vous ne devriez plus le modifier.");
+        if ($command->isPaid()) {
+            flashy()->error("Cette commande a été payée, vous ne devriez plus la modifier.");
             return back();
         }
 
@@ -87,12 +185,13 @@ class CommandController extends BaseController
         $command->update([
             'state'         => $request->input('command_state'),
             'name'          => $request->input('client')['name'],
+            'email'         => $request->input('client')['email'],
             'address'       => $request->input('deliver')['address'],
             'phone_number'  => $request->input('client')['phone_number'],
             'city'          => $request->input('client')['city'],
             'country'       => $request->input('client')['country'],
             'created_at'    => parse_range_dates($request->input('created_at')),
-            'online'        => true,
+            'online'        => $request->input('online', true),
             'user_id'       => $request->input('client')['id'] ?: null,
         ]);
 
@@ -112,6 +211,18 @@ class CommandController extends BaseController
         return back();
     }
 
+
+    public function applyDiscount(Request $request, int $id)
+    {
+        /**
+         * @var \Guysolamour\Administrable\Models\Extensions\Shop\Command
+         */
+        $command = config('administrable.extensions.shop.models.command')::where('id', $id)->firstOrFail();
+
+        $cart =  $command->applyDiscount($request->input('discount', 0));
+
+        return response()->json(['cart' => $cart]);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -176,13 +287,12 @@ class CommandController extends BaseController
         return response()->json(['cart' => Cart::hydrate($command->products, $command->globals)]);
     }
 
-
     public function statistic()
     {
         $orders = config('administrable.extensions.shop.models.order')::with('command')->get();
 
-        $current_month_amount = $orders->filter(fn($item) => $item->created_at->isCurrentMonth() && $item->created_at->isCurrentYear())->sum('amount');
-        $current_year_amount  = $orders->filter(fn($item) => $item->created_at->year == now()->year)->sum('amount');
+        $current_month_amount = $orders->filter(fn ($item) => $item->created_at->isCurrentMonth() && $item->created_at->isCurrentYear())->sum('amount');
+        $current_year_amount  = $orders->filter(fn ($item) => $item->created_at->year == now()->year)->sum('amount');
         $total_orders         = $orders->sum('amount');
 
         $users_sorted_by_expense = User::sortByTotalExpense(10);
@@ -193,8 +303,13 @@ class CommandController extends BaseController
 
 
         return back_view("extensions.shop.statistic.index", compact(
-            'orders', 'current_month_amount', 'current_year_amount', 'total_orders', 'users_sorted_by_expense',
-            'most_sales_products', 'sold_out_products'
+            'orders',
+            'current_month_amount',
+            'current_year_amount',
+            'total_orders',
+            'users_sorted_by_expense',
+            'most_sales_products',
+            'sold_out_products'
         ));
     }
 }

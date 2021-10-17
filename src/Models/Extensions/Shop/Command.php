@@ -35,7 +35,7 @@ class Command extends BaseModel
      */
     protected $fillable = [
         'reference', 'name', 'phone_number', 'email', 'state', 'ip', 'paid', 'online',
-        'amount', 'address', 'products', 'globals','user_id', 'deliver', 'city', 'country', 'created_at'
+         'address', 'products', 'globals', 'user_id', 'deliver', 'city', 'country', 'created_at'
     ];
 
     /**
@@ -43,7 +43,7 @@ class Command extends BaseModel
      *
      * @var array
      */
-    protected $appends = ['formated_products', 'state_label', 'total', 'total_with_shipping'];
+    protected $appends = ['formated_products', 'state_label', 'total', 'total_with_shipping', 'amount'];
 
     /**
      * The attributes that should be cast to native types.
@@ -69,7 +69,7 @@ class Command extends BaseModel
     ];
 
 
-    public static function getCreatedCommandReference() :string
+    public static function getCreatedCommandReference(): string
     {
         $shop_settings = shop_settings();
 
@@ -80,50 +80,61 @@ class Command extends BaseModel
         return $shop_settings->command_prefix . $id . $shop_settings->command_suffix;
     }
 
-    public function isCompleted() :bool
+    public function isCompleted(): bool
     {
         return $this->state === self::STATE['completed']['name'];
     }
 
-    public function isNotCompleted() :bool
+    public function isNotCompleted(): bool
     {
         return !$this->isCompleted();
     }
 
     public function getAmountAttribute(): int
     {
-       return $this->formated_products['total'] + $this->deliver['area']->pivot->price;
+        return $this->total_with_shipping;
     }
 
-    public function getTotalAttribute() :int
+    public function getTotalAttribute(): int
     {
         return Arr::get($this->formated_products, 'total', 0);
     }
 
-    public function getTotalWithShippingAttribute() :int
+    public function getTotalWithShippingAttribute(): int
     {
-        return $this->total +  +Arr::get($this->deliver, 'price', 0);
+        return $this->total + Arr::get($this->deliver, 'price', 0);
     }
 
-    public function getDeliverNameAttribute() :string
+    public function getDeliverNameAttribute(): string
     {
-        return $this->deliver->get('deliver')->name;
+        return $this->deliver->get('deliver')?->name ?? '';
     }
 
-    public function getDeliverPriceAttribute() :int
+    public function getDeliverPriceAttribute(): int
     {
-        return $this->deliver->get('area')->pivot->price;
+        return $this->deliver->get('area')?->pivot->price ?? 0;
     }
 
-    public function getStateLabelAttribute() :?string
+    public function getStateLabelAttribute(): ?string
     {
-        foreach(self::STATE as $state){
-            if ($state['name'] === $this->state){
+        foreach (self::STATE as $state) {
+            if ($state['name'] === $this->state) {
                 return $state['label'];
             }
         }
 
         return $this->state;
+    }
+
+    public function getStates(): array
+    {
+        $states = [];
+
+        foreach (self::STATE as $state) {
+            $states[] = $state;
+        }
+
+        return $states;
     }
 
     /**
@@ -151,12 +162,12 @@ class Command extends BaseModel
         return $this->client();
     }
 
-    public function isPaid() :bool
+    public function isPaid(): bool
     {
-        return $this->paid;
+        return (bool) $this->paid;
     }
 
-    public function isNotPaid() :bool
+    public function isNotPaid(): bool
     {
         return !$this->isPaid();
     }
@@ -176,14 +187,14 @@ class Command extends BaseModel
         event(new ConfirmCommandPayment($this));
     }
 
-    public function setProductsAttribute($value) :void
+    public function setProductsAttribute($value): void
     {
         $value = is_string($value) ? $value : json_encode($value);
 
         $this->attributes['products'] = $value;
     }
 
-    public function setDeliverAttribute($value) :void
+    public function setDeliverAttribute($value): void
     {
         $value = is_string($value) ? $value : json_encode($value);
 
@@ -198,7 +209,7 @@ class Command extends BaseModel
     {
         $value =  json_decode($value, true);
 
-        if (!$value){
+        if (!$value) {
             return collect();
         }
 
@@ -224,7 +235,7 @@ class Command extends BaseModel
      */
     public function addProductsItem($model)
     {
-        if (!$this->exists){
+        if (!$this->exists) {
             return;
         }
 
@@ -288,20 +299,26 @@ class Command extends BaseModel
 
     public function createClient()
     {
-        if ($this->user_id){
+        if ($this->user_id) {
             return;
         }
         // create user
         $client = $this->client()->create([
             'name'           => $this->name,
-            'pseudo'         => $this->name,
+            // 'pseudo'         => $this->name,
             'phone_number'   => $this->phone_number,
             'email'          => $this->email,
             'password'       => bcrypt(Shop::defaultClientPassword()),
         ]);
 
         $this->update(['user_id' => $client->getKey()]);
+    }
 
+    private function sendCreateNotification()
+    {
+        $notif = config('administrable.extensions.shop.notifications.back.commandsent');
+
+        Notification::send(get_guard_notifiers(), new $notif($this));
     }
 
     /**
@@ -324,10 +341,8 @@ class Command extends BaseModel
 
             $command->createClient();
 
-            $notif = config('administrable.extensions.shop.notifications.back.commandsent');
-            Notification::send(get_guard_notifiers(), new $notif($command));
+            $command->sendCreateNotification();
+
         });
     }
 }
-
-
