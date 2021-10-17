@@ -47,9 +47,13 @@ class CategoryController extends BaseController
     {
         $form = $this->getForm(config('administrable.extensions.shop.models.category'), config('administrable.extensions.shop.forms.back.category'));
 
-       $form->redirectIfNotValid();
+        $form->redirectIfNotValid();
 
-        config('administrable.extensions.shop.models.brand')::create($request->all());
+        $category = config('administrable.extensions.shop.models.category')::create($request->all());
+
+        if ($request->ajax()) {
+            return  $category;
+        }
 
        flashy('L\' élément a bien été ajouté');
 

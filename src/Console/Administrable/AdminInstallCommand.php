@@ -330,6 +330,13 @@ class AdminInstallCommand extends BaseCommand
         $auth_config_path
         );
 
+        // publish default config file
+        $this->call('vendor:publish', [
+            '--provider' => 'Guysolamour\Administrable\ServiceProvider',
+            '--tag'      => 'administrable-config',
+        ]);
+
+        
         // Settings config
         $this->call('vendor:publish', [
             '--provider' => 'Spatie\LaravelSettings\LaravelSettingsServiceProvider',

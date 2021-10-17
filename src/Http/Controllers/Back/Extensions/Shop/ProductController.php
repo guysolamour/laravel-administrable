@@ -69,7 +69,7 @@ class ProductController extends BaseController
     public function store(Request $request)
     {
         $data = $this->validateSubmitData();
-        
+
         /**
          * @var \Guysolamour\Administrable\Models\Shop\Product
          */

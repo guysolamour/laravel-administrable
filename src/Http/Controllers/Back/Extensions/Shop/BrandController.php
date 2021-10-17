@@ -49,11 +49,15 @@ class BrandController extends BaseController
     {
         $form = $this->getForm(config('administrable.extensions.shop.models.brand'), config('administrable.extensions.shop.forms.back.brand'));
 
-       $form->redirectIfNotValid();
+        $form->redirectIfNotValid();
 
-        config('administrable.extensions.shop.models.brand')::create($request->all());
+        $brand = config('administrable.extensions.shop.models.brand')::create($request->all());
 
-       flashy('L\' élément a bien été ajouté');
+        if ($request->ajax()){
+            return  $brand;
+        }
+
+        flashy('L\' élément a bien été ajouté');
 
         return redirect_backroute('extensions.shop.brand.index');
     }
@@ -125,7 +129,7 @@ class BrandController extends BaseController
     {
         $brand = config('administrable.extensions.shop.models.brand')::where('slug', $slug)->firstOrFail();
         $brand->delete();
-        
+
         flashy('L\' élément a bien été supprimé');
 
         return redirect_backroute('extensions.shop.brand.index');
