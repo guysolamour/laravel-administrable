@@ -91,7 +91,7 @@
                             @endif
                         </div>
                     </a>
-                    @enfif
+                    @endif
                     <a class="dropdown-item" href="{{ back_route('configuration.edit') }}"><i class="ti-settings"></i> Configuration</a>
                     <div class="dropdown-divider"></div>
 
@@ -107,6 +107,7 @@
 
 
             <!-- Messages -->
+            @if(isset($messages))
             <li class="dropdown d-none d-md-block">
                 <span class="topbar-btn" data-toggle="dropdown"><i class="ti-email"></i></span>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -141,6 +142,7 @@
 
                 </div>
             </li>
+            @endif
             <!-- END Messages -->
               <!-- Notifications -->
             @php

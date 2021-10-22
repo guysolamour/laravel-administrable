@@ -20,6 +20,7 @@
                             <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.statistic.index') }}">Boutique</a></li>
                             <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.category.index') }}">Catégories</a></li>
                             <li class="breadcrumb-item active"><a href="{{ back_route('extensions.shop.category.show', $category) }}">{{ $category->name }}</a></li>
+
                         </ol>
                     </nav>
                 </div>

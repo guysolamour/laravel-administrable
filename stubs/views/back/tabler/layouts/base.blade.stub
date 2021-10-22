@@ -56,6 +56,7 @@
     <script src="{{ asset('vendor/{{theme}}/libs/bootstrap/dist/popper.min.js') }}"></script>
     {{-- <script src="{{ asset('vendor/{{theme}}/libs/bootstrap/dist/bootstrap.min.js') }}"></script> --}}
     <script src="{{ asset('vendor/{{theme}}/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset("vendor/components/daterangepicker/moment.min.js") }}"></script>
     {{-- <script src="{{ asset('vendor/{{theme}}/libs/apexcharts/dist/apexcharts.min.js') }}"></script> --}}
     {{-- <script src="{{ asset('vendor/{{theme}}/libs/jqvmap/dist/jquery.vmap.min.js') }}"></script> --}}
     {{-- <script src="{{ asset('vendor/{{theme}}/libs/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script> --}}

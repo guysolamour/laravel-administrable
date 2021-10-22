@@ -3,8 +3,8 @@
 
 @section('title', 'Edition ' . $product->name)
 
-@section('content')
 
+@section('content')
 <div class="main-content">
     <div class="container-fluid">
         <div class="page-header">

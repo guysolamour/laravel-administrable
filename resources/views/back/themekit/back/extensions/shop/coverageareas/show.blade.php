@@ -19,7 +19,7 @@
                             </li>
                             <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.statistic.index') }}">Boutique</a></li>
                             <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.coveragearea.index') }}">Zones</a></li>
-                            <li class="breadcrumb-item active"><a href="{{ back_route('extensions.shop.coveragearea.show', $coveragearea) }}">{{ $coveragearea->name }}</a></li>
+                            <li class="breadcrumb-item active"><a href="#">{{ $coveragearea->name }}</a></li>
                         </ol>
                     </nav>
                 </div>
@@ -29,8 +29,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h3 class="card-title">Zone de couverture</h3>
-                        <div class="btn-group float-right">
+                        <h3 class="card-title">Zones de couverture</h3>
+                            <div class="btn-group float-right">
                             <a href="{{ back_route('extensions.shop.coveragearea.edit', $coveragearea) }}" class="btn btn-primary">
                                 <i class="fas fa-edit"></i> Editer</a>
 

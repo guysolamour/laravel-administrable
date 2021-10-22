@@ -1,7 +1,7 @@
 @extends(back_view_path('layouts.base'))
 
 
-@section('title','Créez un coupon')
+@section('title', 'Ajout de coupon')
 
 
 @section('content')
@@ -50,17 +50,3 @@
 </div>
 @endsection
 
-
-@push('css')
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/themekit/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endpush
-
-@push('js')
-    <script src="{{ asset('vendor/themekit/plugins/select2/dist/js/select2.min.js') }}"></script>
-    <script>
-        $('.select2').select2({
-            theme: 'bootstrap4'
-        });
-    </script>
-@endpush

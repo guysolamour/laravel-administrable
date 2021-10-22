@@ -1,6 +1,6 @@
 @extends(back_view_path('layouts.base'))
 
-@section('title','Edition ' . $category->name)
+@section('title', 'Edition ' . $category->name)
 
 @section('content')
 

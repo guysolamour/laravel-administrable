@@ -1,4 +1,4 @@
-@extends('back.layouts.base')
+@extends(back_view_path('layouts.base'))
 
 @section('title', 'Paiements')
 
@@ -66,6 +66,7 @@
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('back.extensions.shop.command.edit', $order->command) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> Commande </a>
+
                                         <a href="{{ Storage::url($order->invoice) }}" target="_blank" class="btn btn-secondary btn-sm"><i class="fa fa-eye"></i> Facture</a>
 
                                     </div>

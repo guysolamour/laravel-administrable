@@ -336,7 +336,7 @@ class AdminInstallCommand extends BaseCommand
             '--tag'      => 'administrable-config',
         ]);
 
-        
+
         // Settings config
         $this->call('vendor:publish', [
             '--provider' => 'Spatie\LaravelSettings\LaravelSettingsServiceProvider',

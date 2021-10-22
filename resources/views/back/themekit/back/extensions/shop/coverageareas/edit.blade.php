@@ -34,9 +34,6 @@
                             <a href="{{ back_route('extensions.shop.coveragearea.destroy', $coveragearea) }}" class="btn btn-danger" data-method="delete"
                                 data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?">
                                 <i class="fas fa-trash"></i> Supprimer</a>
-
-
-
                         </div>
                     </div>
 

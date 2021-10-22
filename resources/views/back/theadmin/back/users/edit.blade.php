@@ -21,8 +21,10 @@
             {{ Lang::get('administrable::messages.default.edition') }}
         </h4>
 
+
         <div class="card-body">
             <div class="row">
+              
                 <div class="col-md-8">
                     @include(back_view_path('users._form'), ['edit' => true])
                 </div>

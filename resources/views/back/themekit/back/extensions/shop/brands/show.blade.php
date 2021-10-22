@@ -19,7 +19,8 @@
                             </li>
                             <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.statistic.index') }}">Boutique</a></li>
                             <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.statistic.index') }}">Marques</a></li>
-                            <li class="breadcrumb-item active"><a href="{{ back_route('extensions.shop.attribute.show', $attribute) }}">{{ $attribute->name }}</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ back_route('extensions.shop.brand.show', $brand) }}">{{ $brand->name }}</a></li>
+
                         </ol>
                     </nav>
                 </div>

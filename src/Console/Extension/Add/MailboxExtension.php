@@ -22,6 +22,8 @@ class MailboxExtension extends BaseExtension
         $this->runMigrateArtisanCommand();
 
         $this->displayMessage("{$this->name} extension added successfully.");
+
+        // gérer la cas du header the admin
     }
 
     protected function getHeaderFrontUrlRoute() :string

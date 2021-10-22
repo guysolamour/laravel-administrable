@@ -1,7 +1,7 @@
 @extends(back_view_path('layouts.base'))
 
 
-@section('title','Ajout attribut')
+@section('title', 'Ajout attribut')
 
 
 @section('content')

@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\{{extensionsFolderClass}}\Shop\BrandsTableSeeder;
 use Database\Seeders\{{extensionsFolderClass}}\Shop\CategoriesTableSeeder;
 use Database\Seeders\{{extensionsFolderClass}}\Shop\ProductsTableSeeder;
-use Database\Seeders\{{extensionsFolderClass}}\Shop\CoverageAreasTableSeeder::class,;
+use Database\Seeders\{{extensionsFolderClass}}\Shop\CoverageAreasTableSeeder;
 
 class ShopTableSeeder extends Seeder
 {

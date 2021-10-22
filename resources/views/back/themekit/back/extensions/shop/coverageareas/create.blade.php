@@ -17,7 +17,8 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('admin.dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
-                            <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.statistic.index') }}">Boutique</a></li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ back_route('extensions.shop.statistic.index') }}">Boutique</a></li>
                             <li class="breadcrumb-item">
                                 <a href="{{ back_route('extensions.shop.coveragearea.index') }}">Zone de couverture</a>
                             </li>

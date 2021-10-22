@@ -7,9 +7,6 @@
 <main class="main-container">
 
     <header class="header bg-img">
-        @include(back_view_path('guards._avatar'), [
-        'model'       => $guard,
-        ])
 
         <div class="header-action bg-white">
             @if (get_guard()->can('update-' . config('administrable.guard'), $guard))
@@ -31,6 +28,10 @@
     <div class="main-content">
         <div class="row">
             <div class="col-md-8">
+                @include(back_view_path('guards._avatar'), [
+                    'model' => $guard,
+                ])
+
                 <!-- Tab panes -->
                 @if (get_guard()->can('update-' . config('administrable.guard'), $guard))
                 <div class="tab-content">
@@ -155,9 +156,9 @@
 
                 <div class="card">
                     <div class="text-dark card-body bg-img text-center py-50"
-                    style="background-image: url(/vendor/theadmin/img/gallery/2.jpg);">
+                    style="background-image: url(/vendor/template/theadmin/img/gallery/2.jpg);">
                     <a href="#">
-                        <img data-avatar class="avatar avatar-xxl avatar-bordered" src="{{ $guard->getFrontImageUrl() }}" alt="{{ $guard->name }}">
+                        <img data-avatar="{{ $guard->id }}" class="avatar avatar-xxl avatar-bordered" src="{{ $guard->getFrontImageUrl() }}" alt="{{ $guard->name }}">
                     </a>
                     <h5 class="mt-2 mb-0"><a class="hover-primary text-dark" href="#">{{ $guard->full_name }}</a></h5>
                     <span>{{ $guard->role }}</span>

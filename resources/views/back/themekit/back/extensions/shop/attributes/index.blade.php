@@ -18,7 +18,7 @@
                                 <a href="{{ route(config('administrable.guard') . '.dashboard') }}"><i class="ik ik-home"></i></a>
                             </li>
                             <li class="breadcrumb-item"><a href="{{ back_route('extensions.shop.statistic.index') }}">Boutique</a></li>
-                            <li class="breadcrumb-item active"><a href="{{ back_route('extensions.shop.attribute.index') }}">Attributs</a></li>
+                            <li class="breadcrumb-item active"><a href="#">Attributs</a></li>
                         </ol>
                     </nav>
                 </div>

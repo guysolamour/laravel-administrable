@@ -1,7 +1,7 @@
 @extends(back_view_path('layouts.base'))
 
 
-@section('title','Ajout marques')
+@section('title', 'Ajout de marque')
 
 
 @section('content')
