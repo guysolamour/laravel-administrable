@@ -27,29 +27,6 @@ abstract class BaseModel extends Model
     }
 
 
-    /**
-     * Get elemet by Slug
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $slug
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeFindBySlug($query, string $slug)
-    {
-        return $query->where('slug', $slug);
-    }
-
-
-    /**
-     * Get elements by slug
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param array $slugs
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeFindAllBySlug($query, array $slugs)
-    {
-        return $query->whereIn('slug', $slugs);
-    }
+    
 
 }

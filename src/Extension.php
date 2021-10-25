@@ -14,7 +14,6 @@ class Extension
 
     public static function state(string $name) :?string
     {
-        // dd($name);
         return (config("administrable.extensions.{$name}.activate"));
     }
 

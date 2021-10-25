@@ -691,16 +691,20 @@ class AdminInstallCommand extends BaseCommand
         // Notifications link in header
         if ($this->isAdminLteTheme() || $this->isTablerTheme()){
             $header_path = resource_path("views/{$this->data_map["{{backLowerNamespace}}"]}/partials/_header.blade.php");
-            $stub = $this->filesystem->get($this->getTemplatePath() . "/views/back/{$this->theme}/stubs/header/notificationLink.blade.stub");
+            $header_link_path = $this->getTemplatePath() . "/views/back/{$this->theme}/stubs/header/notificationLink.blade.stub";
 
-            $search = "{{-- Insert Notification Link --}}";
+            if ($this->filesystem->exists($header_link_path)){
+                $stub = $this->filesystem->get($header_link_path);
 
-            $this->filesystem->replaceAndWriteFile(
-                $this->filesystem->get($header_path),
-                $search,
-                $this->filesystem->compliedFile($stub, false),
-                $header_path
-            );
+                $search = "{{-- Insert Notification Link --}}";
+
+                $this->filesystem->replaceAndWriteFile(
+                    $this->filesystem->get($header_path),
+                    $search,
+                    $this->filesystem->compliedFile($stub, false),
+                    $header_path
+                );
+            }
         }
 
         $this->loadEmailsViews();

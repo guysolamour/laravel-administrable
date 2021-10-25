@@ -22,7 +22,7 @@ return [
     | Available theme are adminlte,theadmin,cooladmin,tabler,themekit
     | The theme should not be changed once the installation has been done
     */
-    'theme' => 'themekit',
+    'theme' => 'theadmin',
     /*
     |--------------------------------------------------------------------------
     | Folder
@@ -172,6 +172,26 @@ return [
                 'form'            => \Guysolamour\Administrable\Forms\Front\Extensions\Mailbox\ContactForm::class,
                 'controller'      => \Guysolamour\Administrable\Http\Controllers\Front\Extensions\Mailbox\ContactController::class,
                 'mail'            => \Guysolamour\Administrable\Mail\Front\Extensions\Mailbox\SendMeContactMessageMail::class,
+            ],
+        ],
+        'ad' => [
+            'activate'    => true,
+            'models'      => [
+                'ad'      => Guysolamour\Administrable\Models\Extensions\Ad\Ad::class,
+                'group'   => Guysolamour\Administrable\Models\Extensions\Ad\Group::class,
+                'type'    => Guysolamour\Administrable\Models\Extensions\Ad\Type::class,
+            ],
+            'controllers' => [
+                'back'  => [
+                    'ad'    =>  Guysolamour\Administrable\Http\Controllers\Back\Extensions\Ad\AdController::class,
+                    'group' =>  Guysolamour\Administrable\Http\Controllers\Back\Extensions\Ad\GroupController::class,
+                ],
+            ],
+            'forms' => [
+                'back' => [
+                    'ad'    => Guysolamour\Administrable\Forms\Back\Extensions\Ad\AdForm::class,
+                    'group' => Guysolamour\Administrable\Forms\Back\Extensions\Ad\GroupForm::class,
+                ],
             ],
         ],
         'shop' => [

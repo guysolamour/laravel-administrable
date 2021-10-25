@@ -72,12 +72,22 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->packagePath('resources/lang') => resource_path('lang/vendor/administrable'),
         ], 'administrable-lang');
 
-        // View aliases
+        // View component aliases
         Blade::include('administrable::front.comments.comments', 'comments');
         Blade::include('administrable::filemanager.image', 'imagemanager');
+        Blade::include('administrable::filemanager.front', 'imagemanagerfront');
+        Blade::include('administrable::filemanager.back', 'imagemanagerback');
         Blade::include('administrable::filemanager.button', 'filemanagerButton');
         Blade::include('administrable::filemanager.show', 'filemanagerShow');
         Blade::include('administrable::filemanager.guardavatar', 'guardavatar');
+
+        $this->includeAdExtensionViewsAliases();
+
+        // View aliases
+        Blade::include('administrable::helpers.includeback', 'includeback');
+        Blade::include('administrable::helpers.includefront', 'includefront');
+        Blade::include('administrable::helpers.deleteall', 'deleteall');
+
 
         $this->loadPolicies([
             config('administrable.modules.comment.model') => config('administrable.modules.comment.front.policy'),
@@ -106,6 +116,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 [\Guysolamour\Administrable\Listeners\Extensions\Shop\IncrementProductSoldCount::class, 'handle']
             );
         }
+    }
+
+    private function includeAdExtensionViewsAliases() :void
+    {
+        if (!config('administrable.extensions.ad.activate')){
+            return;
+        }
+
+        Blade::include('administrable::front.extensions.ad._ad', 'ad');
+        Blade::include('administrable::front.extensions.ad._adgroup', 'adgroup');
     }
 
     private function scheduleCommands() :void
@@ -187,6 +207,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 $loader->alias('Cart', \Guysolamour\Administrable\Facades\Cart::class);
                 $loader->alias('Shop', \Guysolamour\Administrable\Facades\Shop::class);
             }
+
             $loader->alias('AdminExtension', Extension::class);
         });
 

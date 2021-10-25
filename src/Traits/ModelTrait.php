@@ -19,23 +19,35 @@ trait ModelTrait
 
     private function guestRelatedForm() :string
     {
+        $form = $this->getFormInAppDirectory();
+
+        if (class_exists($form)){
+            return $form;
+        }
+
+        $form = $this->getFormInPackageDirectory();
+
+        if (class_exists($form)){
+            return $form;
+        }
+
+        return $form;
+    }
+
+
+    private function getFormInAppDirectory() :string
+    {
         $form = Str::afterLast(get_class($this), config('administrable.models_folder') . '\\');
 
         return sprintf('\%s\Forms\%s\%sForm', get_app_namespace(), config('administrable.back_namespace'),  $form);
     }
 
-    public function getViewsFolder()
-    {
-        if ($this->views_folder) {
-            return $this->views_folder;
-        }
 
-        return $this->guestViewsFolder();
-    }
-
-    private function guestViewsFolder(): string
+    private function getFormInPackageDirectory() :string
     {
-        return Str::plural(Str::slug(class_basename($this)));
+        $form = Str::afterLast(get_class($this), config('administrable.models_folder') . '\\');
+
+        return sprintf('\Guysolamour\Administrable\Forms\%s\%sForm',  config('administrable.back_namespace'),  $form);
     }
 
     /**

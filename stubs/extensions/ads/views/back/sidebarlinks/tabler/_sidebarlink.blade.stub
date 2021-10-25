@@ -1,0 +1,28 @@
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#navbar-extra" data-toggle="dropdown" role="button" aria-expanded="false" >
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                           <i class="fas fa-shopping-cart icon"></i>
+                        </span>
+                        <span class="nav-link-title">
+                             &nbsp; Publicités
+                        </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="{{ back_route('{{extensionsFolder}}.ads.ad.create') }}" >
+                                    Ajouter une publicité
+                                </a>
+                            </li>
+                            <li >
+                                <a class="dropdown-item" href="{{ back_route('{{extensionsFolder}}.ads.group.index') }}" >
+                                    Groupes
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ back_route('{{extensionsFolder}}.ads.ad.index') }}" >
+                                    Publicités
+                                </a>
+                            </li>
+                        </ul>
+                    </li>

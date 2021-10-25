@@ -131,8 +131,7 @@
 
 </div>
 
-
-@include('{{backLowerNamespace}}.partials._datatable')
-@include('{{backLowerNamespace}}.partials._deleteAll')
+<x-administrable::datatable />
+@deleteall()
 
 @endsection

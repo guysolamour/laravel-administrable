@@ -1,0 +1,30 @@
+
+            <li class="nav-item has-treeview">
+                <a href="#" class="nav-link {{ set_active_link(back_route_path('{{extensionsFolder}}.ads.group.index'), back_route_path('{{extensionsFolder}}.ads.ad.index')) }}">
+                    <i class="nav-icon fas fa-th-list"></i>
+                    <p>
+                        Publicités
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ back_route('{{extensionsFolder}}.ads.ad.create') }}" class="nav-link {{ set_active_link(back_route_path('{{extensionsFolder}}.ads.ad.create')) }}">
+                            <i class="far fa-plus nav-icon"></i>
+                            <p>Ajouter une publicité</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ back_route('{{extensionsFolder}}.ads.group.index') }}" class="nav-link {{ set_active_link(back_route_path('{{extensionsFolder}}.ads.group.index')) }}">
+                            <i class="far fa-wallet nav-icon"></i>
+                            <p>Groupes</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ back_route('{{extensionsFolder}}.ads.ad.index') }}" class="nav-link {{ set_active_link(back_route_path('{{extensionsFolder}}.ads.ad.index')) }}">
+                            <i class="far fa-th-list nav-icon"></i>
+                            <p>Publicités</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>

@@ -1,0 +1,52 @@
+<?php
+namespace Database\Seeders\{{extensionsFolderClass}}\{{extensionClass}};
+
+use Faker\Factory as Faker;
+use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
+
+class {{extensionsFolderClass}}{{extensionPluralClass}}TypesTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // $faker = Faker::create();
+
+        // ads
+        config('administrable.extensions.ad.models.type')::create([
+            'name'   => 'text',
+            'label'  => 'Texte',
+            'target' => 'ad',
+        ]);
+
+        config('administrable.extensions.ad.models.type')::create([
+            'name'   => 'image',
+            'label'  => 'Image',
+            'target' => 'ad'
+        ]);
+
+        // groups
+        config('administrable.extensions.ad.models.type')::create([
+            'name'   => 'random_ads',
+            'label'  => 'Pubs alétaoire',
+            'target' => 'group'
+        ]);
+
+        config('administrable.extensions.ad.models.type')::create([
+            'name'   => 'sort_asc_ads',
+            'label'  => 'Pubs triées (a-z)',
+            'target' => 'group'
+        ]);
+
+        config('administrable.extensions.ad.models.type')::create([
+            'name'   => 'sort_desc_ads',
+            'label'  => 'Pubs triées (z-a)',
+            'target' => 'group'
+        ]);
+
+    }
+}

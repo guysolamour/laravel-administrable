@@ -1,0 +1,15 @@
+                 <div class="nav-item has-sub">
+                    <a href="#"><i class="fas fa-th-list"></i><span>Publicités</span></a>
+                    <div class="submenu-content">
+                        <a href="{{ back_route('{{extensionsFolder}}.ads.ad.create') }}" class="menu-item {{  set_active_link(back_route_path('{{extensionsFolder}}.ads.ad.create'))  }}">
+                            Ajouter une publicité
+                        </a>
+                        <a href="{{ back_route('{{extensionsFolder}}.ads.group.index') }}" class="menu-item {{  set_active_link(back_route_path('{{extensionsFolder}}.ads.group.index'))  }}">
+                            Groupes
+                        </a>
+                        <a href="{{ back_route('{{extensionsFolder}}.ads.ad.index') }}" class="menu-item {{  set_active_link(back_route_path('{{extensionsFolder}}.ads.ad.index'))  }}">
+                            Publicités
+                        </a>
+                    </div>
+                </div>
+

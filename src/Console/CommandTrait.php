@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 
 trait CommandTrait
 {
-
     public function getAppNamespace(): string
     {
         return get_app_namespace();
@@ -71,7 +70,7 @@ trait CommandTrait
 
     public function isTheme(string $theme): bool
     {
-        return $this->getTheme() === $theme;
+        return $this->getTheme() === Str::lower($theme);
     }
 
     public function getTheme(): string

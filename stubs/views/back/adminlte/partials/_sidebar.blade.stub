@@ -39,18 +39,7 @@
             </a>
           </li>
 
-           <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-users"></i>
-                <p>
-                    Extensions
-                    <i class="right fas fa-angle-left"></i>
-                </p>
-            </a>
-            <ul class="nav nav-treeview">
-                {{--  insert extensions links here  --}}
-            </ul>
-            </li>
+            {{--  insert extensions links here  --}}
 
             <li class="nav-item">
             <a href="{{ back_route('user.index') }}" class="nav-link {{ set_active_link(back_route_path('user.index')) }}">

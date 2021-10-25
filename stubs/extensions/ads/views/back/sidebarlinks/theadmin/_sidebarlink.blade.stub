@@ -1,0 +1,31 @@
+            <li class="menu-item">
+                <a class="menu-link" href="#">
+                    <span class="icon fa fa-shopping-cart"></span>
+                    <span class="title">Publicités</span>
+                    <span class="arrow"></span>
+                </a>
+
+                <ul class="menu-submenu">
+                    <li class="menu-item">
+                        <a class="menu-link" href="{{ back_route('{{extensionsFolder}}.ads.ad.create') }}">
+                            <span class="dot"></span>
+                            <span class="title">Ajouter une publicité</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-item">
+                        <a class="menu-link" href="{{ back_route('{{extensionsFolder}}.ads.group.index') }}">
+                            <span class="dot"></span>
+                            <span class="title">Groupes</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-item">
+                        <a class="menu-link" href="{{ back_route('{{extensionsFolder}}.ads.ad.index') }}">
+                            <span class="dot"></span>
+                            <span class="title">Publicités</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+

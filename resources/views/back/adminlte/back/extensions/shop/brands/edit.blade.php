@@ -46,8 +46,7 @@
                         @include(back_view_path('extensions.shop.brands._form'),['edit' => true])
                     </div>
                     <div class="col-md-4">
-                        @imagemanager([
-                            'collection' => 'front-image',
+                        @imagemanagerfront([
                             'label'      => 'Image mise en avant',
                             'model'      => $form->getModel(),
                         ])

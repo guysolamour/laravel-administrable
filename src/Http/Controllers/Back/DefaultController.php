@@ -27,26 +27,27 @@ class DefaultController extends BaseController
     public function clone(string $model, $key)
     {
         $model = base64_decode($model);
+
         /**
-         * @var \Illuminate\Database\Eloquent\Model $model
+         * @var \Illuminate\Database\Eloquent\Model|\Guysolamour\Administrable\Traits\ModelTrait $model
          */
         $model = (new $model())->resolveRouteBinding($key);
 
         $form_name = $model->getRelatedForm();
 
-        // View
-        $views_folder   = $model->getViewsFolder();
-        $view_segments = Str::afterLast(Str::beforeLast($form_name, '\\'), 'Forms\\');
-        $view_segments = Str::plural(Str::lower(str_replace('\\', '.', $view_segments)));
+        $view = Str::lower(str_replace('\\', '/', Str::afterLast(get_class($model), 'Models\\')));
 
-        $view = "administrable::{$view_segments}.{$views_folder}.create";
-
-        if (!class_exists($form_name)) {
-            return view($view);
+        if (Str::contains($view, '/')){
+            $view = Str::beforeLast($view, '/') . '/' . Str::plural(Str::afterLast($view, '/'));
+        } else {
+            $view = Str::plural($view);
         }
 
-        $form = $this->getForm($model->replicate(), $form_name);
+        $view = $view . '/create';
 
-        return view($view, compact('form'));
+        return class_exists($form_name)
+                    ? back_view($view, ['form' => $this->getForm($model->replicate(), $form_name)])
+                    : back_view($view);
     }
+
 }

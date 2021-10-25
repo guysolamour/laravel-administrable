@@ -14,7 +14,7 @@ class AddExtensionCommand extends BaseCommand
 
 
     private const EXTENSIONS = [
-        'livenews', 'blog', 'testimonial', 'mailbox', 'shop',
+        'livenews', 'blog', 'testimonial', 'mailbox', 'shop', 'ads',
     ];
 
 
@@ -33,8 +33,6 @@ class AddExtensionCommand extends BaseCommand
      * @var string
      */
     protected $description = 'Add a new extension';
-
-
 
 
 
@@ -76,7 +74,7 @@ class AddExtensionCommand extends BaseCommand
     {
         $class = __NAMESPACE__ . '\\' .Str::ucfirst($name) . 'Extension';
 
-        /** @var BaseExtension */
+        /** @var \Guysolamour\Administrable\Console\Extension\BaseExtension */
         $instance = new $class($this, $name);
         $instance->run();
     }
