@@ -1,6 +1,0 @@
-  <nav aria-label="breadcrumb" class="d-flex justify-content-end" style="padding-top:10px;padding-right:20px;">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('{{guard}}.dashboard') }}">Tableau de bord</a></li>
-                <li class="breadcrumb-item active">{{translateModelUcfirst}}</li>
-            </ol>
-        </nav>

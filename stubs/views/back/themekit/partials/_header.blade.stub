@@ -105,7 +105,7 @@
                             Configuration</a>
                         @if (Route::has(back_route_path('extensions.mailbox.mailbox.index')))
                         @php
-                            $unreadMailboxes = config('administrable.extensions.mailbox.model')::unread()->get()
+                            $unreadMailboxes = config('administrable-mailbox.models.mailbox')::unread()->get()
                         @endphp
                         <a class="dropdown-item" href="{{ back_route('extensions.mailbox.mailbox.index') }}">
                             @if($unreadMailboxes->count())
@@ -146,7 +146,7 @@
 
             @if (Route::has(back_route_path('extensions.mailbox.mailbox.index')))
             <div class="app-item">
-              <a href="{{ back_route('extensions.mailbox.mailbox.index') }}"><i class="fa fa-envelope"></i><span>Messagerie</span></a>
+              <a href="{{ back_route('extensions.mailbox.mailbox.index') }}"><i class="fa fa-envelope"></i><span>{{ Lang::get('administrable-mailbox::translations.label') }}</span></a>
             </div>
             @endif
 
@@ -168,7 +168,7 @@
 
             @if (Route::has(back_route_path('extensions.testimonial.testimonial.index')))
             <div class="app-item">
-              <a href="{{ back_route('extensions.testimonial.testimonial.index') }}"><i class="fa fa-comments-alt"></i><span>Témoignages</span></a>
+              <a href="{{ back_route('extensions.testimonial.testimonial.index') }}"><i class="fa fa-comments-alt"></i><span>Lang::get('administrable-testimonial::translations.label')</span></a>
             </div>
             @endif
 

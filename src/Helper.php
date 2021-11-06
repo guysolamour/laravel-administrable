@@ -224,11 +224,7 @@ class Helper {
         return '';
     }
 
-    public function formatPrice($price, string $suffix = '')
-    {
-        return number_format($price, 0, ',', ' ') . " {$suffix}";
-    }
-
+  
     public function getMetaPage(string $name) :?Page
     {
         return Module::model('page')::firstWhere('code', $name);

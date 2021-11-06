@@ -1,5 +1,5 @@
 {
-  "name": "guysolamour/administrable",
+  "name": "guysolamour/laravel-administrable",
   "description": "An administration package based on Laravel. This package was made according to my personal use to not repeat the same things for each project.",
   "license": "MIT",
   "keywords": [
@@ -17,7 +17,6 @@
   "require": {
     "php": "^8.0",
     "laravel/ui": "^3.3",
-    "symfony/yaml": "^5.0",
     "laravel/framework": "^8.0",
     "artesaos/seotools": "^0.20",
     "bmatovu/multi-auth": "^10.0",

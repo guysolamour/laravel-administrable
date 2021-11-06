@@ -1,4 +1,0 @@
-<a class="btn btn-float btn-sm btn-danger" href="{{ route('{{deleteRoute}}', ${{singularSlug}}) }}" title="" data-provide="tooltip" data-placement="left"
-                data-method="delete"
-                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
-                data-original-title="Supprimer"><i class="ti-trash"></i> </a>

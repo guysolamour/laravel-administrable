@@ -1,7 +1,0 @@
-   // {{relatedSingularSlug}} relation
-   public function {{relatedSingularSlug}}()
-    {
-      return $this->belongsToMany({{relatedSingularClass}}::class);
-    }
-    // end {{relatedSingularSlug}} relation
-

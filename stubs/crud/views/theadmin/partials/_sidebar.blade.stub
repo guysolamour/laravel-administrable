@@ -1,9 +1,0 @@
-                    <!-- {{sidebarViewModelWithSubfolder}} link -->
-                    <li class="menu-item {{ set_active_link('{{indexRoute}}') }}">
-                        <a class="menu-link" href="{{ route('{{indexRoute}}') }}">
-                            <span class="icon far {{icon}}"></span>
-                            <span class="title">{{translateModelUcfirst}}</span>
-                        </a>
-                    </li>
-                    <!-- end {{sidebarViewModelWithSubfolder}} link -->
-

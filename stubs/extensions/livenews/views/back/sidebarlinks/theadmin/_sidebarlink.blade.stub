@@ -1,6 +1,0 @@
-                    <li class="menu-item">
-                        <a class="menu-link" href="{{ back_route('{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index') }}">
-                            <span class="dot"></span>
-                            <span class="title">{{extensionLabel}}</span>
-                        </a>
-                    </li>

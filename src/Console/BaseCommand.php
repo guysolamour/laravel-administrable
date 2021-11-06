@@ -21,7 +21,7 @@ abstract class BaseCommand extends Command
             $name = $this->guard;
 
         return [
-            '{{namespace}}'           =>  $this->getAppNamespace(),
+            '{{namespace}}'           =>  get_app_namespace(),
             '{{pluralCamel}}'         =>  Str::plural(Str::camel($name)),
             '{{pluralSlug}}'          =>  Str::plural(Str::slug($name)),
             '{{pluralSnake}}'         =>  Str::plural(Str::snake($name)),
@@ -47,102 +47,91 @@ abstract class BaseCommand extends Command
 
     protected function checkIfPackageHasBeenInstalled(): bool
     {
-        return file_exists($this->getConfigurationYamlPath());
+        return file_exists(config_path('administrable.php'));
     }
 
-    protected function getModelClass(string $model): string
-    {
-        return sprintf("%s\%s\%s", $this->getAppNamespace(), $this->getModelsFolderWithSubfolderNamespace($model, "\\"), ucfirst($model));
-    }
+    // protected function getModelClass(string $model): string
+    // {
+    //     return sprintf("%s\%s\%s", $this->getAppNamespace(), $this->getModelsFolderWithSubfolderNamespace($model, "\\"), ucfirst($model));
+    // }
 
-    protected function getAllCrudConfigModels(): array
-    {
-        return array_filter($this->getCrudConfiguration('models', []), fn ($model) => is_array($model) && Arr::isAssoc($model));
-    }
-
-
-    protected function checkIfCrudHasAlreadyBeenDoneForModel(string $model): bool
-    {
-        return class_exists($this->getModelClass($model));
-    }
-
-    protected function getModelsFolderWithSubfolder(string $model, string $separator = '/'): string
-    {
-        $model = $this->getCrudModel($model);
-
-        $subfolder = Str::ucfirst(Arr::get($model, 'subfolder', ''));
-
-        if (empty($subfolder)) {
-            return Str::ucfirst($this->getCrudGlobalConfiguration('folder', 'Models'));
-        }
-
-        return sprintf("%s%s%s", Str::ucfirst($this->getCrudGlobalConfiguration('folder', 'Models')), $separator, $subfolder);
-    }
+    // protected function getAllCrudConfigModels(): array
+    // {
+    //     return array_filter($this->getCrudConfiguration('models', []), fn ($model) => is_array($model) && Arr::isAssoc($model));
+    // }
 
 
-    protected function getModelsFolderWithSubfolderNamespace(string $model, string $separator = '/'): string
-    {
-        return $this->getModelsFolderWithSubfolder($model, $separator);
-    }
+    // protected function checkIfCrudHasAlreadyBeenDoneForModel(string $model): bool
+    // {
+    //     return class_exists($this->getModelClass($model));
+    // }
+
+    // protected function getModelsFolderWithSubfolder(string $model, string $separator = '/'): string
+    // {
+    //     $model = $this->getCrudModel($model);
+
+    //     $subfolder = Str::ucfirst(Arr::get($model, 'subfolder', ''));
+
+    //     if (empty($subfolder)) {
+    //         return Str::ucfirst($this->getCrudGlobalConfiguration('folder', 'Models'));
+    //     }
+
+    //     return sprintf("%s%s%s", Str::ucfirst($this->getCrudGlobalConfiguration('folder', 'Models')), $separator, $subfolder);
+    // }
 
 
-    protected function getUnusedCrudConfigModels(): array
-    {
-        $models = [];
-
-        foreach ($this->getAllCrudConfigModels() as $name => $model) {
-            if ($this->checkIfCrudHasAlreadyBeenDoneForModel($name)) {
-                continue;
-            }
-
-            array_push($models, $name);
-        }
-
-        return $models;
-    }
+    // protected function getModelsFolderWithSubfolderNamespace(string $model, string $separator = '/'): string
+    // {
+    //     return $this->getModelsFolderWithSubfolder($model, $separator);
+    // }
 
 
-    protected function getModel(): ?string
-    {
-        $model = Str::ucfirst($this->argument('model'));
+    // protected function getUnusedCrudConfigModels(): array
+    // {
+    //     $models = [];
 
-        if (empty($model)) {
-            $models = $this->getUnusedCrudConfigModels();
+    //     foreach ($this->getAllCrudConfigModels() as $name => $model) {
+    //         if ($this->checkIfCrudHasAlreadyBeenDoneForModel($name)) {
+    //             continue;
+    //         }
 
-            if (empty($models)) {
-                $this->triggerError("You must defined a model in configuration yaml file");
-            }
+    //         array_push($models, $name);
+    //     }
 
-            $model = $this->choice('Which model will be used ?', $models, array_key_first($models));
-        }
+    //     return $models;
+    // }
 
-        return $model;
-    }
 
-    protected function getMigrate(): bool
-    {
-        return $this->option('migrate') == 'true';
-    }
+    // protected function getModel(): ?string
+    // {
+    //     $model = Str::ucfirst($this->argument('model'));
 
-    protected function runMigration(bool $migrate): void
-    {
-        if (!$migrate) {
-            return;
-        }
+    //     if (empty($model)) {
+    //         $models = $this->getUnusedCrudConfigModels();
 
-        $this->call('migrate');
-    }
+    //         if (empty($models)) {
+    //             $this->triggerError("You must defined a model in configuration yaml file");
+    //         }
 
-    protected function runProcess(string $command)
-    {
-        $process = new Process(explode(' ', $command), null, null, null, 3600);
+    //         $model = $this->choice('Which model will be used ?', $models, array_key_first($models));
+    //     }
 
-        $process->run(function ($type, $buffer) {
-            // $this->getOutput()->write('> '.$buffer);
-        });
+    //     return $model;
+    // }
 
-        if (!$process->isSuccessful()) {
-            throw new RuntimeException($process->getErrorOutput());
-        }
-    }
+    // protected function getMigrate(): bool
+    // {
+    //     return $this->option('migrate') == 'true';
+    // }
+
+    // protected function runMigration(bool $migrate): void
+    // {
+    //     if (!$migrate) {
+    //         return;
+    //     }
+
+    //     $this->call('migrate');
+    // }
+
+   
 }

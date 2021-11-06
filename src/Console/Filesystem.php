@@ -3,9 +3,8 @@
 namespace Guysolamour\Administrable\Console;
 
 use Illuminate\Support\Arr;
-use Illuminate\Filesystem\Filesystem as Fsystem;
 
-class Filesystem extends Fsystem
+class Filesystem extends \Illuminate\Filesystem\Filesystem
 {
     /** @var array  */
     public $data_map = [];

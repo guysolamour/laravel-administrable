@@ -330,11 +330,6 @@ class AdminInstallCommand extends BaseCommand
         $auth_config_path
         );
 
-        // publish default config file
-        $this->call('vendor:publish', [
-            '--provider' => 'Guysolamour\Administrable\ServiceProvider',
-            '--tag'      => 'administrable-config',
-        ]);
 
 
         // Settings config
@@ -762,10 +757,9 @@ class AdminInstallCommand extends BaseCommand
     private function loadRoutes() :string
     {
         $routes_path = base_path('routes/web/');
-        $prefix = $this->getRoutesStubsFolderPrefix();
 
         // Front routes;
-        $route_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath("/routes/web/front/${prefix}"), false);
+        $route_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath("/routes/web/front"), false);
 
 
         $this->filesystem->compliedAndWriteFile(
@@ -774,7 +768,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
         // Back routes;
-        $route_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath("/routes/web/back/${prefix}"), false);
+        $route_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath("/routes/web/back"), false);
 
 
         $this->filesystem->compliedAndWriteFile(
@@ -1318,6 +1312,11 @@ class AdminInstallCommand extends BaseCommand
 
     private function updateConfigFile() :void
     {
+        $this->call('vendor:publish', [
+            '--provider' => 'Guysolamour\Administrable\ServiceProvider',
+            '--tag'      => 'administrable-config',
+        ]);
+
         $this->updateThemeConfig();
         $this->updateGuardConfig();
         $this->updateModelsFolderConfig();
@@ -1391,31 +1390,15 @@ class AdminInstallCommand extends BaseCommand
 
     private function getConfigFilePath() :string
     {
-        if ($this->filesystem->exists(config_path('administrable.php'))) {
-            $config_path = config_path('administrable.php');
-        } else {
-            $config_path = $this->getPackagePath('/config/administrable.php');
-        }
-
-        return $config_path;
+        return config_path('administrable.php');
     }
 
     private function loadCrudConfiguration() :string
     {
-        $path = $this->getConfigurationYamlPath();
-
-        $stub = $this->getTemplatePath('/crud/configuration/administrable.stub');
-
-        $complied = $this->filesystem->compliedFile($stub);
-
-        $this->filesystem->writeFile(
-            $path,
-            $complied
-        );
-
+        $this->callSilent('administrable:crud:install');
         $this->updateConfigFile();
 
-        return $path;
+        return base_path('administrable.yaml');
     }
 
     private function init() :void

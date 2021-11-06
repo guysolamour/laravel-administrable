@@ -1,2 +1,0 @@
-<a class="btn btn-float btn-sm btn-info" href="{{ route('{{editRoute}}', ${{singularSlug}}) }}" title="" data-provide="tooltip" data-placement="left"
-            data-original-title="Editer"><i class="ti-pencil"></i> </a>

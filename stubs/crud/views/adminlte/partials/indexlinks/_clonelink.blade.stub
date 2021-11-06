@@ -1,4 +1,0 @@
-   <a href="{{ route('{{backLowerNamespace}}.model.clone', get_clone_model_params(${{singularSlug}})) }}"
-                                                                    class="btn btn-secondary" data-toggle="tooltip"
-                                                                    data-placement="top" title="Cloner"><i
-                                                                        class="fas fa-clone"></i></a>

@@ -1,4 +1,0 @@
-<a href="{{ route('{{createRoute}}') }}" class="btn  btn-primary"> <i
-                                class="fa fa-plus"></i> Ajouter</a>
-
-

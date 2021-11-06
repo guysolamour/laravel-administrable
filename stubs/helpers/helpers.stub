@@ -6,7 +6,7 @@ if (!function_exists('get_month')) {
     {
         $date_fr = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet',
             'Août','Septembre','Octobre','Novembre','Décembre'];
-            
+
         return !$longFormat ? \Illuminate\Support\Str::limit($date_fr[$date->format('n') - 1],3,'') : $date_fr[$date->format('n') - 1];
     }
 }
@@ -48,17 +48,6 @@ if (!function_exists('get_full_date')) {
     }
 }
 
-if (!function_exists('format_price')) {
-    /**
-     * @param string $price
-     * @param string $suffix
-     * @return string
-     */
-    function format_price($price, string $suffix = "FCFA")
-    {
-        return number_format($price, 0, ',', ' ') . " " . $suffix;
-    }
-}
 
 if (!function_exists('format_date')) {
     /**

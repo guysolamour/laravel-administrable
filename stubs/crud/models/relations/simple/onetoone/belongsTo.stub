@@ -1,8 +1,0 @@
-    // {{relatedSingularSlug}} relation
-    public function {{relatedSingularSlug}}()
-    {
-      return $this->belongsTo({{relatedSingularClass}}::class);
-    }
-    // end {{relatedSingularSlug}} relation
-
-

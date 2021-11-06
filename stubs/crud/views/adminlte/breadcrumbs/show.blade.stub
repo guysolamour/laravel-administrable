@@ -1,5 +1,0 @@
-  <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('{{guard}}.dashboard') }}">Tableau de bord</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('{{indexRoute}}') }}">{{translateModelUcfirst}}</a></li>
-                            <li class="breadcrumb-item active">{{ ${{singularSlug}}->{{breadcrumb}} }}</li>
-                        </ol>

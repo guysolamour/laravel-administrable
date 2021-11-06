@@ -3,11 +3,14 @@
 namespace Guysolamour\Administrable\Console;
 
 
+use RuntimeException;
 use Illuminate\Support\Str;
+use Symfony\Component\Process\Process;
 
 
 trait CommandTrait
 {
+
     public function getAppNamespace(): string
     {
         return get_app_namespace();
@@ -43,6 +46,7 @@ trait CommandTrait
     {
         return base_path('administrable.yaml');
     }
+    
 
     public function displayTitle(string $title): void
     {
@@ -75,7 +79,7 @@ trait CommandTrait
 
     public function getTheme(): string
     {
-        return config('administrable.theme', 'adminlte');
+        return config('administrable.theme', 'themekit');
     }
 
     public function isAdminLteTheme(): bool
@@ -88,11 +92,16 @@ trait CommandTrait
         return $this->isTheme('tabler');
     }
 
-    public function getRoutesStubsFolderPrefix(): string
+    protected function runProcess(string $command)
     {
-        $prefix = $this->route_controller_callable_syntax ?? config('administrable.route_controller_callable_syntax', true);
+        $process = new Process(explode(' ', $command), null, null, null, 3600);
 
-        return $prefix ? 'new' :  'old';
+        $process->run(function ($type, $buffer) {
+            // $this->getOutput()->write('> '.$buffer);
+        });
+
+        if (!$process->isSuccessful()) {
+            throw new RuntimeException($process->getErrorOutput());
+        }
     }
-
 }

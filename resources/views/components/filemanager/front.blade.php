@@ -2,5 +2,5 @@
     'collection'        => config('administrable.media.collections.front.label'),
     'model'             =>  $model,
     'label'             =>  $label,
-    'type'              =>  $type ?? null
+    'type'              =>  $file_type ?? 'image'
 ])

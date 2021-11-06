@@ -1,6 +1,0 @@
-<a class="nav-link hover-danger" href="{{ route('{{deleteRoute}}', ${{singularSlug}}) }}" data-provide="tooltip" title="Supprimer"
-                                data-method="delete"
-                                data-confirm="Etes vous sûr de bien vouloir procéder à la suppression ?"
-                                data-original-title="Supprimer"><i class="ti-close"></i></a>
-
-

@@ -4,26 +4,19 @@ namespace Guysolamour\Administrable;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Validator;
-use Guysolamour\Administrable\Services\Shop\Shop;
 use Illuminate\Console\Scheduling\Schedule;
 use Guysolamour\Administrable\Console\DeployCommand;
-use Guysolamour\Administrable\Models\Extensions\Shop\Cart;
 use Guysolamour\Administrable\View\Components\Filemanager;
-use Guysolamour\Administrable\Console\Crud\MakeCrudCommand;
-use Guysolamour\Administrable\Console\Crud\AppendCrudCommand;
-use Guysolamour\Administrable\Jobs\PublishProgrammaticalyPost;
 use Guysolamour\Administrable\Jobs\RemoveOrphanTemporaryFiles;
-use Guysolamour\Administrable\Console\Crud\RollbackCrudCommand;
 use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
 use Guysolamour\Administrable\Console\Administrable\CreateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
-use Guysolamour\Administrable\Console\Extension\Add\AddExtensionCommand;
+use Guysolamour\Administrable\Console\Extension\AddExtensionCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -33,10 +26,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->app->bind('administrable-helper', fn () => new Helper);
 
-        if (config('administrable.extensions.shop.activate')){
-            $this->app->bind('administrable-cart', fn () => new Cart);
-            $this->app->bind(self::PACKAGE_NAME . '-shop', fn () => new Shop);
-        }
 
         $this->scheduleCommands();
 
@@ -81,7 +70,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         Blade::include('administrable::filemanager.show', 'filemanagerShow');
         Blade::include('administrable::filemanager.guardavatar', 'guardavatar');
 
-        $this->includeAdExtensionViewsAliases();
 
         // View aliases
         Blade::include('administrable::helpers.includeback', 'includeback');
@@ -99,34 +87,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->loadValidationRules();
 
-        $this->registerEvents();
-
         $this->loadDkimMailServiceProvider();
     }
 
-    private function registerEvents() :void
-    {
-        if (config('administrable.extensions.shop.activate')){
-            Event::listen(
-                \Guysolamour\Administrable\Events\Shop\ConfirmCommandPayment::class,
-                [\Guysolamour\Administrable\Listeners\Extensions\Shop\CreateCommandOrder::class, 'handle']
-            );
-            Event::listen(
-                \Guysolamour\Administrable\Events\Shop\ConfirmCommandPayment::class,
-                [\Guysolamour\Administrable\Listeners\Extensions\Shop\IncrementProductSoldCount::class, 'handle']
-            );
-        }
-    }
-
-    private function includeAdExtensionViewsAliases() :void
-    {
-        if (!config('administrable.extensions.ad.activate')){
-            return;
-        }
-
-        Blade::include('administrable::front.extensions.ad._ad', 'ad');
-        Blade::include('administrable::front.extensions.ad._adgroup', 'adgroup');
-    }
 
     private function scheduleCommands() :void
     {
@@ -144,10 +107,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
             if (config('administrable.schedule.command.telescope')){
                 $schedule->command('telescope:prune')->daily();
-            }
-
-            if (Extension::state('blog')) {
-                $schedule->job(new PublishProgrammaticalyPost)->hourly();
             }
 
             $schedule->job(new RemoveOrphanTemporaryFiles)->daily();
@@ -187,9 +146,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 AdminInstallCommand::class,
-                MakeCrudCommand::class,
-                AppendCrudCommand::class,
-                RollbackCrudCommand::class,
                 CreateGuardCommand::class,
                 UpdateGuardCommand::class,
                 DeployCommand::class,
@@ -203,12 +159,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $loader = AliasLoader::getInstance();
             $loader->alias('AdminModule', Module::class);
 
-            if (config('administrable.extensions.shop.activate')){
-                $loader->alias('Cart', \Guysolamour\Administrable\Facades\Cart::class);
-                $loader->alias('Shop', \Guysolamour\Administrable\Facades\Shop::class);
-            }
-
-            $loader->alias('AdminExtension', Extension::class);
         });
 
     }

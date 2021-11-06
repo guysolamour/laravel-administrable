@@ -1,4 +1,0 @@
-<a href="{{ route('{{createRoute}}') }}" class="btn btn-sm btn-label btn-round btn-primary"><label><i
-                                    class="ti-plus"></i></label> Ajouter</a>
-
-

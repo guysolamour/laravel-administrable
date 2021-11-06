@@ -4,12 +4,11 @@ namespace Guysolamour\Administrable\Console\Extension;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Guysolamour\Administrable\Console\YamlTrait;
 
 
 trait ExtensionTrait
 {
-    use YamlTrait;
+
 
     public function getExtensionConfiguration(?string $key = null, $default = null)
     {
@@ -81,7 +80,7 @@ trait ExtensionTrait
             return;
         }
 
-        $path = database_path("{$this->data_map['{{extensionsFolder}}']}/");
+        $path = database_path("{$this->data_map['{{extensionsFolder}}']}/{$this->data_map['{{extensionSingularSlug}}']}/");
         $signature = now();
 
         foreach ($stubs as $stub) {

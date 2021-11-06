@@ -1,5 +1,0 @@
- <div class="nav-item">
-                    <a href="{{ back_route('{{extensionsFolder}}.{{extensionSingularSlug}}.{{extensionSingularSlug}}.index') }}">
-                        <i class="fa fa-comments-alt"></i><span>{{extensionLabel}}</span>
-                    </a>
-                </div>

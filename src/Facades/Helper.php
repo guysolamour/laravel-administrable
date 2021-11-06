@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Guysolamour\Administrable\Helper getTemplatePath()
  * @method static \Guysolamour\Administrable\Helper configuration(?string $attribute = null, string $default = null)
  * @method static \Guysolamour\Administrable\Helper getSettings(string $class_name, ?string $attribute = null, $default = null)
- * @method static \Guysolamour\Administrable\Helper shopSettings(?string $attribute = null, string $default = null)
  * @method static \Guysolamour\Administrable\Helper getMetaPage(string $name)
  * @method static \Guysolamour\Administrable\Helper getMetaTag(string $page_name, string $code, ?string $key = null)
  * @method static \Guysolamour\Administrable\Helper getMetaType(int $id)

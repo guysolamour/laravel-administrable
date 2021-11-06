@@ -79,7 +79,7 @@ abstract class BaseExtension
 
     protected function getExtensionStubsPath(string $path = '') :string
     {
-        return $this->getExtensionsStubsBasePath($this->name . '/' . $path);
+        return $this->getExtensionsStubsBasePath('stubs' . DIRECTORY_SEPARATOR . $path);
     }
 
     /**
@@ -107,7 +107,7 @@ abstract class BaseExtension
     public function getParsedName(?string $name = null): array
     {
         return array_merge($this->parseName($name), [
-            '{{modelsFolder}}'          => $this->getCrudModelsFolder(),
+            '{{modelsFolder}}'          => config('administrable.models_folder', 'Models'),
             '{{extensionName}}'         => Arr::get($this->getExtension(), 'name', $this->name),
             '{{extensionLabel}}'        => Str::ucfirst(Arr::get($this->getExtension(), 'label', $this->name)),
             '{{extensionsFolder}}'      => $this->getSubfolder(),

@@ -174,13 +174,6 @@ if (!function_exists('get_settings')) {
     }
 }
 
-if (!function_exists('shop_settings')) {
-    function shop_settings(?string $attribute = null, string $default = null)
-    {
-        return Helper::getSettings(config('administrable.extensions.shop.models.setting'), $attribute, $default);
-    }
-}
-
 
 if (!function_exists('translate_model_field')) {
     /**

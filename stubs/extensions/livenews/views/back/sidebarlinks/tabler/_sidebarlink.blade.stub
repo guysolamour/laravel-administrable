@@ -1,5 +1,0 @@
-                            <li>
-                                <a class="dropdown-item" href="{{ back_route('{{extensionsFolder}}.{{extensionPluralSlug}}.{{extensionPluralSlug}}.index') }}">
-                                    {{extensionLabel}}
-                                </a>
-                            </li>
