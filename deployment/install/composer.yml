@@ -1,9 +1,0 @@
----
-- name: Install composer
-  shell: |
-     php -r "readfile('https://getcomposer.org/installer');" | php
-     php composer-setup.php
-     php -r "unlink('composer-setup.php');"
-     mv composer.phar /usr/local/bin/composer
-  args:
-     creates: /usr/local/bin/composer

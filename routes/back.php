@@ -156,7 +156,6 @@ Route::prefix(config('administrable.auth_prefix_path'))
             | FILEMANAGER
             |--------------------------------------------------------------------------
             */
-
             Route::post('temporarymedia/remote', [config("administrable.modules.filemanager.back.temporary_controller"), 'remote']);
             Route::post('temporarymedia/option', [config("administrable.modules.filemanager.back.temporary_controller"), 'getOption']);
             Route::post('temporarymedia/order', [config("administrable.modules.filemanager.back.temporary_controller"), 'order']);
@@ -187,8 +186,6 @@ Route::prefix(config('administrable.auth_prefix_path'))
             Route::get('media/{model}/{id}/tinymce', [config("administrable.modules.filemanager.back.controller"), 'tinymce'])->name('back.media.tinymce');
             Route::delete('media/seo/{model}/{id}', [config("administrable.modules.filemanager.back.controller"), 'destroySeo'])->name('back.media.seodestroy');
             Route::delete('media/{model}/{id}/{collection}/all', [config("administrable.modules.filemanager.back.controller"), 'destroyAll'])->name('back.media.destroy.all');
-
-       
     }
 );
 

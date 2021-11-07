@@ -8,15 +8,14 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
-use Guysolamour\Administrable\Console\DeployCommand;
 use Guysolamour\Administrable\View\Components\Filemanager;
 use Guysolamour\Administrable\Jobs\RemoveOrphanTemporaryFiles;
 use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
+use Guysolamour\Administrable\Console\Extension\AddExtensionCommand;
 use Guysolamour\Administrable\Console\Administrable\CreateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
-use Guysolamour\Administrable\Console\Extension\AddExtensionCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -70,12 +69,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         Blade::include('administrable::filemanager.show', 'filemanagerShow');
         Blade::include('administrable::filemanager.guardavatar', 'guardavatar');
 
-
         // View aliases
         Blade::include('administrable::helpers.includeback', 'includeback');
         Blade::include('administrable::helpers.includefront', 'includefront');
         Blade::include('administrable::helpers.deleteall', 'deleteall');
-
 
         $this->loadPolicies([
             config('administrable.modules.comment.model') => config('administrable.modules.comment.front.policy'),
@@ -148,7 +145,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 AdminInstallCommand::class,
                 CreateGuardCommand::class,
                 UpdateGuardCommand::class,
-                DeployCommand::class,
                 StorageDumpCommand::class,
                 NotPaidCommand::class,
                 AddExtensionCommand::class,

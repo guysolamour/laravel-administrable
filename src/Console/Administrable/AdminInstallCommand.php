@@ -254,7 +254,6 @@ class AdminInstallCommand extends BaseCommand
             $search = '"require-dev": {',
             <<<TEXT
             $search
-                    "garygreen/pretty-routes": "^1.0",
                     "barryvdh/laravel-debugbar": "^3.3",
                     "barryvdh/laravel-ide-helper": "^2.7",
             TEXT,

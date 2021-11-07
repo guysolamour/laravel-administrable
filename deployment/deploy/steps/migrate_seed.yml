@@ -1,5 +1,0 @@
----
-- name: Migrate database
-  shell: php artisan migrate --force
-  args:
-    chdir: "{{ ansistrano_release_path.stdout }}"
