@@ -84,7 +84,6 @@ class AdminInstallCommand extends BaseCommand
             'name'    => $this->guard,
         ]);
 
-
         $this->call("ui", [
             'type'   => $this->preset,
             '--auth' => true,
@@ -151,36 +150,30 @@ class AdminInstallCommand extends BaseCommand
         $database_seeder_path = $this->registerSeed();
         $this->info('Seed registered in ' . $database_seeder_path);
 
-
         // Controllers
         $this->info(PHP_EOL . 'Creating Controllers...');
         $controllers_path = $this->loadControllers();
         $this->info('Controllers created at ' . $controllers_path);
-
 
         // Middleware
         $this->info(PHP_EOL . 'Creating Middleware...');
         $middleware_path = $this->loadMiddleware();
         $this->info('Middleware created at ' . $middleware_path);
 
-
          // Route Middleware
         $this->info(PHP_EOL . 'Registering route middleware...');
         $kernel_path = $this->registerRouteMiddleware();
         $this->info('Route middleware registered in ' . $kernel_path);
-
 
         // Policies
         $this->info(PHP_EOL . 'Creating Policies...');
         $policies_path = $this->loadPolicies();
         $this->info('Policies created at ' . $policies_path);
 
-
         // Forms
         $this->info(PHP_EOL . 'Creating Forms...');
         $forms_path = $this->loadForms();
         $this->info('Forms created at ' . $forms_path);
-
 
         // routes
         $this->info(PHP_EOL . 'Creating Routes...');
@@ -241,8 +234,6 @@ class AdminInstallCommand extends BaseCommand
                 $this->info(PHP_EOL . 'Can not seed if migrate option is false. You have to run migrations and seed manually.');
             }
         }
-
-
     }
 
     private function loadDebugbar() :void
@@ -328,7 +319,6 @@ class AdminInstallCommand extends BaseCommand
         $this->getAppNamespace() . "\\" . $this->models_folder_name,
         $auth_config_path
         );
-
 
 
         // Settings config
@@ -680,7 +670,6 @@ class AdminInstallCommand extends BaseCommand
                 $aside_path
             );
         }
-
 
         // Notifications link in header
         if ($this->isAdminLteTheme() || $this->isTablerTheme()){

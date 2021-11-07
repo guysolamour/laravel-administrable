@@ -3,9 +3,8 @@
 namespace Guysolamour\Administrable\Console\Administrable;
 
 use Illuminate\Support\Str;
-use Guysolamour\Administrable\Console\BaseCommand;
-use Guysolamour\Administrable\Console\YamlTrait;
 use Illuminate\Database\Eloquent\Model;
+use Guysolamour\Administrable\Console\BaseCommand;
 
 class CreateGuardCommand extends BaseCommand
 {

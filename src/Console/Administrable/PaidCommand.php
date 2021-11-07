@@ -4,15 +4,16 @@ namespace Guysolamour\Administrable\Console\Administrable;
 
 use Guysolamour\Administrable\Console\BaseCommand;
 
-class NotPaidCommand extends BaseCommand
+class PaidCommand extends BaseCommand
 {
+
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = "administrable:notpaid
+    protected $signature = "administrable:paid
                             {--m|message= : message to display }
                             ";
 
@@ -21,7 +22,8 @@ class NotPaidCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'Put website in not paiment mode and redirect all requests to notpaid view';
+    protected $description = 'Remove website in not paid mode';
+
 
 
     /**
@@ -31,12 +33,12 @@ class NotPaidCommand extends BaseCommand
      */
     public function handle()
     {
-        $this->info('Putting application in not paid mode');
+        $this->info('Removing application in not paid mode');
 
         $this->saveMessage();
         $this->savePayOption();
 
-        $this->info('Application put in not paid mode');
+        $this->info('Application removed in not paid mode');
     }
 
     private function saveMessage(): void
@@ -52,6 +54,6 @@ class NotPaidCommand extends BaseCommand
 
     private  function savePayOption(): void
     {
-        option_edit('app_paid', '0');
+        option_edit('app_paid', '1');
     }
 }

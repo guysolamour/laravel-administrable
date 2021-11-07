@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
 use Guysolamour\Administrable\View\Components\Filemanager;
 use Guysolamour\Administrable\Jobs\RemoveOrphanTemporaryFiles;
+use Guysolamour\Administrable\Console\Administrable\PaidCommand;
 use Guysolamour\Administrable\Console\Storage\StorageDumpCommand;
 use Guysolamour\Administrable\Console\Administrable\NotPaidCommand;
 use Guysolamour\Administrable\Console\Extension\AddExtensionCommand;
@@ -24,7 +25,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $this->app->bind('administrable-helper', fn () => new Helper);
-
 
         $this->scheduleCommands();
 
@@ -147,6 +147,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 UpdateGuardCommand::class,
                 StorageDumpCommand::class,
                 NotPaidCommand::class,
+                PaidCommand::class,
                 AddExtensionCommand::class,
             ]);
         }
@@ -156,7 +157,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $loader->alias('AdminModule', Module::class);
 
         });
-
     }
 
     private function loadDkimMailServiceProvider(): void
@@ -182,7 +182,5 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         return  __DIR__ . $path;
     }
-
-
 }
 

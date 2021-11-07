@@ -103,20 +103,7 @@
                                 Administrateurs</a>
                         <a class="dropdown-item" href="{{ back_route('configuration.edit') }}"><i class="ik ik-settings dropdown-icon"></i>
                             Configuration</a>
-                        @if (Route::has(back_route_path('extensions.mailbox.mailbox.index')))
-                        @php
-                            $unreadMailboxes = config('administrable-mailbox.models.mailbox')::unread()->get()
-                        @endphp
-                        <a class="dropdown-item" href="{{ back_route('extensions.mailbox.mailbox.index') }}">
-                            @if($unreadMailboxes->count())
-                            <span class="float-right">
-                                <span class="badge badge-primary">{{ $unreadMailboxes->count() }}</span>
-                            </span>
-                            @endif
-                            <i class="ik ik-mail dropdown-icon"></i>
-                            Messagerie
-                        </a>
-                        @endif
+
                         <a class="dropdown-item" href="{{ route('{{singularSlug}}.logout') }}" onclick="event.preventDefault();document.getElementById('{{singularSlug}}-logout-form').submit();"><i class="ik ik-power dropdown-icon"></i>
                             Déconnexion</a>
                         <form id="{{singularSlug}}-logout-form" action="{{ route('{{singularSlug}}.logout') }}" method="POST"
@@ -168,7 +155,7 @@
 
             @if (Route::has(back_route_path('extensions.testimonial.testimonial.index')))
             <div class="app-item">
-              <a href="{{ back_route('extensions.testimonial.testimonial.index') }}"><i class="fa fa-comments-alt"></i><span>Lang::get('administrable-testimonial::translations.label')</span></a>
+              <a href="{{ back_route('extensions.testimonial.testimonial.index') }}"><i class="fa fa-comments-alt"></i><span>{{ Lang::get('administrable-testimonial::translations.label') }}</span></a>
             </div>
             @endif
 
