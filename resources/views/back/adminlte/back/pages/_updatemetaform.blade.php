@@ -1,9 +1,11 @@
 <!-- Modal -->
-
+@php
+    $componentName = 'editpage' . Str::random(10) . now()->format('dmY');
+@endphp
 <div class="modal fade" id="editMetaModal{{ $meta->getKey() }}" tabindex="-1" role="dialog"
     aria-labelledby="addPageMetaDataModalLabel" aria-hidden="true">
 
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div  x-data="{{ $componentName }}" class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addPageMetaDataModalLabel">{{ Lang::get('administrable::messages.default.edition') }}</h5>
@@ -11,7 +13,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ back_route('pagemeta.update', [$page, $meta]) }}" method="post" name="addPageMeta"
+            <form @submit='handleSubmit' action="{{ back_route('pagemeta.update', [$page, $meta]) }}" method="post" name="addPageMeta"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body" style="max-height: 34.375rem">
@@ -77,43 +79,49 @@
                         @endif
                     </div>
 
-                    <div class="form-group" style="display: {{ $meta->isText() ? 'block' : 'none' }}">
+                    <div class="form-group" x-show="isTextType">
                         <label for="content{{ $page->id }}">{{ Lang::get('administrable::messages.view.pagemeta.content') }} </label>
                         <textarea name="textcontent" id="content{{ $page->id }}" class="form-control"
                             data-tinymce>@if($meta->isText()){{ $meta->content }}@endif</textarea>
                     </div>
 
-                    <div class="form-group" style="display: {{ $meta->isSimpleText() ? 'block' : 'none' }}">
+                    <div class="form-group" x-show="isSimpleTextType">
                         <label for="simpletextcontent{{ $page->id }}">{{ Lang::get('administrable::messages.view.pagemeta.content') }} </label>
                         <textarea name="simpletextcontent" id="simpletextcontent{{ $page->id }}"
                             class="form-control">@if($meta->isSimpleText()){{ $meta->content }}@endif</textarea>
                     </div>
 
 
-                    <div class="form-group" style="display: {{ $meta->isImage() ? 'block' : 'none' }}">
+                    <div class="form-group" x-show="isImageType">
                         <label for="imageField">{{ Lang::get('administrable::messages.view.pagemeta.chooseimage') }}</label>
-                        <input type="file" accept="image/*" class="form-control" id="imageField" name="imagecontent">
+                        <input @change='handleImage' type="file" accept="image/*" class="form-control" id="imageField" name="imagecontent">
                         <input type="hidden" name="imagecontent" value="{{ $meta->content }}">
                     </div>
-                    <div class="form-group" style="display: {{ $meta->isAttachedFile() ? 'block' : 'none' }}">
+
+                    <div class="form-group" x-show="isVideoType">
+                        <label for="videoField">{{ Lang::get('administrable::messages.view.pagemeta.videourl') }}</label>
+                        <input x-model='video_url' type="url" class="form-control" id="videoField" name="videocontent"
+                            placeholder="https://youtube.com?v=74df8g585" value="{{ $meta->video_url }}">
+                    </div>
+
+                    <div class="form-group" x-show="isAttachedType">
                         <label for="attachedField">{{ Lang::get('administrable::messages.view.pagemeta.otherfiles') }}</label>
                         <input type="file" class="form-control" id="attachedField" name="attachedfilecontent">
                         <input type="hidden" name="videocontent" value="{{ $meta->content }}">
+                        @if($meta->isAttachedFile())
+                        <a class="badge badge-primary pt-2" href="{{ $meta?->attachedfile?->getUrl() }}" title="{{ $meta->attachedfile->getUrl() }}" target="_blank">Ouvrir le fichier dans un nouvel onglet</a>
+                        @endif
                     </div>
-                    <div class="form-group" style="display: {{ $meta->isVideo() ? 'block' : 'none' }}">
-                        <label for="videoField">{{ Lang::get('administrable::messages.view.pagemeta.videourl') }}</label>
-                        <input type="url" class="form-control" id="videoField" name="videocontent"
-                            placeholder="https://youtube.com?v=74df8g585" value="{{ $meta->video_url }}">
+
+                    <div x-show='isImageType' class="thumbnail text-center" >
+                        <img :src="image_url" alt="" class="img-fluid img-thumbnail" style="height: 145px; overflow: scroll;">
                     </div>
-                    <div class="thumbnail">
-                        <img src="{{ $meta->isImage() ? $meta->image_url : '' }}" class="img-fluid img-thumbnail"
-                            style="height: 145px; overflow: scroll; display: {{ $meta->isImage() ? 'block' : 'none' }}"">
-                            <div class=" embed-responsive embed-responsive-16by9"
-                            style="display: {{ $meta->isVideo() ? 'block' : 'none' }}"">
-                                <iframe class=" embed-responsive-item"
-                            src="{{ $meta->isVideo() ? $meta->video_url : '' }}" allowfullscreen></iframe>
+
+                    <div x-show='isVideoType' class="thumbnail">
+                        <div class="embed-responsive embed-responsive-16by9" style="height: 200px;">
+                            <iframe class="embed-responsive-item" :src="video_url" allowfullscreen></iframe>
+                        </div>
                     </div>
-                </div>
 
         </div>
         <div class="modal-footer btn-group">
@@ -127,8 +135,89 @@
 </div>
 @push('css')
 <style>
-    .tox .tox-tinymce {
+    [data-tinymce] {
         height: 270px !important;
     }
 </style>
+@endpush
+@push('js')
+<script>
+     document.addEventListener('alpine:init', () => {
+        Alpine.data('{{ $componentName }}', () => ({
+            image_url: null,
+            video_url: null,
+            meta: @json($meta),
+            meta_types: @json(AdminModule::model('pagemeta')::TYPES),
+
+            init(){
+                this.$nextTick(() => {
+                    if (this.isImageType())
+                        this.image_url = this.meta.image_url
+
+                    if (this.isVideoType()){
+                        this.video_url = this.meta.video_url
+                    }
+                })
+            },
+            handleSubmit(event){
+                if (this.isImageType()){
+                    if (!this.image_url){
+                        alert("Ce type d'image n'est pas autorisé.")
+                        event.preventDefault();
+                    }
+                }
+
+                if (this.isVideoType()){
+                    if (!this.video_url){
+                        alert("Ce type de vidéo n'est pas autorisé.")
+                        event.preventDefault();
+                    }
+                }
+
+            },
+            handleImage(event){
+                const reader = new FileReader()
+                const image = event.target.files[0]
+
+                if (!this.validateFile(image)) {
+                    return
+                }
+
+                reader.readAsDataURL(image)
+
+                reader.onload = (event) => {
+                    this.image_url = event.target.result
+                }
+            },
+            validateFile(image) {
+                const ext = image.name.substring(image.name.lastIndexOf('.') + 1).toLowerCase()
+
+                if (['png', 'jpg', 'gif', 'jpeg', 'svg'].includes(ext)) {
+                    return true
+                } else {
+                    alert("Erreur lors du traitement de l'image `" + image.name + '`. Veuillez choisir une image de type (jpg, jpeg, png,svg).',)
+                    return false
+                }
+            },
+            isTextType(){
+                return this.isType('text')
+            },
+            isSimpleTextType(){
+                return this.isType('simpletext')
+            },
+            isImageType(){
+                return this.isType('image')
+            },
+            isVideoType(){
+                return this.isType('video')
+            },
+            isAttachedType(){
+                return this.isType('attachedfile')
+            },
+            isType(key){
+                 return this.meta.type == this.meta_types[key].value
+            },
+        }))
+    })
+</script>
 @endpush

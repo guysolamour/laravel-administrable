@@ -37,6 +37,13 @@ class PageMeta extends BaseModel implements HasMedia
      */
     protected $fillable = ['code', 'name', 'title', 'type', 'content', 'page_id', 'parent_id'];
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['image_url', 'video_url', 'image', 'attached_file_url'];
+
 
 
     /**

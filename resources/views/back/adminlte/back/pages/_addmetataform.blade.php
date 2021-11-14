@@ -1,3 +1,7 @@
+@php
+    $componentName = 'addpagemeta' . Str::random(10) . now()->format('dmY');
+@endphp
+
 @if(get_guard()->hasRole('super-' . config('administrable.guard'), config('administrable.guard')))
     @if(isset($group) && $group)
     <button class="btn btn-secondary" data-toggle="modal" title="{{ Lang::get('administrable::messages.view.pagemeta.addgroup') }}"
@@ -11,14 +15,15 @@
 
 <!-- Modal -->
 @if(isset($group) && $group)
-<div class="modal fade" id="addPageMetaDataModalGroup{{ $group->getKey() }}" tabindex="-1" role="dialog"
+
+<div  class="modal fade" id="addPageMetaDataModalGroup{{ $group->getKey() }}" tabindex="-1" role="dialog"
     aria-labelledby="addPageMetaDataModalLabel{{ $group->getKey() }}" aria-hidden="true">
     @else
-    <div class="modal fade" id="addPageMetaDataModal" tabindex="-1" role="dialog"
+    <div   class="modal fade" id="addPageMetaDataModal" tabindex="-1" role="dialog"
         aria-labelledby="addPageMetaDataModalLabel" aria-hidden="true">
         @endif
         >
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div x-data="{{ $componentName }}"  class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     @if(isset($group) && $group)
@@ -32,7 +37,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ back_route('pagemeta.store', $page) }}" method="post" name="addPageMeta"
+                <form @submit='handleSubmit'  action="{{ back_route('pagemeta.store', $page) }}" method="post" name="addPageMeta"
                     enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body" style="max-height: 34.375rem">
@@ -52,7 +57,7 @@
                                 <div class="form-group">
                                     <label for="code{{ $page->getKey() }}">{{ Lang::get('administrable::messages.view.pagemeta.code') }} <span class="text-red">*</span>
                                     </label>
-                                    <input type="text" class="form-control" name="code" id="code{{ $page->id }}">
+                                    <input x-model='code'  type="text"  class="form-control" name="code" id="code{{ $page->id }}">
                                 </div>
                             </div>
                             <div class="col">
@@ -71,11 +76,11 @@
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="">{{ Lang::get('administrable::messages.view.pagemeta.type') }}</label>
-                                    <select name="type" id="image_field{{ $page->id }}" class="custom-select">
-                                        @foreach(AdminModule::model('pagemeta')::TYPES as $type)
-                                        <option value="{{ $type['value'] }}">{{ $type['label'] }}</option>
-                                        @endforeach
+                                    <label for="image_field{{ $page->id }}">{{ Lang::get('administrable::messages.view.pagemeta.type') }}</label>
+                                    <select x-model.number='current_type'  name="type" id="image_field{{ $page->id }}" class="custom-select">
+                                        <template x-for="type in meta_types">
+                                            <option :value="type.value" x-text="type.label"></option>
+                                        </template>
                                     </select>
                                 </div>
                             </div>
@@ -102,38 +107,43 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="content{{ $page->getKey() }}">{{ Lang::get('administrable::messages.view.pagemeta.content') }} </label>
-                            <textarea name="textcontent" id="content{{ $page->getKey() }}" class="form-control"
-                                data-tinymce></textarea>
-                        </div>
-
-                        <div class="form-group" style="display: none">
-                            <label for="simpletextcontent{{ $page->getKey() }}">{{ Lang::get('administrable::messages.view.pagemeta.content') }} </label>
-                            <textarea name="simpletextcontent" id="simpletextcontent{{ $page->getKey() }}"
-                                class="form-control"></textarea>
-                        </div>
-                        <div class="form-group" style="display: none">
-                            <label for="imageField">{{ Lang::get('administrable::messages.view.pagemeta.chooseimage') }}</label>
-                            <input type="file" accept="image/*" class="form-control" id="imageField"
-                                name="imagecontent">
-                        </div>
-                        <div class="form-group" style="display: none">
-                            <label for="videoField">{{ Lang::get('administrable::messages.view.pagemeta.videourl') }}</label>
-                            <input type="url" class="form-control" id="videoField" name="videocontent"
-                                placeholder="https://youtube.com?v=74df8g585">
-                        </div>
-                        <div class="form-group" style="display: none">
-                            <label for="attachedField">{{ Lang::get('administrable::messages.view.pagemeta.otherfiles') }}</label>
-                            <input type="file" class="form-control" id="attachedField" name="attachedfilecontent">
-                        </div>
-
-                        <div class="thumbnail">
-                            <img src="" alt="" class="img-fluid img-thumbnail" style="height: 145px; overflow: scroll; display: none">
-                            <div class="embed-responsive embed-responsive-16by9" style="display: none">
-                                <iframe class="embed-responsive-item" src="" allowfullscreen></iframe>
+                       <div x-show="!isGroupType()">
+                            <div class="form-group" x-show="isTextType">
+                                <label for="content{{ $page->getKey() }}">{{ Lang::get('administrable::messages.view.pagemeta.content') }} </label>
+                                <textarea name="textcontent" id="content{{ $page->getKey() }}" class="form-control"
+                                    data-tinymce></textarea>
                             </div>
-                        </div>
+
+                            <div class="form-group" x-show="isSimpleTextType">
+                                <label for="simpletextcontent{{ $page->getKey() }}">{{ Lang::get('administrable::messages.view.pagemeta.content') }} </label>
+                                <textarea name="simpletextcontent" id="simpletextcontent{{ $page->getKey() }}"
+                                    class="form-control"></textarea>
+                            </div>
+                            <div class="form-group"  x-show="isImageType">
+                                <label for="imageField">{{ Lang::get('administrable::messages.view.pagemeta.chooseimage') }}</label>
+                                <input @change='handleImage' type="file" accept="image/*" class="form-control" id="imageField"
+                                    name="imagecontent">
+                            </div>
+                            <div class="form-group"  x-show="isVideoType">
+                                <label for="videoField">{{ Lang::get('administrable::messages.view.pagemeta.videourl') }}</label>
+                                <input x-model='video_url' type="url" class="form-control" id="videoField" name="videocontent"
+                                    placeholder="https://youtube.com?v=74df8g585">
+                            </div>
+                            <div class="form-group"  x-show="isAttachedType">
+                                <label for="attachedField">{{ Lang::get('administrable::messages.view.pagemeta.otherfiles') }}</label>
+                                <input type="file" class="form-control" id="attachedField" name="attachedfilecontent">
+                            </div>
+
+                            <div x-show='isImageType' class="thumbnail text-center" >
+                                <img :src="image_url" alt="" class="img-fluid img-thumbnail" style="height: 145px; overflow: scroll;">
+                            </div>
+
+                            <div x-show='isVideoType' class="thumbnail">
+                                <div class="embed-responsive embed-responsive-16by9" style="height: 200px;">
+                                    <iframe class="embed-responsive-item" :src="video_url" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                       </div>
                     </div>
                     <div class="modal-footer btn-group">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i>
@@ -147,10 +157,99 @@
     </div>
     @endif
 
-    @push('css')
-    <style>
-        .tox .tox-tinymce {
-            height: 270px !important;
-        }
-    </style>
-    @endpush
+@push('css')
+<style>
+    [data-tinymce] {
+        height: 270px !important;
+    }
+</style>
+@endpush
+@push('js')
+<script>
+     document.addEventListener('alpine:init', () => {
+        Alpine.data('{{ $componentName }}', () => ({
+            current_type: null,
+            image_url: null,
+            video_url: null,
+            code: '',
+            meta_types: @json(AdminModule::model('pagemeta')::TYPES),
+
+            init(){
+                this.$nextTick(() => {
+                    this.current_type = this.meta_types['text'].value
+                })
+            },
+            handleImage(){
+                const reader = new FileReader()
+                const image = event.target.files[0]
+
+                if (!this.validateFile(image)) {
+                    return
+                }
+
+                reader.readAsDataURL(image)
+
+                reader.onload = (event) => {
+                    this.image_url = event.target.result
+                }
+            },
+            handleSubmit(event){
+                if (this.isImageType()){
+                    if (!this.image_url){
+                        alert("Ce type d'image n'est pas autorisé.")
+                        event.preventDefault();
+                    }
+                }
+
+                if (this.isVideoType()){
+                    if (!this.video_url){
+                        alert("Ce type de vidéo n'est pas autorisé.")
+                        event.preventDefault();
+                    }
+                }
+
+                if (!this.code){
+                    alert("Le champ code est obligatoire.")
+                    event.preventDefault();
+                }
+            },
+
+            validateFile(image) {
+                const ext = image.name.substring(image.name.lastIndexOf('.') + 1).toLowerCase()
+
+                if (['png', 'jpg', 'gif', 'jpeg', 'svg'].includes(ext)) {
+                    return true
+                } else {
+                    alert("Erreur lors du traitement de l'image `" + image.name + '`. Veuillez choisir une image de type (jpg, jpeg, png,svg).',)
+                    return false
+                }
+            },
+            isTextType(){
+                return this.isType('text')
+            },
+            isSimpleTextType(){
+                return this.isType('simpletext')
+            },
+            isImageType(){
+                return this.isType('image')
+            },
+            isVideoType(){
+                return this.isType('video')
+            },
+            isAttachedType(){
+                return this.isType('attachedfile')
+            },
+            isType(key){
+                 return  this.current_type == this.meta_types[key].value
+            },
+            isGroupType(){
+               return this.isType('group')
+            }
+        }))
+    })
+</script>
+@endpush
+
+
+
+

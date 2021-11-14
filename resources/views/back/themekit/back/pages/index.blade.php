@@ -39,6 +39,7 @@
                     </div>
 
                     <div class="card-body">
+                        
                         <table class="table table-vcenter card-table" id='list'>
                             <thead>
                                 @role('super-' . config('administrable.guard'), config('administrable.guard'))
