@@ -28,6 +28,7 @@ class Create{{pluralClass}}Table extends Migration
             $table->string('linkedin')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('website')->nullable();
+            $table->json('custom_fields')->nullable();
             $table->text('about')->nullable();
             $table->rememberToken();
 

@@ -4,8 +4,8 @@ namespace Guysolamour\Administrable\Console\Administrable;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Guysolamour\Administrable\Console\BaseCommand;
 use Guysolamour\Administrable\Console\Filesystem;
+use Guysolamour\Administrable\Console\BaseCommand;
 
 
 class AdminInstallCommand extends BaseCommand
@@ -28,9 +28,6 @@ class AdminInstallCommand extends BaseCommand
     /** @var string[] */
     protected  $themes = ['adminlte', 'theadmin', 'tabler', 'themekit'];
 
-    /** @var bool */
-    protected $route_controller_callable_syntax;
-
     /** @var string */
     protected $theme;
 
@@ -50,10 +47,10 @@ class AdminInstallCommand extends BaseCommand
                                 {--p|preset=vue : Ui preset to use }
                                 {--m|model= : Models folder name inside app directory }
                                 {--s|seed : Seed database with fake data }
-                                {--c|route_callable_syntax=true : Use route controller callable syntax }
                                 {--r|migrate=true : Run migrations }
                                 {--k|debug_packages : Add debug packages (debugbar, pretty routes ..) }
-                                {--t|theme= : Theme to use }
+                                {--t|theme= : Backend theme to use }
+                                {--f|front_theme= : Frontend theme to use }
                                 {--l|locale=fr : Locale to use }
                             ';
 
@@ -67,7 +64,6 @@ class AdminInstallCommand extends BaseCommand
         parent::__construct();
 
         $this->models_folder_name = config('administrable.models_folder');
-        $this->route_controller_callable_syntax = config('administrable.route_controller_callable_syntax');
     }
 
     public function handle()
@@ -214,6 +210,9 @@ class AdminInstallCommand extends BaseCommand
         $this->info(PHP_EOL . 'Publishing Assets...');
         $this->publishAssets();
         $this->info('Assets published successfuly');
+
+        // Generate front dashbaord
+
 
         // Composer dump-autoload
         $this->info("Running composer dump-autoload");
@@ -625,6 +624,18 @@ class AdminInstallCommand extends BaseCommand
         return $config_path;
     }
 
+    public function loadFrontViews() :void
+    {
+        $views_path = resource_path('views/');
+
+        $views_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath() . '/views/front/default');
+
+        $this->filesystem->compliedAndWriteFileRecursively(
+            $views_stub,
+            $views_path . $this->data_map["{{frontLowerNamespace}}"]
+        );
+    }
+
     private function loadViews() :string
     {
         $views_path = resource_path('views/');
@@ -642,12 +653,8 @@ class AdminInstallCommand extends BaseCommand
             $views_path . '/' . $this->data_map["{{backLowerNamespace}}"] . '/' .  $this->data_map['{{pluralSlug}}']
         );
 
-        $views_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath() . '/views/front');
+        $this->loadFrontViews();
 
-        $this->filesystem->compliedAndWriteFileRecursively(
-            $views_stub,
-            $views_path . $this->data_map["{{frontLowerNamespace}}"]
-        );
 
         $views_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath() . '/views/vendor');
         $this->filesystem->compliedAndWriteFileRecursively(
@@ -742,18 +749,26 @@ class AdminInstallCommand extends BaseCommand
         );
     }
 
-    private function loadRoutes() :string
+    public function loadFrontRoutes() :void
     {
         $routes_path = base_path('routes/web/');
 
         // Front routes;
-        $route_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath("/routes/web/front"), false);
+        $route_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath("/routes/web/front/"), false);
 
 
         $this->filesystem->compliedAndWriteFile(
             $route_stub,
             $routes_path . $this->data_map["{{frontLowerNamespace}}"]
         );
+    }
+
+    private function loadRoutes() :string
+    {
+        $this->loadFrontRoutes();
+
+
+        $routes_path = base_path('routes/web/');
 
         // Back routes;
         $route_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath("/routes/web/back"), false);
@@ -764,13 +779,9 @@ class AdminInstallCommand extends BaseCommand
             $routes_path . $this->data_map["{{backLowerNamespace}}"]
         );
 
-
         // Change RouteServiceProvider
         $complied = $this->filesystem->compliedFile($this->getTemplatePath('/routes/RouteServiceProvider.stub'));
 
-        if (!$this->route_controller_callable_syntax) {
-            $complied = str_replace('// protected $namespace', 'protected $namespace', $complied);
-        }
 
         $this->filesystem->writeFile(
             app_path('Providers/RouteServiceProvider.php'),
@@ -917,7 +928,7 @@ class AdminInstallCommand extends BaseCommand
         $controllers_path =  app_path('/Http/Controllers/');
 
         // Front controllers
-        $controllers_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath('/controllers/front'));
+        $controllers_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath('/controllers/front'), false);
 
         $this->filesystem->compliedAndWriteFileRecursively(
             $controllers_stub,
@@ -1308,7 +1319,6 @@ class AdminInstallCommand extends BaseCommand
         $this->updateThemeConfig();
         $this->updateGuardConfig();
         $this->updateModelsFolderConfig();
-        $this->updateControllerCallbackSyntaxConfig();
     }
 
     private function updateThemeConfig() :void
@@ -1356,25 +1366,6 @@ class AdminInstallCommand extends BaseCommand
         }
     }
 
-    private function updateControllerCallbackSyntaxConfig() :void
-    {
-        $config_path = $this->getConfigFilePath();
-
-        if (!in_array($this->option('route_callable_syntax'), ['true', 'false'])) {
-            $this->triggerError("The route callback syntax must be [true] or [false] instead of [{$this->option('route_callable_syntax')}]");
-        }
-
-        if ($this->option('route_callable_syntax') === 'false') {
-            $this->filesystem->replaceAndWriteFile(
-                $this->filesystem->get($config_path),
-                "'route_controller_callable_syntax' => true,",
-                "'route_controller_callable_syntax' => false,",
-                $config_path
-            );
-
-            $this->route_controller_callable_syntax = false;
-        }
-    }
 
     private function getConfigFilePath() :string
     {
@@ -1449,8 +1440,5 @@ class AdminInstallCommand extends BaseCommand
 
         $this->theme = $theme;
 	}
-
-
-
 
 }

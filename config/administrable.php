@@ -16,13 +16,14 @@ return [
     'app_short_name'   => config('app.short_name', 'Lvl'),
     /*
     |--------------------------------------------------------------------------
-    | Theme
+    | Backend Theme
     |--------------------------------------------------------------------------
     |
     | Available theme are adminlte,theadmin,cooladmin,tabler,themekit
     | The theme should not be changed once the installation has been done
     */
     'theme' => 'themekit',
+
     /*
     |--------------------------------------------------------------------------
     | Folder
@@ -74,16 +75,6 @@ return [
     */
     'back_namespace' => 'Back',
 
-    /**
-     * Use PHP callable syntax...
-     * use App\Http\Controllers\UserController;
-     * Route::get('/users', [UserController::class, 'index']);
-
-     * Use string syntax...
-     * Route::get('/users', 'App\Http\Controllers\UserController@index');
-     */
-    'route_controller_callable_syntax' => true,
-
     'schedule' => [
         'command' => [
             /**
@@ -101,7 +92,7 @@ return [
 
         ],
     ],
-  
+
     'modules' => [
         'auth' => [
             'back' => [
@@ -191,6 +182,34 @@ return [
         'social_redirect' => [
             'controller' => Guysolamour\Administrable\Http\Controllers\Front\RedirectController::class,
             'networks'   => ['facebook', 'twitter', 'linkedin', 'youtube']
+        ],
+        'user_dashboard' => [
+            /*
+            |--------------------------------------------------------------------------
+            | Frontend Theme
+            |--------------------------------------------------------------------------
+            |
+            | Available theme are sleek
+            | The theme should not be changed once the installation has been done
+            */
+            'theme' => 'sleek',
+
+            'model' => \App\Models\User::class,
+
+            'controllers' => [
+                'front' => [
+                    'login'            => \Guysolamour\Administrable\Http\Controllers\Front\Auth\LoginController::class,
+                    'register'         => \Guysolamour\Administrable\Http\Controllers\Front\Auth\RegisterController::class,
+                    'dashboard'        => \Guysolamour\Administrable\Http\Controllers\Front\Dashboard\DashboardController::class,
+                    'verification'     => \Guysolamour\Administrable\Http\Controllers\Front\Auth\VerificationController::class,
+                    'reset_password'   => \Guysolamour\Administrable\Http\Controllers\Front\Auth\ResetPasswordController::class,
+                    'forgot_password'  => \Guysolamour\Administrable\Http\Controllers\Front\Auth\ForgotPasswordController::class,
+                    'confirm_password' => \Guysolamour\Administrable\Http\Controllers\Front\Auth\ConfirmPasswordController::class,
+                ]
+            ],
+            // 'custom_fields' => [
+
+            // ],
         ]
     ],
 

@@ -2,6 +2,7 @@
 
 namespace Guysolamour\Administrable;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ use Guysolamour\Administrable\Console\Extension\AddExtensionCommand;
 use Guysolamour\Administrable\Console\Administrable\CreateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
+use Guysolamour\Administrable\Console\Administrable\GenerateFrontDashboardCommand;
+use phpDocumentor\Reflection\Types\Static_;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -38,6 +41,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadViewsFrom($this->packagePath('/resources/views/filemanager'), 'administrable');
         $this->loadViewsFrom($this->packagePath('/resources/views/emails'), 'administrable');
 
+        // User dashboard
+        if (static::checkIfUserDashboardWasGenerated()){
+            $this->loadViewsFrom($this->packagePath('/resources/views/front/' . Str::lower(config('administrable.modules.user_dashboard.theme'))), 'administrable');
+        }
+
         $this->loadHelperFile();
 
         $this->loadRoutesFrom($this->packagePath("/routes/back.php"));
@@ -49,12 +57,22 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         ]);
 
         $this->publishes([
-            $this->packagePath('/resources/views/back/' . config('administrable.theme') . '/back') => resource_path('views/vendor/administrable/' . strtolower(config('administrable.back_namespace'))),
-            $this->packagePath('/resources/views/front')       => resource_path('views/vendor/administrable'),
-            $this->packagePath('/resources/views/components')  => resource_path('views/vendor/administrable/components'),
-            $this->packagePath('/resources/views/filemanager') => resource_path('views/vendor/administrable/filemanager'),
-            $this->packagePath('/resources/views/emails')      => resource_path('views/vendor/administrable/emails'),
-        ], 'administrable-views');
+            $this->packagePath('/resources/views/back/' . config('administrable.theme') . '/back') => resource_path('views/vendor/administrable/' . Str::lower(config('administrable.back_namespace'))),
+            $this->packagePath('/resources/views/components')  => resource_path('views/vendor/administrable/'. Str::lower(config('administrable.back_namespace')) .'/components'),
+            $this->packagePath('/resources/views/components/filemanager') => resource_path('views/vendor/administrable/'. Str::lower(config('administrable.back_namespace')) .'/components/filemanager'),
+            $this->packagePath('/resources/views/emails')      => resource_path('views/vendor/administrable/' . Str::lower(config('administrable.back_namespace')) .'/emails'),
+        ], 'administrable-back-views');
+
+        $this->publishes([
+            $this->packagePath('/resources/views/front/front')       => resource_path('views/vendor/administrable/' . Str::lower(config('administrable.front_namespace'))),
+        ], 'administrable-front-views');
+
+        // User dashboard
+        if (static::checkIfUserDashboardWasGenerated()) {
+            $this->publishes([
+                $this->packagePath('/resources/views/front/' . Str::lower(config('administrable.modules.user_dashboard.theme')) . '/front') => resource_path('views/vendor/administrable/' . Str::lower(config('administrable.front_namespace'))),
+            ], 'administrable-dashboard-views');
+        }
 
         $this->publishes([
             $this->packagePath('resources/lang') => resource_path('lang/vendor/administrable'),
@@ -149,6 +167,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 NotPaidCommand::class,
                 PaidCommand::class,
                 AddExtensionCommand::class,
+                GenerateFrontDashboardCommand::class,
             ]);
         }
 
@@ -181,6 +200,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     private function srcPath(string $path = ''): string
     {
         return  __DIR__ . $path;
+    }
+
+    public Static function checkIfUserDashboardWasGenerated() :bool
+    {
+        return file_exists(public_path("vendor/") . Str::lower(config('administrable.modules.user_dashboard.theme')));
     }
 }
 
