@@ -4,6 +4,7 @@ namespace Guysolamour\Administrable\Console\Administrable;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Artisan;
 use Guysolamour\Administrable\Console\Filesystem;
 use Guysolamour\Administrable\Console\BaseCommand;
 
@@ -1374,7 +1375,10 @@ class AdminInstallCommand extends BaseCommand
 
     private function loadCrudConfiguration() :string
     {
-        $this->callSilent('administrable:crud:install');
+        if (Arr::except(Artisan::all(), 'administrable:crud:install')){
+            $this->callSilent('administrable:crud:install');
+        }
+        
         $this->updateConfigFile();
 
         return base_path('administrable.yaml');
