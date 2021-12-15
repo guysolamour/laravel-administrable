@@ -73,6 +73,12 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         return Gravatar::get($this->attributes['email']);
     }
 
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+
 
     // add relation methods below
 }

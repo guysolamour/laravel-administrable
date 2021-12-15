@@ -2,7 +2,6 @@
 
 namespace Guysolamour\Administrable\Http\Controllers\Front\Auth;
 
-use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -82,7 +81,7 @@ class RegisterController extends BaseController
             'pseudo'         => Arr::get($data, 'pseudo'),
             'phone_number'   => Arr::get($data, 'phone_number'),
             'email'          => Arr::get($data, 'email'),
-            'password'       => Hash::make(Arr::get($data, 'password')),
+            'password'       => Arr::get($data, 'password'),
         ]);
     }
 }

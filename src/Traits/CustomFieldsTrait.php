@@ -41,13 +41,13 @@ trait CustomFieldsTrait
      *
      * @return $this
      */
-    public function setCustomField(string $name, $value): self
+    public function setCustomField(string $fieldName, $value): self
     {
         $name = $this->getCustomFieldName();
 
         $customFields = $this->$name;
 
-        Arr::set($customFields, $name, $value);
+        Arr::set($customFields, $fieldName, $value);
 
         $this->custom_fields = $customFields;
 
@@ -55,13 +55,13 @@ trait CustomFieldsTrait
     }
 
 
-    public function forgetCustomField(string $name): self
+    public function forgetCustomField(string $fieldName): self
     {
         $name = $this->getCustomFieldName();
 
         $customFields = $this->$name;
 
-        Arr::forget($customFields, $name);
+        Arr::forget($customFields, $fieldName);
 
         $this->$name = $customFields;
 
