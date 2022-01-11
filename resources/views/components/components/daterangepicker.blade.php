@@ -41,7 +41,7 @@
         opens: @json($opens ?? 'center'),
         drops: @json($drops ?? 'up'),
         locale: {
-            format: 'DD/MM/YYYY HH:mm',
+            format: @json(isset($timepicker) && !$timepicker ? 'DD/MM/YYYY' : 'DD/MM/YYYY HH:mm'),
             daysOfWeek: [
                 'Di','Lu','Ma','Me','Je','Ve','Sa'
             ],

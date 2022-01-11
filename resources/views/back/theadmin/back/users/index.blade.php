@@ -72,11 +72,11 @@
                               {{-- add values here --}}
                             <td>
                                 <nav class="nav no-gutters gap-2 fs-16">
-                                    <a class="nav-link hover-primary" href="{{ back_route('user.show', $user) }}" data-provide="tooltip"
+                                    <a class="nav-link hover-primary" href="{{ back_route('user.show', $user->getKey()) }}" data-provide="tooltip"
                                         title="{{ Lang::get('administrable::messages.default.show') }}"><i class="ti-eye"></i></a>
                                     <a class="nav-link hover-primary" href="{{ back_route('model.clone', get_clone_model_params($user)) }}" data-provide="tooltip"
                                         title="{{ Lang::get('administrable::messages.default.clone') }}"><i class="ti-layers"></i></a>
-                                    <a class="nav-link hover-primary" href="{{ back_route('user.edit', $user) }}" data-provide="tooltip"
+                                    <a class="nav-link hover-primary" href="{{ back_route('user.edit', $user->getKey()) }}" data-provide="tooltip"
                                         title="{{ Lang::get('administrable::messages.default.edit') }}"><i class="ti-pencil"></i></a>
                                     <!-- Button trigger modal -->
                                      <a type="button" title="{{ Lang::get('administrable::messages.view.user.changepassword') }}" class="nav-link hover-primary" data-toggle="modal" data-target="#changePassword{{ $user->id }}">

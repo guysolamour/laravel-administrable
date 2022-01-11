@@ -190,3 +190,12 @@ Route::prefix(config('administrable.auth_prefix_path'))
 );
 
 
+/*
+|--------------------------------------------------------------------------
+| Dropzone
+|--------------------------------------------------------------------------
+*/
+Route::post('dropzone/{model}/{id}/{collection}', [config('administrable.modules.dropzone.front.controller'), 'store'])->name('dropzone.media.store');
+Route::delete('dropzone/{media}', [config('administrable.modules.dropzone.front.controller'), 'destroy'])->name('dropzone.media.delete');
+Route::post('dropzone/temporarymedia/{model}/{collection}/{path}', [config('administrable.modules.dropzone.front.controller'), 'storeTemporaryMedia'])->name('dropzone.temporarymedia.store');
+Route::delete('dropzone/temporarymedia/{media}', [config('administrable.modules.dropzone.front.controller'), 'destoryTemporaryMedia'])->name('dropzone.temporarymedia.delete');

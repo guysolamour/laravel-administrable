@@ -1,0 +1,19 @@
+.dropzone {
+    /*border: 2px dashed #0087F7;*/
+    background: white;
+    border-radius: 5px;
+    min-height: 100px !important;
+    /*padding: 90px 0;*/
+    vertical-align: baseline;
+}
+.dropzone .dz-preview {
+    margin: 5px;
+}
+
+.dz-remove {
+    color: red;
+        /*color: #fff;
+    background-color: red;
+    border-color: #0062cc;*/
+
+}

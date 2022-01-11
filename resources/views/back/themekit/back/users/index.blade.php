@@ -83,14 +83,14 @@
                                 {{-- add values here --}}
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ back_route('user.show', $user) }}" class="btn btn-primary"
+                                        <a href="{{ back_route('user.show', $user->getKey()) }}" class="btn btn-primary"
                                             data-toggle="tooltip" data-placement="top" title="{{ Lang::get('administrable::messages.default.show') }}"><i class="fas fa-eye"></i></a>
 
                                          <a href="{{ back_route('model.clone', get_clone_model_params($user)) }}" class="btn btn-secondary"
                                             title="{{ Lang::get('administrable::messages.default.clone') }}"><i class="fas fa-clone"></i></a>
 
 
-                                        <a href="{{ back_route('user.edit', $user) }}" class="btn btn-info"
+                                        <a href="{{ back_route('user.edit', $user->getKey()) }}" class="btn btn-info"
                                             data-toggle="tooltip" data-placement="top" title="{{ Lang::get('administrable::messages.default.edit') }}"><i class="fas fa-edit"></i></a>
 
                                          <!-- Button trigger modal -->
@@ -98,7 +98,7 @@
                                               <i class="fas fa-lock"></i>
                                           </button>
 
-                                        <a href="{{ back_route('user.destroy',$user) }}" data-method="delete"
+                                        <a href="{{ back_route('user.destroy',$user->getKey()) }}" data-method="delete"
                                             data-confirm="{{ Lang::get('administrable::messages.view.user.destroy') }}" class="btn btn-danger"
                                             data-toggle="tooltip" data-placement="top" title="{{ Lang::get('administrable::messages.default.delete') }}"><i class="fas fa-trash"></i></a>
                                     </div>

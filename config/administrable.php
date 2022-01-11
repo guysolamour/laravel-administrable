@@ -179,6 +179,11 @@ return [
                 'temporary_controller'  => \Guysolamour\Administrable\Http\Controllers\Back\TemporaryMediaController::class,
             ],
         ],
+        'dropzone' => [
+            'front' => [
+                'controller' => \Guysolamour\Administrable\Http\Controllers\Front\DropzoneController::class,
+            ]
+        ],
         'social_redirect' => [
             'controller' => Guysolamour\Administrable\Http\Controllers\Front\RedirectController::class,
             'networks'   => ['facebook', 'twitter', 'linkedin', 'youtube']

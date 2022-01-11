@@ -123,7 +123,6 @@ class MediaController extends BaseController
         return response()->json($media);
     }
 
-
     public function remote(string $model, int $id, string $collection, Request $request)
     {
         /**

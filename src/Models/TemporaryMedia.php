@@ -4,10 +4,10 @@ namespace Guysolamour\Administrable\Models;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Guysolamour\Administrable\Traits\HasMediaTrait;
-use Illuminate\Http\UploadedFile;
 
 class TemporaryMedia extends Model
 {
@@ -85,7 +85,6 @@ class TemporaryMedia extends Model
         return $this;
     }
 
-
     public function withCustomProperties(array $customProperties): self
     {
         $this->custom_properties = $customProperties;
@@ -93,13 +92,21 @@ class TemporaryMedia extends Model
         return $this;
     }
 
-    public static function store(UploadedFile $uploaded_file) :self
+    /**
+     * @param \Illuminate\Http\UploadedFile $uploaded_file
+     * @return string
+     */
+    public static function storeUploadFileOnDisk(UploadedFile $uploaded_file)
     {
-        $url = $uploaded_file->storeAs(
+        return $uploaded_file->storeAs(
             config('administrable.media.temporary_files.folder'),
             static::getUploadedFileName($uploaded_file, true),
             'public'
         );
+    }
+
+    public static function storeMedia(UploadedFile $uploaded_file, string $url, ?string $collection = null, ?string $model = null, bool $select = false) :self
+    {
         /**
          * @var self
          */
@@ -107,19 +114,27 @@ class TemporaryMedia extends Model
 
         $media->name            = static::getUploadedFileNameWithoutExtension($uploaded_file);
         $media->file_name       = static::getUploadedFileName($uploaded_file);
-        $media->collection_name = request('collection');
+        $media->collection_name = $collection ?? request('collection');
         $media->url             = $url;
         $media->mime_type       = $uploaded_file->getMimeType();
         $media->size            = $uploaded_file->getSize();
-        $media->model           = request('model');
+        $media->model           = $model ?? request('model');
         $media->withCustomProperties([
-            'order'  => (int) request('order'),
-            'select' => (bool) config('administrable.media.select_uploaded_file'),
+            'order'  => (int) request('order') ?? 1,
+            'select' => (bool) $select ?: config('administrable.media.select_uploaded_file'),
         ]);
 
         $media->save();
 
         return $media;
+    }
+
+    public static function store(UploadedFile $uploaded_file) :self
+    {
+        return static::storeMedia(
+            $uploaded_file,
+            static::storeUploadFileOnDisk($uploaded_file)
+        );
     }
 
 
@@ -157,18 +172,35 @@ class TemporaryMedia extends Model
 
     public function getStorageUrl() :string
     {
-        //  return storage_path('app/public/administrable/temp/gallery-62021090806.jpg');
-         return storage_path('app/public/' .   $this->getRawOriginal('url'));
+        return storage_path('app/public/' .   $this->getRawOriginal('url'));
     }
 
-    private function getMediaInOptions() :array
+    public static function fetchMediaInOptions(string $collection, string $model, string $path)
     {
-        $option = json_decode(option_get(self::getMediaOptionsKey()), true);
+        $model = base64_decode($model);
+
+        $options = static::getMediaInOptions($collection, $model, $path);
+
+        if(empty($options)){
+            return collect();
+        }
+
+        return config("administrable.modules.filemanager.temporary_model")::where(
+            'collection_name', $collection
+        )->whereIn('id', $options['keys'])->get();
+    }
+
+    private static function getMediaInOptions(?string $collection = null, ?string $model = null, ?string $path = null) :array
+    {
+        $path   = $path ?? request('path');
+        $model  = $model ?? request('model');
+
+        $option = json_decode(option_get(self::getMediaOptionsKey($collection, $model)), true);
 
         if (
             empty($option) ||
-            $option['path'] !== request('path') ||
-            $option['model_name'] !== request('model')
+            $option['path'] !== $path ?? request('path') ||
+            $option['model_name'] !== $model ?? request('model')
         ) {
             return [];
         }
@@ -176,9 +208,9 @@ class TemporaryMedia extends Model
         return $option;
     }
 
-    public static function getMediaOptionsKey() :string
+    public static function getMediaOptionsKey(?string $collection = null, ?string $model = null) :string
     {
-        return 'filemanager' . request('collection') . Str::lower(str_replace('\\', '', request('model')));
+        return sprintf("filemanager%s%s", $collection ?? request('collection'), Str::lower(str_replace('\\', '', $model ?? request('model'))));
     }
 
 
@@ -194,7 +226,7 @@ class TemporaryMedia extends Model
             'model_name' => request('model'),
         ];
 
-        $option = $this->getMediaInOptions();
+        $option = self::getMediaInOptions();
 
         if (empty($option)){
             return option_create($key, json_encode(array_merge($data, [

@@ -1298,7 +1298,6 @@ class AdminInstallCommand extends BaseCommand
 
         $helper_path = app_path('Helpers');
 
-
         $helper_stub = $this->filesystem->getFilesFromDirectory($this->getTemplatePath('/helpers'));
 
         $this->filesystem->compliedAndWriteFile(
@@ -1378,7 +1377,7 @@ class AdminInstallCommand extends BaseCommand
         if (Arr::except(Artisan::all(), 'administrable:crud:install')){
             $this->callSilent('administrable:crud:install');
         }
-        
+
         $this->updateConfigFile();
 
         return base_path('administrable.yaml');

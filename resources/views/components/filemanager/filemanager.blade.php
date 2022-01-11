@@ -352,8 +352,8 @@ document.addEventListener('alpine:init', () => {
         handleRightClick(event){
             event.preventDefault()
 
-            if ($(event.currentTarget).find('.dropdown-menu').is(":hidden")){
-                $(event.currentTarget).find('.dropdown-toggle').dropdown('toggle')
+            if (jQuery(event.currentTarget).find('.dropdown-menu').is(":hidden")){
+                jQuery(event.currentTarget).find('.dropdown-toggle').dropdown('toggle')
             }
         },
         uploadProgress(progressEvent){
@@ -424,6 +424,8 @@ document.addEventListener('alpine:init', () => {
                 return
             }
 
+            this.unSelect(file, false)
+
             const url = this.isCreateMode() ?
                             `/${this.routeprefix}/temporarymedia/${file.id}` :
                             `/${this.routeprefix}/media/${file.id}`
@@ -432,6 +434,10 @@ document.addEventListener('alpine:init', () => {
                 .then(({ data }) => {
                     this.fetchUploadedMedia()
                 })
+
+            if (this.files.uploaded.length == 0){
+                this.selected_file = {}
+            }
         },
         getUploadUrl(){
             if (this.isEditMode()){
@@ -492,7 +498,6 @@ document.addEventListener('alpine:init', () => {
                 this.upload()
             })
         },
-
         uploadRemoteFile(){
             this.remote.loading = true
             this.remote.error   = false
@@ -689,7 +694,6 @@ document.addEventListener('alpine:init', () => {
             }
             return(string.indexOf(start) === 0)
         },
-
         validURL(string) {
             let url;
 
@@ -851,7 +855,7 @@ document.addEventListener('alpine:init', () => {
                         <hr>
 
                         <div class="col-md-12 pl-2">
-                            <div class="row mt-4">
+                            <div class="row mt-4" >
                                 <div x-show="filteredUploadFiles.length > 0" class="col-12 col-md-8 col-xl-8 row order-sm-2 order-md-1  order-xl-1 modal-zone modal-container">
                                     <template x-for="(file, index) in filteredUploadFiles" :key="index">
                                         <div @contextmenu="handleRightClick" @dblclick="toggleSelect(file)" :data-id="file.id" class="filemanagerimagebox col-12 col-sm-6 col-md-6 col-lg-4"  :class="{ 'choosed-image': file.select }">
@@ -859,7 +863,6 @@ document.addEventListener('alpine:init', () => {
                                                 <a href="#" @click.prevent="unSelect(file)" class="file-close">
                                                     <i class="fa fa-check"></i>
                                                 </a>
-
                                                 <div class="file-img-box">
                                                     <img x-show="isImage(file)" :src="file.url" :alt="file.name">
                                                     <i x-show="isFile(file)" :class="'fa file-preview ' + getFileThumbnail(file)"></i>
@@ -890,6 +893,7 @@ document.addEventListener('alpine:init', () => {
                                                             <i class="fa fa-check"></i> &nbsp;
                                                             Sélectionner
                                                         </button>
+
                                                         <button   @click="copyUrl($event, file)" class="dropdown-item " type="button">
                                                             <i class="fas fa-copy"></i> &nbsp;
                                                             Copier le lien
@@ -977,7 +981,7 @@ document.addEventListener('alpine:init', () => {
                 <div class="modal-footer bg-light text-white">
                     <div class="col-12 col-md-6 col-lg-6 order-md-2 order-lg-1">
                         <div class="col-12 border p-2 bg-secondary text-center" >
-                            <i class='fas fa-clock'></i> Collection: {{ $collection }} | <span x-text="' Fichiers: ' + files.uploaded.length "></span> | <span x-text="' Taille: ' + getFileSize(uploadedFileSize) "></span>
+                            <i class='fas fa-clock'></i> <span x-text="' Fichiers: ' + files.uploaded.length "></span> | <span x-text="' Taille: ' + getFileSize(uploadedFileSize) "></span>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-6 order-md-1 order-lg-2">

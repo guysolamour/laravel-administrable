@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Guysolamour\Administrable\Http\Requests\MediaFormRequest;
 use Guysolamour\Administrable\Http\Controllers\BaseController;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\UnreachableUrl;
 
 class TemporaryMediaController extends BaseController
 {

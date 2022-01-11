@@ -97,3 +97,5 @@ if (ServiceProvider::checkIfUserDashboardWasGenerated()) {
         });
     });
 }
+
+

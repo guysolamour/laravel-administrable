@@ -100,7 +100,7 @@
                                                         {{-- add values here --}}
                                                         <td>
                                                             <div class="btn-group" role="group">
-                                                                <a href="{{ back_route('user.show', $user) }}"
+                                                                <a href="{{ back_route('user.show', $user->getKey()) }}"
                                                                     class="btn btn-primary" data-toggle="tooltip"
                                                                     data-placement="top" title="{{ Lang::get('administrable::messages.default.show') }}"><i
                                                                         class="fas fa-eye"></i></a>
@@ -115,11 +115,11 @@
                                                                 data-placement="top" title="{{ Lang::get('administrable::messages.default.clone') }}"><i
                                                                     class="fas fa-clone"></i></a>
 
-                                                                <a href="{{ back_route('user.edit', $user) }}"
+                                                                <a href="{{ back_route('user.edit', $user->getKey()) }}"
                                                                     class="btn btn-info" data-toggle="tooltip"
                                                                     data-placement="top" title="{{ Lang::get('administrable::messages.default.edit') }}"><i
                                                                         class="fas fa-edit"></i></a>
-                                                                <a href="{{ back_route('user.destroy', $user) }}"
+                                                                <a href="{{ back_route('user.destroy', $user->getKey()) }}"
                                                                     data-method="delete"
                                                                     data-confirm="{{ Lang::get('administrable::messages.view.user.destroy') }}"
                                                                     class="btn btn-danger" data-toggle="tooltip"

@@ -21,6 +21,10 @@ trait MediaableTrait
     {
         $media = $this->front_image;
 
+        if (!$media && !empty($this->images)){
+            return Arr::first($this->images)?->getUrl($conversionName);
+        }
+
         if (!$media && $this->email) {
             return Gravatar::get($this->email);
         }
@@ -189,7 +193,7 @@ trait MediaableTrait
 
             $files = collect(request('filemanager'))->map(function ($item) {
                 return array_map(fn ($key) => config("administrable.modules.filemanager.temporary_model")::find($key), json_decode($item));
-            });
+            })->filter();
 
             if ($files->isEmpty()) {
                 return;
@@ -216,7 +220,7 @@ trait MediaableTrait
 
                     $file->delete();
                 }
-                option_delete(config("administrable.modules.filemanager.temporary_model")::getMediaOptionsKey());
+                option_delete(config("administrable.modules.filemanager.temporary_model")::getMediaOptionsKey($collection, get_class($model)));
             });
         });
     }
