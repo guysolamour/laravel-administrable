@@ -14,7 +14,13 @@ trait MediaableTrait
 
     public function getFrontImageAttribute()
     {
-        return $this->getMedia(config('administrable.media.collections.front.label', 'default'), ['select' => true])->first();
+        $media =  $this->getMedia(config('administrable.media.collections.front.label', 'default'), ['select' => true])->first();
+
+        if (!$media && !empty($this->images)){
+            return Arr::first($this->images);
+        }
+
+        return $media;
     }
 
     public function getFrontImageUrl(string $conversionName = ''): ?string
