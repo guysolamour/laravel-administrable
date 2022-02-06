@@ -19,7 +19,6 @@ use Guysolamour\Administrable\Console\Administrable\CreateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\UpdateGuardCommand;
 use Guysolamour\Administrable\Console\Administrable\AdminInstallCommand;
 use Guysolamour\Administrable\Console\Administrable\GenerateFrontDashboardCommand;
-use phpDocumentor\Reflection\Types\Static_;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -91,6 +90,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         Blade::include('administrable::helpers.includeback', 'includeback');
         Blade::include('administrable::helpers.includefront', 'includefront');
         Blade::include('administrable::helpers.deleteall', 'deleteall');
+        Blade::include('administrable::helpers.dropzone', 'dropzone');
 
         $this->loadPolicies([
             config('administrable.modules.comment.model') => config('administrable.modules.comment.front.policy'),

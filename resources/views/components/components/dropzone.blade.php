@@ -1,6 +1,6 @@
 @props([
-    'collection', 'message', 'label', 'model', 'maxFiles', 'key', 'paramName', 'uploadMultiple',
-    'maxFileSize', 'addRemoveLinks', 'formName'
+    'collection', 'message', 'label', 'model', 'key', 'paramName', 'uploadMultiple',
+    'maxFileSize', 'addRemoveLinks', 'formName', 'createImageThumbnails'
 ])
 
 @php
@@ -12,13 +12,11 @@
 
     $model_classname = base64_encode(is_object($model) ? get_class($model) : (string) $model);
 
-    if (!isset($formName)){
-        $formName = $model->form_name ;
-    }
+    $formName = $formName ?? $model->form_name ;
 
-    $collection ??= config('administrable.media.collections.images.label');
+    $collection = $collection ?? config('administrable.media.collections.images.label');
 
-    if (!isset($key) && is_object($model) && method_exists($model, 'getKey')){
+    if (empty($key) && is_object($model) && method_exists($model, 'getKey')){
         $key = $model->getKey();
     }
 
@@ -160,7 +158,7 @@
         paramName: @json($paramName ?? 'file'), // The name that will be used to transfer the file
         uploadMultiple: @json($uploadMultiple ?? true),
         method: 'POST',
-        headers:{'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        headers:{'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content},
         parallelUploads: 1,
         maxFilesize: @json($maxFileSize ?? 10),
         previewTemplate: document.querySelector('#{{ $selector }}').innerHTML,
