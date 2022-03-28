@@ -14,6 +14,9 @@
             </ol>
 
             <div class="btn-group">
+              @if(Route::has(back_view_path('extensions.blog.post.edit')))
+               <a href="{{ back_route('extensions.blog.post.edit', $comment->commentable) }}" class="btn btn-primary"><i class="fa fa-eye"></i> &nbsp; Voir l'article</a>
+               @endif
                 <a href="{{ back_route('comment.destroy', $comment) }}" class="btn btn-danger" data-method="delete"
                     data-confirm="{{ Lang::get('administrable::messages.view.comment.destroy') }}">
                     <i class="fas fa-trash"></i>&nbsp; {{ Lang::get('administrable::messages.default.delete') }}</a>
@@ -35,4 +38,3 @@
     </div>
 </div>
 @endsection
-

@@ -2,7 +2,7 @@
 
 {!! form_rest($form) !!}
 
-<x-administrable::tinymce :model="$form->getModel()" />
+<!-- <x-administrable::tinymce :model="$form->getModel()" /> -->
 
 @if (isset($edit) && $edit)
 <div class="form-group">

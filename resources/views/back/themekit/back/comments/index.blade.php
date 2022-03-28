@@ -116,7 +116,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="alert alert-secondary">
-                                                    {{ $comment->comment }}
+                                                     {{ strip_tags($comment->comment) }}
                                                 </div>
                                                 <form action="{{ back_route('comment.reply', $comment) }}" method="post"
                                                     id="answerComment{{ $comment->getKey() }}">

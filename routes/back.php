@@ -139,7 +139,7 @@ Route::prefix(config('administrable.auth_prefix_path'))
                 'update'     => 'comment.update',
                 'destroy'    => 'comment.destroy',
                 ])->except(['create', 'store']);
-            });
+
 
             Route::post('comments/{comment}/reply', [Module::backController('comment'), 'reply'])->name('comment.reply');
             Route::get('comments/{comment}/approved', [Module::backController('comment'), 'approved'])->name('comment.approved');
@@ -186,7 +186,10 @@ Route::prefix(config('administrable.auth_prefix_path'))
             Route::get('media/{model}/{id}/tinymce', [config("administrable.modules.filemanager.back.controller"), 'tinymce'])->name('back.media.tinymce');
             Route::delete('media/seo/{model}/{id}', [config("administrable.modules.filemanager.back.controller"), 'destroySeo'])->name('back.media.seodestroy');
             Route::delete('media/{model}/{id}/{collection}/all', [config("administrable.modules.filemanager.back.controller"), 'destroyAll'])->name('back.media.destroy.all');
+        });
+
     }
+
 );
 
 

@@ -41,7 +41,7 @@
                     <div class="pb-2">
                         <p><span class="font-weight-bold">{{ Lang::get('administrable::messages.view.comment.content') }}:</span></p>
                         <p>
-                            {{ $comment->comment }}
+                            {{ strip_tags($comment->comment) }}
                         </p>
                     </div>
 
