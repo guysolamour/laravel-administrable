@@ -69,7 +69,7 @@
     <script src="{{ asset('js/main.js') }}"></script>
 
     @stack('js')
-    @include('flashy::message')
+    @flashy()
 
 </body>
 

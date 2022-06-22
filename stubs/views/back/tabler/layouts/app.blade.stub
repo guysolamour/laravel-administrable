@@ -60,7 +60,7 @@
 
 
     @stack('js')
-    {{-- @include('flashy::message') --}}
+    {{-- @flashy() --}}
 </body>
 
 </html>

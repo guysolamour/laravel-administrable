@@ -47,7 +47,7 @@
 {{-- <script src="{{ asset('js/vendor/fontawesome.js') }}"></script> --}}
 <script src="{{ asset('js/vendor/larails-alert.js') }}"></script>
 @stack('js')
-@include('flashy::message')
+@flashy()
 
 @include('cookie-consent::index')
 

@@ -211,6 +211,28 @@ if (!function_exists('delete_all_between')) {
 
 }
 
+if (! function_exists('flashy')) {
+
+    /**
+     * Flash a message
+     *
+     * @param  string|null $message
+     * @param  string      $link
+     * @return \App\Services\Flashy
+     */
+    function flashy(?string $message = null, string $link = '#')
+    {
+        $notifier = app('flashy');
+
+        if (! is_null($message)) {
+            return $notifier->success($message, $link);
+        }
+
+        return $notifier;
+    }
+}
+
+
 if (!function_exists('get_base64encode_class')) {
     /**
      * @param object $model

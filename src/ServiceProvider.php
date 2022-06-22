@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Scheduling\Schedule;
+use Guysolamour\Administrable\Services\Flashy;
 use Guysolamour\Administrable\View\Components\Filemanager;
 use Guysolamour\Administrable\Jobs\RemoveOrphanTemporaryFiles;
 use Guysolamour\Administrable\Console\Administrable\PaidCommand;
@@ -27,6 +28,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $this->app->bind('administrable-helper', fn () => new Helper);
+        
+        $this->app->singleton('flashy', function(){
+            return $this->app->make(Flashy::class);
+        });
+
 
         $this->scheduleCommands();
 
@@ -79,6 +85,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // View component aliases
         Blade::include('administrable::front.comments.comments', 'comments');
+        Blade::include('administrable::front.flashy.message', 'flashy');
         Blade::include('administrable::filemanager.image', 'imagemanager');
         Blade::include('administrable::filemanager.front', 'imagemanagerfront');
         Blade::include('administrable::filemanager.back', 'imagemanagerback');
@@ -91,6 +98,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         Blade::include('administrable::helpers.includefront', 'includefront');
         Blade::include('administrable::helpers.deleteall', 'deleteall');
         Blade::include('administrable::helpers.dropzone', 'dropzone');
+
 
         $this->loadPolicies([
             config('administrable.modules.comment.model') => config('administrable.modules.comment.front.policy'),

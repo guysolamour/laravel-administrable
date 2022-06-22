@@ -64,7 +64,7 @@ class AdminInstallCommand extends BaseCommand
     {
         parent::__construct();
 
-        $this->models_folder_name = config('administrable.models_folder');
+        $this->models_folder_name = config('administrable.models_folder', 'Models');
     }
 
     public function handle()
@@ -245,8 +245,8 @@ class AdminInstallCommand extends BaseCommand
             $search = '"require-dev": {',
             <<<TEXT
             $search
-                    "barryvdh/laravel-debugbar": "^3.3",
-                    "barryvdh/laravel-ide-helper": "^2.7",
+                    "barryvdh/laravel-debugbar": "^3.6",
+                    "barryvdh/laravel-ide-helper": "^2.12",
             TEXT,
             $composer_path
         );
@@ -578,18 +578,18 @@ class AdminInstallCommand extends BaseCommand
     {
         $locales_path = $this->getTemplatePath() . '/locales/' . $this->option('locale');
 
-        if ($this->filesystem->exists(resource_path("lang/{$this->option('locale')}"))) {
+        if ($this->filesystem->exists(lang_path("{$this->option('locale')}"))) {
             return;
         }
 
         $locales_stub = $this->filesystem->getFilesFromDirectory($locales_path, true);
         $this->filesystem->compliedAndWriteFileRecursively(
             $locales_stub,
-            resource_path("lang")
+            lang_path()
         );
 
         $locale_json = $this->getTemplatePath() . '/locales/' . '/json/' .  $this->option('locale') . '.json';
-        $locale_path = resource_path("lang/") . $this->option('locale') . '.json';
+        $locale_path = lang_path() . $this->option('locale') . '.json';
         if ($this->filesystem->exists($locale_path)) {
             return;
         }
@@ -1374,7 +1374,7 @@ class AdminInstallCommand extends BaseCommand
 
     private function loadCrudConfiguration() :string
     {
-        if (Arr::except(Artisan::all(), 'administrable:crud:install')){
+        if (Arr::has(Artisan::all(), 'administrable:crud:install')){
             $this->callSilent('administrable:crud:install');
         }
 

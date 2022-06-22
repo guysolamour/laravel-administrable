@@ -97,9 +97,9 @@ class {{singularClass}} extends Authenticatable implements HasMedia
     /**
      * Get the {{singularSlug}}'s role.
      *
-     * @return string
+     * @return string|null
      */
-    public function getRoleAttribute() :string
+    public function getRoleAttribute() :?string
     {
         return $this->roles->first()?->name;
     }
