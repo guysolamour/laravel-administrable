@@ -28,11 +28,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         $this->app->bind('administrable-helper', fn () => new Helper);
-        
+
         $this->app->singleton('flashy', function(){
             return $this->app->make(Flashy::class);
         });
-
 
         $this->scheduleCommands();
 
@@ -109,8 +108,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadGuardGates();
 
         $this->loadValidationRules();
-
-        $this->loadDkimMailServiceProvider();
     }
 
 
@@ -133,6 +130,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             }
 
             $schedule->job(new RemoveOrphanTemporaryFiles)->daily();
+            $schedule->command('cache:prune-stale-tags')->hourly();
         });
     }
 
@@ -145,7 +143,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     private function loadPolicies(array $policies) :void
     {
-        foreach($policies as $model => $policy){
+        foreach ($policies as $model => $policy) {
             Gate::policy($model, $policy);
         }
     }
@@ -154,9 +152,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         Gate::define('update-' . config('administrable.guard') .'-password', [config('administrable.modules.auth.back.policy'), 'updatePassword']);
         Gate::define('change-' . config('administrable.guard') .'-avatar', [config('administrable.modules.auth.back.policy'), 'changeAvatar']);
-        Gate::define('update-' . config('administrable.guard') , [config('administrable.modules.auth.back.policy'), 'update']);
-        Gate::define('delete-' . config('administrable.guard') , [config('administrable.modules.auth.back.policy'), 'delete']);
-        Gate::define('create-' . config('administrable.guard') , [config('administrable.modules.auth.back.policy'), 'create']);
+        Gate::define('update-' . config('administrable.guard'), [config('administrable.modules.auth.back.policy'), 'update']);
+        Gate::define('delete-' . config('administrable.guard'), [config('administrable.modules.auth.back.policy'), 'delete']);
+        Gate::define('create-' . config('administrable.guard'), [config('administrable.modules.auth.back.policy'), 'create']);
     }
 
     public function register()
@@ -182,22 +180,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->booting(function () {
             $loader = AliasLoader::getInstance();
             $loader->alias('AdminModule', Module::class);
-
         });
-    }
-
-    private function loadDkimMailServiceProvider(): void
-    {
-        if ($this->app->environment('production')) {
-            $this->app->register(\SimonSchaufi\LaravelDKIM\DKIMMailServiceProvider::class);
-        } else {
-            $this->app->register(\Illuminate\Mail\MailServiceProvider::class);
-        }
     }
 
     private function loadHelperFile(): void
     {
-        require $this->srcPath('/Helpers/helpers.php');
+        require_once $this->srcPath('/Helpers/helpers.php');
     }
 
     private function packagePath(string $path = ''): string
@@ -210,7 +198,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         return  __DIR__ . $path;
     }
 
-    public Static function checkIfUserDashboardWasGenerated() :bool
+    public static function checkIfUserDashboardWasGenerated() :bool
     {
         return file_exists(public_path("vendor/") . Str::lower(config('administrable.modules.user_dashboard.theme')));
     }

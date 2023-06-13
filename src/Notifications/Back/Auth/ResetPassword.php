@@ -2,6 +2,7 @@
 
 namespace Guysolamour\Administrable\Notifications\Back\Auth;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -60,10 +61,12 @@ class ResetPassword extends Notification
             ->subject(Lang::get('Reset Password Notification'))
             ->greeting(Lang::get('Hello :name',['name' => $notifiable->full_name]))
             ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
-            ->action(Lang::get('Reset Password'), url(config('app.url').route('admin.password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
-            ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.admins.expire')]))
+            ->action(Lang::get('Reset Password'), url(config('app.url').route(config('administrable.guard') .'.password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
+            ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'. Str::slug(Str::plural(config('administrable.guard'))) .'.expire')]))
             ->line(Lang::get('If you did not request a password reset, no further action is required.'));
     }
+
+
 
     /**
      * Set a callback that should be used when building the notification mail message.

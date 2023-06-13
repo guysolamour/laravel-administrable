@@ -38,4 +38,17 @@ class {{singularClass}}Factory extends Factory
             'about'              => $this->faker->realText(),
         ];
     }
+
+
+    /**
+     * Indicate that the model's email address should be unverified.
+     *
+     * @return $this
+     */
+    public function unverified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => null,
+        ]);
+    }
 }

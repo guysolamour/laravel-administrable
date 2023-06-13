@@ -78,7 +78,5 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         $this->attributes['password'] = bcrypt($value);
     }
 
-
-
     // add relation methods below
 }

@@ -73,13 +73,15 @@ class AdminInstallCommand extends BaseCommand
 
         $this->init();
 
+
         if ($this->checkIfPackageHasBeenInstalled()) {
             $this->triggerError("The installation has already been done, remove all generated files and run installation again!");
         }
 
-        $this->callSilent('multi-auth:install', [
-            'name'    => $this->guard,
-        ]);
+        $multiAuthGenerator = new MultiAuthGenerator(
+            $this->guard, $this->data_map, $this->filesystem
+        );
+        $multiAuthGenerator->generate();
 
         $this->call("ui", [
             'type'   => $this->preset,
@@ -152,10 +154,6 @@ class AdminInstallCommand extends BaseCommand
         $controllers_path = $this->loadControllers();
         $this->info('Controllers created at ' . $controllers_path);
 
-        // Middleware
-        $this->info(PHP_EOL . 'Creating Middleware...');
-        $middleware_path = $this->loadMiddleware();
-        $this->info('Middleware created at ' . $middleware_path);
 
          // Route Middleware
         $this->info(PHP_EOL . 'Registering route middleware...');
@@ -319,6 +317,10 @@ class AdminInstallCommand extends BaseCommand
         $this->getAppNamespace() . "\\" . $this->models_folder_name,
         $auth_config_path
         );
+
+
+
+        // save multi auth setiings
 
 
         // Settings config
@@ -576,6 +578,8 @@ class AdminInstallCommand extends BaseCommand
 
     private function loadLocale()
     {
+        $this->call('lang:publish');
+
         $locales_path = $this->getTemplatePath() . '/locales/' . $this->option('locale');
 
         if ($this->filesystem->exists(lang_path("{$this->option('locale')}"))) {
@@ -589,7 +593,7 @@ class AdminInstallCommand extends BaseCommand
         );
 
         $locale_json = $this->getTemplatePath() . '/locales/' . '/json/' .  $this->option('locale') . '.json';
-        $locale_path = lang_path() . $this->option('locale') . '.json';
+        $locale_path = lang_path() . '/' . $this->option('locale') . '.json';
         if ($this->filesystem->exists($locale_path)) {
             return;
         }
@@ -793,7 +797,7 @@ class AdminInstallCommand extends BaseCommand
         // Delete basic routing files
         $this->filesystem->delete([
             base_path('routes/web.php'),
-            base_path("routes/{$this->guard}.php"),
+            // base_path("routes/{$this->guard}.php"),
         ]);
 
         $this->filesystem->compliedAndWriteFile(
@@ -862,8 +866,9 @@ class AdminInstallCommand extends BaseCommand
 
 
         $search = 'protected $middleware = [';
-        $namespace = $this->data_map['{{namespace}}'];
+        // $namespace = $this->data_map['{{namespace}}'];
 
+        // register
         $this->filesystem->replaceAndWriteFile(
             $kernel,
             $search,
@@ -875,50 +880,6 @@ class AdminInstallCommand extends BaseCommand
         );
 
         return $kernel_path;
-    }
-
-
-    private function loadMiddleware() :string
-    {
-        $middleware_path = app_path('Http/Middleware');
-
-        // Addition of RedirectIfNotSuper middleware
-        $redirect_authenticated_middleware_stub = $this->getTemplatePath('/middleware/RedirectIfAuthenticated.stub');
-        $redirect_authenticated_middleware = $this->filesystem->compliedFile($redirect_authenticated_middleware_stub);
-
-        $this->filesystem->compliedAndWriteFile(
-            $redirect_authenticated_middleware,
-            $middleware_path . '/RedirectIfAuthenticated.php'
-        );
-
-        // Change middleware redirectifNot{$guard) redirect
-        $redirect_if_not = $middleware_path . "/RedirectIfNot{$this->data_map['{{singularClass}}']}.php";
-        $provider = $this->filesystem->get($redirect_if_not);
-
-        $search = "'{$this->data_map['{{singularSlug}}']}/login'";
-        $replace = "config('administrable.auth_prefix_path').'/login'";
-
-        $this->filesystem->replaceAndWriteFile(
-            $provider,
-            $search,
-            $replace,
-            $redirect_if_not
-        );
-
-        $redirect_if_not = $middleware_path . "/RedirectIf{$this->data_map['{{singularClass}}']}.php";
-        $provider = $this->filesystem->get($redirect_if_not);
-
-        $search = $this->data_map['{{singularSlug}}'] . '.home';
-        $replace = $this->data_map['{{singularSlug}}'] . '.dashboard';
-
-        $this->filesystem->replaceAndWriteFile(
-            $provider,
-            $search,
-            $replace,
-            $redirect_if_not
-        );
-
-        return $middleware_path;
     }
 
 
@@ -1156,25 +1117,6 @@ class AdminInstallCommand extends BaseCommand
             $migrations_path
         );
 
-        // Remove existing guard migrations
-        $guard_migration = Arr::first($this->filesystem->glob($migrations_path . '/*_create_' . $guard . '_table.php'));
-
-        $this->filesystem->delete([$guard_migration]);
-
-        // add guard migrations
-        $this->filesystem->move(
-            $migrations_path . '/provider.php',
-            $migrations_path . '/2014_07_24_092010_create_' . $guard . '_table.php',
-        );
-
-
-        $guard_reset_password_migration = Arr::first($this->filesystem->glob($migrations_path . '/*_create_' . $this->data_map['{{singularSlug}}'] . '_password_resets_table.php'));
-
-        $this->filesystem->move(
-            $guard_reset_password_migration,
-            $migrations_path . '/2014_07_25_092010_create_' . $this->data_map['{{singularSlug}}'] . '_password_resets_table.php',
-        );
-
         // load setting migration
         $this->call('vendor:publish', [
             '--provider' => 'Spatie\LaravelSettings\LaravelSettingsServiceProvider',
@@ -1403,7 +1345,7 @@ class AdminInstallCommand extends BaseCommand
             $guard = Str::lower($this->argument('guard'));
         }
 
-        $this->guard = $guard; ;
+        $this->guard = $guard;
     }
 
     private function setPreset(): void

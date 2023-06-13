@@ -49,15 +49,15 @@ class StorageDumpCommand extends BaseCommand
     {
         $this->info('Beginning task ...');
 
-        $zip_file = (new Zip)
+        $zipFile = (new Zip)
                 ->setPath($this->getFilePath())
                 ->addFolder($this->getFolder())
                 ->save();
         $this->info('Zip file successfully created');
 
-        $this->saveFileToDisks($zip_file);
+        $this->saveFileToDisks($zipFile);
 
-        $this->filesystem->delete($zip_file);
+        $this->filesystem->delete($zipFile);
         $this->info('Zip file successfully deleted');
 
         $this->info('Storage folder dumped successfully ...');
@@ -82,6 +82,7 @@ class StorageDumpCommand extends BaseCommand
     private function sendNotification(string $disk) :void
     {
         if ($this->option('send_notification')) {
+            /** @var \Illuminate\Database\Eloquent\Collection */
             $notifiables = get_super_guard_notifiers();
             $notification = config('administrable.storage_dump.notifications.mail.class', SuccessfulStorageFolderBackupNotification::class);
 

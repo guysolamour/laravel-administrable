@@ -181,7 +181,7 @@ class TemporaryMedia extends Model
 
         $options = static::getMediaInOptions($collection, $model, $path);
 
-        if(empty($options)){
+        if (empty($options)){
             return collect();
         }
 

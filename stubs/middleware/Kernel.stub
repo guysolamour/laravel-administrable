@@ -2,3 +2,9 @@
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+
+
+        '{{singularSlug}}.auth' => \{{namespace}}\Http\Middleware\RedirectIfNot{{singularClass}}::class,
+        '{{singularSlug}}.guest' => \{{namespace}}\Http\Middleware\RedirectIf{{singularClass}}::class,
+        // '{{singularSlug}}.verified' => \{{namespace}}\Http\Middleware\Ensure{{singularClass}}EmailIsVerified::class,
+        // '{{singularSlug}}.password.confirm' => \{{namespace}}\Http\Middleware\Require{{singularClass}}Password::class,
