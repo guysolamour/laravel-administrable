@@ -131,7 +131,7 @@ class LoginController extends BaseController
     */
     protected function loggedOut(Request $request)
     {
-        return redirect()->home();
+        return redirect()->route('home');
     }
 
 }

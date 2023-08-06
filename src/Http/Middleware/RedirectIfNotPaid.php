@@ -20,7 +20,7 @@ class RedirectIfNotPaid
     public function handle(Request $request, Closure $next)
     {
         if (option_get('app_paid') && !$this->isNotPaidRoute($request)) {
-            return redirect()->home();
+            return redirect('/');
         }
 
         if (!option_get('app_paid') && $this->isNotPaidRoute($request)){

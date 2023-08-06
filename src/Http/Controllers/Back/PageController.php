@@ -246,7 +246,7 @@ class PageController extends BaseController
     {
         if ('image' === get_meta_type(request('type'))) {
             $key = 'imagecontent';
-        } else if ('attachedfile' === get_meta_type(request('type'))) {
+        } elseif ('attachedfile' === get_meta_type(request('type'))) {
             $key = 'attachedfilecontent';
         } else {
             $key = null;

@@ -859,7 +859,7 @@ class AdminInstallCommand extends BaseCommand
 
         $kernel_stub = $this->filesystem->compliedFile($this->getTemplatePath('/middleware/Kernel.stub'));
 
-        $search = 'protected $routeMiddleware = [';
+        $search = 'protected $middlewareAliases = [';
 
 
         $kernel = str_replace($search, $search . $kernel_stub,  $kernel);
@@ -1132,7 +1132,7 @@ class AdminInstallCommand extends BaseCommand
         // load permission migration
         $this->call('vendor:publish', [
             '--provider' => 'Spatie\Permission\PermissionServiceProvider',
-            '--tag'      => 'migrations',
+            '--tag'      => 'permission-migrations',
         ]);
 
         // load configuration settings
